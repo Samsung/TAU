@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="../">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>TAU</title>
+		<meta charset="utf8">
+		<meta http-equiv="X-UA-Compatible" content="IE-edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-callout.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-core-css.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-clean/sm-clean.css" rel="stylesheet">
+		<link href="js/google-code-prettify/prettify.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
+	</head>
+	<body>
+		<nav>
+			<ul id="main-menu" class="sm sm-clean">
+				<li><a href="index.html">TAU Guide</a></li>
+				<li>
+					<a href="javascript:void(0);">Working with TAU</a>
+					<ul>
+						<li><a href="application_visual_layout.html">Application visual Layout</a></li>
+						<li><a href="basic_page_routing.html">Basic page routing</a></li>
+						<li><a href="introduction_to_widgets.html">Introduction to widgets</a></li>
+						<li><a href="using_jquery_with_tau.html">Using jQuery with TAU</a></li>
+						<li><a href="framework_profiles.html">Framework profiles</a></li>
+						<li><a href="how_to_create_own_widget.html">How to create own widget</a></li>
+						<li><a href="how_to_use_globalize.html">How to use globalize</a></li>
+						<li><a href="how_to_use_controller.html">How to use controller</a></li>
+						<li><a href="how_to_write_declarative.html">How to write use declarative API</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="javascript:void(0);">Custom Elements</a>
+					<ul>
+						<li><a href="customelements/feature.html">Feature overview</a></li>
+						<li><a href="customelements/custom_elements_preparation.html">Custom elements preparation</a></li>
+						<li><a href="customelements/cehelloword.html">Tutorial for Custom Elements</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Tutorials</a>
+					<ul>
+						<li><a href="tutorial_clock.html">Clock</a></li>
+						<li><a href="tutorial_notes.html">Notes</a></li>
+						<li><a href="tutorial_gallery.html">Gallery</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Migration Guide</a>
+					<ul>
+						<li><a href="migration/features_overview.html">Features overview</a></li>
+						<li><a href="migration/breaking_changes.html">Breaking changes</a></li>
+						<li><a href="migration/switching_apps_to_tau.html">Switching your Apps to TAU</a></li>
+					</ul>
+				</li>
+				<li><a href="api.html">API Docs</a></li>
+				<li><a href="https://developer.tizen.org/forums/web-application-development" target="_blank">Forum</a></li>
+			</ul>
+		</nav>
+
+		<article>
+			<h1 id="features-overview">Features overview</h1>
+<p>Main features of the new release:</p>
+<ol>
+<li><strong>Compatibility with Web UI Framework</strong> - backward compatibility is a very important aspect when releasing a new
+platform version. We designed the new core to be compatible with previous Web UI Framework and jQuery Mobile version.</li>
+<li><strong>jQuery Mobile independence</strong> - for all developers who want to create ultra fast applications without
+jQuery Mobile flavor.</li>
+<li><strong>Enhanced widgets</strong> - holding backward compatibility is important, but what makes the difference is the new lighter
+implementation of well-known widgets. We have not only changed the look but also what happens under the hood to save
+more juice inside your battery.</li>
+<li><strong>Performance</strong> - we have constantly have improved the performance of single widgets using Vanilla JS and profit from
+all the goodies inside Tizen&#39;s WebKit engine.</li>
+</ol>
+<h2 id="new-widgets-overview">New widgets overview</h2>
+<h4 id="same-structure-and-classes">Same structure and classes</h4>
+<p>One of the goals for TAU was to stay compatible with Web UI Framework. As we could do deep improvements thanks to resigning
+ from any code depended on jQuery inside JavaScript engine, we could not do the same for widget structure.
+We understand that every developer wants to give unique experience for his users, so we were spending much time on
+ making sure we have the same structure for compatible widgets. You do not need to change many of your CSS selectors to
+ archive the same effect after migrating to TAU.</p>
+<h4 id="two-way-of-creating-widgets">Two way of creating widgets</h4>
+<p>We leave you the choice how to use our Framework.
+The first is to just make sure if everything works as expected after changing the library path to TAU.
+The second is to dive into the new API and use <code>tau.widget.</code> namespace instead of old jQuery syntax.
+Now your apps do not need to be dependent on jQuery. If you like you can even go Vanilla JS.</p>
+<h4 id="building-process-split">Building process split</h4>
+<p>Every widget creation has been separated into phases.
+The first step is fetching widget options and building the whole required DOM structure. Later framework adds all the
+ required event listeners and sets the initial configuration which may be required by the widget to run properly.</p>
+<p>One of the most important benefit gained by splitting the process is that we are now able to prebuilt the whole
+ application before start.
+The prebuilder (called <code>TAU Builder</code>) is a wide subject.</p>
+<h2 id="introducing-tau-widget-api">Introducing TAU Widget API</h2>
+<p>One of the key features of the new release was to introduce a jQuery Mobile free version. That required some major
+ changes under the hood but also allowed to introduce something new.</p>
+<h3 id="widget-instancing">Widget instancing</h3>
+<p>The key part of any UI Framework are the components. In TAU we call them UI widgets (same naming as jQuery).
+Most of the applications created with old Web UI Framework probably use the jQuery syntax for creating user interface
+ components. Same goes for the TAU, but here we can archive the same effect in two ways.</p>
+<h4 id="jquery-style">jQuery Style</h4>
+<p>The first one stays jQuery Mobile (although underneath some other magic is happening).</p>
+<p>For better comparison we will remind how it looks:</p>
+<pre><code>$(&quot;.element-to-select&quot;).widgetname(/* options */);
+</code></pre><p>That creates a standard <code>widgetname</code> widget for selected elements and registers all the required events.</p>
+<h4 id="tau-style">TAU Style</h4>
+<p>The second way is to use the new TAU API and become independent of jQuery (for example when you prefer to use other libs
+ ).</p>
+<pre><code>var element; // Any HTMLElement eg. element = document.querySelector(&#39;.element-to-select&#39;);
+tau.widget.WidgetName(element /*, options */);
+</code></pre><p>This may not look like simpler code to use, but has the big advantage of not running through jQuery layer.
+<code>tau.widget.[widgetName]</code> will return a widget instance, that can be used to manipulate various properties and
+ call methods upon.</p>
+<div class="bs-callout bs-callout-warning"><h4>NOTE: Elements count</h4><p>jQuery syntax allows build widget on a collection of elements (or jQuery object). TAU allows only one element as the
+ parameter for widget creation.
+</p></div>
+
+
+<h3 id="methods-call">Methods call</h3>
+<p>As the new UI Framework shares most of the widget with jQuery Mobile, developers expect to use the same API.
+And that&#39;s true. We have provided the same public API for all jQM-like widgets.</p>
+<p>Simple example below (using <code>Popup</code> and <code>.open()</code> method).</p>
+<p><strong>jQuery</strong></p>
+<pre><code>$(&quot;.popup-to-select&quot;).popup(&#39;open&#39;);
+</code></pre><p><strong>TAU</strong></p>
+<pre><code>tau.widget.Popup(element).open();
+// or
+var instance = tau.widget.Popup(element);
+instance.open();
+</code></pre><h2 id="framework-flow">Framework flow</h2>
+<h3 id="first-start">First start</h3>
+<p>In general we can separate few stages of framework start.</p>
+<ol>
+<li>Internal setup (including widget registration)</li>
+<li>Engine start and router initialization<ol>
+<li>First page initialization</li>
+<li>Widget creation</li>
+<li>Widget event binding</li>
+</ol>
+</li>
+</ol>
+<p>In those stages engine does prepare all required widget definitions,
+ adds the core event listeners and afterwards opens first page and creates
+ all found widgets.</p>
+<p>More detailed description below:</p>
+<h4 id="internal-setup">Internal setup</h4>
+<p>In this stage we gain as much as possible information about the application to store it internally for faster lookups.
+Than we load the theme for the app if the CSS file was not included before.</p>
+<p>During initialization, the engine registers all widgets that use <code>engine.defineWidget()</code> and are shipped with
+ TAU library. You do not need to know the details how the whole process works. The most interesting
+ part is that after every widget registration a <code>widgetdefined</code> event is triggered on the <code>document</code> object.
+ While listening to that event you may know what widgets got loaded into the engine (this could be helpful when defining
+ your own widgets).</p>
+<h4 id="engine-start-and-router-initialization">Engine start and router initialization</h4>
+<p>At first the engine starts by triggering <code>tauinit</code> event on <code>document</code> object.
+This event is responsible for many processes inside the library, one of the most important is the start of jQM layer.</p>
+<p>When using TAU with jQuery we do initialize the jQM layer (jQuery Mobile layer) for backward compatibility.
+There is a lot going on underneath including registering widgets inside jQuery namespace and initialization of the core
+ objects of jQM. Those operations take much time (when looking on the general TAU launch time) and that&#39;s why we
+ encourage you to use <a href="./migration/switching_apps_to_tau.html#Moving-from-jQuery-Mobile-to-pure-TAU">pure TAU version</a> in your
+ apps. The most important thing here is to mention that jQM layer triggers <code>mobileinit</code> event (which is very important
+ for all apps that stay with jQuery Mobile).</p>
+<p>Next comes the <code>beforerouterinit</code> event triggered right before the router starts processing.
+The router is one of the core components in TAU framework. It is responsible for changing <code>Pages</code> and handling <code>Popups</code>
+ and <code>Dialogs</code> routines. Just after engine start, router tries to find the first page to show. For the first page to
+ show Router component checks if it requires building (as it may not because of <code>TAU Builder</code>). In case something needs
+ to be build engine travels across the whole page in search of widgets and build them in tree order.</p>
+<p>Before each widget build a <code>[widgetname]beforecreate</code> event is triggered (eg. <code>buttonbeforecreate</code> in case of <code>Button</code>
+ widget).
+Later few other events appear, in following order:</p>
+<ul>
+<li><code>widgetbuilt</code> and <code>[widgetname]create</code> - after widget build phase (whole DOM should be ready)</li>
+<li><code>widgetbound</code> - after widget binding phase (widget event listeners are attached)</li>
+</ul>
+<p>In case of events mentioned above, you will get a widget instance reference as data inside the <code>Event</code> object.</p>
+
+		</article>
+
+		<footer>
+			<div>Licensed under <a href="license.html">MIT License</a> by Samsung Electronics Co., Ltd. &copy;  2014</div>
+			<div class="version">ver 0.13.46</div>
+		</footer>
+
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/google-code-prettify/prettify.js"></script>
+		<script src="js/smartmenus-0.9.7/jquery.smartmenus.min.js"></script>
+		<script src="js/taupreview.js"></script>
+		<script>
+			$(function () {
+				$("#main-menu").smartmenus({
+					showOnClick: true
+				});
+			});
+		</script>
+	</body>
+</html>

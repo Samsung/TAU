@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>TAU</title>
+		<meta charset="utf8">
+		<meta http-equiv="X-UA-Compatible" content="IE-edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-callout.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-core-css.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-clean/sm-clean.css" rel="stylesheet">
+		<link href="js/google-code-prettify/prettify.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
+	</head>
+	<body>
+		<nav>
+			<ul id="main-menu" class="sm sm-clean">
+				<li><a href="index.html">TAU Guide</a></li>
+				<li>
+					<a href="javascript:void(0);">Working with TAU</a>
+					<ul>
+						<li><a href="application_visual_layout.html">Application visual Layout</a></li>
+						<li><a href="basic_page_routing.html">Basic page routing</a></li>
+						<li><a href="introduction_to_widgets.html">Introduction to widgets</a></li>
+						<li><a href="using_jquery_with_tau.html">Using jQuery with TAU</a></li>
+						<li><a href="framework_profiles.html">Framework profiles</a></li>
+						<li><a href="how_to_create_own_widget.html">How to create own widget</a></li>
+						<li><a href="how_to_use_globalize.html">How to use globalize</a></li>
+						<li><a href="how_to_use_controller.html">How to use controller</a></li>
+						<li><a href="how_to_write_declarative.html">How to write use declarative API</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="javascript:void(0);">Custom Elements</a>
+					<ul>
+						<li><a href="customelements/feature.html">Feature overview</a></li>
+						<li><a href="customelements/custom_elements_preparation.html">Custom elements preparation</a></li>
+						<li><a href="customelements/cehelloword.html">Tutorial for Custom Elements</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Tutorials</a>
+					<ul>
+						<li><a href="tutorial_clock.html">Clock</a></li>
+						<li><a href="tutorial_notes.html">Notes</a></li>
+						<li><a href="tutorial_gallery.html">Gallery</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Migration Guide</a>
+					<ul>
+						<li><a href="migration/features_overview.html">Features overview</a></li>
+						<li><a href="migration/breaking_changes.html">Breaking changes</a></li>
+						<li><a href="migration/switching_apps_to_tau.html">Switching your Apps to TAU</a></li>
+					</ul>
+				</li>
+				<li><a href="api.html">API Docs</a></li>
+				<li><a href="https://developer.tizen.org/forums/web-application-development" target="_blank">Forum</a></li>
+			</ul>
+		</nav>
+
+		<article>
+			<h1 id="how-to-use-controller">How to use Controller</h1>
+<p>Controller controls navigation in applications.
+It is a part of TAU but can work standalone without the rest of the TAU.
+If it is combine with TAU then it cooperates with router module from TAU.</p>
+<h2 id="creating-pages-on-the-fly">Creating pages on the fly</h2>
+<p>Example below shows how to create dynamic page.
+It is important to use <code>deferred.resolve(page);</code> this operation runs router on element which is applied to resolve and builds page/popup on element.</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    var controller = tau.Controller.getInstance();
+    controller.addRoute(&quot;page-dynamic&quot;, function (deferred) {
+        var page = document.createElement(&quot;div&quot;);
+        page.dataset.role = &quot;page&quot;;
+        page.textContent = &quot;Hello world!&quot;;
+        deferred.resolve(page);
+    });
+&lt;/script&gt;
+</code></pre><p>The code above has the following flow:</p>
+<ul>
+<li>&quot;page-dynamic&quot; route is registered</li>
+<li>user is navigated to &quot;page-dynamic&quot;</li>
+<li>callback is called</li>
+<li>the dynamic page is created</li>
+<li>the page is showed by router</li>
+</ul>
+<h2 id="using-params-in-routes">Using params in routes</h2>
+<p>Example below shows how to pass params to next page.</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    var controller = tau.Controller.getInstance();
+    controller.addRoute(&quot;page-params/:param1/:param2&quot;, function (deferred, param1, param2) {
+        deferred.resolve(
+            &#39;&lt;div data-role=&quot;page&quot;&gt;&#39; +
+                &#39;&lt;div&gt;param1: &lt;strong&gt;&#39; + param1 + &#39;&lt;/strong&gt;&lt;/div&gt;&#39; +
+                &#39;&lt;div&gt;param2: &lt;strong&gt;&#39; + param2 + &#39;&lt;/strong&gt;&lt;/div&gt;&#39; +
+            &#39;&lt;/div&gt;&#39;
+        );
+    });
+&lt;/script&gt;
+</code></pre><p>The code above has the following flow:</p>
+<ul>
+<li>&quot;page-params&quot; route is registered</li>
+<li>parameter is added to the registered route</li>
+<li>user is navigated to &quot;page-params&quot;</li>
+<li>callback which pass parameters is called</li>
+<li>the page with the given parameters is created in callback</li>
+</ul>
+<h2 id="loading-pages-from-string">Loading pages from string</h2>
+<p>Example of simple page created from string.</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    var controller = tau.Controller.getInstance();
+    controller.addRoute(&quot;page-string&quot;, function (deferred) {
+        deferred.resolve(&#39;&lt;div data-role=&quot;page&quot;&gt;Hello world!&lt;/a&gt;&#39;);
+    });
+&lt;/script&gt;
+</code></pre><p>The code above has the following flow:</p>
+<ul>
+<li>&quot;page-string&quot; route is registered</li>
+<li>user is navigated to &quot;page-string&quot;</li>
+<li>callback is called</li>
+<li>the page is rendered from string</li>
+</ul>
+<h2 id="loading-pages-from-templates">Loading pages from templates</h2>
+<p>Open a page defined in template.</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    var controller = tau.Controller.getInstance();
+    controller.addRoute(&quot;page-template&quot;, function (deferred) {
+        tau.template.render(&quot;templates/page-template.html&quot;, {}, function (status, data) {
+            if (status.success) {
+                deferred.resolve(data);
+            } else {
+                deferred.reject();
+            }
+        });
+    });
+&lt;/script&gt;
+</code></pre><p>The code above has the following flow:</p>
+<ul>
+<li>&quot;page-template&quot; route is registered</li>
+<li>user is navigated to &quot;page-template&quot;</li>
+<li>template is downloaded by <code>tau.template.render</code></li>
+<li>template is loaded</li>
+<li>data to router is passed by template</li>
+<li>template is rendered if the data was retrieved</li>
+<li>if not then the router will stop the action and page from template will not be loaded. This is done by <code>deferred.reject</code> method</li>
+</ul>
+<p>TAU has template mechanism that supports multiple view based on which device you are working.
+You can define multiple views of one template:</p>
+<p>Files in MyApplication/src/templates:</p>
+<ul>
+<li>page-template.html <em>file with default template</em></li>
+<li>page-template.mobile.html <em>file with template for mobile profile</em></li>
+<li>page-template.tv.html <em>file with template for TV profile</em></li>
+<li>page-template.wearable.html <em>file with template for wearable profile</em></li>
+</ul>
+<p>Open a page defined in template.</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+    var controller = tau.Controller.getInstance();
+    controller.addRoute(&quot;page-template&quot;, function (deferred) {
+        tau.template.render(&quot;templates/page-template.html&quot;, {}, function (status, data) {
+            if (status.success) {
+                deferred.resolve(data);
+            } else {
+                deferred.reject();
+            }
+        });
+    });
+&lt;/script&gt;
+</code></pre><p>At first it tries to find template with the name of current profile in suffix. If it can&#39;t find specific view it will choose &quot;page-template.html&quot;.</p>
+
+		</article>
+
+		<footer>
+			<div>Licensed under <a href="license.html">MIT License</a> by Samsung Electronics Co., Ltd. &copy;  2014</div>
+			<div class="version">ver 0.13.46</div>
+		</footer>
+
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/google-code-prettify/prettify.js"></script>
+		<script src="js/smartmenus-0.9.7/jquery.smartmenus.min.js"></script>
+		<script src="js/taupreview.js"></script>
+		<script>
+			$(function () {
+				$("#main-menu").smartmenus({
+					showOnClick: true
+				});
+			});
+		</script>
+	</body>
+</html>

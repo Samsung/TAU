@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>TAU</title>
+		<meta charset="utf8">
+		<meta http-equiv="X-UA-Compatible" content="IE-edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-callout.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-core-css.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-clean/sm-clean.css" rel="stylesheet">
+		<link href="js/google-code-prettify/prettify.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
+	</head>
+	<body>
+		<nav>
+			<ul id="main-menu" class="sm sm-clean">
+				<li><a href="index.html">TAU Guide</a></li>
+				<li>
+					<a href="javascript:void(0);">Working with TAU</a>
+					<ul>
+						<li><a href="application_visual_layout.html">Application visual Layout</a></li>
+						<li><a href="basic_page_routing.html">Basic page routing</a></li>
+						<li><a href="introduction_to_widgets.html">Introduction to widgets</a></li>
+						<li><a href="using_jquery_with_tau.html">Using jQuery with TAU</a></li>
+						<li><a href="framework_profiles.html">Framework profiles</a></li>
+						<li><a href="how_to_create_own_widget.html">How to create own widget</a></li>
+						<li><a href="how_to_use_globalize.html">How to use globalize</a></li>
+						<li><a href="how_to_use_controller.html">How to use controller</a></li>
+						<li><a href="how_to_write_declarative.html">How to write use declarative API</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="javascript:void(0);">Custom Elements</a>
+					<ul>
+						<li><a href="customelements/feature.html">Feature overview</a></li>
+						<li><a href="customelements/custom_elements_preparation.html">Custom elements preparation</a></li>
+						<li><a href="customelements/cehelloword.html">Tutorial for Custom Elements</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Tutorials</a>
+					<ul>
+						<li><a href="tutorial_clock.html">Clock</a></li>
+						<li><a href="tutorial_notes.html">Notes</a></li>
+						<li><a href="tutorial_gallery.html">Gallery</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Migration Guide</a>
+					<ul>
+						<li><a href="migration/features_overview.html">Features overview</a></li>
+						<li><a href="migration/breaking_changes.html">Breaking changes</a></li>
+						<li><a href="migration/switching_apps_to_tau.html">Switching your Apps to TAU</a></li>
+					</ul>
+				</li>
+				<li><a href="api.html">API Docs</a></li>
+				<li><a href="https://developer.tizen.org/forums/web-application-development" target="_blank">Forum</a></li>
+			</ul>
+		</nav>
+
+		<article>
+			<h1 id="using-jquery-with-tau">Using jQuery with TAU</h1>
+<p>The TAU framework is standalone library and doesn&#39;t need other tools.
+Developers who like to use jQuery in projects can do this like before.
+The TAU has a very strong compatibility with jQuery Mobile in the scope
+of the public API but you should know that this feature is available only in
+mobile profile <a href="framework_profiles.html">see: TAU profiles</a>.</p>
+<h2 id="placed-tau-and-jquery-in-html-file">Placed TAU and jQuery in HTML file</h2>
+<p>First of all JQuery has to be placed before TAU library.</p>
+<pre><code class="lang-html">&lt;script src=&quot;../lib/tau/mobile/js/jquery.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;../lib/tau/mobile/js/tau.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>TAU framework directory contains the jQuery in version 1.11.0.
+Developer can use this jQuery package or replace by own version.</p>
+<p>Developers can use TAU widgets with the same syntax as in jQuery Mobile.</p>
+<h2 id="construct-widget">Construct widget</h2>
+<p>Example below shows how to build widget by constructor.</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot;&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;div id=&quot;sample-button&quot;&gt;button&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    $(document).on(&quot;pagebeforeshow&quot;, function (e) {
+        $(&quot;#sample-button&quot;).button();
+    });
+&lt;/script&gt;
+</code></pre>
+<div class="bs-callout bs-callout-warning"><h4></h4><p>Developer can create many widgets on the one HTML element, but only one instance of the same class.
+</p></div>
+
+
+
+<h2 id="get-value-of-widget-property">Get value of widget property</h2>
+<p>The below example shows how to get widget value using jQuery Mobile syntax.</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;main-page&quot;&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;input type=&quot;range&quot; name=&quot;slider-1&quot; id=&quot;sample-slider&quot; value=&quot;60&quot; min=&quot;0&quot; max=&quot;100&quot;&gt;
+        &lt;button id=&quot;get-value&quot;&gt;Get slider value&lt;/button&gt;
+        &lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    $(&quot;#get-value&quot;).on(&quot;vclick&quot;, function (e) {
+        var value = $(&quot;#sample-slider&quot;).slider(&quot;value&quot;);
+        $(&quot;#result&quot;).html(&quot;Value: &quot; + value);
+    });
+&lt;/script&gt;
+</code></pre>
+<h2 id="set-widget-s-value">Set widget&#39;s value</h2>
+<p>Widgets which have a value also provide method to set this value</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;main-page&quot;&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;div id=&quot;sample-progress&quot; data-role=&quot;progressbar&quot;&gt;&lt;/div&gt;
+        &lt;div data-role=&quot;button&quot; id=&quot;button&quot;&gt;Change value to 50&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    $(&quot;#button&quot;).on(&quot;vclick&quot;, function (e) {
+        $(&quot;#sample-progress&quot;).progressbar(&quot;value&quot;, 50);
+    });
+&lt;/script&gt;
+</code></pre>
+<h2 id="set-widget-option">Set widget option</h2>
+<p>Almost all widgets have an options which have impact on the widget behavior
+or appearance.</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;main-page&quot;&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;ul id=&quot;sample-list&quot; data-role=&quot;listview&quot;&gt;
+            &lt;li&gt;Apple&lt;/li&gt;
+            &lt;li&gt;Banana&lt;/li&gt;
+            &lt;li&gt;Grapes&lt;/li&gt;
+            &lt;li&gt;Melon&lt;/li&gt;
+            &lt;li&gt;Pear&lt;/li&gt;
+            &lt;li&gt;Strawberry&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;div data-role=&quot;button&quot; id=&quot;button&quot;&gt;Change option autodividers to &quot;true&quot;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    $(&quot;#button&quot;).on(&quot;vclick&quot;, function (e) {
+        $(&quot;#sample-list&quot;).listview(&quot;option&quot;, &quot;autodividers&quot;, true);
+    });
+&lt;/script&gt;
+</code></pre>
+<h2 id="call-widget-s-method">Call widget&#39;s method</h2>
+<p>Developer can call widget method in the same way as set option or value.</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;main-page&quot;&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;div data-role=&quot;gallery&quot; id=&quot;sample-gallery&quot;&gt;
+            &lt;img src=&quot;images/sample-image-01.jpg&quot; /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div data-role=&quot;footer&quot;&gt;
+        &lt;div data-role=&quot;button&quot; id=&quot;button&quot;&gt;Add images to gallery&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    $(&quot;#button&quot;).on(&quot;vclick&quot;, function (e) {
+        $(&quot;#sample-gallery&quot;).gallery(&quot;add&quot;, &quot;images/sample-image-02.jpg&quot;);
+        $(&quot;#sample-gallery&quot;).gallery(&quot;value&quot;, 1);
+        $(&quot;#sample-gallery&quot;).gallery(&quot;refresh&quot;);
+    });
+&lt;/script&gt;
+</code></pre>
+<h2 id="add-event-listener-to-the-widget">Add event listener to the widget</h2>
+<p>At the below example we can see how to add listener on widget&#39;s event.</p>
+<p>Simple button is listening on <code>vclick</code> event</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;main-page&quot;&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;button id=&quot;show-message&quot;&gt;tap the button shows a message&lt;/button&gt;
+        &lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    $(&quot;#show-message&quot;).on(&quot;vclick&quot;, function (e) {
+        $(&quot;#result&quot;).html(&quot;Message is shown&quot;);
+    });
+&lt;/script&gt;
+</code></pre>
+<p>In second example the text content will changed when the <code>popup</code> widget will
+be open.</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;main-page&quot;&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;a href=&quot;#sample-popup&quot; data-role=&quot;button&quot;&gt;open popup&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div data-role=&quot;popup&quot; id=&quot;sample-popup&quot; class=&quot;ui-popup center_title_1btn&quot;&gt;
+        &lt;div class=&quot;ui-popup-text&quot;&gt;
+            &lt;div id=&quot;message&quot;&gt;... in progress&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;ui-popup-button-bg&quot;&gt;
+            &lt;a data-role=&quot;button&quot; data-rel=&quot;back&quot; data-inline=&quot;true&quot;&gt;Back button&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    $(&quot;#sample-popup&quot;).on(&quot;popupafteropen&quot;, function (e) {
+        $(&quot;#message&quot;).html(&quot;Popup is open&quot;);
+    });
+&lt;/script&gt;
+</code></pre>
+<h2 id="what-should-you-remember-when-use-tau-with-jquery-">What should you remember when use TAU with jQuery?</h2>
+<ul>
+<li>TAU framework uses existed implementations of HTML5, EcmaScript5, DOM3, CSS4
+in today web browsers.</li>
+<li>TAU framework doesn&#39;t modify prototypes of native objects.</li>
+<li>TAU API methods doesn&#39;t take jQuery object as argument and doesn&#39;t return
+jQuery objects.</li>
+<li>Because of differences in architecture of TAU widgets and jQuery Mobile widgets
+the <code>extend()</code> method is not supported.</li>
+</ul>
+<h3 id="document-loading">Document Loading</h3>
+<p>The jQuery recommends to attach application logic to <code>ready</code> event, because
+after this the DOM is ready. In TAU framework the application logic should be
+attach to <code>pagebeforeshow</code> or <code>pageshow</code> which is started from main page.
+After <code>pagebeforeshow</code> event the developer may be sure that DOM is completed,
+widgets are built and initialized (similarly like it is in jQuery Mobile).</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;sample-page&quot;&gt;
+    &lt;div data-role=&quot;header&quot;&gt;&lt;h1&gt;Header&lt;/h1&gt;&lt;/div&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div data-role=&quot;footer&quot;&gt;Footer&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    function appStart() {
+        $(&quot;#result&quot;).html(&quot;DOM is ready and shown &quot;);
+    }
+    $(&quot;#sample-page&quot;).on(&quot;pageshow&quot;, appStart);
+&lt;/script&gt;
+</code></pre>
+<h3 id="tau-methods-do-not-allows-arguments-as-jquery-objects-">TAU methods do not allows arguments as jQuery objects.</h3>
+<p>The example of wrong implementation:</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+    var elements = tau.util.selectors.getChildrenByTag($(&quot;#sample-list&quot;), &quot;li&quot;);
+    $(&quot;#result&quot;).html(&quot;Items found: &quot; + elements.length);
+&lt;/script&gt;
+</code></pre>
+<p>In this case the argument has to be provide as HTML element,
+eg. as first element of jQuery object.</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+    var elements = tau.util.selectors.getChildrenByTag($(&quot;#sample-list&quot;).get(0), &quot;li&quot;);
+    $(&quot;#result&quot;).html(&quot;Items found: &quot; + elements.length);
+&lt;/script&gt;
+</code></pre>
+<h3 id="selectors">Selectors</h3>
+<p>The TAU API selectors in compare to <a href="http://www.w3.org/TR/css3-selectors/">DOM selectors</a>
+return always array (instance of <code>Array</code>).</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+    var list = document.getElementById(&quot;sample-list&quot;),
+        items = tau.util.selectors.getChildrenByTag(list, &quot;li&quot;);
+    $(&quot;#result&quot;).html(&quot;List length: &quot; + items.length);
+&lt;/script&gt;
+</code></pre>
+<p>For comparison the DOM selectors (querySelectorAll) returns list of elements
+as <code>NodeList</code> instance. You should know that the <code>NodeList</code> do not inherited
+from <code>Array</code> class. This means that has no methods like <code>forEach</code>, <code>filter</code> etc.</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+    var items = document.querySelectorAll(&quot;#sample-list &gt; li&quot;);
+    $(&quot;#result&quot;).html(&quot;List length: &quot; + items.length);
+&lt;/script&gt;
+</code></pre>
+<p>On the other hand the jQuery&#39;s selectors return jQuery object.</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&quot;result&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+    var items = $(&quot;#sample-list &gt; li&quot;);
+    $(&quot;#result&quot;).html(&quot;List length: &quot; + items.length);
+&lt;/script&gt;
+</code></pre>
+<h3 id="the-tau-methods-do-not-return-jquery-objects">The TAU methods do not return jQuery objects</h3>
+<p>The example of wrong implementation:</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script&gt;
+    var list = document.getElementById(&quot;sample-list&quot;),
+        items = tau.util.selectors.getChildrenByTag(list, &quot;li&quot;);
+    items.css(&quot;background-color&quot;, &quot;blue&quot;);
+&lt;/script&gt;
+</code></pre>
+<p>We can use EcmaScript5 methods to iterate result by methods like <code>filter</code>,
+<code>forEach</code> ect.</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script&gt;
+    var list = document.getElementById(&quot;sample-list&quot;),
+        items = tau.util.selectors.getChildrenByTag(list, &quot;li&quot;);
+    items.forEach(function (element) {
+        element.style.backgroundColor = &quot;blue&quot;;
+    })
+&lt;/script&gt;
+</code></pre>
+<p>Or change TAU method result to jQuery object (not recommended but possible)</p>
+<pre><code class="lang-mobile">&lt;ul id=&quot;sample-list&quot;&gt;
+    &lt;li&gt;element 1&lt;/li&gt;
+    &lt;li&gt;element 2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script&gt;
+    var list = document.getElementById(&quot;sample-list&quot;),
+        items = tau.util.selectors.getChildrenByTag(list, &quot;li&quot;);
+    $(items).css(&quot;backgroundColor&quot;, &quot;red&quot;);
+&lt;/script&gt;
+</code></pre>
+<h2 id="events">Events</h2>
+<p>Developer has several ways to handle events.</p>
+<p>The below example shows how developer can register event listener and trigger
+own event on HTML element.</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;sample-page&quot;&gt;
+    &lt;div data-role=&quot;header&quot;&gt;&lt;h1&gt;Trigger event on checkbox&lt;/h1&gt;&lt;/div&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; id=&quot;sample-checkbox&quot;&gt;
+        &lt;button id=&quot;by-jquery&quot;&gt;trigger event by jQuery&lt;/button&gt;
+        &lt;button id=&quot;by-tau&quot;&gt;trigger event by TAU&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div data-role=&quot;footer&quot;&gt;Footer&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    // trigger event by jQuery API
+    $(&quot;#by-jquery&quot;).on(&quot;click&quot;, function (e) {
+        $(&quot;#sample-checkbox&quot;).trigger(&quot;click&quot;);
+    });
+
+    // trigger event by TAU API
+    document.getElementById(&quot;by-tau&quot;).addEventListener(&quot;click&quot;, function (e) {
+        tau.event.trigger(document.getElementById(&quot;sample-checkbox&quot;), &quot;click&quot;);
+    });
+&lt;/script&gt;
+</code></pre>
+<div class="bs-callout bs-callout-warning"><h4></h4><p>The TAU triggers <code>CustomEvent</code> also on DOM tree, then the event is propagating across DOM. In case of jQuery the <code>CustomEvent</code> doesn&#39;t propagate by DOM only target element.
+</p></div>
+
+
+
+<p>Example show how to add listeners by DOM methods, TAU API methods and jQuery API
+methods.</p>
+<pre><code class="lang-mobile">&lt;div data-role=&quot;page&quot; id=&quot;sample-page&quot;&gt;
+    &lt;div data-role=&quot;header&quot;&gt;&lt;h1&gt;Header&lt;/h1&gt;&lt;/div&gt;
+    &lt;div data-role=&quot;content&quot;&gt;
+        &lt;div id=&quot;sample-element&quot;&gt; Some DIV element.&lt;/div&gt;
+        &lt;ul id=&quot;result&quot; data-role=&quot;listview&quot;&gt;&lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div data-role=&quot;footer&quot;&gt;Footer&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    var element = document.getElementById(&quot;sample-element&quot;);
+
+    // add listener
+    element.addEventListener(&quot;click&quot;, function (e) {
+        $(&quot;#result&quot;).append(&quot;&lt;li&gt;click (listener added by addEventListener)&lt;/li&gt;&quot;);
+    });
+
+    // by TAU
+    tau.event.on(element, &quot;click&quot;, function (e) {
+        $(&quot;#result&quot;).append(&quot;&lt;li&gt;click (listener added by TAU)&lt;/li&gt;&quot;);
+    });
+
+    // by jQuery
+    $(element).on(&quot;click&quot;, function (e) {
+        $(&quot;#result&quot;).append(&quot;&lt;li&gt;click (listener added by jQuery)&lt;/li&gt;&quot;);
+    });
+
+    $(&quot;#sample-page&quot;).on(&quot;pageshow&quot;, function () {
+        $(&quot;#result&quot;).append(&quot;&lt;li data-role=&#39;list-divider&#39;&gt;--- Event triggered by jQuery ---&lt;/li&gt;&quot;);
+
+        // trigger listener by jQuery
+        $(element).trigger(&quot;click&quot;);
+
+        $(&quot;#result&quot;).append(&quot;&lt;li data-role=&#39;list-divider&#39;&gt;--- Event triggered by TAU ---&lt;/li&gt;&quot;);
+
+        // trigger listener by TAU
+        tau.event.trigger(element, &quot;click&quot;);
+
+        // refresh listview widget with result;
+        $(&quot;#result&quot;).listview(&quot;refresh&quot;);
+    })
+
+&lt;/script&gt;
+</code></pre>
+<div class="bs-callout bs-callout-warning"><h4></h4><p>Developer may use above methods exchangeably in the same application but it&#39;s better decide which one to use.
+</p></div>
+
+
+		</article>
+
+		<footer>
+			<div>Licensed under <a href="license.html">MIT License</a> by Samsung Electronics Co., Ltd. &copy;  2014</div>
+			<div class="version">ver 0.13.46</div>
+		</footer>
+
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/google-code-prettify/prettify.js"></script>
+		<script src="js/smartmenus-0.9.7/jquery.smartmenus.min.js"></script>
+		<script src="js/taupreview.js"></script>
+		<script>
+			$(function () {
+				$("#main-menu").smartmenus({
+					showOnClick: true
+				});
+			});
+		</script>
+	</body>
+</html>
