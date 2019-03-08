@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>TAU</title>
+		<meta charset="utf8">
+		<meta http-equiv="X-UA-Compatible" content="IE-edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-callout.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-core-css.css" rel="stylesheet">
+		<link href="js/smartmenus-0.9.7/css/sm-clean/sm-clean.css" rel="stylesheet">
+		<link href="js/google-code-prettify/prettify.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
+	</head>
+	<body>
+		<nav>
+			<ul id="main-menu" class="sm sm-clean">
+				<li><a href="index.html">TAU Guide</a></li>
+				<li>
+					<a href="javascript:void(0);">Working with TAU</a>
+					<ul>
+						<li><a href="application_visual_layout.html">Application visual Layout</a></li>
+						<li><a href="basic_page_routing.html">Basic page routing</a></li>
+						<li><a href="introduction_to_widgets.html">Introduction to widgets</a></li>
+						<li><a href="using_jquery_with_tau.html">Using jQuery with TAU</a></li>
+						<li><a href="framework_profiles.html">Framework profiles</a></li>
+						<li><a href="how_to_create_own_widget.html">How to create own widget</a></li>
+						<li><a href="how_to_use_globalize.html">How to use globalize</a></li>
+						<li><a href="how_to_use_controller.html">How to use controller</a></li>
+						<li><a href="how_to_write_declarative.html">How to write use declarative API</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="javascript:void(0);">Custom Elements</a>
+					<ul>
+						<li><a href="customelements/feature.html">Feature overview</a></li>
+						<li><a href="customelements/custom_elements_preparation.html">Custom elements preparation</a></li>
+						<li><a href="customelements/cehelloword.html">Tutorial for Custom Elements</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Tutorials</a>
+					<ul>
+						<li><a href="tutorial_clock.html">Clock</a></li>
+						<li><a href="tutorial_notes.html">Notes</a></li>
+						<li><a href="tutorial_gallery.html">Gallery</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void(0)">Migration Guide</a>
+					<ul>
+						<li><a href="migration/features_overview.html">Features overview</a></li>
+						<li><a href="migration/breaking_changes.html">Breaking changes</a></li>
+						<li><a href="migration/switching_apps_to_tau.html">Switching your Apps to TAU</a></li>
+					</ul>
+				</li>
+				<li><a href="api.html">API Docs</a></li>
+				<li><a href="https://developer.tizen.org/forums/web-application-development" target="_blank">Forum</a></li>
+			</ul>
+		</nav>
+
+		<article>
+			<h1 id="clock">Clock</h1>
+<p>In this tutorial we will create a basic clock application for wearable devices. Our
+goals will include:</p>
+<ol>
+<li>Basic clock face</li>
+<li>Settings page</li>
+<li>Face color changing</li>
+<li>24/12 clock type change</li>
+<li>Alarms</li>
+</ol>
+<p>The purpose of this tutorial is to create a Tizen web application step by step, find
+out how this is accomplished from project startup to packaging. This lesson does not
+focus on JavaScript code itself (like code quality, performance or code patterns) as
+this exceeds the scope of the tutorial.</p>
+<h2 id="starting-the-project">Starting the project</h2>
+<p>Let&#39;s start by creating a new Tizen Web Project. To do this, open Tizen SDK IDE, and
+click <em>File-&gt;New-&gt;Tizen Web Project</em> then in the dialog window choose <em>Basic</em> template
+and type <em>Clock</em> in the project name input box.</p>
+<p>This will create a new clock project which we will implement with our code to accomplish
+defined goals.</p>
+<h2 id="how-to-start-coding">How to start coding</h2>
+<p>As this is a fairly simple application we don&#39;t need the emulator for now, we can use
+<strong>Chrome</strong> or <strong>Chromium</strong> browser to test our code while incrementally writing the application.</p>
+<div class="bs-callout bs-callout-info"><h4>Developer environment</h4><p>We have specified above browsers as examples, the key thing to remember is to use a webkit based browser since Tizen uses this engine for application runtime
+</p></div>
+
+
+<p>You can open the <code>index.html</code> file in your browser directly but the proposed solution
+is to use a simple server to host the application. You can use ngix, lighttpd, apache
+or the simplest <em>Python</em></p>
+<p>To start a simple server with python, navigate in the command prompt (terminal application)
+or your choosing to the project folder and type:</p>
+<pre><code class="lang-bash">python -m SimpleHTTPServer
+</code></pre>
+<p>And if you are using Python 3.* type:</p>
+<pre><code class="lang-bash">python -m http.server
+</code></pre>
+<p>Now start your browser and open <a href="http://localhost:8000">http://localhost:8000</a></p>
+<h2 id="creating-the-main-page">Creating the main page</h2>
+<p>We start by creating our clock face page, which will be the starting point of our whole
+application. It&#39;s really basic, just the time and AM/PM indicator. The following code
+should be placed inside of body tag.</p>
+<pre><code class="lang-wearable">&lt;div class=&quot;ui-page ui-page-active&quot; id=&quot;main&quot;&gt;
+    &lt;div class=&quot;ui-content&quot;&gt;
+        &lt;div id=&quot;time&quot;&gt;00:00&lt;/div&gt;
+        &lt;div id=&quot;ampm&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>Now we have to program our clock measure and display the time. The JavaScript code
+should be placed in separate file for more readability (and this is done in the
+finished demo application, the link is placed at the end of the tutorial) but here
+in the examples we will write it at the markup level.</p>
+<pre><code class="lang-wearable">&lt;div class=&quot;ui-page ui-page-active&quot; id=&quot;main&quot;&gt;
+    &lt;div class=&quot;ui-content&quot;&gt;
+        &lt;div id=&quot;time&quot;&gt;&lt;/div&gt;
+        &lt;div id=&quot;ampm&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    (function () {
+        &quot;use strict&quot;;
+
+        function setTime() {
+            var date = new Date(),
+                    hours = date.getHours(),
+                    minutes = date.getMinutes() &lt; 10 ? &#39;0&#39; + date.getMinutes() : date.getMinutes(),
+                    seconds = date.getSeconds() &lt; 10 ? &#39;0&#39; + date.getSeconds() : date.getSeconds(),
+                    ampm = hours &gt;= 12 ? &#39;PM&#39; : &#39;AM&#39;,
+                    time = &quot;&quot;;
+            // Displays proper format 12/24h.
+            if (localStorage.timeFormat === &#39;12&#39;) {
+                    hours = hours &gt; 12 ? hours - 12 : hours;
+                    document.getElementById(&#39;ampm&#39;).innerHTML = ampm;
+                    document.getElementById(&#39;time&#39;).className = &#39;&#39;;
+            } else {
+                    document.getElementById(&#39;ampm&#39;).innerHTML = &#39;&#39;;
+                    document.getElementById(&#39;time&#39;).className = &#39;full&#39;;
+            }
+
+            hours = hours &lt; 10 ? &#39;0&#39; + hours : hours;
+
+            if (localStorage.timeSettings === &#39;show-seconds&#39;) {
+                    time = hours + &#39;:&#39; + minutes + &#39;:&#39; + seconds;
+            } else {
+                    time = hours + &#39;:&#39; + minutes;
+            }
+            document.getElementById(&#39;time&#39;).innerHTML = time;
+            window.setTimeout(setTime, 1000);
+        }
+        setTime();
+    }());
+&lt;/script&gt;
+</code></pre>
+<p>As seen above we added support for AM/PM format by checking a localStorage value that
+we will implement in the next chapter.</p>
+<h2 id="settings-page">Settings page</h2>
+<p>So now let&#39;s do the settings page. This will be fairly simple, just two elements (three
+on Tizen devices, see alarm section) like 12/24h mode and color change. We will use
+one addition to the page widget, mainly the header, since we need to show the user where
+he is now. We will also use the <code>Listview</code> widget to list option elements.</p>
+<p>First, let&#39;s start with the markup:</p>
+<pre><code class="lang-wearable">&lt;div class=&quot;ui-page&quot; id=&quot;settings&quot;&gt;
+        &lt;header class=&quot;ui-header&quot;&gt;
+                 &lt;h2 class=&quot;ui-title&quot;&gt;Settings&lt;/h2&gt;
+
+        &lt;/header&gt;
+        &lt;div class=&quot;ui-content&quot;&gt;
+                &lt;ul class=&quot;ui-listview&quot;&gt;
+                        &lt;li class=&quot;li-has-checkbox&quot;&gt;
+                                &lt;label&gt;24h
+                                        &lt;input id=&quot;am_pm_toggle&quot; type=&quot;checkbox&quot;&gt;
+                                &lt;/label&gt;
+                        &lt;/li&gt;
+                        &lt;li&gt;&lt;a href=&quot;#color&quot;&gt;color&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+        &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>This gives us a nice list of elements. We should implement the logic time mode set.
+This is pretty straightforward, the color changing will be more fun ^_^</p>
+<pre><code class="lang-wearable">&lt;div class=&quot;ui-page&quot; id=&quot;settings&quot;&gt;
+        &lt;header class=&quot;ui-header&quot;&gt;
+             &lt;h2 class=&quot;ui-title&quot;&gt;Settings&lt;/h2&gt;
+        &lt;/header&gt;
+        &lt;div class=&quot;ui-content&quot;&gt;
+            &lt;ul class=&quot;ui-listview&quot;&gt;
+                &lt;li class=&quot;li-has-checkbox&quot;&gt;
+                    &lt;label&gt;24h
+                        &lt;input id=&quot;am_pm_toggle&quot; type=&quot;checkbox&quot;&gt;
+                        &lt;/label&gt;
+                &lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#color&quot;&gt;color&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    (function () {
+        &quot;use strict&quot;;
+        var am_pm = document.querySelector(&quot;#am_pm_toggle&quot;);
+        function getAndSetAmPm() {
+            if (am_pm.checked === true) {
+                    localStorage.timeFormat = &#39;24&#39;;
+                } else {
+                    localStorage.timeFormat = &#39;12&#39;;
+                }
+        }
+        if (localStorage.timeFormat === null) {
+            localStorage.timeFormat = &#39;12&#39;;
+        }
+        am_pm.addEventListener(&#39;change&#39;, function () {
+            getAndSetAmPm();
+        });
+    }());
+&lt;/script&gt;
+</code></pre>
+<p>Now we should combine this with previous code and add some page changing ability, let&#39;s
+make the clock face clickable and it should open the settings page.</p>
+<pre><code class="lang-wearable">    &lt;div class=&quot;ui-page ui-page-active&quot; id=&quot;main&quot;&gt;
+        &lt;div class=&quot;ui-content&quot;&gt;
+            &lt;div id=&quot;time&quot;&gt;&lt;/div&gt;
+            &lt;div id=&quot;ampm&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;ui-page&quot; id=&quot;settings&quot;&gt;
+            &lt;header class=&quot;ui-header&quot;&gt;
+                 &lt;h2 class=&quot;ui-title&quot;&gt;Settings&lt;/h2&gt;
+            &lt;/header&gt;
+            &lt;div class=&quot;ui-content&quot;&gt;
+                &lt;ul class=&quot;ui-listview&quot;&gt;
+                    &lt;li class=&quot;li-has-checkbox&quot;&gt;
+                        &lt;label&gt;24h
+                            &lt;input id=&quot;am_pm_toggle&quot; type=&quot;checkbox&quot;&gt;
+                            &lt;/label&gt;
+                    &lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;#color&quot;&gt;color&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        (function () {
+            &quot;use strict&quot;;
+
+            function setTime() {
+                var date = new Date(),
+                    hours = date.getHours(),
+                    minutes = date.getMinutes() &lt; 10 ? &#39;0&#39; + date.getMinutes() : date.getMinutes(),
+                    seconds = date.getSeconds() &lt; 10 ? &#39;0&#39; + date.getSeconds() : date.getSeconds(),
+                    ampm = hours &gt;= 12 ? &#39;PM&#39; : &#39;AM&#39;,
+                    time = &quot;&quot;;
+                // Displays proper format 12/24h.
+                if (localStorage.timeFormat === &#39;12&#39;) {
+                    hours = hours &gt; 12 ? hours - 12 : hours;
+                    document.getElementById(&#39;ampm&#39;).innerHTML = ampm;
+                    document.getElementById(&#39;time&#39;).className = &#39;&#39;;
+                } else {
+                    document.getElementById(&#39;ampm&#39;).innerHTML = &#39;&#39;;
+                    document.getElementById(&#39;time&#39;).className = &#39;full&#39;;
+                }
+
+                hours = hours &lt; 10 ? &#39;0&#39; + hours : hours;
+
+                if (localStorage.timeSettings === &#39;show-seconds&#39;) {
+                    time = hours + &#39;:&#39; + minutes + &#39;:&#39; + seconds;
+                } else {
+                    time = hours + &#39;:&#39; + minutes;
+                }
+                document.getElementById(&#39;time&#39;).innerHTML = time;
+                window.setTimeout(setTime, 1000);
+            }
+
+            setTime();
+
+            var am_pm = document.getElementById(&#39;am_pm_toggle&#39;);
+            function getAndSetAmPm() {
+                if (am_pm.checked === true) {
+                        localStorage.timeFormat = &#39;24&#39;;
+                    } else {
+                        localStorage.timeFormat = &#39;12&#39;;
+                    }
+                    setTime();
+            }
+            if (localStorage.timeFormat === null) {
+                localStorage.timeFormat = &#39;12&#39;;
+            }
+            am_pm.addEventListener(&#39;change&#39;, function () {
+                getAndSetAmPm();
+            });
+
+            var watchface = document.getElementById(&quot;main&quot;);
+            watchface.addEventListener(&#39;vclick&#39;, function (ev) {
+                tau.changePage(&#39;#settings&#39;);
+            });
+        }());
+    &lt;/script&gt;
+</code></pre>
+<h2 id="color-picker">Color picker</h2>
+<div class="bs-callout bs-callout-warning"><h4>Big examples</h4><p>As the code is growing we will restrain ourselves from posting full examples, just functionalities that we want to emphasis. The full code can be viewed in the demo app at the tutorial end
+</p></div>
+
+
+<p>The color picker is failry simple, as the main UI element is implemented by the browser
+so we only need to get it&#39;s value.</p>
+<pre><code class="lang-wearable">&lt;div class=&quot;ui-page&quot; id=&quot;color&quot;&gt;
+    &lt;header class=&quot;ui-header&quot;&gt;
+         &lt;h2 class=&quot;ui-title&quot;&gt;Clock Color&lt;/h2&gt;
+    &lt;/header&gt;
+    &lt;div class=&quot;ui-content&quot;&gt;
+        Please choose color: &lt;input type=&quot;color&quot; id=&quot;cpicker&quot; /&gt;
+    &lt;/div&gt;
+    &lt;footer class=&quot;ui-footer&quot;&gt;
+        &lt;a href=&quot;#&quot; class=&quot;ui-btn&quot; id=&quot;color_save&quot;&gt;Save&lt;/a&gt;
+    &lt;/footer&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    (function () {
+        &quot;use strict&quot;;
+        var color_picker = document.querySelector(&quot;#cpicker&quot;),
+            color_save = document.querySelector(&quot;#color_save&quot;),
+            tempColor = &quot;#fff&quot;;
+
+        color_save.addEventListener(&#39;vclick&#39;, function () {
+            tau.changePage(&#39;#main&#39;);
+            localStorage.timeColor = tempColor;
+        });
+
+        color_range.addEventListener(&#39;change&#39;, function () {
+            tempColor = this.value;
+        });
+
+        if (localStorage.timeColor === null) {
+            localStorage.timeColor = &quot;#fff&quot;;
+        }
+    }());
+&lt;/script&gt;
+</code></pre>
+<h2 id="alarms">Alarms</h2>
+<p>To get our alarm working we need to use Tizen Alaram API. We could also save our alarm
+event locally and poll the time using setInterval, upon closing, we would lose the alarm
+information (meaning, the application would have to run always for alarm function to work).
+Tizen Alarm API starts the application when the alarm occurs.</p>
+<p>For the API to work we first need to get the appId from current application:</p>
+<pre><code class="lang-javascript">var appId = tizen.application.getCurrentApplication().appInfo.id;
+</code></pre>
+<p>To set an alarm event we need to create a new <code>ApplicationControl</code> object, and specify
+the operation, operation uri and it&#39;s mime type</p>
+<pre><code class="lang-javascript">var appControl = new tizen.ApplicationControl(
+    &#39;http://tizen.org/appcontrol/operation/main&#39;,
+    &#39;sounds/my_alarm_sound.mp3&#39;,
+    &#39;audio/*&#39;,
+    null);
+</code></pre>
+<p>We obviously need to create the time object of the desired startup time and pass it
+to <code>Tizen Alarm API</code> with the <code>appControl</code> and <code>appId</code> variables. Event adding can trigger
+<code>WebAPIException</code> so it&#39;s best to enclose the code with a try-catch statement. Let&#39;s
+make the alarm run on 2020-05-04 01:00:00 which will be the Star Wars day in 2020 ^_^</p>
+<pre><code class="lang-javascript">var appId = tizen.application.getCurrentApplication().appInfo.id,
+appControl = new tizen.ApplicationControl(
+    &#39;http://tizen.org/appcontrol/operation/main&#39;,
+    &#39;sounds/my_alarm_sound.mp3&#39;,
+    &#39;audio/*&#39;,
+    null),
+alarmTime = new Date(2012, 5, 4, 1, 0, 0);
+
+try {
+    tizen.alarm.add(alarmTime, appId, appControl);
+} catch (exception) {
+    // handle error
+}
+</code></pre>
+<p>OK, so the alarm is set, what now? Well now we have to handle the startup of our
+application when the event occurs. Tizen will execute our clock app on that day,
+we just need to get those parameters we have just set.</p>
+<p>First of lets add and <code>audio</code> element to our markup, does not matter where, just inside
+the body.</p>
+<pre><code class="lang-html">&lt;audio id=&quot;soundPlayer&quot;&gt;&lt;/audio&gt;
+</code></pre>
+<p>OK, we have got that, now let&#39;s cover the startup. We need to get the application id,
+and the requested <code>ApplicationControl</code> object thats bound to the event, from that we
+will extract the uri and set it as the src for the <code>audio</code> element.</p>
+<pre><code class="lang-javascript">var appId = tizen.application.getCurrentApplication().appInfo.id,
+    requestedControl = tizen.application.getCurrentApplication().getRequestedAppControl(),
+    audioElement = document.querySelector(&quot;audio&quot;);
+
+if (requestedControl.uri !== null) {
+    audioElement.src = requestedControl.uri;
+    audioElement.play();
+}
+</code></pre>
+<p>And thats it, our app will start and happily play the sound we have set to play on
+given date.</p>
+<p>But to a user that&#39;s not obvious, we need to add something that will pop out to the
+user, so let&#39;s use the simplest, a <code>Popup</code> widget. The markup is fairly simple:</p>
+<pre><code class="lang-html">&lt;div id=&quot;alarmPopup&quot; class=&quot;ui-popup&quot;&gt;
+    &lt;div class=&quot;ui-popup-header&quot;&gt;Wake Up!&lt;/div&gt;
+    &lt;div class=&quot;ui-popup-content&quot;&gt;
+        That&#39;s an alarm, wake up!
+    &lt;/div&gt;
+    &lt;div class=&quot;ui-popup-footer&quot;&gt;
+        &lt;button id=&quot;alarmPopupClose&quot; class=&quot;ui-btn&quot;&gt;Close&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>Let&#39;s enhance our alarm starting code by adding close functionality and opening the
+popup on start.</p>
+<pre><code class="lang-javascript">var appId = tizen.application.getCurrentApplication().appInfo.id,
+    requestedControl = tizen.application.getCurrentApplication().getRequestedAppControl(),
+    audioElement = document.querySelector(&quot;audio&quot;);
+
+if (requestedControl.uri !== null) {
+    audioElement.src = requestedControl.uri;
+    tau.openPopup(&quot;#alarmPopup&quot;);
+    audioElement.play();
+}
+
+document.querySelector(&quot;alarmPopupClose&quot;, function () {
+    tau.closePopup(&quot;#alaramPopup&quot;);
+    audioElement.pause();
+    tizen.alarm.removeAll();
+});
+</code></pre>
+<h2 id="wrap-up">Wrap up</h2>
+<p>OK, so now we have to put it all together. Link to the finished demo application is
+added at bottom. You can check it out in the browser, but bare in mind that alarms
+wont work since there is no Tizen API in a normal browser. Still the app can be downloaded
+and imported to Tizen SDK IDE and deployed to a device or emulator to checkout.</p>
+<p><a href="tutorial_apps/clock/">Clock Application DEMO</a></p>
+<p><a href="tutorial_apps/clock_application.zip">Clock Application DEMO Project ZIP archive</a></p>
+
+		</article>
+
+		<footer>
+			<div>Licensed under <a href="license.html">MIT License</a> by Samsung Electronics Co., Ltd. &copy;  2014</div>
+			<div class="version">ver 0.13.46</div>
+		</footer>
+
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/google-code-prettify/prettify.js"></script>
+		<script src="js/smartmenus-0.9.7/jquery.smartmenus.min.js"></script>
+		<script src="js/taupreview.js"></script>
+		<script>
+			$(function () {
+				$("#main-menu").smartmenus({
+					showOnClick: true
+				});
+			});
+		</script>
+	</body>
+</html>
