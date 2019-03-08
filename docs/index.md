@@ -29,7 +29,7 @@ When using TAU you will get many benefits usable in your code.
 
 ## Simple example
 
-```mobile-wearable-tv
+```html
 <div class="ui-page ui-page-active">
   <div class="ui-header">MyApplication</div>
   <div class="ui-content">Hello world</div>
