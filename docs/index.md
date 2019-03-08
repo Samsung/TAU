@@ -47,15 +47,18 @@ When using TAU you will get many benefits usable in your code.
 </script>
 ```
 
-**warning**
+**Warning**
+
 _Examples in browsers_
+
 Some of the functionality shown in the examples may not work properly in a desktop browser, to fully get the TAU experience use a real Tizen device or Tizen emulator from the Tizen SDK.
 
 The example above shows a simple application, with a header and a button in the footer
 that closes the application. Click on the preview to check out how it works on different
 framework profiles.
 
-_Example for profiles_
+_Examples for profiles_
+
 TAU Profiles (mobile, TV, wearable) have differences, so some of the examples will not have preview buttons for specific profiles.
 
 ## Where to get it
