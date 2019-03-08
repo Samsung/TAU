@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, user-scalable=no"/>
+	<title>Tizen micro UI - Tab</title>
+	<link rel="stylesheet"  href="../../../dist/themes/default/tau.css">
+</head>
+
+<body>
+<div class="ui-page">
+	<header class="ui-header">
+		<h2 class="ui-title">Popup</h2>
+	</header>
+	<div class="ui-content content-padding">
+		<h3>Buttons</h3>
+		<div class="ui-grid-row">
+			<a href="#innerPopup" class="ui-btn" data-rel="popup">Inner popup</a>
+			<a href="external.html" class="ui-btn" data-rel="popup">External popup</a>
+			<a href="external-page.html" class="ui-btn">Go external Page</a>
+		</div>
+	</div>
+
+	<div id="innerPopup" class="ui-popup">
+		<div class="ui-popup-header">Popup1</div>
+		<div class="ui-popup-content">
+			Turning on Power
+			saving mode will
+			limit the maximum
+			per
+		</div>
+		<div class="ui-popup-footer">
+			<a href="#innerPopup2" class="ui-btn" data-rel="popup">Open Pop2</a>
+		</div>
+	</div>
+
+	<div id="innerPopup2" class="ui-popup">
+		<div class="ui-popup-header">Popup2</div>
+		<div class="ui-popup-content">
+			Turning on Power
+			saving mode will
+			limit the maximum
+			per
+		</div>
+		<div class="ui-popup-footer">
+			<a href="external-page.html" class="ui-btn">Go external Page</a>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="../../../dist/js/tau.js"></script>
+</body>
+</html>

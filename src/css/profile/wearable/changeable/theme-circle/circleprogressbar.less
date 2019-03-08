@@ -1,0 +1,69 @@
+/***************************************************************************
+                  circle progress bar
+***************************************************************************/
+.ui-progressbar {
+	.ui-progressbar-value {
+		.ui-progressbar-value-left {
+			border: 8 * @unit_base solid @color_circleprogressbar_value;
+		}
+
+		.ui-progressbar-value-right {
+			border: 8 * @unit_base solid @color_circleprogressbar_value;
+		}
+	}
+
+	.ui-progressbar-bg {
+		border: 8 * @unit_base solid @color_circleprogressbar_bg;
+	}
+
+	&.ui-progressbar-small {
+		.ui-progressbar-value {
+			.ui-progressbar-value-left,
+			.ui-progressbar-value-right {
+				border: 4 * @unit_base solid @color_circleprogressbar_value;
+			}
+		}
+
+		.ui-progressbar-bg {
+			border: 4 * @unit_base solid @color_circleprogressbar_bg;
+		}
+	}
+
+	&-end-point {
+		position: absolute;
+		z-index: 1000;
+		width: 20px;
+		height: 20px;
+		background: rgba(55,161,237,1);
+		border-radius: 50%;
+		left: 180px;
+		top: 180px;
+		transform: translate(-50%, -50%);
+		transform-origin: center center;
+		display: none;
+		&::after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: rgba(55, 161, 237, 0.5);
+			left: 0;
+			right: 0;
+			border-radius: 50%;
+			transform: scale(1);
+			transition-property: transform;
+			transition-duration: .25s;
+			transition-timing-function: ease-out;
+		}
+
+		&-active {
+			display: block;
+		}
+
+		&-pressed::after {
+			content: "";
+			transform: scale(2);
+		}
+	}
+}
+

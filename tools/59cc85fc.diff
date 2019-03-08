@@ -1,0 +1,41 @@
+From 59cc85fcd40f9423a0c8b1f0fbf085212b13b55a Mon Sep 17 00:00:00 2001
+From: Krzysztof Antoszek <k.antoszek@samsung.com>
+Date: Tue, 14 Oct 2014 10:53:03 +0200
+Subject: [PATCH] [FIX] Router: tv XHR crash temporary fix
+
+Change-Id: I0ef1ef441864b29623345f792c9edccda487fc84
+Signed-off-by: Krzysztof Antoszek <k.antoszek@samsung.com>
+---
+
+diff --git a/tau/src/js/core/router/Router.js b/tau/src/js/core/router/Router.js
+index b9df9f2..7881691 100644
+--- a/tau/src/js/core/router/Router.js
++++ b/tau/src/js/core/router/Router.js
+@@ -686,15 +686,22 @@
+ 
+ 				// Load the new content.
+ 				request = new XMLHttpRequest();
+-				request.responseType = "document";
+-				request.overrideMimeType("text/html");
++				// @NOTE: quick fix for tv profile, document causes crash
++				//request.responseType = "document";
++				//request.overrideMimeType("text/html");
++				request.responseType = "text";
+ 				request.open("GET", absUrl);
+ 				request.addEventListener("error", self._loadError.bind(self, absUrl, options, deferred));
+ 				request.addEventListener("load", function (event) {
+-					var request = event.target;
++					var request = event.target,
++						node;
+ 					if (request.readyState === 4) {
+-						if (request.status === 200 || (request.status === 0 && request.responseXML)) {
+-							self._loadSuccess(absUrl, options, rule, deferred, request.responseXML);
++						//if (request.status === 200 || (request.status === 0 && request.responseXML)) {
++						if (request.status === 200 || (request.status === 0 && request.responseText)) {
++							node = document.createElement("div");
++							node.innerHTML = request.responseText;
++							//self._loadSuccess(absUrl, options, rule, deferred, request.responseXML);
++							self._loadSuccess(absUrl, options, rule, deferred, node);
+ 						} else {
+ 							self._loadError(absUrl, options, deferred);
+ 						}

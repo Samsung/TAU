@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+</head>
+<body>
+
+<!-- Events should be occured in the test nodes as follows:
+all_events, div_event, touch_move:
+	Tap: touchstart, touchend, mouseover, mousemove, mousedown, mouseup, click
+	Pan: touchstart, touchmove, touchend
+	Long Tap: contextmenu is shown except div_event
+touch_start:
+	Tap: touchstart, touchend
+	Pan: touchstart, touchmove, touchend
+	Long Tap: contextmenu is not shown
+touch_end:
+	Tap: touchstart, touchend
+	Pan: touchstart, touchmove touchend
+	Long Tap: contextmenu is shown
+vclick_test:
+	Tap: touchstart, touchend, vclick, mouseover, mousemove, mousedown, mouseup
+	Pan: touchstart, touchmove, touchend
+	Long Tap: contextmenu is shown
+
+Android chrome browser and iOS's fast Tap:
+the click is not occured when Touch End sets prevent default.
+
+iOS's slow Tap and Android S3 browser:
+the click is occured even though Touch End sets prevent default. is it a bug?
+
+Android chrome browser:
+Does not pass the all touch event if touchstart and touchmove handler is not exist. strange, is it for performance??
+
+iOS:
+Pass the click event if webpage is not scrolled after Pan. click is not passed in the Android chrome browser. we also do not pass the click in that case.
+-->
+<font style="font-size: 35px; color: #0;">TEXT SELECTION</font> <br>
+<a id="all_events" href='#' style="font-size: 35px; color: #0;">ALL EVENTS</a> <br>
+<div id="div_event" style="background-color:#00FF00; width:300px; height:50px;"></div> <br>
+<a id="touch_start" href="#" style="font-size: 25px; color: #0;">CONSUME TOUCH START</a> <br>
+<a id="touch_move" href="#" style="font-size: 25px; color: #0;">CONSUME TOUCH MOVE</a> <br>
+<a id="touch_end" href="#" style="font-size: 25px; color: #0;">CONSUME TOUCH END</a> <br>
+<span id="vclick">
+<a id="vclick_test" href="#" style="font-size: 25px; color: #0;">CONSUME VCLICK</a> <br>
+</span>
+<button id="reset">RESET LOGS</button>
+<div id="log" style="font-size: 15px; color: #0;"></div>
+<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
+<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
+
+<script>
+$(document).ready( function () {
+$('#all_events').bind("touchstart touchmove touchend mousedown mouseover mousemove mouseup mouseout click scroll contextmenu", eventHandler);
+$('#div_event').bind("touchstart touchmove touchend mousedown mouseover mousemove mouseup mouseout click scroll contextmenu", eventHandler);
+$('#touch_start').bind("touchstart touchmove touchend mousedown mouseover mousemove mouseup mouseout click scroll contextmenu", touchStartHandler);
+$('#touch_move').bind("touchstart touchmove touchend mousedown mouseover mousemove mouseup mouseout click scroll contextmenu", touchMoveHandler);
+$('#touch_end').bind("touchstart touchmove touchend mousedown mouseover mousemove mouseup mouseout click scroll contextmenu", touchEndHandler);
+$('#vclick_test').bind("vclick touchstart touchmove touchend mousedown mouseover mousemove mouseup mouseout click scroll contextmenu", vclickHandler);
+$('#reset').bind("click", resetHandler);
+
+var log = "";
+
+function eventHandler(e) {
+	log = log + " " + e.target.id + ":" + e.type + "<br>";
+	document.getElementById("log").innerHTML = log;
+}
+
+function resetHandler(e) {
+	log = "";
+	document.getElementById("log").innerHTML = log;
+}
+
+function touchStartHandler(e) {
+	log = log + " " + e.target.id + ":" + e.type + "<br>";
+	document.getElementById("log").innerHTML = log;
+	if (e.type == 'touchstart') {
+		return false;
+	}
+}
+
+function touchMoveHandler(e) {
+	log = log + " " + e.target.id + ":" + e.type + "<br>";
+	document.getElementById("log").innerHTML = log;
+	if (e.type == 'touchmove') {
+		return false;
+	}
+}
+
+function touchEndHandler(e) {
+	log = log + " " + e.target.id + ":" + e.type + "<br>";
+	document.getElementById("log").innerHTML = log;
+	if (e.type == 'touchend') {
+		return false;
+	}
+}
+
+function vclickHandler(e) {
+	log = log + " " + e.target.id + ":" + e.type + "<br>";
+	document.getElementById("log").innerHTML = log;
+	if (e.type == 'vclick') {
+		var spanNode = $('#vclick');
+		spanNode.empty();
+		spanNode.append("<input id='click_test'>");
+		//spanNode.append("<a id='click_test' href='#' style='font-size: 25px; color: #0;'>CONSUME CLICK</a>");
+		$('#click_test').bind("vclick touchstart touchmove touchend mousedown mouseover mousemove mouseup mouseout click scroll contextmenu", clickHandler);
+
+		return false;
+	}
+}
+
+function clickHandler(e) {
+	log = log + " " + e.target.id + ":" + e.type + "<br>";
+	if (e.type == 'mousedown' || e.type == 'mouseup') {
+		log = log + "[x, y] = [" + e.pageX + ", " + e.pageY + "]<br>";
+	}
+	document.getElementById("log").innerHTML = log;
+	if (e.type == 'click') {
+		return false;
+	}
+}
+});
+</script>
+
+</body>
+</html>

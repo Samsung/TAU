@@ -1,0 +1,4 @@
+PLATFORM_VER:$(platformVer)
+ARCHITECTURE:i386
+TOOLCHAIN:$(tc)
+TYPE:$(projectType)

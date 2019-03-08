@@ -1,0 +1,39 @@
+#!/bin/sh
+CURRENT_WORKSPACE_PATH=`pwd`
+HOME_PATH=`test -h $0 && dirname $(readlink $0) || dirname $0`
+LIB_PATH=$HOME_PATH/../lib-ncli
+
+CONFIG_PATH=$HOME_PATH/../conf-ncli
+LOG_CONF_FILE=log4j-progress.xml
+LOG_OPT="-Dlog4j.configuration=${LOG_CONF_FILE}"
+
+LIBS=`find $LIB_PATH -maxdepth 1`
+LIB=""
+for LIB in $LIBS; do
+	CLASS_PATH=$CLASS_PATH:$LIB
+done
+
+CLASS_PATH=$CONFIG_PATH:$CLASS_PATH
+
+escapeSpace() {
+	echo $(printf "'%s'" "$ARG" )
+}
+
+for ARG in "$@" ; do
+	ARGS="$ARGS $(escapeSpace $ARG)"
+done
+
+#Check if sub-command is entered - first argument MUST be sub-command!
+#If there is no sub-command , do not set --current-workspace-path option.
+# @Added by Harry Hyeongseok Heo
+# 2013.11.14
+if [ ${#ARGS} -gt 0 ]
+then ARGS="$ARGS --current-workspace-path $CURRENT_WORKSPACE_PATH"
+else ARGS=""
+fi
+
+MAIN=org.tizen.ncli.ide.shell.Main
+
+EXEC="java $LOG_OPT -Djava.library.path=$LIB_PATH/spawner -cp $CLASS_PATH $MAIN $ARGS"
+
+eval "$EXEC"

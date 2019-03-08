@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Router - issues</title>
+		<details>Issues reported by third party developers</details>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../../../../libs/qunit-1.11.0.css">
+		<link rel="stylesheet" href="../../../../libs/dist/theme/default/tau.css">
+		<script src="../../../../libs/qunit-1.11.0.js"
+				type="text/javascript"></script>
+		<script type="text/javascript" src="../../../../libs/support.js"></script>
+		<script type="text/javascript" src="../../../../karma/tests/helpers.js"></script>
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		<script>
+			var tauConfig = {
+				"autorun": false,
+				"pageContainer": document.getElementById("qunit-fixture")
+			};
+		</script>
+		<script src="../../../../libs/dist/js/tau.js"
+				type="text/javascript"></script>
+		<script type="text/javascript">
+			tau.setConfig("pageTransition", "none");
+			tau.setConfig("popupTransition", "none");
+		</script>
+		<script src="Router-issues.js"></script>
+	</body>
+</html>

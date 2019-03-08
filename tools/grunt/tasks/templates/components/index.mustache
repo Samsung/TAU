@@ -1,0 +1,29 @@
+{
+    "name": "tau-component-packages-generated",
+    "main": "main",
+    "version": "1.0.0",
+    "description": "TAU Components",
+    "keywords": [],
+    "repository": "http://suprem.sec.samsung.net/gerrit/owe/fwk",
+    "license": "MIT",
+    "engines": {
+        "atom": ">=1.0.0 <2.0.0"
+    },
+    "dependencies": {
+        "jquery": "latest",
+        "less": "^2.5.3",
+        "mustache": "^2.2.1"
+    },
+    "consumedServices": {
+        "closet": {
+            "versions": {
+                "1.0.0": "consumeCloset"
+            }
+        }
+    },
+    "components": { {{#table.rows}}
+        "{{shortName}}": "components/{{shortName}}"{{^last}},{{/last}}{{/table.rows}}
+    },
+    "appTemplate": {},
+    "pageTemplate" : {}
+}

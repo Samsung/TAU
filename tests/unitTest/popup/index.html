@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Gear UI Popup Test Suite</title>
+
+	<link rel="stylesheet"  href="../../../dist/themes/default/tau.css">
+	<link rel="stylesheet" href="../lib/qunit-1.13.0.css" />
+	<link rel="stylesheet" href="../test.css" />
+	<script type="text/javascript" src="../../../dist/js/tau.js"></script>
+	<script type="text/javascript" src="../lib/jquery-2.0.3.js"></script>
+	<script type="text/javascript" src="../lib/qunit-1.13.0.js"></script>
+	<script type="text/javascript" src="../helper.js"></script>
+	<script type="text/javascript" src="tests.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+
+<div id="main" class="ui-page">
+
+	<div id="popup" class="ui-popup">
+		<div class="ui-popup-content">
+		</div>
+	</div>
+
+	<div id="layout-test-header-footer" class="ui-popup">
+		<div class="ui-popup-header">Test Popup</div>
+		<div class="ui-popup-content">
+		</div>
+		<div class="ui-popup-footer">
+			<button class="ui-btn">Cancel</button>
+		</div>
+	</div>
+
+	<div id="layout-test-header" class="ui-popup">
+		<div class="ui-popup-header">Test Popup</div>
+		<div class="ui-popup-content"></div>
+	</div>
+
+	<div id="layout-test-footer" class="ui-popup">
+		<div class="ui-popup-content"></div>
+		<div class="ui-popup-footer">
+			<button class="ui-btn">Cancel</button>
+		</div>
+	</div>
+
+	<div id="layout-test-content-padding" class="ui-popup">
+		<div class="ui-popup-header">Test Popup</div>
+		<div class="ui-popup-content" style="padding:10px;"></div>
+		<div class="ui-popup-footer">
+			<button class="ui-btn">Cancel</button>
+		</div>
+	</div>
+
+	<div id="has-external-link-popup" class="ui-popup">
+		<div class="ui-popup-content">
+			<a href="externalPage.html">externalPage</a>
+		</div>
+	</div>
+
+	<div id="has-popup-link-popup" class="ui-popup">
+		<div class="ui-popup-content">
+			<a href="#another-popup" data-rel="popup">another popup</a>
+		</div>
+	</div>
+
+	<div id="another-popup" class="ui-popup">
+		<div class="ui-popup-content"></div>
+	</div>
+
+</div>
+
+<div id="internal-page" class="ui-page"></div>
+
+</body>
+</html>

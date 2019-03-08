@@ -1,0 +1,805 @@
+{
+  "Loader": {
+    "name": "Loader",
+    "methods": [
+      "show",
+      "hide",
+      "resetHtml",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='loader'], .ui-loader",
+    "selectors": [
+      "[data-role='loader']",
+      ".ui-loader:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "Scroller": {
+    "name": "Scroller",
+    "methods": [
+      "scrollTo",
+      "cancel",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": ".scroller",
+    "selectors": [".scroller:not([data-role='none'])"],
+    "namespace": "",
+    "widgetNameToLowercase": true
+  },
+  "Page": {
+    "name": "Page",
+    "methods": [
+      "focus",
+      "blur",
+      "setActive",
+      "keepNativeSelector",
+      "setContainerBackground",
+      "removeContainerBackground",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='page'], .ui-page",
+    "selectors": [
+      "[data-role='page']",
+      ".ui-page:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "page": {
+    "name": "page",
+    "methods": [
+      "layout",
+      "focus",
+      "blur",
+      "setActive",
+      "isActive",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "",
+    "selectors": [],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "Tab": {
+    "name": "Tab",
+    "methods": [
+      "setActive",
+      "getActive",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "",
+    "selectors": [],
+    "namespace": "tizen",
+    "widgetNameToLowercase": true
+  },
+  "TabIndicator": {
+    "name": "TabIndicator",
+    "methods": [
+      "setActive",
+      "getActive",
+      "setSize",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": ".ui-tab",
+    "selectors": [".ui-tab:not([data-role='none'])"],
+    "namespace": "",
+    "widgetNameToLowercase": true
+  },
+  "Button": {
+    "name": "Button",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='button'], .ui-btn",
+    "selectors": [
+      "[data-role='button']",
+      ".ui-btn:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "FormButton": {
+	"name": "FormButton",
+	"methods": [
+	  "destroy",
+	  "disable",
+	  "enable",
+	  "option",
+	  "refresh",
+	  "value"
+	],
+	"selector": "button",
+	"selectors": [
+	  "button:not([data-role='none'])"
+	],
+	"namespace": "core",
+	"widgetNameToLowercase": true
+  },
+  "InputButton": {
+	"name": "InputButton",
+	"methods": [
+	  "destroy",
+	  "disable",
+	  "enable",
+	  "option",
+	  "refresh",
+	  "value"
+	],
+	"selector": "input[type='button']",
+	"selectors": [
+	  "input[type='button']:not([data-role='none'])"
+	],
+	"namespace": "core",
+	"widgetNameToLowercase": true
+  },
+  "Checkbox": {
+	"name": "Checkbox",
+	"methods": [
+	  "destroy",
+	  "disable",
+	  "enable",
+	  "option",
+	  "refresh",
+	  "value"
+	],
+	"selector": "input[type='checkbox']:not(.ui-slider-switch-input):not([data-role='toggleswitch']):not(.ui-toggleswitch):not(.ui-toggle-switch),input.ui-checkbox",
+	"selectors": [
+	  "input[type='checkbox']:not(.ui-slider-switch-input):not([data-role='toggleswitch']):not(.ui-toggleswitch):not(.ui-toggle-switch)",
+	  "input.ui-checkbox:not([data-role='none'])"
+	],
+	"namespace": "core",
+	"widgetNameToLowercase": true
+  },
+  "Radio": {
+	"name": "Radio",
+	"methods": [
+	  "destroy",
+	  "disable",
+	  "enable",
+	  "option",
+	  "refresh",
+	  "value"
+	],
+	"selector": "input[type='radio'], input.ui-radio",
+	"selectors": [
+	  "input[type='radio']",
+	  "input.ui-radio:not([data-role='none'])"
+	],
+	"namespace": "core",
+	"widgetNameToLowercase": true
+  },
+  "Listview": {
+    "name": "Listview",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='listview'], .ui-listview",
+    "selectors": [
+      "[data-role='listview']",
+      ".ui-listview:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "Panel": {
+    "name": "Panel",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='panel'], .ui-panel",
+    "selectors": [
+      "[data-role='panel']",
+      ".ui-panel:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "PanelChanger": {
+    "name": "PanelChanger",
+    "methods": [
+      "changePanel",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='panel-changer'], .ui-panel-changer",
+    "selectors": [
+      "[data-role='panel-changer']",
+      ".ui-panel-changer:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "PageIndicator": {
+    "name": "PageIndicator",
+    "methods": [
+      "setActive",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='page-indicator'], .ui-page-indicator",
+    "selectors": [
+      "[data-role='page-indicator']",
+      ".ui-page-indicator:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "Slider": {
+    "name": "Slider",
+    "methods": [
+      "value",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "input[data-role='slider'], input[type='range'], input[data-type='range']",
+    "selectors": [
+      "input[data-role='slider']",
+      "input[type='range']:not([data-role='none'])",
+      "input[data-type='range']:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "SearchInput": {
+    "name": "SearchInput",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "input[type='search'], .ui-search-input",
+    "selectors": [
+      "input[type='search']:not([data-role='none'])",
+      ".ui-search-input:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "Progress": {
+    "name": "Progress",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='progress'], .ui-progress",
+    "selectors": [
+      "[data-role='progress']",
+      ".ui-progress:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "pagecontainer": {
+    "name": "pagecontainer",
+    "methods": [
+      "change",
+      "getActivePage",
+      "showLoading",
+      "hideLoading",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "body",
+    "selectors": ["body:not([data-role='none'])"],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "Popup": {
+    "name": "Popup",
+    "methods": [
+      "open",
+      "close",
+      "reposition",
+      "setPositionCallback",
+      "setPositionCB",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='popup'], .ui-popup",
+    "selectors": [
+      "[data-role='popup']",
+      ".ui-popup:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "SectionChanger": {
+	"name": "SectionChanger",
+	"methods": [
+	  "getActiveSectionIndex",
+	  "setActiveSection",
+	  "destroy",
+	  "disable",
+	  "enable",
+	  "option",
+	  "refresh",
+	  "value"
+	],
+	"selector": "[data-role='section-changer'], .ui-section-changer",
+	"selectors": [
+	  "[data-role='section-changer']",
+	  ".ui-section-changer:not([data-role='none'])"
+	],
+	"namespace": "",
+	"widgetNameToLowercase": true
+  },
+  "Scrollview": {
+    "name": "Scrollview",
+    "methods": [
+      "scrollTo",
+      "ensureElementIsVisible",
+      "centerToElement",
+      "getScrollPosition",
+      "skipDragging",
+      "translateTo",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": ".ui-content:not([data-scroll='none']):not([data-handler='true']):not(.ui-scrollview-clip):not(.ui-scrolllistview):not(.ui-scrollhandler), [data-scroll]:not([data-scroll='none']):not([data-handler='true']):not(.ui-scrollhandler), .ui-scrollview:not([data-scroll='none']):not([data-handler='true']):not(.ui-scrollhandler)",
+    "selectors": [
+      ".ui-content:not([data-scroll='none']):not([data-handler='true']):not(.ui-scrollview-clip):not(.ui-scrolllistview):not(.ui-scrollhandler):not([data-role='none'])",
+      "[data-scroll]:not([data-scroll='none']):not([data-handler='true']):not(.ui-scrollhandler):not([data-role='none'])",
+      ".ui-scrollview:not([data-scroll='none']):not([data-handler='true']):not(.ui-scrollhandler):not([data-role='none'])"
+    ],
+    "namespace": "tizen",
+    "widgetNameToLowercase": true
+  },
+  "Expandable": {
+    "name": "Expandable",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='expandable'], .ui-expandable",
+    "selectors": [
+      "[data-role='expandable']",
+      ".ui-expandable:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "TabBar": {
+    "name": "TabBar",
+    "methods": [
+      "setActive",
+      "getActive",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='tabbar'], .ui-tabbar",
+    "selectors": [
+      "[data-role='tabbar']",
+      ".ui-tabbar:not([data-role='none'])"
+    ],
+    "namespace": "tizen",
+    "widgetNameToLowercase": true
+  },
+  "TextInput": {
+    "name": "TextInput",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "input[type='text']:not([data-role]), input[type='number']:not([data-role]), input[type='password']:not([data-role]), input[type='email']:not([data-role]), input[type='url']:not([data-role]), input[type='tel']:not([data-role]), textarea, input:not([type]).ui-text-input",
+    "selectors": [
+      "input[type='text']:not([data-role]):not([data-role='none'])",
+      "input[type='number']:not([data-role]):not([data-role='none'])",
+      "input[type='password']:not([data-role]):not([data-role='none'])",
+      "input[type='email']:not([data-role]):not([data-role='none'])",
+      "input[type='url']:not([data-role]):not([data-role='none'])",
+      "input[type='tel']:not([data-role]):not([data-role='none'])",
+      "textarea:not([data-role='none'])",
+      "input:not([type]).ui-text-input:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "DropdownMenu": {
+    "name": "DropdownMenu",
+    "methods": [
+      "open",
+      "close",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "select:not([data-role='slider']):not([data-role='range']):not([data-role='toggleswitch']):not(.ui-toggleswitch):not(.ui-slider), select.ui-select-menu:not([data-role='slider']):not([data-role='range']):not([data-role='toggleswitch'])",
+    "selectors": [
+      "select:not([data-role='slider']):not([data-role='range']):not([data-role='toggleswitch']):not(.ui-toggleswitch):not(.ui-slider):not([data-role='none'])",
+      "select.ui-select-menu:not([data-role='slider']):not([data-role='range']):not([data-role='toggleswitch']):not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "TextEnveloper": {
+    "name": "TextEnveloper",
+    "methods": [
+      "add",
+      "remove",
+      "length",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='textenveloper'], .ui-text-enveloper",
+    "selectors": [
+      "[data-role='textenveloper']",
+      ".ui-text-enveloper:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "VirtualListview": {
+    "name": "VirtualListview",
+    "methods": [
+      "draw",
+      "setListItemUpdater",
+      "scrollTo",
+      "scrollToIndex",
+      "create",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='virtuallistview'],[data-role='virtuallist'], .ui-virtuallistview",
+    "selectors": [
+      "[data-role='virtuallistview']",
+      "[data-role='virtuallist']",
+      ".ui-virtuallistview:not([data-role='none'])"
+    ],
+    "namespace": "tizen",
+    "widgetNameToLowercase": true
+  },
+  "VirtualGrid": {
+    "name": "VirtualGrid",
+    "methods": [
+      "create",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role=virtualgrid], .ui-virtualgrid",
+    "selectors": [
+      "[data-role=virtualgrid]",
+      ".ui-virtualgrid:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "Drawer": {
+    "name": "Drawer",
+    "methods": [
+      "transition",
+      "setDragHandler",
+      "open",
+      "close",
+      "isOpen",
+      "getState",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='drawer'], .ui-drawer",
+    "selectors": [
+      "[data-role='drawer']",
+      ".ui-drawer:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "ToggleSwitch": {
+    "name": "ToggleSwitch",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "input[data-role='toggleswitch'],select[data-role='toggleswitch'],select.ui-toggleswitch, input.ui-toggleswitch",
+    "selectors": [
+      "input[data-role='toggleswitch']",
+      "select[data-role='toggleswitch']",
+      "select.ui-toggleswitch:not([data-role='none'])",
+      "input.ui-toggleswitch:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "Navigation": {
+    "name": "Navigation",
+    "methods": [
+      "push",
+      "pop",
+      "create",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='navigation'], .ui-navigation",
+    "selectors": [
+      "[data-role='navigation']",
+      ".ui-navigation:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "IndexScrollbar": {
+    "name": "IndexScrollbar",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='indexscrollbar'], .ui-indexscrollbar",
+    "selectors": [
+      "[data-role='indexscrollbar']",
+      ".ui-indexscrollbar:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "FloatingActions": {
+    "name": "FloatingActions",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='floatingactions'], .ui-floatingactions",
+    "selectors": [
+      "[data-role='floatingactions']",
+      ".ui-floatingactions:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "Tabs": {
+    "name": "Tabs",
+    "methods": [
+      "setIndex",
+      "getIndex",
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='tabs'], .ui-tabs",
+    "selectors": [
+      "[data-role='tabs']",
+      ".ui-tabs:not([data-role='none'])"
+    ],
+    "namespace": "core",
+    "widgetNameToLowercase": true
+  },
+  "ColoredListview": {
+    "name": "ColoredListview",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='coloredlistview'], .ui-colored-list",
+    "selectors": [
+      "[data-role='coloredlistview']",
+      ".ui-colored-list:not([data-role='none'])"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "GridView": {
+    "name": "GridView",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "ul.ui-gridview, ul[data-role='gridview']",
+    "selectors": [
+      "ul.ui-gridview:not([data-role='none'])",
+      "ul[data-role='gridview']"
+    ],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "Box": {
+    "name": "Box",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "[data-role='box'], .ui-box",
+    "selectors": [
+      "[data-role='box']",
+      ".ui-box:not([data-role='none'])"
+    ],
+    "namespace": "",
+    "widgetNameToLowercase": true
+  },
+  "FixedToolbar": {
+    "name": "FixedToolbar",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "",
+    "selectors": [],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "pagelayout": {
+    "name": "pagelayout",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "",
+    "selectors": [],
+    "namespace": "mobile",
+    "widgetNameToLowercase": true
+  },
+  "popupwindow": {
+    "name": "popupwindow",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "",
+    "selectors": [],
+    "namespace": "tizen",
+    "widgetNameToLowercase": true
+  },
+  "ctxpopup": {
+    "name": "ctxpopup",
+    "methods": [
+      "destroy",
+      "disable",
+      "enable",
+      "option",
+      "refresh",
+      "value"
+    ],
+    "selector": "",
+    "selectors": [],
+    "namespace": "tizen",
+    "widgetNameToLowercase": true
+  }
+}

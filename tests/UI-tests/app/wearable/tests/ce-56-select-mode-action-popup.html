@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet"  href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/fonts.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+</head>
+<body>
+<div class="ui-page" id="selectModePageCE">
+	<header class="ui-header">
+		<h2 class="ui-title">Select Mode</h2>
+	</header>
+	<div class="ui-content">
+		<div class="ui-more">handler</div>
+		<ul class="ui-listview">
+			<li>List one</li>
+			<li>List two</li>
+			<li>List three</li>
+			<li>List four</li>
+			<li>List five</li>
+			<li>List six</li>
+		</ul>
+	</div>
+
+	<div class="select-mode">
+		<!-- select button -->
+		<div class="select-btn" id="select-btnCE">
+			<a class="select-btn-text" id="select-btn-textCE"></a>
+		</div>
+		<!-- select option popup -->
+		<div class="select-popup">
+			<ul class="ui-listview select-mode-btn-list">
+				<li><a href="#" id="select-allCE">Select all</a></li>
+				<li><a href="#" id="deselect-allCE">Deselect all</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<!-- Circle Profile -->
+	<div id="moreoptionsPopupCircleCE" class="ui-popup">
+		<div id="selectorCE" class="ui-selector">
+			<div class="ui-item show-icon" data-title="Show"></div>
+			<div class="ui-item human-icon" data-title="Human"></div>
+			<div class="ui-item delete-icon" data-title="Delete"></div>
+			<div class="ui-item show-icon" data-title="Show"></div>
+			<div class="ui-item human-icon" data-title="Human"></div>
+			<div class="ui-item delete-icon" data-title="Delete"></div>
+		</div>
+	</div>
+	<script src="ce-56-select-mode-action-popup.js"></script>
+</div>
+<script type="text/javascript" src="../lib/tau/wearable/js/tau.js" data-build-remove="false"></script>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</body>
+</html>

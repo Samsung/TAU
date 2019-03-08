@@ -1,0 +1,282 @@
+/***************************************************************************
+                   Common Style
+
+***************************************************************************/
+/***************************************************************************
+                   Development Tip
+  If you want to implement specific css code of circle device,
+  you should implement specific code here.
+  But when you implement code, you should check duplicate value
+  between common/layout.less and this file.
+  If you have duplicate value, please change static value to variable value.
+***************************************************************************/
+body {
+	background: @color_bg_cover;
+	color: @color_text;
+}
+
+.ui-page {
+
+	.ui-header {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		height: 92 * @unit_base;
+		line-height: @fixed_header_line_height;
+		background-color: transparent;
+		text-align: center;
+		margin-top: 23 * @unit_base;
+
+		&.ui-header-medium {
+			margin-top: 12 * @unit_base;
+			.ui-title {
+				margin-bottom: 14 * @unit_base;
+			}
+			.ui-subtitle {
+				margin-top: -7 * @unit_base;
+			}
+		}
+
+		&.ui-header-small {
+			margin-top: 2 * @unit_base;
+			.ui-title {
+				margin-bottom: 4 * @unit_base;
+			}
+			.ui-subtitle {
+				margin-top: 3 * @unit_base;
+			}
+		}
+		&.ui-header-smaller {
+			margin-top: 2 * @unit_base;
+			height: 81 * @unit_base;
+			display: flex;
+			justify-content: flex-end;
+		}
+
+		.ui-title {
+			color: @color_actionbar_title_text;
+			margin: 14 * @unit_base 64 * @unit_base 25 * @unit_base;
+			padding-left: 0;
+			padding-right: 0;
+			font-size: @fixed_header_title_font_size;
+			mask-image: none;
+			&.ui-icon {
+				background: none !important;
+				padding-left: 24 * @unit_base;
+			}
+		}
+
+		&.ui-header-big {
+			height: 94 * @unit_base;
+			.ui-title {
+				font-size: 32 * @unit_base;
+				margin-top: 28 * @unit_base;
+				margin-bottom: 27 * @unit_base;
+				color: @color_actionbar_title_text_big;
+			}
+		}
+
+		.ui-subtitle {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			color: @color_actionbar_subtitle_text;
+			font-size: 24 * @unit_base;
+			font-weight: normal;
+			margin: -18 * @unit_base 35 * @unit_base 0;
+			line-height: 32 * @unit_base;
+		}
+
+		&.ui-has-more {
+			.ui-title {
+				padding-right: 24 * @unit_base;
+				mask-image: none;
+			}
+			.ui-more {
+				position: fixed;
+				top: 50%;
+				right: 0;
+				width: @fixed_header_more_width;
+				height: @fixed_header_more_height;
+				transform: translate(0, -50%);
+				border: 0 none;
+				padding: 0;
+				&.ui-icon-overflow {
+					mask-image: none;
+					mask-position: initial;
+					background-color: transparent;
+					&[disabled="disabled"] {
+						mask-position: initial;
+					}
+					&:active {
+						background-color: transparent;
+					}
+					overflow: visible;
+				}
+			}
+		}
+	}
+
+	.ui-more {
+		position: fixed;
+		top: 50%;
+		right: 0;
+		width: @fixed_header_more_width;
+		height: @fixed_header_more_height;
+		transform: translate(0, -50%);
+		background-color: transparent;
+		overflow: visible;
+		border: 0 none;
+		padding: 0;
+		text-indent: -9999px;
+		&::before {
+			content: "";
+			position: absolute;
+			width: 200 * @unit_base;
+			height: 200 * @unit_base;
+			background-color: @color_moreoptions_handler;
+			border-radius: 50%;
+			opacity: 0;
+			.transform(scale(1));
+			top: 50%;
+			left: 50%;
+			margin-top: -100 * @unit_base;
+			margin-left: -100 * @unit_base;
+			.transition(all ease-out 200ms);
+			pointer-events: none;
+		}
+		&:active::before {
+			opacity: 1;
+			.transition(transform ease-out 300ms);
+			.transform(scale(1.1));
+		}
+		&::after {
+			content: "";
+			position: absolute;
+			width: 16 * @unit_base;
+			height: 36 * @unit_base;
+			-webkit-mask-box-image-source: url("images/Actionbar/b_more_option.png");
+			background-color: @color_moreoptions_bg;
+			border-radius: 50%;
+			top: 50%;
+			right: 6 * @unit_base;
+			.transform(translate(0, -50%));
+		}
+	}
+
+	background: @color_bg;
+	.ui-content {
+		text-align: center;
+		font-size: 32 * @px_base;
+		line-height: 42 * @unit_base;
+
+		&.ui-content-padding {
+			font-stretch: ultra-condensed;
+			padding-left: 33 * @unit_base;
+			padding-right: 33 * @unit_base;
+		}
+	}
+	.ui-footer.ui-bottom-button {
+		position: fixed !important;
+		bottom: 6 * @unit_base;
+		z-index: 1000;
+		max-height: 100 * @unit_base;
+		.display-flex();
+		.flex-direction(column);
+
+		justify-content: center;
+		align-items: center;
+		min-height: 100 * @unit_base;
+
+		.ui-btn {
+			.display-flex();
+			.flex-direction(column);
+			.justify-content(center);
+			.align-items(center);
+
+			line-height: 37 * @unit_base;
+			position: relative;
+			font-size: 28 * @unit_base;
+			font-weight: bold;
+			color: @color_button_bottom_text;
+			padding: 8 * @unit_base 18 * @unit_base 0 23 * @unit_base 0;
+			margin: 8 * @unit_base 0;
+			height: 72 * @unit_base;
+			width: 210 * @unit_base;
+			background-color: @bg_color_button_bottom;
+			border: 3 * @unit_base solid @border_color_button_bottom;
+			border-radius: 60 * @unit_base;
+
+			&::after {
+				content: "";
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				left: 0;
+				top: 0;
+				background-color: @color_footer_button_bg_press;
+				.transition(opacity 200ms);
+				opacity: 0;
+				z-index: -1;
+			}
+
+			&.ui-btn-active {
+				color: @color_button_bottom_text_pressed;
+				background-color: @bg_color_button_bottom_pressed;
+				height: 72 * @unit_base;
+				width: 210 * @unit_base;
+				border-radius: 65 * @unit_base;
+				font-size: 30 * @unit_base;
+				&::after {
+					animation: btn-footer-opacity-press linear 565ms;
+				}
+			}
+
+			&.ui-btn-inactive {
+				background-color: @bg_color_button_bottom;
+				height: 72 * @unit_base;
+				width: 210 * @unit_base;
+				border-radius: 65 * @unit_base;
+				font-size: 28 * @unit_base;
+				&::after {
+					animation: btn-footer-opacity-press linear 565ms;
+				}
+			}
+
+			&.ui-state-disabled, &:disabled {
+				color: @color_button_bottom_text_disable;
+				background-color: @bg_color_button_bottom_disabled;
+				border-color: @border_color_button_bottom_disabled;
+			}
+
+			&.ui-btn-icon-only {
+				padding: 14 * @unit_base 0 14 * @unit_base 0;
+			}
+		}
+	}
+}
+
+/***************************************************************************
+                   Page Scroll
+***************************************************************************/
+.ui-page.ui-scroll-on {
+	overflow: hidden;
+	.touch-scrolling-clear();
+
+	.ui-content {
+		margin-top: 115 * @unit_base;
+		padding-bottom: 100 * @unit_base;
+		padding-top: 0;
+	}
+	.ui-header {
+		~ .ui-content {
+			margin-top: 0;
+		}
+		~ .ui-scroller > .ui-content {
+			margin-top: 0;
+		}
+	}
+	.ui-content ~ .ui-footer:not(.ui-expandable-footer) {
+		margin-top: -85 * @unit_base;
+	}
+}

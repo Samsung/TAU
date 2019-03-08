@@ -1,0 +1,19 @@
+.ui-circle-progress {
+	display: none;
+}
+
+// common style for progressbar
+.ui-progressbar {
+	position: relative;
+	display: inline-block;
+	pointer-events: none;
+
+	// specific style for progressbar
+	&.ui-progressbar-full {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+}

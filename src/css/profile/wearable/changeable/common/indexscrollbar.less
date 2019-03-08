@@ -1,0 +1,81 @@
+.ui-indexscrollbar {
+	display: block;
+	position: fixed;
+	right: 0; //TODO:bidi
+	top: 0;
+	width: 45 * @unit_base;
+	height: 100%;
+	padding-left: 2 * @unit_base;
+	background-color: @color_indexscrollbar_bg;
+	z-index: 10;
+	overflow: visible; // To show 2nd indexbar
+	.user-select(none);
+	cursor: pointer;
+
+	ul {
+		position: absolute;
+		width: 100%;
+		top: 0;
+		li {
+			color: @color_indexscrollbar_text;
+			display: block;
+			width: 100%;
+			text-align: center;
+			font-size: 24 * @unit_base;
+			height: 36 * @unit_base;
+		}
+		li.ui-state-selected {
+			background-color: @color_indexscrollbar_selected_bg;
+			color: @color_indexscrollbar_selected_text;
+		}
+	}
+	ul.ui-indexscrollbar-supplementary {
+		position: relative;
+		height: auto;
+		top: 0;
+		right: -40 * @unit_base;
+		width: 100%;
+		li {
+			background-color: @color_indexscrollbar_bg_supplementary;
+			color: @color_indexscrollbar_text;
+		}
+		li.ui-state-selected {
+			background-color: @color_indexscrollbar_bg_supplementary;
+			color: @color_indexscrollbar_selected_text_supplementary;
+		}
+
+	}
+
+	& + .ui-listview li {
+		padding-right: 40*@unit_base;
+	}
+}
+
+.ui-indexscrollbar-indicator {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9;
+	display: none;
+
+	> span {
+		width: 140 * @unit_base;
+		height: 87 * @unit_base;
+		position: absolute;
+		display: block;
+		top: 50%;
+		left: 50%;
+		margin-left: -90 * @unit_base;
+		margin-top: -43 * @unit_base;
+		line-height: 87 * @unit_base;
+		font-size: 70 * @unit_base;
+		text-align: center;
+		background-color: @color_indexscrollbar_indicator_bg;
+		color: @color_indexscrollbar_indicator_text_normal;
+
+		> span.ui-selected {
+			color: @color_indexscrollbar_indicator_text_selected;
+		}
+
+	}
+}

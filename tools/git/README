@@ -1,0 +1,15 @@
+To add commit message template you have to move
+the prepare-commit-msg hook to .git/hooks
+$ mv tools/git/prepare-commit-msg .git/hooks/prepare-commit-msg
+
+Possible errors
+$ chmod +x .git/hooks/prepare-commit-msg
+echo may not interpret the newline character by default
+you will need to edit the hook and add -e parameter after echo
+as in:
+  echo -e "$commitTemplate\n $(cat $1)" > $1
+rather than
+  echo "$commitTemplate\n $(cat $1)" > $1
+
+For IntelliJ/Webstorm:
+https://plugins.jetbrains.com/plugin/9364-commit-message-template

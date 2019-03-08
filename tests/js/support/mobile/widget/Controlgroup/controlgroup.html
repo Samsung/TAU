@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Controlgroup tests</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../../../../../libs/qunit-1.11.0.css">
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture">
+			<div data-role="page" id="page1">
+				<div data-role="controlgroup" id="test1">
+					<a href="#" data-role="button" id="test1a">A</a>
+					<a href="#" data-role="button" id="test1b">B</a>
+					<a href="#" data-role="button" id="test1c">C</a>
+				</div>
+
+				<div data-role="controlgroup" id="test2">
+					<a href="#" data-role="button" id="test2a">A</a>
+					<a href="#" data-role="button" id="test2b">B</a>
+					<a href="#" data-role="button" id="test2c">C</a>
+					<legend>Test2 Legend</legend>
+				</div>
+
+				<div data-role="controlgroup" id="test3">
+					<a href="#" data-role="button" id="test3a">A</a>
+					<a href="#" data-role="button" id="test3b">B</a>
+					<a href="#" data-role="button" id="test3c">C</a>
+					<div class="ui-controlgroup-label">Test3 Legend</div>
+				</div>
+
+				<div data-role="controlgroup" id="test4">
+					<a href="#" data-role="button" id="test4a">A</a>
+					<a href="#" data-role="button" id="test4b">B</a>
+					<a href="#" data-role="button" id="test4c">C</a>
+				</div>
+
+				<div data-role="controlgroup" data-type="horizontal" data-shadow="true" data-mini="true" id="test5">
+					<a href="#" data-role="button" id="test5a">A</a>
+					<a href="#" data-role="button" id="test5b">B</a>
+					<a href="#" data-role="button" id="test5c">C</a>
+				</div>
+
+				<div data-role="controlgroup" id="test6">
+					<a href="#" data-role="button" id="test6a">A</a>
+					<a href="#" data-role="button" id="test6b">B</a>
+					<a href="#" data-role="button" id="test6c">C</a>
+				</div>
+
+				<div data-role="controlgroup" id="test7" data-type="horizontal">
+					<a href="#" data-role="button" id="test7a">A</a>
+					<a href="#" data-role="button" id="test7b">B</a>
+					<a href="#" data-role="button" id="test7c">C</a>
+				</div>
+		</div>
+		<script src="../../../../../libs/jquery.js"></script>
+		<script src="../../../../../libs/qunit-1.11.0.js" type="text/javascript"></script>
+		<script src="../../../../../libs/support.js"></script>
+		<script src="./controlgroup.js"></script>
+		<script type="text/javascript">
+			var tauConfig = {
+				"autorun": false
+			};
+		</script>
+		<script type="text/javascript" src="../../../../../libs/dist/js/tau.js"></script>
+		<script type="text/javascript" src="../../../../../libs/dist/js/tau.support-2.3.js"></script>
+
+	</body>
+</html>

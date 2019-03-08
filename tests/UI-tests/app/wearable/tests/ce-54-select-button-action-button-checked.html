@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+	<script type="text/javascript" src="../lib/tau/wearable/js/tau.js"></script>
+</head>
+<body>
+<div class="ui-page" id="54-select-button-action-button-checked-pageCE">
+	<header class="ui-header">
+	</header>
+	<div class="ui-content">
+		<ul class="ui-listview">
+			<li class="select">Display</li>
+			<li>Connections</li>
+			<li>List three</li>
+			<li>List four</li>
+			<li>List five</li>
+			<li class="select">List six</li>
+		</ul>
+	</div>
+
+	<div class="select-mode">
+		<!-- select button -->
+		<div class="select-btn" id="select-btnCE">
+			<a class="select-btn-text" id="select-btn-textCE"></a>
+		</div>
+	</div>
+
+	<script>
+		(function () {
+			var page = document.getElementById("54-select-button-action-button-checked-pageCE"),
+				listview = page.querySelector(".ui-listview"),
+				list = listview.getElementsByTagName("li"),
+				selectWrapper = document.querySelector(".select-mode"),
+				selectBtn = document.getElementById("select-btnCE"),
+				selectBtnText = document.getElementById("select-btn-textCE"),
+				selectCount = 0,
+				addFunction,
+				fnPopup,
+				fnPopupClose,
+				fnBackKey;
+
+			/**
+			 * Updates the number of the selected list items
+			 */
+			function textRefresh() {
+				selectBtnText.innerHTML = selectCount;
+				selectBtn.classList.toggle("select-btn-disabled", selectCount === 0);
+			}
+
+			/**
+			 * Shows select mode
+			 */
+			function modeShow() {
+				selectWrapper.classList.remove("open");
+				selectWrapper.classList.add("show-btn");
+				textRefresh();
+			}
+
+			/**
+			 * Select particular item
+			 * @param {HTMLLIElement} li element to select
+			 */
+			function selectItem(li) {
+				li.classList.add("select");
+				li.appendChild(document.createElement("span"));
+				selectCount++;
+				modeShow();
+			}
+
+			/**
+			 * Deselect particular item
+			 * @param {HTMLLIElement} li element to deselect
+			 */
+			function deselectItem(li) {
+				li.classList.remove("select");
+				if (li.firstElementChild) {
+					li.removeChild(li.firstElementChild);
+				}
+				selectCount--;
+				if (selectCount < 0) {
+					selectCount = 0;
+				}
+				textRefresh();
+			}
+
+			/**
+			 * Toggle select state on particular item
+			 * @param {HTMLLIElement} li element to toggle
+			 */
+			function toggleSelectedItem(li) {
+				if (!li.classList.contains("select")) {
+					selectItem(li);
+				} else {
+					deselectItem(li);
+				}
+			}
+
+			/**
+			 * Select/Deselects a list item
+			 * click event handler for list item
+			 * @param {Event} event
+			 */
+			addFunction = function (event) {
+				var target = event.target,
+					li = (target.nodeName.toLowerCase() === "span") ? target.parentElement : target;
+
+				toggleSelectedItem(li);
+			};
+
+			/**
+			 * pageshow event handler
+			 * Do preparatory works and adds event listeners
+			 */
+			page.addEventListener("pageshow", function () {
+				list = page.getElementsByTagName("li"),
+				listview.addEventListener("click", addFunction, false);
+				selectBtn.addEventListener("click", fnPopup, false);
+				selectWrapper.addEventListener("click", fnPopupClose, false);
+				toggleSelectedItem(list[0]);
+				toggleSelectedItem(list[1]);
+				modeShow();
+				textRefresh();
+			}, false);
+
+			/**
+			 * pagehide event handler
+			 * Destroys and removes event listeners
+			 */
+			page.addEventListener("pagehide", function () {
+				listview.removeEventListener("click", addFunction, false);
+				document.removeEventListener("tizenhwkey", fnBackKey);
+			}, false);
+
+			/**
+			 * pagebeforeshow event handle
+			 * Do preparatory works and adds event listeners
+			 */
+			page.addEventListener("pagebeforeshow", function () {
+				document.addEventListener("tizenhwkey", fnBackKey);
+			});
+
+		}());
+	</script>
+
+</div>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InputColorTable>
+	<Theme index="0">
+		<InputColorInfo hue="30" saturation="17" value="14"/>
+		<InputColorInfo hue="33" saturation="27" value="29"/>
+		<InputColorInfo hue="30" saturation="34" value="35"/>
+		<InputColorInfo hue="34" saturation="100" value="100"/>
+	</Theme>
+	<Theme index="1">
+		<InputColorInfo hue="210" saturation="75" value="19"/>
+		<InputColorInfo hue="212" saturation="95" value="40"/>
+		<InputColorInfo hue="210" saturation="100" value="56"/>
+		<InputColorInfo hue="65" saturation="75" value="100"/>
+	</Theme>
+</InputColorTable>

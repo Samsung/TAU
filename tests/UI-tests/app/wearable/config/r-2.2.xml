@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns:tizen="http://tizen.org/ns/widgets" xmlns="http://www.w3.org/ns/widgets" id="http://yourdomain/Test"
+		version="0.1.0" viewmodes="fullscreen">
+	<tizen:application id="vUf39tzQ3t.UITests" package="vUf39tzQ3t" required_version="3.0"/>
+	<content src="index.html"/>
+	<icon src="icon.png"/>
+	<name>UITestsWearable</name>
+	<tizen:privilege name="http://tizen.org/privilege/filesystem.read"/>
+	<tizen:privilege name="http://tizen.org/privilege/filesystem.write"/>
+	<tizen:profile name="wearable"/>
+	<tizen:setting background-support="enable" />
+	<tizen:background-category value="media" />
+</widget>

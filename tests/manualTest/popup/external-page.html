@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, user-scalable=no"/>
+	<title>Tizen micro UI - Tab</title>
+	<link rel="stylesheet"  href="../../../dist/themes/default/tau.css">
+</head>
+
+<body>
+<div class="ui-page">
+	<header class="ui-header">
+		<h2 class="ui-title">External Page</h2>
+	</header>
+	<div class="ui-content content-padding">
+		<h3>Buttons</h3>
+		<a href="#innerPopOnExternalPage" class="ui-btn" data-rel="popup">Inner popup</a>
+		<a href="external.html" class="ui-btn" data-rel="popup">External popup</a>
+	</div>
+
+	<div id="innerPopOnExternalPage" class="ui-popup">
+		<div class="ui-popup-header">innerPop On ExternalPage</div>
+		<div class="ui-popup-content">
+			Turning on Power
+			saving mode will
+			limit the maximum
+			per
+		</div>
+		<div class="ui-popup-footer ui-grid-col-2">
+			<button id="cancel" class="ui-btn">Cancel</button>
+			<a href="#innerPopOnExternalPage2" class="ui-btn" data-rel="popup">Open inner Pop2</a>
+		</div>
+	</div>
+
+	<div id="innerPopOnExternalPage2" class="ui-popup">
+		<div class="ui-popup-header">Popup2</div>
+		<div class="ui-popup-content">
+			Turning on Power
+			saving mode will
+			limit the maximum
+			per
+		</div>
+		<div class="ui-popup-footer">
+			<div class="ui-grid-col-2 button-group-height">
+				<button id="cancel" class="ui-btn">Cancel</button>
+				<a href="index.html" class="ui-btn">Go Page</a>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="../../../dist/js/tau.js"></script>
+</body>
+</html>

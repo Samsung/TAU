@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<title>Screen size tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="widthtest.js"></script>
+<link rel="stylesheet" href="widthtest.css">
+<script>
+
+var step = 25;
+var maximumSize = 2200;
+
+document.write('<style id="test">');
+
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('@media all and (min-width: ' + (i+1) + 'px) and (max-width: ' + (i+step) + 'px) {');
+	document.write('#width' + i + '{display: list-item}');
+	document.write('#width {display: none;} }');
+
+	document.write('@media all and (min-device-width: ' + (i+1) + 'px) and (max-device-width: ' + (i+step) + 'px) {');
+	document.write('#devicewidth' + i + '{display: list-item}');
+	document.write('#devicewidth {display: none;} }');
+
+	document.write('@media all and (min-height: ' + (i+1) + 'px) and (max-height: ' + (i+step) + 'px) {');
+	document.write('#height' + i + '{display: list-item}');
+	document.write('#height {display: none;} }');
+
+	document.write('@media all and (min-device-height: ' + (i+1) + 'px) and (max-device-height: ' + (i+step) + 'px) {');
+	document.write('#deviceheight' + i + '{display: list-item}');
+	document.write('#deviceheight {display: none;} }');
+}
+
+document.write('</style>');
+
+
+</script>
+
+</head>
+
+<body>
+
+<h2>Screen size tests</h2>
+
+<p>This test has no <code>&lt;meta viewport&gt;</code> tag.</p>
+
+<div id="testdiv"></div>
+<div id="writeroot"></div>
+
+<button id="testButton">Refresh tests</button>
+<button id="stretch">Stretch writeroot</button>
+
+<h2>Media queries</h2>
+
+<ul>
+<li id="width">Media queries for screen width not supported.</li>
+<li id="devicewidth">Media queries for device width not supported.</li>
+<li id="height">Media queries for screen height not supported.</li>
+<li id="deviceheight">Media queries for device height not supported.</li>
+
+<script>
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('<li class="query" id="width' + i + '">Width is between ' + i + ' and ' + (i+step-1) +  'px.</li>');
+}
+
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('<li class="query" id="height' + i + '">Height is between ' + i + ' and ' + (i+step-1) +  'px.</li>');
+}
+
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('<li class="query" id="devicewidth' + i + '">Device width is between ' + i + ' and ' + (i+step-1) +  'px.</li>');
+}
+
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('<li class="query" id="deviceheight' + i + '">Device height is between ' + i + ' and ' + (i+step-1) +  'px.</li>');
+}
+
+</script>
+
+</ul>
+
+<p>This is a paragraph that is supposed to take the entire width (whatever that may be)
+of the browser canvas and even wrap to the next line. Obviously, since no width has been
+defined on anything, the browser must have some clever way of handling this paragraph, or
+it&#8217;ll be unreadable. Right now I feel that the different between browser experiences
+will mainly depend on handling this issue.
+<span>And this span is supposed to span 50% of the paragraph.</span>
+</p>
+
+<h2>Variants</h2>
+
+<ul>
+	<li><a href="widthtest_vp720.html">With viewport width set to 720</a></li>
+	<li><a href="widthtest_vpdevice.html">With viewport width set to device width</a></li>
+	<li><a href="widthtest_layout.html">With a hard-coded width: 1500px for the writeroot</a></li>
+</ul>
+
+
+</body>
+</html>

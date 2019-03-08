@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+</head>
+<body>
+<div class="ui-page" id="103-end-effect-bottom-page-ce">
+	<header class="ui-header">
+		<h2 class="ui-title">Mobile Network</h2>
+	</header>
+	<div class="ui-content">
+		<ul class="ui-listview" id="103-end-effect-bottom-ce" data-bouncing-timeout="10000">
+			<li class="li-has-multiline">
+				<a>
+					Use mobile network
+					<span class="ui-li-sub-text li-text-sub">Always on</span>
+				</a>
+			</li>
+			<li class="li-has-multiline">
+				<a>
+					Mobile data
+					<span class="ui-li-sub-text li-text-sub">Screen savers and other settings</span>
+				</a>
+			</li>
+			<li class="li-has-multiline">
+				<a>
+					Font size
+					<span class="ui-li-sub-text li-text-sub">Overall size of fonts</span>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<script>
+		(function () {
+			var pageElement = document.getElementById("103-end-effect-bottom-page-ce"),
+				arcListviewElement = document.getElementById("103-end-effect-bottom-ce"),
+				arcListview;
+
+			pageElement.addEventListener("pageshow", function () {
+				// make ArcListview object
+				arcListview = tau.widget.Listview(arcListviewElement);
+				// simulate rotary for enable bottom end-effect
+				arcListview.scrollToPosition(2, true);
+				arcListview._rollDown();
+			});
+
+			pageElement.addEventListener("pagehide", function () {
+				// release object
+				arcListview.destroy();
+			});
+		}());
+	</script>
+</div>
+</body>
+<script type="text/javascript" src="../lib/tau/wearable/js/tau.js" data-build-remove="false"></script>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</html>

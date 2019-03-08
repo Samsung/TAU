@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Blur effect test</title>
+		<style>
+			.image-blur {
+				-webkit-filter: blur(2px);
+			}
+		</style>
+	</head>
+	<body>
+		<h4>
+		This page is css blur effect test page.
+		You can show below two buttons. If you click the Add button, below image add blur filter effect.
+		</h4>
+		<button id="add" type="button"> Add </button><button id="delete" type="button"> Delete </button><br>
+		<img id="image" src = "./test.jpg" style="width: 300px; height: 300px;"></img>
+		<script>
+		(function(){
+			document.getElementById( "add" ).addEventListener( "click", function(){
+				var image = document.getElementById( "image" );
+				image.className = image.className.replace( "image-blur", "" );
+				image.className += "image-blur";
+			});
+
+			document.getElementById( "delete" ).addEventListener( "click", function(){
+				var image = document.getElementById( "image" );
+				image.className = image.className.replace( "image-blur", "" );
+			});
+		})();
+		</script>
+	</body>
+</html>
+

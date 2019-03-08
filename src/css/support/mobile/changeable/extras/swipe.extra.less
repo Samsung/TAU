@@ -1,0 +1,64 @@
+@list-li-padding-horizontal: 16 * @unit_base;
+
+.ui-swipe {
+	padding: 0 !important;
+	list-style-type: none;
+}
+
+.ui-swipe-item {
+	.user-select(none);
+
+	min-height: 38 * @unit_base;
+	opacity: 0;
+	text-align : center;
+	background-color: @color_list_swipe_left_bg;
+	color: @color_list_swipe_text;
+	font-size: @font_size_list_swipe_text;
+	margin-left : -13 * @unit_base;
+	margin-right : -13 * @unit_base;
+	padding-bottom: 9 * @unit_base;
+
+	.ui-btn {
+		margin-top: 9 * @unit_base;
+		top: auto;
+		position: relative;
+	}
+
+	p {
+		margin: 0;
+	}
+}
+
+.ui-listview li .ui-swipe-item [data-role="button"]:last-child {
+	position: relative;
+	right: auto;
+}
+
+.ui-swipe-item-cover {
+	position: absolute;
+	border: none;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+
+	.ui-swipe-item-cover-inner {
+		position : absolute;
+		padding-top : 15 * @unit_base;
+		padding-bottom : 15 * @unit_base;
+		padding-left : 8 * @unit_base;
+
+		width : 100%;
+
+		text-align : left;
+
+		.ui-li-text-sub {
+			position : absolute;
+			padding-right : 16 * @unit_base;
+		}
+	}
+	p {
+		margin: 0;
+	}
+}

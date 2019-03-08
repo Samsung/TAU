@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+	<div id="externalPopup" class="ui-popup">
+		<div class="ui-popup-content" style="height:294px; overflow-y:scroll;">
+			<ul class="ui-listview">
+				<li>Ringtones 1</li>
+				<li>Ringtones 2</li>
+				<li>Ringtones 3</li>
+				<li>Ringtones 4</li>
+				<li>Ringtones 5</li>
+				<li>Ringtones 6</li>
+				<li>Ringtones 7</li>
+			</ul>
+		</div>
+		<div class="ui-popup-footer ui-grid-col-2">
+			<a href="#" class="ui-btn">Go Page</a>
+			<a href="#" class="ui-btn" data-rel="popup">Open Pop</a>
+		</div>
+		<script>
+			window.testVariableFromExternalFile = true;
+		</script>
+		<script data-script>
+			window.testVariableFromExternalFile2 = true;
+		</script>
+		<script src="test.js"></script>
+	</div>
+</body>
+</html>

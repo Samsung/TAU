@@ -1,0 +1,2 @@
+Cloned from https://github.com/jquery/globalize.git
+Revision 2be340f57157799ad8667fe7fd4bf5ecec43a93e

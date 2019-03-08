@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/mobile/theme/default/tau.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<script type="text/javascript" src="../lib/tau/mobile/js/tau.js" data-build-remove="false"></script>
+</head>
+<body>
+<div id="panelPage" class="ui-page">
+	<div class="ui-header ui-header-navigation" data-position="fixed">
+		<h1>Title</h1>
+		<a class="ui-header-btn ui-header-btn-left ui-header-btn-icon btn-icon-back"></a>
+		<nav id="navigation" class="ui-navigation"></nav>
+	</div>
+	<div class="ui-content">
+		<div id="panelChanger" class="ui-panel-changer">
+			<div id="mainpanel" class="ui-panel">
+				<ul class="ui-listview ui-colored-list">
+					<li class="ui-li-static">List Item 01</li>
+					<li class="ui-li-static">List Item 02</li>
+					<li class="ui-li-static">List Item 03</li>
+					<li class="ui-li-static">List Item 04</li>
+					<li class="ui-li-static">List Item 05</li>
+					<li class="ui-li-static">List Item 06</li>
+					<li class="ui-li-static">List Item 07</li>
+					<li class="ui-li-static">List Item 08</li>
+					<li class="ui-li-static">List Item 09</li>
+					<li class="ui-li-static">List Item 10</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script>
+		(function(tau) {
+			/**
+			 * page - Panel page element
+			 * panelChanger - Panel changer element
+			 * panelChangerComponent - TAU panel changer instance
+			 * navigation - navigation element
+			 * navigationComponent - TAU navigation instance
+			 */
+			var page = document.querySelector("#panelPage"),
+					panelChanger = page.querySelector("#panelChanger"),
+					panelChangerComponent,
+					navigation = page.querySelector("#navigation"),
+					navigationComponent;
+
+			/**
+			 * pagebeforeshow event handler
+			 * Do preparatory works and adds event listeners
+			 */
+			page.addEventListener("pagebeforeshow", function(){
+				panelChangerComponent = tau.widget.PanelChanger(panelChanger);
+				navigationComponent = tau.widget.Navigation(navigation);
+				navigationComponent.push('My files');
+				navigationComponent.push('Folder');
+				navigationComponent.push('Navigation');
+			});
+
+		}(window.tau));
+	</script>
+</div>
+</body>
+</html>

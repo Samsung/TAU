@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../../../../libs/qunit-1.11.0.css" />
+	<title>Listview</title>
+</head>
+
+<body>
+
+<h1 id="qunit-header">Listview default selectors</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture">
+	<div data-role="page" id="page1">
+		<div data-role="content">
+			<ul data-role="listview" id="ul-by-data-role">
+				<li>Anton</li>
+				<li>Arabella</li>
+			</ul>
+			<ul class="ui-listview" id="ul-by-class-selector">
+				<li>Anton</li>
+				<li>Arabella</li>
+			</ul>
+			<ol data-role="listview" id="ol-by-data-role">
+				<li>Anton</li>
+				<li>Arabella</li>
+			</ol>
+			<ol class="ui-listview" id="ol-by-class-selector">
+				<li>Anton</li>
+				<li>Arabella</li>
+			</ol>
+			<div data-role="listview" id="div-by-data-role">
+				<div>Anton</div>
+				<div>Arabella</div>
+			</div>
+			<div class="ui-listview" id="div-by-class-selector">
+				<div>Anton</div>
+				<div>Arabella</div>
+			</div>
+		</div>
+	</div>
+</div>
+	<script src="../../../../../../../libs/qunit-1.11.0.js"></script>
+	<script src="../../../../../../../libs/support.js"></script>
+
+	<script src="defaultSelectors.js"></script>
+	<script type="text/javascript">
+		var tauConfig = {
+			"autorun": false
+		};
+	</script>
+	<script type="text/javascript" src="../../../../../../../libs/dist/js/tau.js"></script>
+</body>
+</html>

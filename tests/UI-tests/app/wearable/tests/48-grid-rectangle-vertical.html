@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+	<script type="text/javascript" src="../lib/tau/wearable/js/tau.js"
+		data-build-remove="false"></script>
+</head>
+<body>
+<div class="ui-page" id="48-grid-rectangle-vertical-page" data-enable-page-scroll="false">
+	<div class="ui-content">
+		<ul id="48-grid-rectangle-vertical" class="ui-grid" data-lines="2" data-shape="rectangle"
+			data-orientation="vertical">
+			<li><a href="#"><img src="images/default/gallery_default_image_09.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_10.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_01.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_10.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_04.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_06.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_07.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_08.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_09.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_10.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_11.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_12.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_13.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_14.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_01.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_02.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_03.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_04.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_05.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_06.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_07.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_08.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_09.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_10.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_11.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_12.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_13.jpg"/></a></li>
+			<li><a href="#"><img src="images/default/gallery_default_image_14.jpg"/></a></li>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		(function (tau) {
+			var page = document.getElementById("48-grid-rectangle-vertical-page"),
+				element = document.getElementById("48-grid-rectangle-vertical"),
+				grid;
+
+			/**
+			 * pagebeforeshow event handler
+			 * Do preparatory works and adds event listeners
+			 */
+			page.addEventListener("pagebeforeshow", function () {
+				grid = tau.widget.Grid(element);
+			});
+
+			/**
+			 * pagebeforehide event handler
+			 * Destroys widget
+			 */
+			page.addEventListener("pagebeforehide", function () {
+				grid.destroy();
+			});
+		}(window.tau));
+	</script>
+</div>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</body>
+</html>

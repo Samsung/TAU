@@ -1,0 +1,46 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<title>Screen size tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="widthtest.css" />
+<link rel="stylesheet" href="/quirksmode.css">
+<script src="/quirksmode.js"></script>
+<script src="widthtest.js"></script>
+<style>
+html {
+	background: #ffffff url(raster.gif) no-repeat;
+}
+
+body {
+	background: none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Screen size tests</h2>
+
+<p>This test has no <code>&lt;meta viewport&gt;</code> tag.</p>
+
+<div id="writeroot"></div>
+
+<button id="testButton">Refresh tests</button>
+<button id="stretch">Stretch writeroot</button>
+
+
+<p id="testPar">This is a paragraph that is supposed to take the entire width (whatever that may be)
+of the browser canvas and even wrap to the next line. Obviously, since no width has been
+defined on anything, the browser must have some clever way of handling this paragraph, or
+it&#8217;ll be unreadable. Right now I feel that the different between browser experiences
+will mainly depend on handling this issue.
+<span>And this span is supposed to span 50% of the paragraph.</span>
+</p>
+
+
+
+</body>
+</html>

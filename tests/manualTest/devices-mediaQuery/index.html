@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Media Queries for Multi device layout</title>
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<link rel="stylesheet"  href="device-media-query.css">
+</head>
+<body>
+<!-- This is test for Multi layout support:
+We need to configure multiple devices using media queries.
+It covers below devices.
+	Watch: window size 320x320, device-aspect-ratio: 1
+	Mobile Phone:
+		- Portrait: range between window width: 320~360px, device-aspect-ratio: 9/10
+		- Landscape: range between window width: 360~640px, device-aspect-ratio: 1/1
+	Tablet, TV:
+		- Portrait: above window width:360px (from 361), device-aspect-ratio: 9/10
+		- Landscape: above window width:640px (from 641), device-aspect-ratio: 1/1
+It uses only window width and device aspect-ratio because of below reasons.
+	- window height can be changed when IME/SIP comes up.
+	- device size can not be relavant to screen size.
+It has below restriction.
+	- It can not cover spectial type of devices.
+	  ex) Gear Fit has long width and tiny height. It is not covered by this test cases.
+	- It can not cover physical size. There is no way to get physical size value fastOn web.
+	  In CSS, window size does not mean physical size.
+-->
+
+
+
+	<div id="wsize"></div>
+	<label for="IMETest">IME Test</label>
+	<input name="IMETest" type="text"><br>
+<script>
+function addMultiEventListner(el, evts, fn) {
+	var i,
+		events = evts.split(' ');
+	for (i=0;i<evts.length;i++)
+		el.addEventListener(events[i], fn, false);
+}
+
+addMultiEventListner( window, 'resize load', function() {
+	document.getElementById("wsize").innerText
+		= ":" + window.innerWidth + "*" + window.innerHeight;
+	});
+</script>
+</body>
+</html>

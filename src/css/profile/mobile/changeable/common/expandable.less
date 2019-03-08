@@ -1,0 +1,93 @@
+.ui-listview .ui-expandable {
+	padding: 0;
+	border-top: 2 * @unit_base solid @color_groupindex_divider;
+	box-sizing: border-box;
+	user-select: none;
+
+	.ui-expandable-heading {
+		font-size: 32 * @unit_base;
+		font-weight: normal;
+		padding: 0;
+		margin: 0;
+		position: relative;
+
+		.ui-expandable-heading-toggle {
+			position: relative;
+			display: block;
+			color: @color_list_divider_text;
+			text-decoration: none;
+			padding: 10 * @unit_base 113 * @unit_base 12 * @unit_base 32 * @unit_base;
+			height: 40 * @unit_base;
+			line-height: 40 * @unit_base;
+
+			&:active {
+				color: @color_list_divider_text_expandable_press;
+			}
+
+			&::after {
+				content: "";
+				position: absolute;
+				right: 17 * @unit_base;
+				top: -2 * @unit_base;
+				mask-image: url('images/core_icon_expand_open.png');
+				mask-repeat: no-repeat;
+				mask-position: center;
+				mask-size: 100%;
+				background-color: @color_expandable_heading_arrow;
+				width: 64 * @unit_base;
+				height: 64 * @unit_base;
+				transition: all 330ms ease;
+				transform: rotate(0);
+			}
+		}
+		&.ui-expandable-heading-active {
+			.ui-expandable-heading-toggle::after {
+				background-color: @color_expandable_heading_arrow_pressed;
+			}
+		}
+	}
+
+	&.ui-expandable-collapsed {
+		.ui-expandable-heading {
+			.ui-expandable-heading-toggle {
+				&::after {
+					transform: rotate(180deg);
+				}
+			}
+		}
+	}
+
+	.ui-expandable-content {
+		display: block;
+		border-left-width: 0;
+		border-right-width: 0;
+		border-top: none; // Overrides ui-body-*
+		background-image: none; // Overrides ui-body-*
+		max-height: 9999px;
+		overflow: visible;
+		transition: all 330ms ease;
+		.ui-listview {
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	.ui-expandable-content-collapsed {
+		overflow: hidden;
+		max-height: 0 !important;
+		display: none;
+		transition: all 330ms ease;
+	}
+
+	&.ui-state-disabled {
+		cursor: default !important;
+		pointer-events: none;
+		zoom: 1;
+
+		.ui-expandable-heading {
+			.ui-expandable-heading-toggle::after {
+				background-color: @color_expandable_heading_arrow_dim;
+			}
+		}
+	}
+}

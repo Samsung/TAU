@@ -1,0 +1,196 @@
+.ui-selector {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: @color_selector_layer_bg;
+
+	.ui-layer {
+		position: absolute;
+		display: none;
+		width: 68 * @unit_base;
+		height: 68 * @unit_base;
+		border-radius: 50%;
+
+		&.ui-layer-active {
+			display: block;
+			width: 100%;
+			height: 100%;
+			z-index: 3;
+
+			.ui-item {
+				visibility: visible;
+				.transition(transform 300ms ease-out);
+			}
+		}
+
+		&.ui-layer-hide {
+			.ui-item {
+				visibility: visible;
+				.transition(transform 100ms ease-out);
+			}
+		}
+
+		&.ui-layer-prev {
+			display: block;
+			width: 48 * @unit_base;
+			height: 48 * @unit_base;
+			left: 50%;
+			margin-left: 6 * @unit_base;
+			margin-top: 12 * @unit_base;
+			z-index: 5;
+			mask-image: url("./images/Common/b_more_option_btn_previous_page.png");
+		}
+
+		&.ui-layer-next {
+			display: block;
+			width: 48 * @unit_base;
+			height: 48 * @unit_base;
+			right: 50%;
+			margin-right: 6 * @unit_base;
+			margin-top: 12 * @unit_base;
+			z-index: 5;
+			mask-image: url("./images/Common/b_more_option_btn_next_page.png");
+		}
+	}
+
+	.ui-item {
+		background-color: @color_selector_icon_bg;
+		position: absolute;
+		visibility: hidden;
+		width: 68 * @unit_base;
+		height: 68 * @unit_base;
+		top: 50%;
+		left: 50%;
+		border-radius: 50%;
+		margin: -34 * @unit_base;
+		z-index: 100;
+
+		&:active {
+			background-color: @color_selector_icon_bg_press;
+		}
+
+		&::before {
+			transition: background-color 200ms ease-out;
+		}
+	}
+
+	.ui-selector-indicator {
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+		position: absolute;
+		z-index: 4;
+		width: 164 * @unit_base;
+		height: 164 * @unit_base;
+		left: 50%;
+		top: 50%;
+		.transform(translate(-50%, -50%));
+		.user-select(none);
+
+		&::before {
+			content: "";
+			position: absolute;
+			width: 90%;
+			height: 90%;
+			left: 50%;
+			top: 50%;
+			border-radius: 50%;
+			background-color: transparent;
+			transform: translate(-50%, -50%);
+			opacity: 0;
+		}
+
+		&.ui-selector-indicator-active::before {
+			z-index: -1;
+			background-color: white;
+			transform: translate(-50%, -50%) scale(1.1);
+			animation-duration: 300ms, 733ms;
+			animation-name: touch-text-btn-scale, touch-text-btn-opacity;
+			animation-timing-function: cubic-bezier(.25, .46, .45, 1), linear;
+		}
+
+		.ui-selector-indicator-text {
+			font-size: 30 * @unit_base;
+			pointer-events: none;
+			width: 164 * @unit_base;
+			line-height: 40 * @unit_base;
+			max-height: 80 * @unit_base;
+			text-align: center;
+			overflow: hidden;
+		}
+
+		.ui-selector-indicator-icon-active {
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
+			width: 140 * @unit_base;
+			height: 140 * @unit_base;
+			overflow: hidden;
+
+			&-with-text {
+				margin-top: -4 * @unit_base;
+				width: 94 * @unit_base;
+				height: 94 * @unit_base;
+			}
+
+			+ .ui-selector-indicator-text:not(:empty) {
+				margin-top: 5 * @unit_base;
+				width: 138 * @unit_base;
+			}
+		}
+
+		.ui-selector-indicator-subtext {
+			font-size: 29 * @unit_base;
+			pointer-events: none;
+			width: 138 * @unit_base;
+			line-height: 39 * @unit_base;
+			max-height: 39 * @unit_base;
+			text-align: center;
+			overflow: hidden;
+		}
+
+		&.ui-selector-indicator-with-subtext {
+			.ui-selector-indicator-text {
+				width: 150 * @unit_base;
+			}
+
+			.ui-selector-indicator-subtext {
+				color: @color_selector_text;
+				width: 150 * @unit_base;
+			}
+		}
+	}
+
+	.ui-selector-indicator-arrow {
+		position: absolute;
+		width: 210 * @unit_base;
+		height: 210 * @unit_base;
+		top: 50%;
+		left: 50%;
+		margin: -105 * @unit_base;
+		text-align: center;
+		line-height: 210 * @unit_base;
+		font-size: 28 * @unit_base;
+		z-index: 0;
+		&::before {
+			position: absolute;
+			content: "";
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			mask-image: url('./images/Common/b_rotary_selector_center_pointer.png');
+			.mask-size(100% 100%);
+			.mask-repeat(no-repeat);
+			background-color: @color_selector_dot;
+		}
+	}
+
+	&.ui-selector-edit-mode .ui-layer {
+		.ui-item-removable:active {
+			background-color: @color_selector_icon_bg;
+		}
+	}
+}

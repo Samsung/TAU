@@ -1,0 +1,7 @@
+.ui-icon-tabedit {
+	background-image: url(00_tab_edit.png);
+}
+
+.ui-btn-active .ui-icon-tabedit {
+	background-image: url(00_tab_edit_press.png);
+}

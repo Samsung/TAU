@@ -1,0 +1,77 @@
+/************************************************************************/
+/*                           fixedUIStyle.less                          */
+/************************************************************************/
+/* When system font-size is changed, winset size (ex. header, footer, button, etc,
+   include font) also changed. But in UX guide, some UI elements should have fixed
+   size regardless of system font size.
+   So, this less file supports fixed style for some elements.
+   - Layout: header, footer, button
+   - Popup : popup header, popup footer
+   - toggleswitch
+   - progress: text for ratio
+*/
+
+/***********************************************************************/
+/*                         Layout(FIXED)                               */
+/***********************************************************************/
+@fixed_header_height: 115px;
+@fixed_header_small_height: 76px;
+@fixed_header_has_sub_title_height: 89px;
+@fixed_header_line_height: 39px;
+@fixed_header_expand_height: 203px;
+@fixed_header_expand_title_top: 142px;
+@fixed_header_title_padding_top: 51px;
+@fixed_header_small_title_padding_top: 37px;
+@fixed_header_has_sub_title_padding_top: 38px;
+@fixed_header_title_font_size: 30px;
+@fixed_header_title_padding: 64px;
+@fixed_header_title_icon_padding: 60px;
+@fixed_header_title_icon_position_x: 16px;
+@fixed_header_title_icon_position_y: 14px;
+@fixed_header_title_icon_size: 34px;
+@fixed_header_more_title_padding: 78px;
+@fixed_header_more_width: 50px;
+@fixed_header_more_height: 140px;
+@fixed_footer_btn_width: 700px;
+@fixed_footer_btn_height: 700px;
+@fixed_footer_btn_margin_bottom: -22px;
+@fixed_footer_height: 98px;
+@fixed_page_footer_padding_bottom: 23px;
+
+/**********************************************************************/
+/*                       Popup(FIXED)                                 */
+/**********************************************************************/
+@fixed_popup_header_height: 99px;
+@fixed_popup_header_font_size: 30px;
+@fixed_popup_header_padding_top: 60px;
+@fixed_popup_header_padding_left: 61px;
+@fixed_popup_header_padding_right: 61px;
+@fixed_popup_footer_height: 700px;
+@fixed_popup_footer_width: 700px;
+@fixed_popup_icon_width: 50px;
+@fixed_popup_icon_height: 50px;
+@fixed_popup_btn_margin: 5px;
+
+/**********************************************************************/
+/*                      ToggleSwitch(FIXED)                           */
+/**********************************************************************/
+@fixed_toggleswitch_text_margin_top: 60px;
+@fixed_toggleswitch_text_margin_bottom: 48px;
+@fixed_toggleswitch_text_font_size: 34px;
+@fixed_toggleswitch_sub_text_margin_top: 48px;
+@fixed_toggleswitch_sub_text_margin_bottom: 55px;
+@fixed_toggleswitch_sub_text_font_size: 26px;
+@fixed_toggleswitch_width: 76px;
+@fixed_toggleswitch_height: 76px;
+@fixed_toggleswitch_handler_width: 86px;
+@fixed_toggleswitch_handler_height: 86px;
+@fixed_toggleswitch_handle_on_margin_left: 0;
+@fixed_toggleswitch_handle_position: 0 -49px;
+@fixed_toggleswitch_on_position: 0 -98px;
+@fixed_toggleswitch_off_position: 0 -147px;
+
+/**********************************************************************/
+/*                      List(FIXED)                                   */
+/**********************************************************************/
+@fixed_list_btn_icon_size: 60px;
+@fixed_list_btn_icon_margin: 29px;

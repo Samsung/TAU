@@ -1,0 +1,38 @@
+.ui-view-switcher {
+	height: 100%;
+	overflow: hidden;
+	&.ui-view-carousel {
+		.ui-view {
+			display: none;
+			position: absolute;
+			z-index: -1000;
+			top: 50%;
+			background-color: @color_moreoptions_bg;
+			&.ui-view-carousel-active {
+				display: inline;
+				z-index: 100;
+				left: 50%;
+				transform: translate3d(-50%, 0, 0);
+				.ui-view-carousel-dim {
+					opacity: 0;
+				}
+			}
+			&.ui-view-carousel-left {
+				display: inline;
+				left: 0;
+			}
+			&.ui-view-carousel-right {
+				display: inline;
+				right: 0;
+			}
+			.ui-view-carousel-dim {
+				position: absolute;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				opacity: .6;
+				background-color: @color_viewswitcher_dim_bg;
+			}
+		}
+	}
+}

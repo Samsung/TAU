@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <title>Blur effect animation test</title>
+                <style>
+			@-webkit-keyframes blur_animation {
+				0% { -wetkit-filter: blur(0px); }
+				50% { -webkit-filter: blur(5px); }
+				100% { -webkit-filter: blur(0px); }
+			}
+                        .image-blur {
+                                -webkit-animation: blur_animation 3s;
+                        }
+                </style>
+        </head>
+        <body>
+                <h4>
+                This page is css blur effect animation test page.
+                You can show below two buttons. If you click the start button, below image start blur filter animation effect.
+		After animation, you need to click reset button. Then you can restart blur aniamtion.
+                </h4>
+                <button id="start" type="button"> start </button><button id="reset" type="button"> reset </button><br>
+                <img id="image" src = "./test.jpg" style="width: 300px; height: 300px;"></img>
+                <script>
+                (function(){
+                        document.getElementById( "start" ).addEventListener( "click", function(){
+                                var image = document.getElementById( "image" );
+                                image.className = image.className.replace( "image-blur", "" );
+                                image.className += "image-blur";
+                        });
+                        document.getElementById( "reset" ).addEventListener( "click", function(){
+                                var image = document.getElementById( "image" );
+                                image.className = image.className.replace( "image-blur", "" );
+                        });
+
+                })();
+                </script>
+        </body>
+</html>

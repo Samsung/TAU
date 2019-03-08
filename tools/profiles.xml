@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<profiles version="3.0">
+<profile name="Developer">
+<profileitem ca="tools/tizen-developer-ca.cer" distributor="0" key="tools/Tomasz/author.p12" password="toWdtebP1OSx6A7T7XSrwA==" rootca=""/>
+<profileitem ca="tools/tizen-distributor-ca.cer" distributor="1" key="tools/tizen-distributor-signer.p12" password="Vy63flx5JBMc5GA4iEf8oFy+8aKE7FX/+arrDcO4I5k=" rootca=""/>
+<profileitem ca="" distributor="2" key="" password="xmEcrXPl1ss=" rootca=""/>
+</profile>
+<profile name="Tomasz">
+<profileitem ca="tools/tizen-developer-ca.cer" distributor="0" key="tools/Tomasz/author.p12" password="toWdtebP1OSx6A7T7XSrwA==" rootca=""/>
+<profileitem ca="tools/tizen-distributor-ca.cer" distributor="1" key="tools/tizen-distributor-signer.p12" password="Vy63flx5JBMc5GA4iEf8oFy+8aKE7FX/+arrDcO4I5k=" rootca=""/>
+<profileitem ca="" distributor="2" key="tools/Tomasz/distributor.p12" password="toWdtebP1OSx6A7T7XSrwA==" rootca=""/>
+</profile>
+</profiles>

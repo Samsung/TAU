@@ -1,0 +1,57 @@
+<!-- This is test for multiple transform animations :
+It has below functions.
+	scale3d(x, y, z), rotate3d(x, y, z, angle)
+It's possible to test performance for multiple animations, because this page has the number of boxes (5*8).
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Rotate Test of CSS3 3D transform</title>
+<style>
+.box {
+	display: inline-block;
+	width: 63px;
+	height: 60px;
+	line-height: 60px;
+	border: 1px solid black;
+	border-radius: 3px;
+	background-color: burlywood;
+}
+.registAnimation {
+	-webkit-animation: boxAnimation 2s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-direction: alternate;
+}
+@-webkit-keyframes boxAnimation {
+	from { -webkit-transform: rotate3d(0, 1, 0, 0deg) scale3d(1, 1, 1); }
+	to { -webkit-transform: rotate3d(0, 1, 0, 360deg) scale3d(0.9, 0.9, 1); background-color: bisque; }
+}
+</style>
+</head>
+
+<body onload="createBoxes()">
+<script>
+function createBoxes() {
+	var layerHTML = "",
+		i, j, column = 5, row = 8;
+
+	for (i=1; i<row+1; i++) {
+		layerHTML += "<div id='row" + i + "'>";
+		for (j=1; j<column+1; j++) {
+			var number = column * (i - 1) + j;
+			layerHTML += "<div class='box' id='box" + number + "' onclick='start(" + number + ")'>Box " + number + "</div>";
+		}
+		layerHTML += "</div>";
+	}
+	document.getElementById("container").innerHTML = layerHTML;
+}
+
+function start(number) {
+	document.getElementById("box" + number).className += " registAnimation";
+}
+</script>
+
+<div id="container"></div>
+</body>
+</html>

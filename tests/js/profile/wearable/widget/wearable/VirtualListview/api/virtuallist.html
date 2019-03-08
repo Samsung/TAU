@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Engine bound event test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../../../../libs/qunit-1.11.0.css">
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture">
+		<div class="ui-page" id="first">
+			<div data-role="mock" id="mock1">Mock</div>
+		</div>
+		<div class="ui-page" id="second">
+			<div data-role="mock" id="mock2">Mock</div>
+		</div>
+	</div>
+	<script src="../../../../../../../libs/qunit-1.11.0.js"
+			type="text/javascript"></script>
+	<script src="../../../../../../../libs/support.js"></script>
+	<script type="text/javascript">
+			var tauConfig = {
+				"autorun": false
+			};
+		</script>
+	<script type="text/javascript"
+			src="../../../../../../../libs/dist/js/tau.js"></script>
+	<script src="virtuallist.js"></script>
+</body>
+</html>

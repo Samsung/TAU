@@ -1,0 +1,31 @@
+{
+	"jquery": true,
+	"boss": true,
+	"curly": true,
+	"eqeqeq": true,
+	"eqnull": true,
+	"expr": true,
+	"immed": true,
+	"noarg": true,
+	"onevar": true,
+	"quotmark": "double",
+	"smarttabs": true,
+	"trailing": true,
+	"undef": true,
+	"unused": true,
+	"node": true,
+	"latedef": true,
+	"noempty": true,
+	"sub": true,
+
+	"globals": {
+		"define": false,
+		"requirejs": false,
+		"window": false,
+		"location": false,
+		"document": false,
+		"Error": false,
+		"CustomEvent": false
+	}
+
+}

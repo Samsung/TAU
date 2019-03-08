@@ -1,0 +1,21 @@
+.ui-page {
+	position: absolute;
+	top: -99999em;
+	left: -99999em;
+}
+
+.ui-content {
+	height: 500px !important;
+}
+
+.ui-content.small {
+	height: 200px !important;
+}
+
+.ui-content.big {
+	height: 1000px !important;
+}
+
+.ui-page {
+	height: 500px !important;
+}

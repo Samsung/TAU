@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, user-scalable=no"/>
+	<title>Tizen micro UI</title>
+	<link rel="stylesheet"  href="../../../dist/themes/default/tau.css">
+	<script type="text/javascript" src="../../../dist/js/tau.js"></script>
+</head>
+
+<body>
+<div id="main" class="ui-page">
+	<header class="ui-header">
+		<h2 class="ui-title">Page Navigation Test</h2>
+	</header>
+	<div class="ui-content" style="padding:13px;">
+		<h3>Internal Page</h3>
+		<div class="ui-grid-row">
+			<a href="#innerPage1" class="ui-btn">Go internal page1</a>
+			<a href="#innerPage2" class="ui-btn">Go internal page2</a>
+			<a href="#not-exist-page" class="ui-btn">Not exist internal page (not working)</a>
+		</div>
+
+		<h3>External Page</h3>
+		<div class="ui-grid-row">
+			<a href="external.html" class="ui-btn">Go external page</a>
+			<a href="external.html#hashtest" class="ui-btn">Go external page with hash</a>
+			<a href="sub/sub1.html" class="ui-btn">Go external page in another folder</a>
+			<a href="not-exist-page.html" class="ui-btn">Not exist external page (not working)</a>
+			<a href="empty.html" class="ui-btn">Empty page (not working)</a>
+		</div>
+	</div>
+</div>
+
+<div id="innerPage1" class="ui-page">
+	<header class="ui-header">
+		<h2 class="ui-title">Internal Page 1</h2>
+	</header>
+	<div class="ui-content" style="padding:13px;">
+		<h3>Internal Page</h3>
+		<div class="ui-grid-row">
+			<a href="index.html" class="ui-btn">Go main page by url</a>
+			<a href="#main" class="ui-btn">Go main page by id</a>
+			<a href="#innerPage2" class="ui-btn">Go internal page2</a>
+		</div>
+
+		<h3>External Page</h3>
+		<div class="ui-grid-row">
+			<a href="external.html" class="ui-btn">Go external page</a>
+			<a href="sub/sub1.html" class="ui-btn">Go external page in another folder</a>
+		</div>
+	</div>
+</div>
+
+<div id="innerPage2" class="ui-page">
+	<header class="ui-header">
+		<h2 class="ui-title">Internal Page 2</h2>
+	</header>
+	<div class="ui-content" style="padding:13px;">
+		<h3>Internal Page</h3>
+		<div class="ui-grid-row">
+			<a href="index.html" class="ui-btn">Go main page by url</a>
+			<a href="#main" class="ui-btn">Go main page by id</a>
+			<a href="#innerPage1" class="ui-btn">Go internal page1</a>
+		</div>
+
+		<h3>External Page</h3>
+		<div class="ui-grid-row">
+			<a href="external.html" class="ui-btn">Go external page</a>
+			<a href="sub/sub1.html" class="ui-btn">Go external page in another folder</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

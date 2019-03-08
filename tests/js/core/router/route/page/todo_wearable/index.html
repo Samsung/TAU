@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Navigation Test Suite</title>
+
+    <link rel="stylesheet" href="../../../../../../libs/dist/theme/default/tau.css">
+    <link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css"/>
+    <link rel="stylesheet" href="test.css"/>
+</head>
+<body>
+<div id="qunit"></div>
+
+<div id="main" class="ui-page"></div>
+<div id="internal-page-hide" class="ui-page"></div>
+<div id="internal-page-show" class="ui-page"></div>
+
+<div id="layout-test-header-footer" class="ui-page">
+    <header class="ui-header ui-has-more">
+        <h2 class="ui-title">Call menu</h2>
+        <button type="button" class="ui-more ui-icon-overflow">More Options</button>
+    </header>
+    <div class="ui-content">
+        Content message
+    </div>
+    <footer class="ui-footer">
+        <button class="ui-btn">footer</button>
+    </footer>
+</div>
+
+<div id="layout-test-header" class="ui-page">
+    <header class="ui-header ui-has-more">
+        <h2 class="ui-title">Call menu</h2>
+    </header>
+    <div class="ui-content">
+        Content message
+    </div>
+</div>
+
+<div id="layout-test-footer" class="ui-page">
+    <div class="ui-content">
+        Content message
+    </div>
+    <footer class="ui-footer">
+        <button class="ui-btn">footer</button>
+    </footer>
+</div>
+
+<div id="layout-test-only-content" class="ui-page">
+    <div class="ui-content">
+        Content message
+    </div>
+</div>
+
+<div id="layout-test-only-custom-header" class="ui-page">
+    <header class="ui-header" style="height:40px;">
+        <h2 class="ui-title">Call menu</h2>
+    </header>
+    <div class="ui-content">
+        Content message
+    </div>
+    <footer class="ui-footer">
+        <button class="ui-btn">footer</button>
+    </footer>
+</div>
+
+<div id="layout-test-only-custom-footer" class="ui-page">
+    <header class="ui-header">
+        <h2 class="ui-title">Call menu</h2>
+    </header>
+    <div class="ui-content">
+        Content message
+    </div>
+    <footer class="ui-footer" style="height:120px;">
+        <button class="ui-btn">footer</button>
+    </footer>
+</div>
+<script type="text/javascript">
+	var tauConfig = {
+		pageTransition: "none"
+	}
+</script>
+<script type="text/javascript" src="../../../../../../libs/jquery.js"></script>
+<script type="text/javascript" src="../../../../../../libs/qunit-1.11.0.js"></script>
+<script type="text/javascript" src="../../../../../../libs/support.js"></script>
+<script type="text/javascript" src="../../../../../../libs/helper.js"></script>
+<script type="text/javascript" src="tests.js"></script>
+<script type="text/javascript" src="../../../../../../libs/dist/js/tau.js"></script>
+</body>
+</html>

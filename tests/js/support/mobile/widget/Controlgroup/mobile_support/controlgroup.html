@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Controlgroup tests</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css">
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture">
+			<div data-role="page" id="page1">
+				<div data-role="controlgroup" id="test1">
+					<a href="#" data-role="button" id="test1a">A</a>
+					<a href="#" data-role="button" id="test1b">B</a>
+					<a href="#" data-role="button" id="test1c">C</a>
+				</div>
+
+				<div data-role="controlgroup" id="test2">
+					<a href="#" data-role="button" id="test2a">A</a>
+					<a href="#" data-role="button" id="test2b">B</a>
+					<a href="#" data-role="button" id="test2c">C</a>
+					<legend>Test2 Legend</legend>
+				</div>
+
+				<div data-role="controlgroup" id="test3">
+					<a href="#" data-role="button" id="test3a">A</a>
+					<a href="#" data-role="button" id="test3b">B</a>
+					<a href="#" data-role="button" id="test3c">C</a>
+					<div class="ui-controlgroup-label">Test3 Legend</div>
+				</div>
+
+				<div data-role="controlgroup" id="test4">
+					<a href="#" data-role="button" id="test4a">A</a>
+					<a href="#" data-role="button" id="test4b">B</a>
+					<a href="#" data-role="button" id="test4c">C</a>
+				</div>
+
+				<div data-role="controlgroup" data-type="horizontal" data-shadow="true" data-mini="true" id="test5">
+					<a href="#" data-role="button" id="test5a">A</a>
+					<a href="#" data-role="button" id="test5b">B</a>
+					<a href="#" data-role="button" id="test5c">C</a>
+				</div>
+
+				<div data-role="controlgroup" id="test6">
+					<a href="#" data-role="button" id="test6a">A</a>
+					<a href="#" data-role="button" id="test6b">B</a>
+					<a href="#" data-role="button" id="test6c">C</a>
+				</div>
+
+				<div data-role="controlgroup" id="test7" data-type="horizontal">
+					<a href="#" data-role="button" id="test7a">A</a>
+					<a href="#" data-role="button" id="test7b">B</a>
+					<a href="#" data-role="button" id="test7c">C</a>
+				</div>
+		</div>
+		<script src="../../../../../../libs/jquery.js"></script>
+		<script src="../../../../../../libs/qunit-1.11.0.js" type="text/javascript"></script>
+		<script src="../../../../../../libs/support.js"></script>
+		<script>
+			module('support/mobile/widget/Controlgroup', {
+				teardown: function () {
+					ej.engine._clearBindings();
+				}
+			});
+
+			test("Controlgroup content is wrapped with div with proper css classes", function () {
+				$('#test1').controlgroup();
+				equal($('#test1').children().length, 1, 'Controlgroup content is wrapped with 1 element');
+				equal($('#test1').children().get(0).tagName, 'DIV', 'Controlgroup content is wrapped with div element');
+				ok($('#test1').children().eq(0).hasClass('ui-controlgroup-controls'), 'Controlgroup content wrapper has ui-controlgroup-controls class');
+			});
+
+			test("Controlgroup legend was replaced with stylable div", function () {
+				$('#test2').controlgroup();
+				equal($('#test2').find('legend').length, 0, 'Legend element was removed');
+				equal($('#test2').children().length, 2, 'New element was added instead of legend element');
+				ok($('#test2').children().eq(0).hasClass('ui-controlgroup-label'), 'Replacement element has ui-controlgroup-label class');
+				equal($('#test2').children().eq(0).text(), 'Test2 Legend', 'Replacement element has removed legend text');
+			});
+
+			test("Controlgroup heading was moved to the top if already exist", function () {
+				$('#test3').controlgroup();
+				ok($('#test3').children().eq(0).hasClass('ui-controlgroup-label'), 'Existing label was moved to the top of container');
+				equal($('#test3').children().eq(0).text(), 'Test3 Legend', 'Moved element has correct content');
+			});
+
+			test("Controlgroup container has appropriate css styles", function () {
+				var container;
+
+				$('#test4').controlgroup();
+				container = $('#test4');
+				ok(container.hasClass('ui-corner-all'), 'Controlgroup must contain ui-corner-all class');
+				ok(container.hasClass('ui-controlgroup'), 'Controlgroup must contain ui-controlgroup class');
+				ok(container.hasClass('ui-controlgroup-vertical'), 'Controlgroup must contain ui-controlgroup-vertical class as default');
+				ok(!container.hasClass('ui-shadow'), 'Controlgroup must not contain ui-shadow class as default');
+				ok(!container.hasClass('ui-mini'), 'Controlgroup must not contain ui-mini class as default');
+			});
+
+			test("Controlgroup container has appropriate css styles when data attributes are set", function () {
+				var container;
+
+				$('#test5').controlgroup();
+				container = $('#test5');
+				ok(container.hasClass('ui-corner-all'), 'Controlgroup must contain ui-corner-all class');
+				ok(container.hasClass('ui-controlgroup'), 'Controlgroup must contain ui-controlgroup class');
+				ok(container.hasClass('ui-controlgroup-horizontal'), 'Controlgroup must contain ui-controlgroup-horizontal when data-type is set to horizontal');
+				ok(container.hasClass('ui-shadow'), 'Controlgroup must contain ui-shadow class when data-shadow is set to true');
+				ok(container.hasClass('ui-mini'), 'Controlgroup must contain ui-mini class when data-mini is set to true');
+			});
+
+			test("Controlgroup buttons has appropriate css styles in vertical mode", function () {
+				var buttons;
+
+				$('#test6').controlgroup();
+
+				buttons = $('.ui-btn', '#test6');
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-btn-corner-all'), 'Controlgroup elements must not contain ui-btn-corner-all class');
+				});
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-shadow'), 'Controlgroup elements must not contain ui-shadow class');
+				});
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-corner-left'), 'Controlgroup elements must not contain ui-corner-left class');
+				});
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-corner-right'), 'Controlgroup elements must not contain ui-corner-right class');
+				});
+
+				ok(buttons.eq(0).hasClass('ui-corner-top'), 'First controlgroup item must contain ui-corner-top class');
+				ok(buttons.last().hasClass('ui-corner-bottom'), 'Last controlgroup item must contain ui-corner-bottom class');
+				ok(buttons.last().hasClass('ui-controlgroup-last'), 'Last controlgroup item must contain ui-controlgroup-last class');
+
+				ok(!buttons.eq(1).hasClass('ui-corner-top'), 'Middle controlgroup item must not contain ui-corner-top class');
+				ok(!buttons.eq(1).hasClass('ui-corner-bottom'), 'Middle controlgroup item must not contain ui-corner-bottom class');
+				ok(!buttons.eq(1).hasClass('ui-controlgroup-last'), 'Middle controlgroup item must not contain ui-controlgroup-last class');
+			});
+
+			test("Controlgroup buttons has appropriate css styles in horizontal mode", function () {
+				var buttons;
+
+				$('#test7').controlgroup();
+
+				buttons = $('.ui-btn', '#test7');
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-btn-corner-all'), 'Controlgroup elements must not contain ui-btn-corner-all class');
+				});
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-shadow'), 'Controlgroup elements must not contain ui-shadow class');
+				});
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-corner-top'), 'Controlgroup elements must not contain ui-corner-top class');
+				});
+
+				buttons.each(function (item) {
+					ok(!$(item).hasClass('ui-corner-bottom'), 'Controlgroup elements must not contain ui-corner-bottom class');
+				});
+
+				ok(buttons.eq(0).hasClass('ui-corner-left'), 'First controlgroup item must contain ui-corner-left class');
+				ok(buttons.last().hasClass('ui-corner-right'), 'Last controlgroup item must contain ui-corner-right class');
+				ok(buttons.last().hasClass('ui-controlgroup-last'), 'Last controlgroup item must contain ui-controlgroup-last class');
+
+				ok(!buttons.eq(1).hasClass('ui-corner-left'), 'Middle controlgroup item must not contain ui-corner-left class');
+				ok(!buttons.eq(1).hasClass('ui-corner-right'), 'Middle controlgroup item must not contain ui-corner-right class');
+				ok(!buttons.eq(1).hasClass('ui-controlgroup-last'), 'Middle controlgroup item must not contain ui-controlgroup-last class');
+			});
+
+		</script>
+		<script type="text/javascript">
+			var tauConfig = {
+				"autorun": false
+			};
+		</script>
+		<script type="text/javascript" src="../../../../../../libs/dist/js/tau.js"></script>
+		<script type="text/javascript" src="../../../../../../libs/dist/js/tau.support-2.3.js"></script>
+
+	</body>
+</html>

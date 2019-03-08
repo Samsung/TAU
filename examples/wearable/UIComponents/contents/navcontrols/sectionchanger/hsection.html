@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<title>Wearable Extra UI - Section changer</title>
+	<link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="../../../lib/tau/wearable/theme/default/tau.circle.min.css">
+	<link rel="stylesheet" href="../../../css/style.css">
+</head>
+<body>
+	<div id="hsectionchangerPage" class="ui-page" data-enable-page-scroll="false">
+		<div id="pageIndicator" class="ui-page-indicator"></div>
+		<link rel="stylesheet"  href="css/sectionchanger.css">
+		<div id="hsectionchanger" class="ui-content">
+			<!-- section changer has only one child. -->
+			<div>
+				<section style="text-align:center" >
+					<h3> LEFT2 PAGE </h3>
+				</section>
+				<section style="text-align:center">
+					<h3> LEFT1 PAGE </h3>
+				</section>
+				<section class="ui-section-active" style="text-align:center">
+					<h3> MAIN PAGE </h3>
+				</section>
+				<section style="text-align:center">
+					<h3> RIGHT1 PAGE </h3>
+				</section>
+				<section style="text-align:center">
+					<h3> RIGHT2 PAGE </h3>
+				</section>
+			</div>
+		</div>
+		<script src="hsection.js"></script>
+	</div>
+<script src="../../../lib/tau/wearable/js/tau.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+</head>
+<body>
+<div id="colorpickerPage-ce" class="ui-page" data-enable-page-scroll="false">
+	<div id="colorpicker-ce" class="ui-colorpicker">
+	</div>
+	<script>
+		(function (tau) {
+			var page = document.getElementById("colorpickerPage-ce"),
+				colorpicker = document.getElementById("colorpicker-ce"),
+				colorpickerComponent;
+
+			page.addEventListener("pagebeforeshow", function () {
+				colorpickerComponent = tau.widget.ColorPicker(colorpicker);
+				colorpickerComponent._setActiveItem(2);
+			});
+
+			page.addEventListener("pagebeforehide", function () {
+				colorpickerComponent.destroy();
+			});
+		}(window.tau));
+	</script>
+</div>
+</body>
+<script type="text/javascript" src="../lib/tau/wearable/js/tau.js" data-build-remove="false"></script>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</html>

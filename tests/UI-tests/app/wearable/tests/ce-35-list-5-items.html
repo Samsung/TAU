@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/fonts.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+</head>
+<body>
+<div class="ui-page" id="35-list-5-pageCE" style="border: solid 1px red; border-radius: 50%">
+	<div class="ui-content">
+		<ul class="ui-listview" data-visible-items="5" id="35-list-5CE">
+			<li><a href="#">List01</a></li>
+			<li><a href="#">List02</a></li>
+			<li><a href="#">List03</a></li>
+			<li><a href="#">List04</a></li>
+			<li><a href="#">List05</a></li>
+			<li><a href="#">List06</a></li>
+		</ul>
+	</div>
+	<script>
+		(function () {
+			/* global tau */
+			var pageElement = document.getElementById("35-list-5-pageCE"),
+				listElement = document.getElementById("35-list-5CE"),
+				listviewWidget;
+
+			pageElement.addEventListener("pageshow", function () {
+				listviewWidget = tau.widget.Listview(listElement);
+				listviewWidget._rollDown();
+				listviewWidget._rollDown();
+			});
+		}());
+	</script>
+</div>
+<script type="text/javascript" src="../lib/tau/wearable/js/tau.js"
+	data-build-remove="false"></script>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</body>
+</html>

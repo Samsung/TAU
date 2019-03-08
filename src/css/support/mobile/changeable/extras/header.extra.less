@@ -1,0 +1,59 @@
+/* Header style */
+.ui-header {
+	> .ui-btn, > button, > [data-role="button"] {
+		left: 8 * @unit_base;
+	}
+	.ui-btn:last-of-type:not(:only-of-type), button:last-of-type:not(:only-of-type), [data-role="button"]:last-of-type:not(:only-of-type) {
+		left: initial;
+		right: 8 * @unit_base;
+	}
+
+	img {
+		position: absolute;
+		width: 60 * @unit_base;
+		height: 60 * @unit_base;
+		top: 8 * @unit_base;
+		left: 8 * @unit_base;
+	}
+
+	> .ui-btn, button, [data-role="button"] {
+		&[data-icon], &.ui-btn-icon {
+			min-width: 0;
+			width: 60 * @unit_base;
+			height: 60 * @unit_base;
+			top: 8 * @unit_base;
+			&::after {
+				position: absolute;
+				content: "";
+				width: 100%;
+				height: 100%;
+				border-radius: 0;
+				top: 0;
+				left: 0;
+				.mask-box-image-repeat(none);
+				.mask-size(100%);
+				background-color: @color_button_icon;
+			}
+		}
+	}
+	> .ui-btn {
+		position: absolute;
+		top: 8 * @unit_base;
+		&:not(.ui-btn-circle):not(.ui-btn-nobg):not(.ui-floatingactions-item) {
+			-webkit-mask-box-image: none;
+			background-color: transparent;
+
+			&::before {
+				z-index: -1;
+				-webkit-mask-box-image: none;
+				background-color: @color_button_bg_press;
+			}
+		}
+	}
+	> .ui-btn-icon.ui-btn-icon-only::after {
+		top: 0;
+		left: 0;
+		margin-top: 0;
+		margin-left: 0;
+	}
+}

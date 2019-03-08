@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <link rel="stylesheet" type="text/css" href="{{basedir}}../css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="{{basedir}}../css/snippet.css" />
+    <script type="text/javascript" src="{{basedir}}../scripts/snippet.js"></script>
+    <script type="text/javascript" src="{{basedir}}../scripts/jquery.util.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{{basedir}}../scripts/common.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{{basedir}}../scripts/core.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{{basedir}}../scripts/search.js" charset="utf-8"></script>
+
+    <title>{{title}}</title>
+</head>
+
+<body onload="prettyPrint()" style="overflow: auto;">
+
+<div id="navigation">
+    <div id="profile">
+        <p><img alt="Mobile Web" src="{{basedir}}../images/mobile_s_w.png"/> <img alt="Wearable Web" src="images/wearable_s_w.png"/></p>
+    </div>
+
+    <div id="toc_border"><div id="toc">
+        <p class="toc-title">Related Info</p>
+        <ul class="toc">
+            <li><a href="{{basedir}}../../../org.tizen.guides/html/web/guides_w.htm">Tizen Web Tutorials</a></li>
+            <li><a href="{{basedir}}../../../org.tizen.training/html/web/tutorials_w.htm">Tizen Web Guides</a></li>
+        </ul>
+    </div>
+
+    </div>
+</div>
+
+
+<div id="container"><div id="contents"><div class="content">
+
+<h1>{{title}}</h1>
+
+{{{brief}}}
+
+<h2>Table of Contents</h2>
+<ol class="toc">
+	{{#toc}}
+		<li><a href="#{{href}}">{{name}}</a>
+			{{#hasTOC}}
+				<ol class="toc">
+					{{#toc}}
+						<li><a href="#{{href}}">{{name}}</a>
+						</li>
+					{{/toc}}
+				</ol>
+			{{/hasTOC}}
+		</li>
+	{{/toc}}
+</ol>
+
+{{{description}}}
+
+{{#since}}
+	<table class="note">
+		<tbody>
+		<tr>
+			<th class="note">Note</th>
+		</tr>
+		<tr>
+			<td class="note">This widget is supported since <strong>{{since}}</strong>.</td>
+		</tr>
+		</tbody>
+	</table>
+{{/since}}
+{{#showEvents}}
+	<h2><a id="events-list"></a>Events list</h2>
+
+	<table>
+		<tbody>
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+		</tr>
+		{{#events}}
+			<tr>
+				<td class="option"><span style="font-family: Courier New,Courier,monospace">{{name}}</span></td>
+				<td>{{{description}}}</td>
+			</tr>
+		{{/events}}
+		</tbody>
+	</table>
+
+{{/showEvents}}
+{{#showProperties}}
+	<h2><a id="properties-list"></a>Properties list</h2>
+
+	<h3>Summary</h3>
+	<table class="informaltable">
+		<thead>
+		<tr>
+			<th>Property</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#properties}}
+			{{#isPublic}}
+				<tr>
+					<td>
+						<pre class="intable prettyprint">{{types}} <a
+								href="#property-{{name}}">{{name}}</a> {{#defaultValue}} = {{defaultValue}}{{/defaultValue}} </pre>
+					</td>
+					<td>{{{brief}}}</td>
+				</tr>
+			{{/isPublic}}
+		{{/properties}}
+		</tbody>
+	</table>
+	<dl>
+		{{#properties}}
+			{{#isPublic}}
+				<dt class="property" id="addidp28072"><code><b><span
+						class="propertyName"
+																   id="property-{{name}}">{{name}}</span></b></code></dt>
+				<dd>
+					<div class="brief">
+						{{{brief}}}
+					</div>
+					<div class="synopsis">
+						<pre class="signature prettyprint">{{types}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}
+						</pre>
+					</div>
+					<div class="returntype">
+						<p><span class="return">Type: </span>{{types}}</p>
+					</div>
+					{{#since}}
+						<p><span class="version">Since: </span>
+							{{since}}
+						</p>
+					{{/since}}
+					<div class="description">
+						<p>
+							{{{description}}}
+						</p>
+					</div>
+					{{#examples}}
+						<div class="example">
+							<span class="example"><p>Code
+								example:</p><p>{{name}}</p></span>
+							<pre name="code" class="examplecode
+							prettyprint">{{{code}}}</pre>
+						</div>
+					{{/examples}}
+				</dd>
+			{{/isPublic}}
+		{{/properties}}
+	</dl>
+{{/showProperties}}
+{{#showMethods}}
+	<h2><a id="methods-list"></a>Methods list</h2>
+
+	<h3>Summary</h3>
+	<table class="informaltable">
+		<thead>
+		<tr>
+			<th>Method</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#methods}}
+			{{#isPublic}}
+				<tr>
+					<td>
+						<pre class="intable prettyprint">{{#return.types}}{{return.types}} {{/return.types}}<a href="#method-{{name}}">{{name}}</a> ( {{#shortParams}}{{types}}{{#isOptional}}?{{/isOptional}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}{{^isLast}}, {{/isLast}}{{/shortParams}} ) </pre>
+					</td>
+					<td>{{{brief}}}</td>
+				</tr>
+			{{/isPublic}}
+		{{/methods}}
+		</tbody>
+	</table>
+	<dl>
+		{{#methods}}
+			{{#isPublic}}
+				<dt class="method" id="addidp28072"><code><b><span class="methodName"
+																   id="method-{{name}}">{{name}}</span></b></code></dt>
+				<dd>
+					<div class="brief">
+						{{{brief}}}
+					</div>
+					<div class="synopsis">
+						<pre class="signature prettyprint">{{#return.types}}{{return.types}} {{/return.types}}{{name}} ( {{#shortParams}}{{types}}{{#isOptional}}?{{/isOptional}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}{{^isLast}}, {{/isLast}}{{/shortParams}}) </pre>
+					</div>
+					{{#since}}
+						<p><span class="version">Since: </span>
+							{{since}}
+						</p>
+					{{/since}}
+					<div class="description">
+						<p>
+							{{{description}}}
+						</p>
+					</div>
+					{{#hasParams}}
+					<div class="parameters">
+						<p><span class="param">Parameters:</span></p>
+					<table>
+					<tbody>
+					<tr>
+						<th>Parameter</th>
+						<th>Type</th>
+						<th>Required / optional</th>
+						<th>Default value</th>
+						<th>Description</th>
+					</tr>
+					{{/hasParams}}
+					{{#params}}
+					<tr>
+						<td><span style="font-family: Courier New,Courier,monospace">{{name}}</span></td>
+						<td>{{types}}</td>
+						<td>{{#isOptional}}optional{{/isOptional}}{{^isOptional}}required{{/isOptional}}</td>
+						<td>{{defaultValue}}</td>
+						<td>{{{description}}}</td>
+					</tr>
+					{{/params}}
+					{{#hasParams}}
+					</tbody>
+					</table>
+					</div>
+					{{/hasParams}}
+					<div class="returntype">
+						<p><span class="return">Return value:</span></p>
+						{{#return}}
+							<table>
+								<tbody>
+								<tr>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+								<tr>
+									<td>{{types}}</td>
+									<td>{{{description}}}</td>
+								</tr>
+								</tbody>
+							</table>
+						{{/return}}
+						{{^return}}
+							No Return Value
+						{{/return}}
+					</div>
+					{{#examples}}
+						<div class="example">
+							<span class="example"><p>Code
+								example:</p><p>{{name}}</p></span>
+							<pre name="code" class="examplecode
+							prettyprint">{{{code}}}</pre>
+						</div>
+					{{/examples}}
+				</dd>
+			{{/isPublic}}
+		{{/methods}}
+	</dl>
+{{/showMethods}}
+{{#showInheritedMethods}}
+	<h2><a id="methods-list"></a>Inherited methods list</h2>
+
+	<h3>Summary</h3>
+	<table class="informaltable">
+		<thead>
+		<tr>
+			<th>Method</th>
+			<th>Description</th>
+		</tr>
+		</thead>
+		<tbody>
+		{{#inheritedMethods}}
+			{{#isPublic}}
+				<tr>
+					<td>
+						<pre class="intable prettyprint">{{#return.types}}{{return.types}} {{/return.types}}<a href="#method-{{name}}">{{name}}</a> ( {{#params}}{{types}}{{#isOptional}}?{{/isOptional}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}{{^isLast}}, {{/isLast}}{{/params}} ) </pre>
+					</td>
+					<td>{{{brief}}}</td>
+				</tr>
+			{{/isPublic}}
+		{{/inheritedMethods}}
+		</tbody>
+	</table>
+	<dl>
+		{{#inheritedMethods}}
+			{{#isPublic}}
+				<dt class="method" id="addidp28072"><code><b><span class="methodName"
+																   id="method-{{name}}">{{name}}</span></b></code></dt>
+				<dd>
+					<div class="brief">
+						{{{brief}}}
+					</div>
+					<div class="synopsis">
+						<pre class="signature prettyprint">{{#return.types}}{{return.types}} {{/return.types}}{{name}} ( {{#params}}{{types}}{{#isOptional}}?{{/isOptional}} {{name}}{{#defaultValue}} = {{defaultValue}}{{/defaultValue}}{{^isLast}}, {{/isLast}}{{/params}}) </pre>
+					</div>
+					{{#since}}
+						<p><span class="version">Since: </span>
+							{{since}}
+						</p>
+					{{/since}}
+					{{#inherited}}
+						<p><span class="version">Inherited from: </span>
+							{{inherited}}
+						</p>
+					{{/inherited}}
+					<div class="description">
+						<p>
+							{{{description}}}
+						</p>
+					</div>
+					{{#hasParams}}
+					<div class="parameters">
+						<p><span class="param">Parameters:</span></p>
+					<table>
+					<tbody>
+					<tr>
+						<th>Parameter</th>
+						<th>Type</th>
+						<th>Required / optional</th>
+						<th>Default value</th>
+						<th>Description</th>
+					</tr>
+					{{/hasParams}}
+					{{#params}}
+					<tr>
+						<td><span style="font-family: Courier New,Courier,monospace">{{name}}</span></td>
+						<td>{{types}}</td>
+						<td>{{#isOptional}}optional{{/isOptional}}{{^isOptional}}required{{/isOptional}}</td>
+						<td>{{defaultValue}}</td>
+						<td>{{{description}}}</td>
+					</tr>
+					{{/params}}
+					{{#hasParams}}
+					</tbody>
+					</table>
+					</div>
+					{{/hasParams}}
+					<div class="returntype">
+						<p><span class="return">Return value:</span></p>
+						{{#return}}
+							<table>
+								<tbody>
+								<tr>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+								<tr>
+									<td>{{types}}</td>
+									<td>{{{description}}}</td>
+								</tr>
+								</tbody>
+							</table>
+						{{/return}}
+						{{^return}}
+							No Return Value
+						{{/return}}
+					</div>
+					{{#examples}}
+						<div class="example">
+							<span class="example"><p>Code
+								example:</p><p>{{name}}</p></span>
+							<pre name="code" class="examplecode
+							prettyprint">{{{code}}}</pre>
+						</div>
+					{{/examples}}
+				</dd>
+			{{/isPublic}}
+		{{/inheritedMethods}}
+	</dl>
+{{/showInheritedMethods}}
+<h2>Where to Go Next</h2>
+<ul>
+	{{#seeMore}}
+		<li><a href="{{file}}">{{name}}</a></li>
+	{{/seeMore}}
+</ul>
+    <script type="text/javascript" src="{{basedir}}../scripts/jquery.zclip.min.js"></script>
+    <script type="text/javascript" src="{{basedir}}../scripts/showhide.js"></script>
+</div></div></div>
+
+<a class="top sms" href="#"><img src="{{basedir}}../images/btn_top.gif" alt="Go to top" /></a>
+
+<div id="footer">
+    <p class="footer">Except as noted, this content - excluding the Code Examples - is licensed under <a href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_blank">Creative Commons Attribution 3.0</a> and all of the Code Examples contained herein are licensed under <a href="https://www.tizen.org/bsd-3-clause-license" target="_blank">BSD-3-Clause</a>.<br/>For details, see the <a href="https://www.tizen.org/content-license" target="_blank">Content License</a>.</p>
+</div>
+
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-25976949-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+</body>
+</html>

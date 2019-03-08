@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+</head>
+<body>
+<div class="ui-page red-border" id="page-toastpopup2l">
+	<header class="ui-header">
+		<h2 class="ui-title">Title</h2>
+	</header>
+	<div class="ui-content">
+		<ul class="ui-listview">
+			<li><a href="#popupToast">List 01</a></li>
+			<li><a href="#">List 02</a></li>
+			<li><a href="#">List 03</a></li>
+			<li><a href="#">List 04</a></li>
+			<li><a href="#">List 05</a></li>
+			<li><a href="#">List 06</a></li>
+		</ul>
+	</div>
+
+	<div id="popupToast2l" class="ui-popup ui-popup-toast toast-text-only">
+		<div class="ui-popup-content">
+			Your mobile
+			network is not available
+		</div>
+	</div>
+	<script>
+		(function () {
+			var page = document.getElementById("page-toastpopup2l"),
+				popupElement = document.getElementById("popupToast2l"),
+				popup,
+
+				onPageShow = function () {
+					popup = tau.widget.Popup(popupElement);
+					popup.options.closeAfter = 20000;
+					popup.open();
+				},
+				onPageHide = function () {
+					popup.destroy();
+				};
+			page.addEventListener("pageshow", onPageShow);
+			page.addEventListener("pagebeforehide", onPageHide);
+		}());
+	</script>
+</div>
+<script type="text/javascript" src="../lib/tau/wearable/js/tau.js" data-build-remove="false"></script>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</body>
+</html>

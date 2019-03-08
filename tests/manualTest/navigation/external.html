@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, user-scalable=no"/>
+	<title>Tizen micro UI</title>
+	<link rel="stylesheet"  href="../../../dist/themes/default/tau.css">
+	<script type="text/javascript" src="../../../dist/js/tau.js"></script>
+</head>
+
+<body>
+<div class="ui-page">
+	<header class="ui-header">
+		<h2 class="ui-title">External Page Test</h2>
+	</header>
+	<div class="ui-content" style="padding:13px;">
+		<h3>Internal Page</h3>
+		<div class="ui-grid-row">
+			<a href="index.html" class="ui-btn">Go main page by url</a>
+			<a href="index.html#main" class="ui-btn">Go main page by id</a>
+			<a href="index.html#innerPage1" class="ui-btn">Go internal page1</a>
+			<a href="index.html#innerPage2" class="ui-btn">Go internal page2</a>
+			<a href="#innerPage2" class="ui-btn">Go internal page2 by only id (not working)</a>
+		</div>
+
+		<h3>External Page</h3>
+		<div class="ui-grid-row">
+			<a href="sub/sub1.html" class="ui-btn">Go external page in another folder</a>
+			<a href="not-exist-page.html" class="ui-btn">Not exist page (not working)</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

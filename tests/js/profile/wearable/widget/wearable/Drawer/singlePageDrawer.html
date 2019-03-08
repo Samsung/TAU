@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Engine bound event test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css">
+	<link rel="stylesheet"
+		  href="../../../../../../libs/dist/theme/default/tau.css">
+	<script src="../../../../../../libs/qunit-1.11.0.js"></script>
+	<script src="../../../../../../libs/support.js"></script>
+	<script>
+			// workaround for touches simulate;
+			window.ontouchstart = {};
+	</script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">
+	<div id="drawerSinglePage" class="ui-page">
+		<header id="spHeader" class="ui-header">
+			<h2 class="ui-title">Drawer</h2>
+		</header>
+		<div id="spContent" class="ui-content">
+			Drawer
+		</div>
+
+		<!-- Drawer Handlers -->
+
+		<a id="leftDrawerHandler" href="#leftDrawer" class="drawer-handler">Left Handler</a>
+		<a id="rightDrawerHandler" href="#rightDrawer" class="drawer-handler">Right HAndler</a>
+
+		<!-- More Option -->
+
+		<nav id="leftDrawer" class="ui-drawer" data-drawer-target="#drawerSinglePage" data-position="left"
+			 data-enable="true" data-drag-edge="1">
+			<header class="ui-header">
+				<h2 class="ui-title">Left Drawer</h2>
+			</header>
+			<div id="leftClose" class="ui-content">
+				<p>Click Close</p>
+			</div>
+		</nav>
+
+		<!-- Over View -->
+
+		<div id="rightDrawer" class="ui-drawer" data-drawer-target="#drawerSinglePage" data-position="right"
+			 data-enable="true" data-drag-edge="1">
+			<header class="ui-header">
+				<h2 class="ui-title">Right Drawer</h2>
+			</header>
+			<div class="ui-content">
+				<ul>
+					<li>List Item 1</li>
+					<li>List Item 2</li>
+					<li>List Item 3</li>
+					<li>List Item 4</li>
+					<li>List Item 5</li>
+				</ul>
+			</div>
+		</div>
+		<footer class="ui-footer">
+			<a href="#" class="ui-btn" id="rightClose">Close</a>
+		</footer>
+	</div>
+</div>
+<script type="text/javascript"
+		src="../../../../../../libs/dist/js/tau.js"></script>
+<script type="text/javascript" src="Drawer.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+/*
+ * toggle switch
+ */
+.ui-switch {
+	width: 100%;
+	color: @color_switch_text;
+}
+
+.ui-switch-inneroffset,
+.ui-switch-handler {
+	display: none;
+}
+
+.ui-switch-text {
+	margin-top: @fixed_toggleswitch_text_margin_top;
+	margin-bottom: @fixed_toggleswitch_text_margin_bottom;
+	padding: 0 30px;
+	font-size: @fixed_toggleswitch_text_font_size;
+	text-align: center;
+}
+
+.ui-switch-sub-text {
+	margin-top: @fixed_toggleswitch_sub_text_margin_top;
+	font-size: @fixed_toggleswitch_sub_text_font_size;
+	text-align: center;
+	color: @color_switch_sub_text;
+}
+
+.ui-toggleswitch {
+	position: relative;
+	display: inline-block;
+	width: @fixed_toggleswitch_width;
+	height: @fixed_toggleswitch_height;
+	overflow: hidden;
+	&.ui-toggleswitch-large {
+		width: @fixed_toggleswitch_large_width;
+		height: @fixed_toggleswitch_large_height;
+	}
+
+	& .ui-switch-input {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		-webkit-appearance: none;
+		display: block;
+
+		&::before {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			mask-image: url('images/Controller_icon/toggle_changeable.png');
+			.mask-size(100% 400%);
+			.mask-repeat(no-repeat);
+			.mask-position(0 0);
+			background-color: @color_toggle_off_bg_press;
+			z-index: 0;
+		}
+
+		&:active {
+			&::before {
+				background-color: @color_toggle_off_bg_press;
+			}
+			& ~ .ui-switch-activation,
+			~ .ui-switch-button {
+				background-color: @color_toggle_off_handler_press;
+				&::before {
+					background-color: @color_toggle_off_handler_off_press;
+				}
+			}
+		}
+	}
+
+	& .ui-switch-activation,
+	.ui-switch-button {
+		width: 100%;
+		height: 100%;
+		mask-image: url('images/Controller_icon/toggle_changeable.png');
+		.mask-size(100% 400%);
+		.mask-repeat(no-repeat);
+		.mask-position(0 33.3%);
+		background-color: @color_toggle_off_handler;
+		position: absolute;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+		z-index: 1;
+
+		&::before {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			mask-image: url('images/Controller_icon/toggle_changeable.png');
+			.mask-size(100% 400%);
+			.mask-repeat(no-repeat);
+			.mask-position(0 66.7%);
+			background-color: @color_toggle_off_handler_off;
+			top: 0;
+			left: 0;
+		}
+	}
+
+	& .ui-switch-input:checked {
+		& ~ .ui-switch-activation,
+		~ .ui-switch-button {
+			width: 100%;
+			height: 100%;
+			background-color: @color_toggle_on_handler;
+			.mask-position(0 33%); // To correct position error
+			.transform(translate3d(36.23%, 0, 0));
+			&::before {
+				.mask-position(0 100%);
+				background-color: @color_toggle_on_handler_on;
+			}
+		}
+
+		&::before {
+			background-color: @color_toggle_on_bg;
+		}
+
+		&:active {
+			&::before {
+				background-color: @color_toggle_on_bg_press;
+			}
+			& ~ .ui-switch-activation, ~ .ui-switch-button {
+				background-color: @color_toggle_on_handler_press;
+				&::before {
+					background-color: @color_toggle_on_handler_on_press;
+				}
+			}
+		}
+	}
+}

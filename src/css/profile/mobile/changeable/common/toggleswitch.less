@@ -1,0 +1,80 @@
+/*new button type like*/
+tau-toggleswitch {
+	.default-div();
+}
+
+.ui-toggle-container {
+	position: relative;
+	width: 72 * @unit_base;
+	height: 72 * @unit_base;
+
+	.ui-switch-handler {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: transparent;
+		pointer-events: none;
+		backface-visibility: hidden;
+		perspective: 1000px;
+
+		&:before,
+		&:after {
+			content: "";
+			position: absolute;
+			height: 100%;
+			width: 100%;
+			mask-position: center center;
+			mask-size: 100%
+		}
+
+		&:before {
+			background-color: @color_toggle_handle_off_icon;
+			mask-image: url("images/controls/core_toggle_icon_off.svg");
+			transform: scale(1);
+			transition: 250ms ease-out 50ms;
+		}
+		&:after {
+			background-color: @color_toggle_handle_off_icon;
+			mask-image: url("images/controls/core_toggle_icon_on.svg");
+			transform: scale(0);
+			transition: 100ms ease-out;
+		}
+	}
+
+	input[type="checkbox"].ui-toggle-switch {
+		width: 72 * @unit_base;
+		height: 72 * @unit_base;
+		border-radius: 50%;
+		background-color: @color_toggle_handle_off_bg; /*@color_toggle_bg;*/
+		appearance: none;
+		outline: 0;
+		margin: 0;
+		backface-visibility: hidden;
+		perspective: 1000px;
+		transition: background-color 150ms;
+
+		&::before {
+			content: none;
+		}
+
+		&:checked {
+			background-color: @color_toggle_handle_on_bg;
+			~ .ui-switch-handler {
+				&::before {
+					transform: scale(0);
+					transition: 100ms ease-out;
+				}
+				&::after {
+					transform: scale(1);
+					transition: 250ms ease-out 50ms;
+				}
+			}
+		}
+
+		&:disabled {
+			background-color: @color_toggle_handle_dim_bg;
+		}
+	}
+}

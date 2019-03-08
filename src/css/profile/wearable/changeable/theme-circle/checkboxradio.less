@@ -1,0 +1,166 @@
+//***************************************************************************
+//				  checkbox / radio button
+//***************************************************************************
+input[type="checkbox"]:not(.ui-switch-input),
+input[type="radio"] {
+	height: 76px;
+	width: 76px;
+}
+
+input[type="checkbox"]:not(.ui-switch-input) {
+	//bg line, gray check mark
+	mask-image: none;
+	background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_checkbox_bg_uncheck 63%, @color_checkboxradio_checkbox_bg_uncheck 68%, transparent 72%), url("images/Controller_icon/Check/ref_btn_check_holo_dark.png") no-repeat;
+	background-size: 100% 100%;
+	//blue bg line
+	&::before {
+		content: "";
+		mask-image: none;
+		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_checkbox_bg 63%, @color_checkboxradio_checkbox_bg 68%, transparent 72%);
+		height: 100%;
+		width: 100%;
+		opacity: 0;
+		position: absolute;
+		transition: all 300ms ease-in;
+	}
+	//blue check mark
+	&::after {
+		mask-image: url('images/Controller_icon/Check/tw_btn_check_holo_dark.png');
+		mask-repeat: repeat;
+		mask-position: center bottom;
+		height: 0;
+		transition-property: height;
+		transition-duration: 500ms;
+		bottom: 0;
+		mask-size: 100%;
+	}
+	&:checked {
+		&::before {
+			animation: checkon 300ms ease-out;
+			transition: none;
+			mask-image: none;
+			background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_checkbox_bg 63%, @color_checkboxradio_checkbox_bg 68%, transparent 72%);
+			opacity: 1;
+		}
+		&::after {
+			background-color: @color_checkboxradio_check;
+			height: 100%;
+		}
+	}
+
+	&:active {
+		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_checkbox_bg_uncheck 63%, @color_checkboxradio_checkbox_bg_uncheck 68%, transparent 72%), url("images/Controller_icon/Check/ref_btn_check_holo_dark.png") no-repeat;
+		background-size: 100% 100%;
+		&::after {
+			height: 0;
+		}
+		&:checked {
+			&::before {
+				mask-image: none;
+				background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_checkbox_bg 63%, @color_checkboxradio_checkbox_bg 68%, transparent 72%);
+			}
+			&::after {
+				background-color: @color_checkboxradio_check;
+				height: 100%;
+			}
+		}
+	}
+
+	&:disabled {
+		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_checkbox_bg_uncheck_dim 63%, @color_checkboxradio_checkbox_bg_uncheck_dim 68%, transparent 72%), url("images/Controller_icon/Check/ref_btn_check_holo_dark.png") no-repeat;
+		background-size: 100% 100%;
+		&:checked {
+			&::before {
+				mask-image: none;
+				background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_checkbox_bg_dim 63%, @color_checkboxradio_checkbox_bg_dim 68%, transparent 72%);
+			}
+			&::after {
+				background-color: @color_checkboxradio_check_dim;
+				height: 100%;
+			}
+		}
+	}
+}
+
+//check on animation
+@keyframes checkon {
+	.transition-checkon();
+}
+
+.transition-checkon() {
+	from {
+		opacity: .5;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+input[type="radio"] {
+	background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_off 63%, @color_checkboxradio_radiobox_line_off 68%, transparent 72%, transparent);
+	mask-image: none;
+	&::after {
+		content: "";
+		mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
+		background-color: @color_checkboxradio_radio_off;
+	}
+	&::before {
+		content: "";
+		background-color: @color_checkboxradio_radio;
+		mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
+		mask-repeat: no-repeat;
+		width: 100%;
+		height: 100%;
+		mask-size: 100% 100%;
+		position: absolute;
+		transform: scale(0);
+		transition: transform 300ms;
+	}
+	&:checked {
+		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line 63%, @color_checkboxradio_radiobox_line 68%, transparent 72%, transparent);
+		&::before {
+			background-color: @color_checkboxradio_radio;
+			mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
+			transform: scale(1.0);
+			z-index: 1;
+		}
+	}
+	&:active {
+		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_off_press 63%, @color_checkboxradio_radiobox_line_off_press 68%, transparent 72%, transparent);
+		mask-image: none;
+		&::after {
+			mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
+			background-color: @color_checkboxradio_radio_off_press;
+		}
+		&:checked {
+			background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_press 63%, @color_checkboxradio_radiobox_line_press 68%, transparent 72%, transparent);
+			&::before {
+				mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
+				background-color: @color_checkboxradio_radio_press;
+			}
+			&::after {
+				content: none;
+			}
+		}
+	}
+	&:disabled {
+		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_off_dim 63%, @color_checkboxradio_radiobox_line_off_dim 68%, transparent 72%, transparent);
+		mask-image: none;
+		&::before {
+			transition: none;
+		}
+		&::after {
+			background-color: @color_checkboxradio_radio_off_dim;
+		}
+		&:checked {
+			background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_dim 63%, @color_checkboxradio_radiobox_line_dim 68%, transparent 72%, transparent);
+			&::before {
+				background-color: @color_checkboxradio_radio_dim;
+				transition: none;
+			}
+			&::after {
+				content: none;
+			}
+		}
+	}
+}

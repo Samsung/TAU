@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<title>Screen size tests - Opera bug</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<style>
+
+.query {
+	display: none;
+	color: red;
+}
+
+@media all and (min-resolution: 97dpi) {
+	#dpimore96 {
+		display: block;
+	}
+
+	#dpi {
+		display: none;
+	}
+}
+
+@media all and (max-resolution: 95dpi) {
+	#dpiless96 {
+		display: block;
+	}
+
+	#dpi {
+		display: none;
+	}
+}
+
+@media all and (max-resolution: 96dpi and min-resolution: 96dpi) {
+	#dpi96 {
+		display: block;
+	}
+
+	#dpi {
+		display: none;
+	}
+}
+
+
+</style>
+
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Opera bug</h2>
+
+<p>The following dpi media query test works in Opera 10.00 WinXP, in Opera Mobile 9.5 on HTC Touch Diamond
+(Win Mob 6.1), but not in Opera 9.6 on Samsung H1 (for Vodafone). That last browser
+shows all paragraphs. It seems to execute all media queries.</p>
+
+<p>The same happens on the <a href="widthtest.html">main test page</a>, but I created
+this simplified test page to exclude all other options.</p>
+
+<p id="dpi">Media queries for dpi do not work.</p>
+<p class="query" id="dpimore96">Dpi is more than 96.</p>
+<p class="query" id="dpiless96">Dpi is less than 96.</p>
+<p class="query" id="dpi96">Dpi is 96.</p>
+
+</body>
+</html>

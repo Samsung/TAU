@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Media query tests</title>
+<script type="text/javascript">
+
+/* Thank you, @sil */
+
+function getRatio(X,Y){
+	var T=(function(u,v){
+		var U=u,V=v;
+		while(1){
+			if(!(U%=V)) return V;
+			if(!(V%=U)) return U;
+		}
+	})(X,Y);
+	if (!T) T=1;
+	return [X/=T,Y/=T];
+}
+
+var aspectRatioTests = [
+/*	'1/1',
+	'2/3',
+	'3/2',
+	'4/3',
+	'3/4',
+	'4/5',
+	'5/4',
+	'5/3',
+	'3/5',
+	'16/10',
+	'10/16',
+	'99/80',
+	'80/99' */
+];
+
+var deviceAspectRatio =  getRatio(screen.width,screen.height).join('/');
+var aspectRatio =  getRatio(document.documentElement.clientWidth,document.documentElement.clientHeight).join('/');
+
+aspectRatioTests.push(deviceAspectRatio);
+aspectRatioTests.push(aspectRatio);
+
+document.write('<style id="test">');
+
+for (var i=0;i<aspectRatioTests.length;i+=1) {
+	document.write('@media all and (device-aspect-ratio: ' + aspectRatioTests[i] + ') {');
+	document.write('#dar' + i + ' {display: list-item}');
+	document.write('#daspectratio {display: none;} }');
+	document.write('@media all and (aspect-ratio: ' + aspectRatioTests[i] + ') {');
+	document.write('#ar' + i + ' {display: list-item}');
+	document.write('#aspectratio {display: none;} }');
+}
+
+var step = 10;
+var maximumSize = 400;
+
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('@media all and (min-resolution: ' + i + 'dpi) and (max-resolution: ' + (i+step-1) + 'dpi) {');
+	document.write('#dpi' + i + '{display: list-item}');
+	document.write('#dpi {display: none;} }');
+}
+
+document.write('</style>');
+
+</script>
+
+<style>
+
+body {
+	background: white;
+}
+
+.query {
+	display: none;
+}
+
+p#touch1 {
+	display: none;
+}
+
+
+@media all and (resolution: 96dpi) {
+	li#dpi96 {
+		display: list-item;
+	}
+}
+
+@media all and (-o-touch) {
+	p#touch1 {
+		display: block;
+	}
+	p#touch2 {
+		display: none;
+	}
+	span.webkit {
+		display: none;
+	}
+}
+
+@media all and (-webkit-touch) {
+	p#touch1 {
+		display: block;
+	}
+	p#touch2 {
+		display: none;
+	}
+	span.opera {
+		display: none;
+	}
+}
+</style>
+</head>
+
+<body>
+
+<h2>Media queries</h2>
+
+<p>Here are some advanced media query tests.</p>
+
+<h3>Aspect ratios</h3>
+
+<p>Reference device aspect ratio: <span id="deviceRatio"></span>.<br>
+Reference aspect ratio: <span id="ratio"></span>.</p>
+
+<ul>
+<li id="daspectratio">Value for device aspect ratio not retrieved.</li>
+<li id="aspectratio">Value for for aspect ratio not retrieved.</li>
+
+<script>
+
+for (var i=0;i<aspectRatioTests.length;i+=1) {
+	document.write('<li class="query" id="ar' + i + '">Aspect ratio is ' + aspectRatioTests[i] +  '.</li>');
+	document.write('<li class="query" id="dar' + i + '">Device aspect ratio is ' + aspectRatioTests[i] +  '.</li>');
+}
+document.getElementById('deviceRatio').innerHTML = deviceAspectRatio;
+document.getElementById('ratio').innerHTML = aspectRatio;
+
+</script>
+</ul>
+
+<h3>touch</h3>
+
+<p id="touch1">Supports touchscreen media queries
+
+<span class="opera">with the -o- prefix</span>
+<span class="webkit">with the -webkit- prefix</span>
+
+</p>
+<p id="touch2">Does not support touchscreen media queries or is not a touchscreen device.</p>
+
+<h3>dpi</h3>
+
+<p>Please measure the width of your device with a ruler and enter the value. Press Done when you&#8217;re ready.</p>
+
+<form>
+<input id="measuredDeviceWidth"><br>
+<input type="radio" name="deviceWidthUnit" value="cm" checked> centimeters
+<input type="radio" name="deviceWidthUnit" id="inch" value="in"> inches<br>
+<button id="measurementDone">Done</button>
+</form>
+
+<script>
+
+document.getElementById('measurementDone').onclick = function () {
+	var value = document.getElementById('measuredDeviceWidth').value;
+	var unit = (document.getElementById('inch').checked) ? 1 : 2.54;
+	value /= unit;
+	var screenWidth = screen.width;
+	var expectedDPI = parseInt(screenWidth/value);
+	document.getElementById('expectedDPI').innerHTML = expectedDPI;
+	return false;
+}
+
+</script>
+
+<p>Expected DPI: <span id="expectedDPI"></span>. Does this expected DPI fall in the range shown below?</p>
+
+<ul>
+<li id="dpi">dpi media query doesn&#8217;t work.</li>
+
+<script>
+
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('<li class="query" id="dpi' + i + '">dpi is between ' + i + ' and ' + (i+step-1) +  '.</li>');
+}
+
+</script>
+<li class="query" id="dpi96">dpi reported as exactly 96</li>
+</ul>
+</body>
+</html>

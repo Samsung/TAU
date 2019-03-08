@@ -1,0 +1,87 @@
+//
+// Common definition for theme
+//
+//**************************************************************
+//   default font size (base font from WRT)
+//   => small: 13px
+//   => normal: 17px
+//   => large: 20px
+//
+// This is only applied to gear2.
+// so, we set @font_size_default as 17px on gear2 and it was changed to 16px since gear-S.
+// This value only used for @rem_base, not for html font-size
+// html font-size is set by WRT base font-size
+// **************************************************************
+@font_size_default: 16px; // Default unit font size. DO NOT USE THIS VALUE IN WIDGET CSS!
+
+@rem_base: (1rem/@font_size_default);
+@em_base: 1em/@font_size_default; // WARNING: Don't use em unit!	This value is to be removed.
+@px_base: 1px;
+
+@unit_base: @rem_base;
+
+@font_family: Tizen, Samsung Sans, Helvetica;
+
+//*****************************
+// z-index order collection
+//*****************************
+@z_base_maximum: 2147483647;
+@z_base_header_footer: 1000;
+@z_base_popup: @z_base_header_footer + 100;
+
+//**************************************************************************
+//                   Common Style
+//**************************************************************************
+
+.tau-info-theme {
+	position: absolute;
+	top: -999px;
+	left: -999px;
+}
+
+.screen-hidden {
+	visibility: hidden;
+	position: absolute;
+	top: -10000em;
+	left: -10000em;
+}
+
+//**************************************************************************
+//                   Default Style.
+//**************************************************************************
+button, input {
+	outline: none;
+	cursor: pointer;
+}
+
+* {
+	.border-box();
+}
+
+a {
+	text-decoration: none;
+	color: @color_text;
+}
+
+ul, li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+img {
+	margin: 0;
+	padding: 0;
+}
+
+//*****************************
+//  Global LESS mixin collection
+//*****************************
+
+.LESSbox-boxsizing( @value ) {
+	-o-box-sizing: @value;
+	-ms-box-sizing: @value;
+	-moz-box-sizing: @value;
+	-webkit-box-sizing: @value;
+	box-sizing: @value;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="lib/qunit-1.13.0.css"/>
+  <script src="lib/jquery-2.0.3.js"></script>
+  <script src="lib/qunit-1.13.0.js"></script>
+  <script src="tests.js"></script>
+  <script src="runner.js"></script>
+  <style type="text/css">
+    html, body {
+      width:100%;
+      height:100%;
+      margin:0px;
+      padding:0px;
+    }
+
+    #testFrame {
+      float: right;
+      border: 0px;
+      height: 100%;
+      width: 64%;
+    }
+
+    #results {
+      float: left;
+      width: 35%;
+    }
+  </style>
+</head>
+<body>
+  <div id="results">
+    <h1 id="qunit-header"><a href="#">Gear UI Test Suite</a></h1>
+    <h2 id="qunit-banner"></h2>
+    <ol id="qunit-tests"></ol>
+  </div>
+	<iframe data-src="{{testfile}}" name="testFrame" id="testFrame" scrolling="no">
+	</iframe>
+</body>
+</html>

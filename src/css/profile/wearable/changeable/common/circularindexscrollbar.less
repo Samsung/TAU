@@ -1,0 +1,40 @@
+.ui-circularindexscrollbar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+
+	.ui-circularindexscrollbar-indicator {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 158 * @unit_base;
+		height: 158 * @unit_base;
+		line-height: 158 * @unit_base;
+		border-radius: 50%;
+		background-color: @color_circularindexscrollbar_indicator_bg;
+		.transition(opacity 250ms ease-out);
+		.transform(translate(-50%, -50%));
+		opacity: 0;
+	}
+
+	&.ui-circularindexscrollbar-show {
+		pointer-events: auto;
+		.ui-circularindexscrollbar-indicator {
+			opacity: 1;
+		}
+	}
+
+	.ui-circularindexscrollbar-indicator-text {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		font-size: 70 * @unit_base;
+		color: @color_circularindexscrollbar_indicator_text;
+	}
+}

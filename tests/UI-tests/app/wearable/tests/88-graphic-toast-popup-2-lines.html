@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+</head>
+
+<body>
+<div class="ui-page red-border" id="page-popup-graphic2l">
+	<header class="ui-header">
+		<h2 class="ui-title">Toast Popup</h2>
+	</header>
+	<div class="ui-content">
+		<ul class="ui-listview">
+			<li><a href="#graphicPopupToast" data-rel="popup">Graphic Toast Popup</a></li>
+		</ul>
+	</div>
+	<div id="graphicPopupToast2l" class="ui-popup ui-popup-toast ui-popup-toast-graphic">
+		<div class="ui-popup-content">
+			<div class="ui-popup-toast-icon ui-popup-toast-check-icon btn-icon-toast-check">check</div>
+			Toast popup line 1<br>Toast popup line 2
+		</div>
+	</div>
+	<script>
+		(function () {
+			var page = document.getElementById("page-popup-graphic2l"),
+				popupElement = document.getElementById("graphicPopupToast2l"),
+				popup,
+				onPageShow = function () {
+					popup = tau.widget.Popup(popupElement);
+					popup.options.closeAfter = 50000;
+					popup.open();
+				},
+				onPageHide = function () {
+					popup.destroy();
+				};
+
+			page.addEventListener("pageshow", onPageShow);
+			page.addEventListener("pagebeforehide", onPageHide);
+		}());
+
+
+	</script>
+</div>
+<script type="text/javascript" src="../lib/tau/wearable/js/tau.js" data-build-remove="false"></script>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</body>
+</html>

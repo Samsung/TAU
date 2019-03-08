@@ -1,0 +1,14 @@
+{
+  "name": "karma-console-reporter",
+  "version": "0.0.0",
+  "description": "Console report",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "colors": "1.1.2"
+  },
+  "author": "",
+  "license": "BSD-2-Clause"
+}

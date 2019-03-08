@@ -1,0 +1,38 @@
+.ui-tabs {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+	> .ui-title {
+		height: 100 * @unit_base;
+		line-height: 100 * @unit_base;
+		position: relative;
+		font-size: @font_size_tabs_title_text;
+		font-weight: 200;
+		text-align: center;
+		margin-top: 0;
+		margin-bottom: 0;
+		color: @color_tabs_title_text;
+		background-color: @color_tabs_title_bg;
+	}
+	header, .ui-header {
+		position: relative;
+	}
+	.ui-tabbar {
+		height: 110 * @unit_base;
+		background-color: @color_tabs_tabbar_bg;
+	}
+	&.ui-tabs-with-title .ui-tabbar-link {
+		height: 52 * @unit_base;
+		.ui-tabbar-text {
+			top: 0;
+			.transform(translate3d(-50%, 0, 0));
+		}
+	}
+
+	.ui-listview {
+		overflow: hidden;
+		min-height: 100%;
+		min-width: 100%;
+	}
+
+}

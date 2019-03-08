@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Grid tests</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../../../../libs/qunit-1.11.0.css">
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture">
+			<ul id="grid1">
+				<li id="e0">Solo</li>
+			</ul>
+			<ul id="grid2">
+				<li id="e1">Element 1</li>
+				<li id="e2">Element 2</li>
+				<li id="e3">Element 3</li>
+				<li id="e4">Element 4</li>
+				<li id="e5">Element 5</li>
+				<li id="e6">Element 6</li>
+			</ul>
+			<ul id="grid3">
+				<li id="e7">Element 1</li>
+				<li id="e8">Element 2</li>
+				<li id="e9">Element 3</li>
+				<li id="e10">Element 4</li>
+				<li id="e11">Element 5</li>
+			</ul>
+		</div>
+		<script src="../../../../libs/qunit-1.11.0.js" type="text/javascript"></script>
+		<script src="../../../../libs/support.js"></script>
+		<script type="text/javascript" src="../../../../libs/dist/js/tau.js"></script>
+
+		<script>
+			//test cases based on jqm grid
+			module("core/util/grid");
+
+			test("grid-solo", function () {
+				var grid1 = document.getElementById('grid1');
+				ej.util.grid.makeGrid(grid1);
+				ok(grid1.classList.contains('ui-grid-solo'));
+				ok(document.getElementById('e0').classList.contains('ui-block-a'));
+			});
+
+			test("custom grid", function () {
+				var grid1 = document.getElementById('grid1');
+				ej.util.grid.makeGrid(grid1, "d");
+				ok(grid1.classList.contains('ui-grid-d'));
+			});
+
+			test("grid 6", function () {
+				var grid2 = document.getElementById('grid2');
+				ej.util.grid.makeGrid(grid2);
+				ok(grid2.classList.contains('ui-grid-a'));
+				ok(grid2.classList.contains('ui-grid-duo'));
+				ok(document.getElementById('e1').classList.contains('ui-block-a'));
+				ok(document.getElementById('e2').classList.contains('ui-block-b'));
+				ok(document.getElementById('e3').classList.contains('ui-block-a'));
+				ok(document.getElementById('e4').classList.contains('ui-block-b'));
+				ok(document.getElementById('e5').classList.contains('ui-block-a'));
+				ok(document.getElementById('e6').classList.contains('ui-block-b'));
+			});
+
+			test("grid 5", function () {
+			var grid3 = document.getElementById('grid3');
+			ej.util.grid.makeGrid(grid3);
+			ok(grid3.classList.contains('ui-grid-d'));
+			ok(document.getElementById('e7').classList.contains('ui-block-a'));
+			ok(document.getElementById('e8').classList.contains('ui-block-b'));
+			ok(document.getElementById('e9').classList.contains('ui-block-c'));
+			ok(document.getElementById('e10').classList.contains('ui-block-d'));
+			ok(document.getElementById('e11').classList.contains('ui-block-e'));
+		});
+		</script>
+	</body>
+</html>

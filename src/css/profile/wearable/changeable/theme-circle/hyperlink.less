@@ -1,0 +1,9 @@
+// color of hyperlink should be defined only in cirlce because we don't have color codes in standard
+a.ui-hyperlink {
+	color: @color_hyperlink_normal;
+
+	&:active,
+	&:hover {
+		color: @color_hyperlink_press;
+	}
+}

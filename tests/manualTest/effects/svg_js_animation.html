@@ -1,0 +1,66 @@
+<!DOCTYPEhtml>
+<html>
+	<head>
+		<title>JavaScript SVG Animation</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/> <!-- Remove this line in production. -->
+	</head>
+
+	<body>
+		<h4> This page has SVG javascript animation example. If you can showed below animation,
+			your webkit provide to webkitRequestAniamtionFrame() function.
+			Number below animated image is framerate in your test enviroment.
+			And please note that, SVG is not supported in micro profile.
+		</h4>
+		<svg width="200px" height="200px" viewBox="0 0 800 800">
+			<g transform="translate(400, 400)">
+			<rect id="mySquare" x="-100" y="-100" width="200" height="200" rx="5" ry="5"
+				style=" fill: orange; stroke: black; stroke-width: 3; stroke-dasharray: 10, 5;" />
+			<line x1="-400" y1="0" x2="400" y2="0" style="stroke: black;" />
+			<line x1="0" y1="-400" x2="0" y2="400" style="stroke: black;" />
+			</g>
+		</svg>
+		<div id = "frame"><div>
+		<script>
+			"use strict";
+
+			/* CONSTANTS */
+			var initialTheta = 0; // The initial rotation angle, in degrees.
+			var thetaDelta = 0.3; // The amount to rotate the square about every 16.7 milliseconds, in degrees.
+			var angularLimit = 90; // The maximum number of degrees to rotate the square.
+			var theSquare = document.getElementById("mySquare");
+
+			var fps = {
+				startTime : 0,
+				frameNumber : 0,
+				getFPS : function(){
+					this.frameNumber++;
+					var d = new Date().getTime(),
+						currentTime = ( d - this.startTime ) / 1000,
+						result = Math.floor( ( this.frameNumber / currentTime ) );
+
+					if( currentTime > 1 ){
+						this.startTime = new Date().getTime();
+						this.frameNumber = 0;
+					}
+					return result;
+
+				}
+			};
+			theSquare.currentTheta = initialTheta;
+
+			var f = document.getElementById("frame");
+			var requestAnimationFrameID = webkitRequestAnimationFrame(doAnim); // Start the loop.
+			function doAnim() {
+				if (theSquare.currentTheta > angularLimit) {
+					cancelAnimationFrame(requestAnimationFrameID);
+					return;
+				}
+
+				theSquare.setAttribute("transform", "rotate(" + theSquare.currentTheta + ")");
+				theSquare.currentTheta += thetaDelta;
+				requestAnimationFrameID = webkitRequestAnimationFrame(doAnim); // Call the doAnim() function about 60 times per second (60 FPS), or about once every 16.7 milliseconds until cancelAnimationFrame() is called.
+				f.innerHTML = fps.getFPS();
+			}
+		</script>
+	</body>
+</html>

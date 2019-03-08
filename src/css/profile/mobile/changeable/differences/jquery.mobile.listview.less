@@ -1,0 +1,46 @@
+/****************************
+ listview
+****************************/
+.ui-listview {
+
+	.ui-li-last {
+		border-bottom-color: @color_bg;
+	}
+
+}
+
+.ui-listview li.ui-divider-btn {
+	&:active {
+		background-color: @color_list_divider_bg_press;
+
+		.ui-divider-normal-line {
+			background: @color_list_divider_text_press;
+		}
+
+		a {
+			color: @color_list_divider_text_press;
+		}
+	}
+
+	.ui-link-inherit {
+		color: @color_list_divider_text;
+		font-weight: bold;
+	}
+
+	&[data-style="check"] {
+		&:active label .ui-btn-inner{
+			background-color: @color_list_divider_bg_press;
+		}
+	}
+}
+
+.ui-listview {
+	li.ui-li-dialogue {
+		&.ui-collapsible-heading {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
+}
+
+

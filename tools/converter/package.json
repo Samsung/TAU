@@ -1,0 +1,10 @@
+{
+	"name": "convert",
+	"version": "0.0.1",
+	"description": "A small library providing utility method to replace standard tau widgets with widgets based on custom elements",
+	"main": "convert.js",
+	"devDependencies": {
+		"cheerio": "0.19.0",
+		"jsdom": "^3"
+	}
+}

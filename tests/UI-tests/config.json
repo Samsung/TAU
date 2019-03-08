@@ -1,0 +1,4650 @@
+[
+	{
+		"profile": "mobile",
+		"type": "p-3.0",
+		"screens": [
+			{
+				"name": "19-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "11-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "16-end-effect-left",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "16-end-effect-right",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "16-end-effect-top",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "16-end-effect-bottom",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "21-list-with-back",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "25-list-with-2-tabs",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "27-list-tab-long",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "28-list-tab-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "30-tabs-with-icon",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "35-list-tab-2-title",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "38-list-tab-long-title",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "39-tabs-with-title-with-icons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "41-navigation-bar-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "44-scroll-bar",
+				"time": 0,
+				"width": 4.102,
+				"height": 714
+			},
+			{
+				"name": "46-index-scroll-bar",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "48-index-scroll-with-floating-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "49-page-indicator",
+				"time": 1000
+			},
+			{
+				"name": "53-normal-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "74-grid-view",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "76-grid-view-with-label",
+				"time": 0
+			},
+			{
+				"name": "77-grid-view-with-label-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "78-grid-view-with-checkbox",
+				"time": 0
+			},
+			{
+				"name": "79-grid-view-with-badge",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "80-grid-view-with-move",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "81-popup-with-grid-view",
+				"time": 1000,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "83-popup-with-multiline-grid-view",
+				"time": 1000,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "84-group-index",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "85-group-index-with-checkbox",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "85-group-index-with-checkbox-new",
+				"time": 0
+			},
+			{
+				"name": "86-progress",
+				"time": 0
+			},
+			{
+				"name": "88-activity",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true,
+				"threshold": 2
+			},
+			{
+				"name": "90-list-with-circle-button",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "91-contact-card-with-circle-buttons",
+				"time": 0
+			},
+			{
+				"name": "93-box-buttons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "96-bottom-buttons",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "98-text-button",
+				"time": 0
+			},
+			{
+				"name": "100-toggle-on-off-list",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "106-text-input",
+				"time": 0
+			},
+			{
+				"name": "107-text-input",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "108-email-input",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "110-dropdown-menu-small",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "111-dropdown-menu",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "112-dropdown-menu-open",
+				"time": 0
+			},
+			{
+				"name": "118-slider-vertical",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "119-slider-vertical-2",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "120-slider-vertical-3",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "121-sliders",
+				"time": 200,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "124-number-picker-vertical",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "124-number-picker-horizontal",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "129-time-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "125-number-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "126-time-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "131-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "131-date-picker-within-popup",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "130-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "133-color-picker",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "136-popup-2-buttons",
+				"time": 1000,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "139-popup-2-buttons-keyboard",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "142-popup-2-buttons-image",
+				"time": 1000,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "143-popup-2-buttons-list",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "144-popup-2-buttons-checkbox",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "145-popup-toast",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "146-popup-toast-big",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "147-popup-toast-button",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "150-popup-contextual",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "151-popup-contextual-with-icons",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "152-popup-contextual-2",
+				"time": 1000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "153-more-menu",
+				"time": 1000,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "158-light-view-grid",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "160-floating-button",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "161-floating-button-2",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "162-floating-button-3",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "162-floating-button-4",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "162-floating-button-5",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "162-floating-button-6",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "162-floating-button-7",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "163-floating-button-8",
+				"time": 0,
+				"width": 241,
+				"height": 4.128
+			},
+			{
+				"name": "165-empty-state",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "166-empty-state-with-floating-action",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "168-empty-state-search",
+				"time": 0,
+				"width": 552,
+				"height": 948
+			},
+			{
+				"name": "169-device-option-popup",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "170-tabbar-with-badge",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "171-welcome-page",
+				"time": 0,
+				"width": 720,
+				"height": 1240
+			},
+			{
+				"name": "173-search-bar-clear-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "176-details",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "177-text-overflow",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "178-matched-text",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "179-matched-text-dropdown",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "181-time-and-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "182-three-bottom-buttons",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "textarea-in-popup",
+				"time": 0,
+				"width": 720,
+				"height": 1280,
+				"pass": true
+			},
+			{
+				"name": "T01-single-page",
+				"time": 0,
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "T02-navigation-view-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "T02-navigation-view-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "T02-navigation-view-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ext-sample-active-view-1",
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ext-sample-active-view-2",
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ce-19-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-11-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-16-end-effect-left",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-16-end-effect-right",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-16-end-effect-top",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-16-end-effect-bottom",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-21-list-with-back",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-25-list-with-2-tabs",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-27-list-tab-long",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-28-list-tab-3",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-30-tabs-with-icon",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-35-list-tab-2-title",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-38-list-tab-long-title",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-39-tabs-with-title-with-icons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-41-navigation-bar-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-44-scroll-bar",
+				"time": 0,
+				"width": 4.102,
+				"height": 714
+			},
+			{
+				"name": "ce-46-index-scroll-bar",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-48-index-scroll-with-floating-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-49-page-indicator",
+				"time": 1000
+			},
+			{
+				"name": "ce-53-normal-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-74-grid-view",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "ce-76-grid-view-with-label",
+				"time": 0
+			},
+			{
+				"name": "ce-77-grid-view-with-label-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-78-grid-view-with-checkbox",
+				"time": 0
+			},
+			{
+				"name": "ce-79-grid-view-with-badge",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "ce-80-grid-view-with-move",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-81-popup-with-grid-view",
+				"time": 1000,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "ce-83-popup-with-multiline-grid-view",
+				"time": 1000,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "ce-84-group-index",
+				"time": 200,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-85-group-index-with-checkbox",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-85-group-index-with-checkbox-new",
+				"time": 0
+			},
+			{
+				"name": "ce-86-progress",
+				"time": 0
+			},
+			{
+				"name": "ce-88-activity",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true,
+				"threshold": 2
+			},
+			{
+				"name": "ce-90-list-with-circle-button",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-91-contact-card-with-circle-buttons",
+				"time": 0
+			},
+			{
+				"name": "ce-93-box-buttons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-96-bottom-buttons",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-98-text-button",
+				"time": 0
+			},
+			{
+				"name": "ce-100-toggle-on-off-list",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-106-text-input",
+				"time": 0
+			},
+			{
+				"name": "ce-107-text-input",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-108-email-input",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-110-dropdown-menu-small",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-111-dropdown-menu",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-112-dropdown-menu-open",
+				"time": 0
+			},
+			{
+				"name": "ce-118-slider-vertical",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-119-slider-vertical-2",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-120-slider-vertical-3",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-121-sliders",
+				"time": 200,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-124-number-picker-vertical",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-124-number-picker-horizontal",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-129-time-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-125-number-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-126-time-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-131-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-131-date-picker-within-popup",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-130-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-133-color-picker",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-136-popup-2-buttons",
+				"time": 1000,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-139-popup-2-buttons-keyboard",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-142-popup-2-buttons-image",
+				"time": 1000,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-143-popup-2-buttons-list",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-144-popup-2-buttons-checkbox",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-145-popup-toast",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-146-popup-toast-big",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-147-popup-toast-button",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-150-popup-contextual",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-151-popup-contextual-with-icons",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "ce-152-popup-contextual-2",
+				"time": 1000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-153-more-menu",
+				"time": 1000,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-158-light-view-grid",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-160-floating-button",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-161-floating-button-2",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-162-floating-button-3",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-162-floating-button-4",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-162-floating-button-5",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-162-floating-button-6",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "ce-162-floating-button-7",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "ce-163-floating-button-8",
+				"time": 0,
+				"width": 241,
+				"height": 4.128
+			},
+			{
+				"name": "ce-165-empty-state",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-166-empty-state-with-floating-action",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "ce-168-empty-state-search",
+				"time": 0,
+				"width": 552,
+				"height": 948
+			},
+			{
+				"name": "ce-169-device-option-popup",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-170-tabbar-with-badge",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-171-welcome-page",
+				"time": 0,
+				"width": 720,
+				"height": 1240
+			},
+			{
+				"name": "ce-173-search-bar-clear-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-176-details",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "ce-177-text-overflow",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-178-matched-text",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-179-matched-text-dropdown",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-181-time-and-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-182-three-bottom-buttons",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "ce-textarea-in-popup",
+				"time": 0,
+				"width": 720,
+				"height": 1280,
+				"pass": true
+			},
+			{
+				"name": "ce-T01-single-page",
+				"time": 0,
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ce-T02-navigation-view-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-T02-navigation-view-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-T02-navigation-view-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-ext-sample-active-view-1",
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ce-ext-sample-active-view-2",
+				"width": 720,
+				"height": 1280
+			}
+		]
+	},
+	{
+		"profile": "mobile",
+		"type": "p-bar-3.0",
+		"screens": [
+			{
+				"name": "155-light-view-camera",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "157-light-view-more",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "text-enveloper-empty-state-1",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-empty-state-1-UX",
+				"width": 189,
+				"height": 336,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-empty-state-keyboard",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recipients-1-added",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recipients-1-added-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recipients-2-added",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recipients-4-added",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recipients-removed",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recipients-sms-typing-on",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "text-enveloper-recpients-select-effect-1",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "email-2-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "email-3-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "email-4-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "email-5-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "email-7-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "email-9-recipients-CC",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "email-empty-state-1",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-155-light-view-camera",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-157-light-view-more",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-text-enveloper-empty-state-1",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-empty-state-1-UX",
+				"width": 189,
+				"height": 336,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-empty-state-keyboard",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recipients-1-added",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recipients-1-added-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recipients-2-added",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recipients-4-added",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recipients-removed",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recipients-sms-typing-on",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 500
+			},
+			{
+				"name": "ce-text-enveloper-recpients-select-effect-1",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-email-2-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-email-3-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-email-4-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-email-5-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-email-7-recipients-typing",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-email-9-recipients-CC",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			},
+			{
+				"name": "ce-email-empty-state-1",
+				"width": 720,
+				"height": 1280,
+				"time": 1000
+			}
+		]
+	},
+	{
+		"profile": "mobile",
+		"type": "l-3.0",
+		"screens": [
+			{
+				"name": "19-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "11-list",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "textarea-in-popup",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "16-end-effect-left",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "16-end-effect-right",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "16-end-effect-top",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "16-end-effect-bottom",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "21-list-with-back",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "25-list-with-2-tabs",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "27-list-tab-long",
+				"time": 0,
+				"width": 331,
+				"height": 589
+			},
+			{
+				"name": "28-list-tab-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "30-tabs-with-icon",
+				"time": 200,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "29-list-tab-4",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "35-list-tab-2-title",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "38-list-tab-long-title",
+				"time": 0,
+				"width": 331,
+				"height": 589
+			},
+			{
+				"name": "39-tabs-with-title-with-icons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "41-navigation-bar-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "44-scroll-bar",
+				"time": 0,
+				"width": 4.102,
+				"height": 714
+			},
+			{
+				"name": "46-index-scroll-bar",
+				"time": 200,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "48-index-scroll-with-floating-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "49-page-indicator",
+				"time": 1000
+			},
+			{
+				"name": "53-normal-list",
+				"time": 0
+			},
+			{
+				"name": "74-grid-view",
+				"time": 0,
+				"width": 331,
+				"height": 589
+			},
+			{
+				"name": "76-grid-view-with-label",
+				"time": 3000
+			},
+			{
+				"name": "77-grid-view-with-label-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "78-grid-view-with-checkbox",
+				"time": 0
+			},
+			{
+				"name": "79-grid-view-with-badge",
+				"time": 0
+			},
+			{
+				"name": "80-grid-view-with-move",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "81-popup-with-grid-view",
+				"time": 1000,
+				"width": 923,
+				"height": 519
+			},
+			{
+				"name": "83-popup-with-multiline-grid-view",
+				"time": 1000,
+				"width": 923,
+				"height": 519
+			},
+			{
+				"name": "84-group-index",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "85-group-index-with-checkbox",
+				"time": 0
+			},
+			{
+				"name": "85-group-index-with-checkbox-new",
+				"time": 0
+			},
+			{
+				"name": "86-progress",
+				"time": 0
+			},
+			{
+				"name": "88-activity",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true,
+				"threshold": 1
+			},
+			{
+				"name": "90-list-with-circle-button",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "91-contact-card-with-circle-buttons",
+				"time": 0
+			},
+			{
+				"name": "93-box-buttons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "96-bottom-buttons",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "98-text-button",
+				"time": 0
+			},
+			{
+				"name": "100-toggle-on-off-list",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "106-text-input",
+				"time": 0
+			},
+			{
+				"name": "107-text-input",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "108-email-input",
+				"time": 0
+			},
+			{
+				"name": "111-dropdown-menu",
+				"time": 0
+			},
+			{
+				"name": "112-dropdown-menu-open",
+				"time": 0
+			},
+			{
+				"name": "118-slider-vertical",
+				"time": 0
+			},
+			{
+				"name": "119-slider-vertical-2",
+				"time": 0
+			},
+			{
+				"name": "120-slider-vertical-3",
+				"time": 0
+			},
+			{
+				"name": "121-sliders",
+				"time": 0
+			},
+			{
+				"name": "124-number-picker-vertical",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "124-number-picker-horizontal",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "129-time-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "125-number-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "126-time-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "130-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "131-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "133-color-picker",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "131-date-picker-within-popup",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "136-popup-2-buttons",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "139-popup-2-buttons-keyboard",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "142-popup-2-buttons-image",
+				"time": 1000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "143-popup-2-buttons-list",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "144-popup-2-buttons-checkbox",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "145-popup-toast",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "146-popup-toast-big",
+				"time": 2000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "147-popup-toast-button",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "150-popup-contextual",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "151-popup-contextual-with-icons",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "152-popup-contextual-2",
+				"time": 1000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "153-more-menu",
+				"time": 2000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "155-light-view-camera",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "157-light-view-more",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "158-light-view-grid",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "160-floating-button",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "161-floating-button-2",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "162-floating-button-3",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "162-floating-button-4",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "162-floating-button-5",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "162-floating-button-6",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "162-floating-button-7",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "163-floating-button-8",
+				"time": 0,
+				"width": 241,
+				"height": 4.128
+			},
+			{
+				"name": "165-empty-state",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "166-empty-state-with-floating-action",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "168-empty-state-search",
+				"time": 0,
+				"width": 552,
+				"height": 948
+			},
+			{
+				"name": "169-device-option-popup",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "170-tabbar-with-badge",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "171-welcome-page",
+				"time": 0,
+				"width": 720,
+				"height": 1240
+			},
+			{
+				"name": "173-search-bar-clear-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "176-details",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "177-text-overflow",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "178-matched-text",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "179-matched-text-dropdown",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "181-time-and-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "182-three-bottom-buttons",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "T01-single-page",
+				"time": 0,
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "T02-navigation-view-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "T02-navigation-view-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "T02-navigation-view-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ext-sample-active-view-1",
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ext-sample-active-view-2",
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ce-19-list",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-11-list",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-textarea-in-popup",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-16-end-effect-left",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-16-end-effect-right",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-16-end-effect-top",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-16-end-effect-bottom",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-21-list-with-back",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-25-list-with-2-tabs",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-27-list-tab-long",
+				"time": 0,
+				"width": 331,
+				"height": 589
+			},
+			{
+				"name": "ce-28-list-tab-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-30-tabs-with-icon",
+				"time": 200,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-29-list-tab-4",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-35-list-tab-2-title",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-38-list-tab-long-title",
+				"time": 0,
+				"width": 331,
+				"height": 589
+			},
+			{
+				"name": "ce-39-tabs-with-title-with-icons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-41-navigation-bar-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-44-scroll-bar",
+				"time": 0,
+				"width": 4.102,
+				"height": 714
+			},
+			{
+				"name": "ce-46-index-scroll-bar",
+				"time": 200,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-48-index-scroll-with-floating-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-49-page-indicator",
+				"time": 1000
+			},
+			{
+				"name": "ce-53-normal-list",
+				"time": 0
+			},
+			{
+				"name": "ce-74-grid-view",
+				"time": 0,
+				"width": 331,
+				"height": 589
+			},
+			{
+				"name": "ce-76-grid-view-with-label",
+				"time": 3000
+			},
+			{
+				"name": "ce-77-grid-view-with-label-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-78-grid-view-with-checkbox",
+				"time": 0
+			},
+			{
+				"name": "ce-79-grid-view-with-badge",
+				"time": 0
+			},
+			{
+				"name": "ce-80-grid-view-with-move",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-81-popup-with-grid-view",
+				"time": 1000,
+				"width": 923,
+				"height": 519
+			},
+			{
+				"name": "ce-83-popup-with-multiline-grid-view",
+				"time": 1000,
+				"width": 923,
+				"height": 519
+			},
+			{
+				"name": "ce-84-group-index",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-85-group-index-with-checkbox",
+				"time": 0
+			},
+			{
+				"name": "ce-85-group-index-with-checkbox-new",
+				"time": 0
+			},
+			{
+				"name": "ce-86-progress",
+				"time": 0
+			},
+			{
+				"name": "ce-88-activity",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true,
+				"threshold": 1
+			},
+			{
+				"name": "ce-90-list-with-circle-button",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-91-contact-card-with-circle-buttons",
+				"time": 0
+			},
+			{
+				"name": "ce-93-box-buttons",
+				"time": 200,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-96-bottom-buttons",
+				"time": 0,
+				"width": 360,
+				"height": 640,
+				"pass": true
+			},
+			{
+				"name": "ce-98-text-button",
+				"time": 0
+			},
+			{
+				"name": "ce-100-toggle-on-off-list",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-106-text-input",
+				"time": 0
+			},
+			{
+				"name": "ce-107-text-input",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-108-email-input",
+				"time": 0
+			},
+			{
+				"name": "ce-111-dropdown-menu",
+				"time": 0
+			},
+			{
+				"name": "ce-112-dropdown-menu-open",
+				"time": 0
+			},
+			{
+				"name": "ce-118-slider-vertical",
+				"time": 0
+			},
+			{
+				"name": "ce-119-slider-vertical-2",
+				"time": 0
+			},
+			{
+				"name": "ce-120-slider-vertical-3",
+				"time": 0
+			},
+			{
+				"name": "ce-121-sliders",
+				"time": 0
+			},
+			{
+				"name": "ce-124-number-picker-vertical",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-124-number-picker-horizontal",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-129-time-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-125-number-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-126-time-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-130-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-131-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-133-color-picker",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-131-date-picker-within-popup",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-136-popup-2-buttons",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-139-popup-2-buttons-keyboard",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-142-popup-2-buttons-image",
+				"time": 1000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-143-popup-2-buttons-list",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-144-popup-2-buttons-checkbox",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-145-popup-toast",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-146-popup-toast-big",
+				"time": 2000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-147-popup-toast-button",
+				"time": 3000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-150-popup-contextual",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-151-popup-contextual-with-icons",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "ce-152-popup-contextual-2",
+				"time": 1000,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-153-more-menu",
+				"time": 2000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-155-light-view-camera",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-157-light-view-more",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-158-light-view-grid",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-160-floating-button",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-161-floating-button-2",
+				"time": 0,
+				"width": 241,
+				"height": 4.129
+			},
+			{
+				"name": "ce-162-floating-button-3",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "ce-162-floating-button-4",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "ce-162-floating-button-5",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "ce-162-floating-button-6",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "ce-162-floating-button-7",
+				"time": 0,
+				"width": 156,
+				"height": 277
+			},
+			{
+				"name": "ce-163-floating-button-8",
+				"time": 0,
+				"width": 241,
+				"height": 4.128
+			},
+			{
+				"name": "ce-165-empty-state",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-166-empty-state-with-floating-action",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "ce-168-empty-state-search",
+				"time": 0,
+				"width": 552,
+				"height": 948
+			},
+			{
+				"name": "ce-169-device-option-popup",
+				"time": 1000,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-170-tabbar-with-badge",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-171-welcome-page",
+				"time": 0,
+				"width": 720,
+				"height": 1240
+			},
+			{
+				"name": "ce-173-search-bar-clear-button",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-176-details",
+				"time": 0,
+				"width": 552,
+				"height": 981
+			},
+			{
+				"name": "ce-177-text-overflow",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-178-matched-text",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-179-matched-text-dropdown",
+				"time": 0,
+				"width": 336,
+				"height": 598
+			},
+			{
+				"name": "ce-181-time-and-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-182-three-bottom-buttons",
+				"time": 0,
+				"width": 589,
+				"height": 1047
+			},
+			{
+				"name": "ce-T01-single-page",
+				"time": 0,
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ce-T02-navigation-view-1",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-T02-navigation-view-2",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-T02-navigation-view-3",
+				"time": 0,
+				"width": 360,
+				"height": 640
+			},
+			{
+				"name": "ce-ext-sample-active-view-1",
+				"width": 720,
+				"height": 1280
+			},
+			{
+				"name": "ce-ext-sample-active-view-2",
+				"width": 720,
+				"height": 1280
+			}
+		]
+	},
+	{
+		"profile": "wearable",
+		"type": "c-3.0",
+		"screens": [
+			{
+				"name": "10-basic-grid",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "10-basic-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "11-basic-grid-2",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "11-basic-grid-1",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "18-header-title",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "18-header-title-sub",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "19-header-title-3-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "19-header-title-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "19-header-title-sub-3-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "19-header-title-sub-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "23-page-indicator-circularly-horizontal-dot-19",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "24-page-indicator-circularly-horizontal-18-dots",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+			    "pass": true
+			},
+			{
+				"name": "25-page-indicator-horizontal-dot-7",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "26-page-indicator-horizontal-dot-6",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "20-circularly-vertical-bar",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "21-circularly-horizontal-bar",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "22-index-scroll",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "28-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "29-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "29-list-sublines",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "30-list-fadeout",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "30-list-fadeout-2",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "31-list-font",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "32-list-font-color",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "33-list-3-sublines",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "33-list-2-sublines",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "33-list-2-sublines-scrolled-down",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "34-list-left-icon",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "34-list-right-icon",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "35-list-5-items",
+				"width": 360,
+				"height": 360,
+				"time": 2000,
+				"pass": true,
+				"threshold": 1.2
+			},
+			{
+				"name": "35-list-with-icon-and-subtext",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "35-list-with-icon-and-subtext-2",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "36-list-with-icon-and-multiline",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "36-list-with-icon-and-multiline-2",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "37-list-groupindex",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "38-list-divider",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "39-list-button",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "39-list-button-2",
+				"time": 1200,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "39-list-button-3",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "40-multiline-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "40-multiline-list-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "41-multiline-list-with-subtext",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "41-multiline-list-with-subtext-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "42-multiline-list-subtext-icon-left",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "42-multiline-list-subtext-icon-left-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "42-multiline-list-subtext-icon-right",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "42-multiline-list-subtext-icon-right-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "44-grid-thumbnails-center",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "44-grid-thumbnails-center-vertical",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "44-grid-thumbnails-indicator",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "45-grid",
+				"pass": true,
+				"width": 360,
+				"height": 360,
+				"time": 5000
+			},
+			{
+				"name": "45-grid-vertical",
+				"width": 360,
+				"height": 360,
+				"time": 5000,
+				"pass": true
+			},
+			{
+				"name": "46-grid-moved-at-right",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "46-grid-vertical-moved-at-bottom",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "47-grid-2lines",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "47-grid-2lines-vertical",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "48-grid-rectangle-horizontal",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "48-grid-rectangle-vertical",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "49-grid-rectangle-horizontal",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "49-grid-rectangle-vertical",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "45-progress-indicator-full",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "46-progress-indicator-small",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "48-activity-indicator-at-list",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "51-bottom-button",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "52-bottom-button-and-content",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "54-select-button-action-button-unchecked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "60-checkbox-small",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "47-activity-indicator",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "49-sending-effect",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "59-text-button",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "59-text-button-short",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "59-text-button-long",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "56-icon-button",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "56-icon-button-small",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "56-icon-button-big",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "62-text-input-placeholder",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "62-text-input-placeholder-disabled",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "67-slider",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "68-slider-zero",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "56-select-mode-action-popup",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "57-select-mode-action-popup-selectall",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "48-activity-indicator-small",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "54-select-button-action-button-checked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "58-on-off-switch-checked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "74-time-picker",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 2.1
+			},
+			{
+				"name": "61-radio-on",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "80-popup-2-buttons",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "80-popup-2-buttons-and-small-checkbox",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "61-radio-off",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "65-SDK-entry-input",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "66-SDK-entry-input",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "63-entry-input",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "78-popup-general",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "58-on-off-switch-unchecked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "99-empty-state-add-items-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "59-checkbox-checked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "59-checkbox-unchecked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "75-time-picker-24h",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "99-empty-state-add-items-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "114-slider-with-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "81-popup-btn-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "87-text-toast-popup-2-lines",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "87-text-toast-popup-3-lines",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "88-graphic-toast-popup-1-line",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "88-graphic-toast-popup-2-lines",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "89-popup-toast-small-text",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "89-popup-toast-small-text-icon",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "90-popup-toast-small-icon",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "103-end-effect-left",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "103-end-effect-right",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "103-end-effect-top",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "103-end-effect-bottom",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "103-end-effect-top-scroll",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "103-end-effect-bottom-scroll",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "109-popup-2-buttons-with-btn-text-inside-btn",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "110-bottom-button-text-position",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "111-bottom-button-text-position-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "109-popup-2-buttons-with-btn-text-inside-btn-moved-bottom",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "112-bottom-button-text-position-with-image-74px-title",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "112-bottom-button-text-with-big-img",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "113-bottom-button-text-position-with-image-74px",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "101-load-more-content",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "69-number-picker",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.4
+			},
+			{
+				"name": "105-colorpicker",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "116-hyper-link",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "91-more-options",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "92-more-options-open",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 4.1
+			},
+			{
+				"name": "95-more-options-open-with-subtext",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 4.1
+			},
+			{
+				"name": "95-more-options-open-2-lines",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 4.1
+			},
+			{
+				"name": "95-more-options-open-2-lines-subtext",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 4.1
+			},
+			{
+				"name": "98-rotary-selector",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "100-rotary-selector-2-lines",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "100-rotary-selector-2-lines-subtext",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "100-rotary-selector-with-subtext",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "101-rotary-selector-with-icon",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "101-rotary-selector-with-icon-and-text",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "103-rotary-selector-edit-mode",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.5
+			},
+			{
+				"name": "113-bottom-button-text-position-with-image-100px",
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "114-slider-with-1-line-text",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "81-popup-btn-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "81-popup-btn-6-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "107-popup-2-buttons-8-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "108-popup-2-buttons-with-image-3-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "108-popup-2-buttons-with-image-and-title",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "82-popup-with-progress-2lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "108-popup-2-buttons-with-image-5-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "111-bottom-button-text-position-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "82-popup-with-progress-1line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "98-empty-state-no-items-icon-and-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "81-popup-btn-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "111-bottom-button-text-position-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "75-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "76-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "76-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "77-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "77-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "78-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 1.1
+			},
+			{
+				"name": "snap-listview",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-10-basic-grid",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-10-basic-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-11-basic-grid-2",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-11-basic-grid-1",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-18-header-title",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-18-header-title-sub",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-19-header-title-3-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-19-header-title-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-19-header-title-sub-3-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-19-header-title-sub-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-23-page-indicator-circularly-horizontal-dot-19",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-24-page-indicator-circularly-horizontal-18-dots",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-25-page-indicator-horizontal-dot-7",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-26-page-indicator-horizontal-dot-6",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-20-circularly-vertical-bar",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-21-circularly-horizontal-bar",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-22-index-scroll",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-28-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-29-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-29-list-sublines",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-30-list-fadeout",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-30-list-fadeout-2",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-31-list-font",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-32-list-font-color",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-33-list-3-sublines",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-33-list-2-sublines",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-33-list-2-sublines-scrolled-down",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-34-list-left-icon",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-34-list-right-icon",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-35-list-5-items",
+				"width": 360,
+				"height": 360,
+				"time": 2000,
+				"pass": true,
+				"threshold": 1.2
+			},
+			{
+				"name": "ce-35-list-with-icon-and-subtext",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-35-list-with-icon-and-subtext-2",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-36-list-with-icon-and-multiline",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-36-list-with-icon-and-multiline-2",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-37-list-groupindex",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-38-list-divider",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-39-list-button",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-39-list-button-2",
+				"time": 1200,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-39-list-button-3",
+				"time": 1400,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-40-multiline-list",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-40-multiline-list-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-41-multiline-list-with-subtext",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-41-multiline-list-with-subtext-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-42-multiline-list-subtext-icon-left",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-42-multiline-list-subtext-icon-left-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-42-multiline-list-subtext-icon-right",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-42-multiline-list-subtext-icon-right-bottom",
+				"time": 1400,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-44-grid-thumbnails-center",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-44-grid-thumbnails-center-vertical",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-44-grid-thumbnails-indicator",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-45-grid",
+				"pass": true,
+				"width": 360,
+				"height": 360,
+				"time": 5000
+			},
+			{
+				"name": "ce-45-grid-vertical",
+				"width": 360,
+				"height": 360,
+				"time": 5000,
+				"pass": true
+			},
+			{
+				"name": "ce-46-grid-moved-at-right",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-46-grid-vertical-moved-at-bottom",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-47-grid-2lines",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-47-grid-2lines-vertical",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-48-grid-rectangle-horizontal",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-48-grid-rectangle-vertical",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-49-grid-rectangle-horizontal",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-49-grid-rectangle-vertical",
+				"time": 5000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-45-progress-indicator-full",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-46-progress-indicator-small",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-48-activity-indicator-at-list",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-51-bottom-button",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-52-bottom-button-and-content",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-54-select-button-action-button-unchecked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-60-checkbox-small",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-47-activity-indicator",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-49-sending-effect",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-59-text-button",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-59-text-button-short",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-59-text-button-long",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-56-icon-button",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-56-icon-button-small",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-56-icon-button-big",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-62-text-input-placeholder",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-62-text-input-placeholder-disabled",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-67-slider",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-68-slider-zero",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-56-select-mode-action-popup",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-57-select-mode-action-popup-selectall",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-48-activity-indicator-small",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-54-select-button-action-button-checked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-58-on-off-switch-checked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-74-time-picker",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 2.1
+			},
+			{
+				"name": "ce-61-radio-on",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-80-popup-2-buttons",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-80-popup-2-buttons-and-small-checkbox",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-61-radio-off",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-65-SDK-entry-input",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-66-SDK-entry-input",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-63-entry-input",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-78-popup-general",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-58-on-off-switch-unchecked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-99-empty-state-add-items-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-59-checkbox-checked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-59-checkbox-unchecked",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-75-time-picker-24h",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "ce-99-empty-state-add-items-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-114-slider-with-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-81-popup-btn-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-87-text-toast-popup-2-lines",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-87-text-toast-popup-3-lines",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-88-graphic-toast-popup-1-line",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-88-graphic-toast-popup-2-lines",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-89-popup-toast-small-text",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-89-popup-toast-small-text-icon",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-90-popup-toast-small-icon",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-103-end-effect-left",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-103-end-effect-right",
+				"time": 1000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-103-end-effect-top",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-103-end-effect-bottom",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-103-end-effect-top-scroll",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-103-end-effect-bottom-scroll",
+				"time": 2000,
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-109-popup-2-buttons-with-btn-text-inside-btn",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-110-bottom-button-text-position",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-111-bottom-button-text-position-4-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-109-popup-2-buttons-with-btn-text-inside-btn-moved-bottom",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-112-bottom-button-text-position-with-image-74px-title",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-112-bottom-button-text-with-big-img",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-113-bottom-button-text-position-with-image-74px",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-101-load-more-content",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-69-number-picker",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.4
+			},
+			{
+				"name": "ce-105-colorpicker",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-116-hyper-link",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-91-more-options",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "ce-92-more-options-open",
+				"width": 360,
+				"height": 360,
+				"threshold": 4.1
+			},
+			{
+				"name": "ce-95-more-options-open-with-subtext",
+				"width": 360,
+				"height": 360,
+				"threshold": 4.1
+			},
+			{
+				"name": "ce-95-more-options-open-2-lines",
+				"width": 360,
+				"height": 360,
+				"threshold": 4.1
+			},
+			{
+				"name": "ce-95-more-options-open-2-lines-subtext",
+				"width": 360,
+				"height": 360,
+				"threshold": 4.1
+			},
+			{
+				"name": "ce-98-rotary-selector",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-100-rotary-selector-2-lines",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-100-rotary-selector-2-lines-subtext",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-100-rotary-selector-with-subtext",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-101-rotary-selector-with-icon",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-101-rotary-selector-with-icon-and-text",
+				"width": 360,
+				"height": 360,
+				"pass": true
+			},
+			{
+				"name": "ce-103-rotary-selector-edit-mode",
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.5
+			},
+			{
+				"name": "ce-113-bottom-button-text-position-with-image-100px",
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-114-slider-with-1-line-text",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-81-popup-btn-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-81-popup-btn-6-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-107-popup-2-buttons-8-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-108-popup-2-buttons-with-image-3-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-108-popup-2-buttons-with-image-and-title",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-82-popup-with-progress-2lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-108-popup-2-buttons-with-image-5-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-111-bottom-button-text-position-2-lines",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-82-popup-with-progress-1line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-98-empty-state-no-items-icon-and-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-81-popup-btn-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-111-bottom-button-text-position-1-line",
+				"time": 0,
+				"width": 360,
+				"height": 360
+			},
+			{
+				"name": "ce-75-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "ce-76-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "ce-76-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "ce-77-date-picker-1",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "ce-77-date-picker-2",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 0.76
+			},
+			{
+				"name": "ce-78-date-picker",
+				"time": 0,
+				"width": 360,
+				"height": 360,
+				"pass": true,
+				"threshold": 1.1
+			},
+			{
+				"name": "ce-snap-listview",
+				"time": 5000,
+				"width": 360,
+				"height": 360
+			}
+		]
+	}
+]

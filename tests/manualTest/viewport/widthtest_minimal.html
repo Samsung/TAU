@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<title>Screen size tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="widthtest.js"></script>
+<style>
+
+html,body {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	background-color: black;
+	width: 300px;
+}
+
+body {
+	background: #ffffff url(raster.gif) no-repeat;
+	margin-right: 50px;
+}
+
+#writeroot {
+	margin: 10px 0;
+	padding: 10px 0;
+}
+
+p {
+	width: 50%;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>Screen size tests - minimal viewport</h2>
+
+<p>This test has no <code>&lt;meta viewport&gt;</code> tag. It does have a hard-coded
+<code>width: 300px</code> on the HTML element.</p>
+
+<div id="writeroot"></div>
+
+<p>Test paragraph that should be about 150px wide (50%).</p>
+
+<button id="testButton">Refresh tests</button>
+
+</body>
+</html>

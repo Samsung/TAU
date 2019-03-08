@@ -1,0 +1,68 @@
+.ui-welcome-page {
+	.ui-content {
+		.ui-scrollview-view {
+			.display-flex();
+			.flex-direction(column);
+			.justify-content(center);
+			text-align: center;
+			padding-bottom: 83 * @unit_base;
+		}
+
+		.ui-welcome-icon {
+			height: 160 * @unit_base;
+			width: auto;
+			.flex(0 0 auto);
+			.align-self(center);
+		}
+
+		.ui-welcome-primary-text,
+		.ui-welcome-secondary-text {
+			margin: 0 40 * @unit_base;
+			font-weight: normal;
+
+		}
+
+		.ui-welcome-primary-text {
+			color: @color_welcome_primary_text;
+			line-height: 67 * @unit_base;
+			font-size: 49 * @unit_base; // @note: set by trial and error based on UX guide
+		}
+
+		.ui-welcome-secondary-text {
+			color: @color_welcome_secondary_text;
+			line-height: 43 * @unit_base;
+			font-size: 35 * @unit_base; // @note: set by trial and error based on UX guide
+		}
+
+		.ui-welcome-primary-text + .ui-welcome-secondary-text {
+			margin-top: 58 * @unit_base;
+		}
+	}
+
+	.ui-footer {
+		height: 172 * @unit_base;
+		text-align: center;
+		.justify-content(center);
+		.align-items(center);
+
+		button,
+		.ui-btn-welcome {
+			min-width: 496 * @unit_base;
+			height: 104 * @unit_base;
+			background-color: @color_welcome_footer_btn_default;
+			display: inline-block;
+			width: auto;
+			.flex(0 0 auto);
+
+			&:active,
+			&:focus {
+				background-color: @color_welcome_footer_btn_press;
+			}
+
+			&[disabled],
+			&.ui-disabled {
+				background-color: @color_welcome_footer_btn_dim;
+			}
+		}
+	}
+}

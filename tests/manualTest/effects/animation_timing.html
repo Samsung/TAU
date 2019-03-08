@@ -1,0 +1,81 @@
+<!-- This is test for script-based animation-timing feature :
+It has method as follows.
+	requestAnimationFrame(callback) - It's used to signal to the user agent.
+		If subsequent animation frames are needed, it should be called again.
+	cancelAnimationFrame(id) - It's used to cancel a previously made request.
+Please click a box before a previous box disappears fastOn screen and see that it's stopped.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>animation-timing test using requestAnimationFrame</title>
+<style>
+.box {
+	position: relative;
+	width: 215px;
+	height: 100px;
+	padding: 0px 10px;
+	border: 2px solid black;
+}
+#animationBox1 {
+	background-color: white;
+}
+#animationBox2 {
+	background-color: black;
+	color: white;
+}
+#animationBox3 {
+	background-color: gray;
+}
+</style>
+</head>
+<body>
+
+<script>
+var animationId = 0, animationStartTime = 0, number = 1;
+
+function animateCallback(time) {
+	var animationBox = document.getElementById("animationBox" + number);
+	animationBox.style.left = (time - animationStartTime) % window.innerWidth + "px";
+	animationBox.style.opacity = 1 / (time - animationStartTime) * 100;
+
+	if ((time - animationStartTime) > window.innerWidth)
+		stop();
+	else
+		animationId = window.requestAnimationFrame(animateCallback);
+}
+
+function start(event) {
+	number = event.currentTarget.id.split('x')[1];
+	animationStartTime = window.performance.now();
+	if (window.requestAnimationFrame)
+		animationId = window.requestAnimationFrame(animateCallback);
+}
+
+function stop() {
+	if (animationId)
+		window.cancelAnimationFrame(animationId);
+
+	reset();
+}
+
+function reset() {
+	var animationBox = document.getElementById("animationBox" + number);
+	animationBox.style.left = "";
+	animationBox.style.opacity = 1;
+	animationId = 0;
+}
+</script>
+
+<div class="box" id="animationBox1" onclick="start(event)">
+	<h3>Animation Test for requestAnimationFrame API</h3>
+</div>
+<div class="box" id="animationBox2" onclick="start(event)">
+	<h3>Animation Test for requestAnimationFrame API</h3>
+</div>
+<div class="box" id="animationBox3" onclick="start(event)">
+	<h3>Animation Test for requestAnimationFrame API</h3>
+</div>
+
+</body>
+</html>

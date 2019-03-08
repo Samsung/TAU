@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../../libs/qunit-1.11.0.css" />
+	<title>Fieldcontain</title>
+</head>
+
+<body>
+	<h1 id="qunit-header">Fieldcontain</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+	<div id="qunit-fixture">
+		<div data-role="page" id="page">
+			<div data-role="content">
+				<!-- Basic fieldcontain test -->
+				<div id="test-fieldcontain" data-role="fieldcontain">
+					<label for="name">Text Input:</label>
+					<input type="text" name="name" id="name" value=""  />
+				</div>
+
+				<div id="without-text" data-role="fieldcontain">
+					<label for="name">Text Input:</label>
+					<input type="text" name="name" id="name" value=""  />
+				</div>
+
+				<div id="with-text" data-role="fieldcontain">
+					text <label for="name">Text Input:</label>
+					<input type="text" name="name" id="name" value=""  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="../../../../../libs/qunit-1.11.0.js"></script>
+	<script src="../../../../../libs/support.js"></script>
+	<script>
+		module("support/mobile/widget/Fieldcontain", {
+			teardown: function () {
+				ej.engine._clearBindings();
+			}
+		});
+
+		function cssStyles ( fieldcontain ) {
+			ok( fieldcontain.contains('ui-field-contain'), 'A fieldcontain element must contain styles ui-field-contain.' );
+			ok( fieldcontain.contains('ui-br'), 'A fieldcontain element must contain styles ui-br.' );
+			ok( fieldcontain.contains('ui-body'), 'A fieldcontain element must contain styles ui-body.' );
+		}
+
+		test( "Field container contains appropriate css styles.", function(){
+			var elem = document.getElementById('test-fieldcontain');
+			ok( !elem.classList.contains('ui-field-contain'), 'A fieldcontain element does not contain styles ui-field-contain before building.' );
+			ej.engine.instanceWidget(elem, 'FieldContain');
+			cssStyles( elem.classList );
+		});
+
+		test( "Field container contains only not-empty text nodes after building.", function(){
+			var elem = document.getElementById('without-text'),
+				elemtext = document.getElementById('with-text');
+			equal( elem.childNodes.length, 5, 'Before building the empty text nodes should exist.' );
+			ej.engine.instanceWidget(elem, 'FieldContain');
+			cssStyles( elem.classList );
+			equal(elem.childNodes.length, 2, 'Afret building field container the empty text nodes should be delated.' );
+
+			equal(elemtext.childNodes.length, 5, 'Before building the empty text nodes should exist.' );
+			ej.engine.instanceWidget(elemtext, 'FieldContain');
+			cssStyles(elemtext.classList );
+			equal(elemtext.childNodes.length, 3, 'Afret building field container only empty text nodes should be delated.' );
+		});
+	</script>
+	<script type="text/javascript">
+		var tauConfig = {
+			"autorun": false
+		};
+	</script>
+	<script type="text/javascript" src="../../../../../libs/dist/js/tau.js"></script>
+	<script type="text/javascript" src="../../../../../libs/dist/js/tau.support-2.3.js"></script>
+
+
+</body>
+</html>

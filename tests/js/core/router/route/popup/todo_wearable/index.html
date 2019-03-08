@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Popup Test Suite</title>
+
+	<link rel="stylesheet" href="../../../../../../libs/dist/theme/default/tau.css">
+	<link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css" />
+	<link rel="stylesheet" href="test.css" />
+</head>
+<body>
+<div id="qunit"></div>
+
+<div id="main" class="ui-page">
+
+	<div id="popup" class="ui-popup">
+		<div class="ui-popup-content">
+		</div>
+	</div>
+
+	<div id="layout-test-header-footer" class="ui-popup">
+		<div class="ui-popup-header">Test Popup</div>
+		<div class="ui-popup-content">
+		</div>
+		<div class="ui-popup-footer">
+			<button class="ui-btn">Cancel</button>
+		</div>
+	</div>
+
+	<div id="layout-test-header" class="ui-popup">
+		<div class="ui-popup-header">Test Popup</div>
+		<div class="ui-popup-content"></div>
+	</div>
+
+	<div id="layout-test-footer" class="ui-popup">
+		<div class="ui-popup-content"></div>
+		<div class="ui-popup-footer">
+			<button class="ui-btn">Cancel</button>
+		</div>
+	</div>
+
+	<div id="layout-test-content-padding" class="ui-popup">
+		<div class="ui-popup-header">Test Popup</div>
+		<div class="ui-popup-content" style="padding:10px;"></div>
+		<div class="ui-popup-footer">
+			<button class="ui-btn">Cancel</button>
+		</div>
+	</div>
+
+	<div id="has-external-link-popup" class="ui-popup">
+		<div class="ui-popup-content">
+			<a href="test-data/externalPage.html">externalPage</a>
+		</div>
+	</div>
+
+	<div id="has-popup-link-popup" class="ui-popup">
+		<div class="ui-popup-content">
+			<a href="#another-popup" data-rel="popup">another popup</a>
+		</div>
+	</div>
+
+	<div id="another-popup" class="ui-popup">
+		<div class="ui-popup-content"></div>
+	</div>
+
+</div>
+
+<div id="internal-page" class="ui-page"></div>
+<script type="text/javascript">
+	var tauConfig = {
+		popupTransition: "none"
+	}
+</script>
+	<script type="text/javascript" src="../../../../../../libs/jquery.js"></script>
+	<script type="text/javascript" src="../../../../../../libs/qunit-1.11.0.js"></script>
+	<script type="text/javascript" src="../../../../../../libs/support.js"></script>
+	<script type="text/javascript" src="../../../../../../libs/helper.js"></script>
+	<script type="text/javascript" src="tests.js"></script>
+	<script type="text/javascript" src="../../../../../../libs/dist/js/tau.js"></script>
+</body>
+</html>

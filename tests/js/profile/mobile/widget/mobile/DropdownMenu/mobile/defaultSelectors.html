@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../../../../libs/qunit-1.11.0.css" />
+	<title>DropdownMenu</title>
+</head>
+
+<body>
+
+<h1 id="qunit-header">DropdownMenu default selectors</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture">
+	<div data-role="page" id="page1">
+		<div data-role="content">
+			<select data-native-menu="false" id="select">
+				<option value="1">The 1st Option</option>
+				<option value="2">The 2nd Option</option>
+			</select>
+			<select data-native-menu="false" id="select-slider" data-role="slider">
+				<option value="On"></option>
+				<option value="Off"></option>
+			</select>
+			<select data-native-menu="false" id="select-range" data-role="range">
+				<option value="1">The 1st Option</option>
+				<option value="2">The 2nd Option</option>
+			</select>
+			<select id="by-css-selector" class="ui-select-menu">
+				<option value="1">The 1st Option</option>
+				<option value="2">The 2nd Option</option>
+			</select>
+			<div id="element-by-css-selector" class="ui-select-menu">
+				<span>The 1st Option</span>
+				<span>The 2nd Option</span>
+			</div>
+		</div>
+	</div>
+</div>
+	<script src="../../../../../../../libs/qunit-1.11.0.js"></script>
+	<script src="../../../../../../../libs/support.js"></script>
+	<script src="../../../../../../../libs/jquery.js"></script>
+
+
+	<script type="text/javascript">
+		var tauConfig = {
+			"autorun": false
+		};
+	</script>
+	<script type="text/javascript" src="../../../../../../../libs/dist/js/tau.js"></script>
+	<script src="defaultSelectors.js"></script>
+</body>
+</html>

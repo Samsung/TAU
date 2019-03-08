@@ -1,0 +1,118 @@
+input[type="checkbox"]:not(.ui-switch-input),
+input[type="radio"] {
+	box-sizing: border-box;
+	padding: 0;
+	height: 56px;
+	width: 56px;
+	font-size: 32px;
+	.appearance(none);
+	position: relative;
+}
+
+input[type="radio"] {
+	background-color: @color_checkboxradio_radiobox;
+	mask-image: url('images/Controller_icon/tw_btn_radiobox_holo_dark.png');
+	.mask-repeat(no-repeat);
+	.mask-size(100% 100%);
+}
+
+input[type="radio"]::after {
+	content: "";
+	background-color: @color_checkboxradio_radiobox_line;
+	mask-image: url('images/Controller_icon/tw_btn_radiobox_line.png');
+	.mask-repeat(no-repeat);
+	.mask-size(100% 100%);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+input[type="radio"]:checked::before {
+	content: "";
+	background-color: @color_checkboxradio_radio;
+	mask-image: url('images/Controller_icon/tw_btn_radio_holo_dark.png');
+	.mask-repeat(no-repeat);
+	.mask-size(100% 100%);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+input[type="radio"]:active {
+	background-color: @color_checkboxradio_radiobox_press;
+	mask-image: url('images/Controller_icon/tw_btn_radiobox_holo_dark.png');
+	.mask-repeat(no-repeat);
+}
+
+input[type="radio"]:active::after {
+	content: "";
+	background-color: @color_checkboxradio_radiobox_line_press;
+	mask-image: url('images/Controller_icon/tw_btn_radiobox_line.png');
+	.mask-repeat(no-repeat);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+input[type="radio"]:active:checked::before {
+	content: "";
+	background-color: @color_checkboxradio_radio_press;
+	mask-image: url('images/Controller_icon/tw_btn_radio_holo_dark.png');
+	.mask-repeat(no-repeat);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+input[type="checkbox"]:not(.ui-switch-input) {
+	mask-image: url('images/Controller_icon/tw_btn_checkbox_holo_dark.png');
+	.mask-repeat(no-repeat);
+	.mask-size(100% 100%);
+	background-color: @color_checkboxradio_checkbox;
+	&::after {
+		content: "";
+		background-color: @color_checkboxradio_checkbox_line;
+		mask-image: url('images/Controller_icon/tw_btn_checkbox_line_holo_dark.png');
+		.mask-repeat(no-repeat);
+		.mask-size(100% 100%);
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
+	&:checked::before {
+		content: "";
+		mask-image: url('images/Controller_icon/tw_btn_check_holo_dark.png');
+		.mask-repeat(no-repeat);
+		.mask-size(100% 100%);
+		background-color: @color_checkboxradio_check;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
+	&:active {
+		background-color: @color_checkboxradio_checkbox_press;
+		&::after {
+			content: "";
+			background-color: @color_checkboxradio_checkbox_line_press;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+		}
+		&:checked::before {
+			content: "";
+			background-color: @color_checkboxradio_check_press;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+		}
+	}
+}
+
+.ui-checkbox-small {
+	input[type=checkbox]:not(.ui-switch-input), input[type=radio] {
+		top: 7 * @unit_base;
+		margin-right: 7 * @unit_base;
+		width: 34 * @unit_base;
+		height: 34 * @unit_base;
+	}
+}

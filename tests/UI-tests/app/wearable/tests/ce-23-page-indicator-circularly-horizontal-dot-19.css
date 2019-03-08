@@ -1,0 +1,9 @@
+#pageIndicatorCirclePage19 .ui-content section {
+	overflow: hidden;
+	overflow-y: auto;
+	text-align: center;
+}
+
+#pageIndicatorCirclePage19 .ui-content section h3 {
+	margin-top: 140px;
+}

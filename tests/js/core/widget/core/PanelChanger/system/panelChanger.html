@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Panel test</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css">
+		<link rel="stylesheet"
+			  href="../../../../../../libs/dist/theme/default/tau.css">
+		<script src="../../../../../../libs/qunit-1.11.0.js"
+				type="text/javascript"></script>
+		<script src="../../../../../../libs/support.js"></script>
+
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture">
+				<div class="ui-page" id="page1">
+					<div id="panelChanger" data-role="panel-changer" data-animation-type="none">
+						<div id="mainpanel" data-role="panel">
+							<ul data-role="listview">
+								<li>
+									<a href="#panel2">Go Panel 2</a>
+								</li>
+							</ul>
+						</div>
+						<div id="panel2" data-role="panel">
+							<ul data-role="listview">
+								<li>
+									<a href="#panel3">Go Panel 2</a>
+								</li>
+							</ul>
+						</div>
+						<div id="panel3" data-role="panel">
+							<ul data-role="listview">
+								<li>
+									<a href="#mainpanel">Go Panel 2</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+		</div>
+		<script>
+			tauConfig = {
+				pageContainer: document.getElementById('qunit-fixture')
+			};
+		</script>
+		<script type="text/javascript"
+				src="../../../../../../libs/dist/js/tau.js"></script>
+		<script src="panelChanger.js"></script>
+	</body>
+</html>

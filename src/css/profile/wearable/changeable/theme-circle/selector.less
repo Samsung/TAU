@@ -1,0 +1,230 @@
+.ui-selector {
+	background-color: @color_selector_layer_bg;
+
+	.ui-item {
+		background-color: @color_selector_icon_bg;
+
+		&:active {
+			background-color: @color_selector_icon_bg_press;
+		}
+		&.ui-item-active:active {
+			background-color: @color_selector_icon_bg;
+		}
+	}
+
+	.ui-layer {
+		&.ui-layer-prev,  &.ui-layer-next {
+			background-color: @color_selector_btn;
+		}
+
+		&.ui-layer-prev:active, &.ui-layer-next:active {
+			background-color: @color_selector_btn_press;
+		}
+	}
+
+	.ui-selector-indicator {
+		font-size: 30 * @unit_base;
+		.ui-selector-indicator-text {
+			color: @color_selector_text;
+		}
+
+		.ui-selector-indicator-subtext {
+			color: @color_selector_subtext;
+		}
+
+		&:active + .ui-selector-indicator-arrow::before {
+			background-color: @color_selector_handler_bg_pressed;
+		}
+		&-active + .ui-selector-indicator-arrow::before {
+			background-color: @color_selector_handler_bg_pressed;
+		}
+	}
+
+	.ui-selector-indicator-arrow {
+		&::before {
+			background-color: @color_selector_handler_bg;
+		}
+	}
+
+	&.ui-selector-edit-mode {
+
+		&.ui-selector-reorder {
+			.ui-item {
+				.ui-item-icon-remove-left, .ui-item-icon-remove-right {
+					display: none;
+				}
+
+				&.ui-item-plus {
+					pointer-events: none;
+				}
+			}
+
+			.ui-selector-indicator, .ui-selector-indicator-arrow {
+				pointer-events: none;
+			}
+
+			.ui-layer:not(.ui-layer-active):not(.ui-layer-next):not(.ui-layer-prev) {
+				pointer-events: none;
+			}
+		}
+
+		.ui-selector-indicator {
+			> :not(.ui-selector-indicator-text) {
+				display: none;
+			}
+
+			&-arrow::before {
+				background: none;
+			}
+
+			&:active + .ui-selector-indicator-arrow::before {
+				background: none;
+			}
+		}
+
+		.ui-item {
+			&.ui-item-placeholder, &.ui-item-removable.ui-item-placeholder {
+				box-sizing: border-box;
+				border: 1 * @unit_base solid @color_selector_edit_icon_empty_bg;
+				background: none;
+
+				.ui-item-icon-remove-left, .ui-item-icon-remove-right {
+					display: none;
+				}
+
+				&::before, &::after {
+					display: none;
+				}
+			}
+
+			@keyframes dragItem {
+				0% {
+					transform: scale(1.0);
+					opacity: 1;
+				}
+
+				100% {
+					transform: scale(68 / 56);
+					opacity: 0.7;
+				}
+			}
+
+			&.ui-item-moved {
+				position: fixed;
+				width: 56 * @unit_base;
+				height: 56 * @unit_base;
+				z-index: 101;
+				visibility: visible;
+				opacity: 0.7;
+				transform: scale(68 / 56);
+				pointer-events: none;
+				margin: -28 * @unit_base;
+				animation: 333ms dragItem;
+
+				&-end {
+					opacity: 1;
+					transform: scale(1);
+				}
+
+				.ui-item-icon-remove-left, .ui-item-icon-remove-right {
+					display: none;
+				}
+			}
+		}
+
+		.ui-item-removable {
+			.ui-item-icon-remove-left, .ui-item-icon-remove-right {
+				position: absolute;
+				width: 30 * @unit_base;
+				height: 30 * @unit_base;
+				top: -2 * @unit_base;
+
+				&:active {
+					.ui-item-icon-remove-bg {
+						background-color: @color_selector_edit_icon_bg_press;
+					}
+
+					&::after {
+						background-color: @color_selector_edit_icon_minus_press;
+					}
+				}
+
+				.ui-item-icon-remove-bg {
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					background-color: @color_selector_edit_icon_bg;
+					mask-image: url("./images/Selector/b_rotary_selector_edit_mode_ic_delete_bg.png");
+				}
+
+				&::before, &::after {
+					content: "";
+					position: absolute;
+					width: 100%;
+					height: 100%;
+					top: 0;
+					left: 0;
+				}
+
+				&::before {
+					background-color: @color_selector_edit_icon_outline;
+					mask-image: url("./images/Selector/b_rotary_selector_edit_mode_ic_delete_bg_ef.png");
+				}
+
+				&::after {
+					background-color: @color_selector_edit_icon_minus;
+					mask-image: url("./images/Selector/b_rotary_selector_edit_mode_ic_delete.png");
+				}
+			}
+
+			.ui-item-icon-remove-right {
+				right: -3 * @unit_base;
+				transform-origin: top right;
+
+				.ui-item-icon-remove-bg, &::before, &::after {
+					transform: scaleX(-1);
+				}
+			}
+
+			.ui-item-icon-remove-left {
+				transform-origin: top left;
+				left: -3 * @unit_base;
+			}
+
+			&.ui-item-removed.ui-item {
+				opacity: 0;
+				transition: opacity 200ms;
+			}
+		}
+
+		.ui-item-plus {
+			background-color: @color_selector_edit_plus_button_bg;
+			mask-image: url("./images/Selector/b_rotary_selector_edit_mode_ic_add.png");
+			mask-size: 100%;
+		}
+	}
+}
+
+/* ------------------------- Selector List for bezelless watches ------------------------- */
+.ui-bezelless-selector {
+	.ui-more {
+		z-index: 1;
+	}
+	.ui-listview li img {
+		width: 50 * @unit_base;
+		height: 50 * @unit_base;
+	}
+	
+	.thumb-container {
+		display: inline-block;
+		width: 50 * @unit_base;
+		height: 50 * @unit_base;
+		position: absolute;
+		left: 40 * @unit_base;
+		background: white;
+		border-radius: 100 * @unit_base;
+	}
+	.ui-arc-listview-carousel.ui-arc-listview-5 li.ui-arc-listview-selected {
+		line-height: 50 * @unit_base;
+	}
+}

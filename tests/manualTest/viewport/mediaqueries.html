@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<title>Screen size tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+
+html,body {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	background-color: black;
+}
+
+body {
+	background: #ffffff url(raster.gif) no-repeat;
+	margin-right: 50px;
+}
+
+#testEl {
+	background-color: red;
+	color: white;
+}
+
+#huge {
+	background-color: blue;
+	color: white;
+	display: none;
+	text-align: right;
+	width: 2000px;
+}
+
+#writeroot {
+	margin: 10px 0;
+	background-color: white;
+	padding: 10px 0;
+}
+
+</style>
+
+<style>
+
+.query {
+	display: none;
+}
+
+@media all and (min-resolution: 97dpi) {
+	#dpimore96 {
+		display: list-item;
+	}
+
+	#dpi {
+		display: none;
+	}
+}
+
+@media all and (max-resolution: 95dpi) {
+	#dpiless96 {
+		display: list-item;
+	}
+
+	#dpi {
+		display: none;
+	}
+}
+
+@media all and (resolution: 96dpi) {
+	#dpi96 {
+		display: list-item;
+	}
+
+	#dpi {
+		display: none;
+	}
+}
+
+@media all and (orientation: portrait) {
+	#portrait {
+		display: list-item;
+	}
+	#orientation {
+		display: none;
+	}
+}
+
+@media all and (orientation: landscape) {
+	#landscape {
+		display: list-item;
+	}
+	#orientation {
+		display: none;
+	}
+}
+</style>
+<script>
+
+var aspectRatioTests = [
+	'1/1',
+	'2/3',
+	'3/2',
+	'4/3',
+	'3/4',
+	'4/5',
+	'5/4',
+	'5/3',
+	'3/5',
+	'16/10',
+	'10/16',
+	'99/80',
+	'80/99'
+];
+
+var step = 50;
+var maximumSize = 2000;
+
+document.write('<style id="test">');
+
+for (var i=step;i<maximumSize+1;i+=step) {
+
+	document.write('@media all and (min-device-width: ' + (i+1)/10 + 'cm) and (max-device-width: ' + (i+step)/10 + 'cm) {');
+	document.write('#devicelarger' + i + '{display: list-item}');
+	document.write('#devicewidth {display: none;} }');
+
+}
+
+for (var i=0;i<aspectRatioTests.length;i+=1) {
+	document.write('@media all and (aspect-ratio: ' + aspectRatioTests[i] + ') {');
+	document.write('#ar' + i + ' {display: list-item}');
+	document.write('#aspectratio {display: none;} }');
+	document.write('@media all and (device-aspect-ratio: ' + aspectRatioTests[i] + ') {');
+	document.write('#dar' + i + ' {display: list-item}');
+	document.write('#daspectratio {display: none;} }');
+}
+
+document.write('</style>');
+
+
+</script>
+
+</head>
+
+<body>
+
+<h2>Screen size tests</h2>
+
+<div id="writeroot"></div>
+
+<button id="testButton">Refresh tests</button>
+<button id="toggle">Show wide layer</button>
+<button id="constrain">Constrain body</button>
+
+<!-- div id="testEl">This is the test element</div -->
+
+<div id="huge">This is a 2000px layer.</div>
+
+
+
+<h2>Media queries</h2>
+
+<ul>
+<li id="width">Media queries for screen width not supported.</li>
+<li id="devicewidth">Media queries for device width not supported.</li>
+<!-- li id="aspectratio">Media queries for aspect ratio not supported.</li -->
+<li id="daspectratio">Media queries for device aspect ratio not supported.</li>
+<li id="dpi">Media queries for dpi not supported.</li>
+<li id="orientation">Media queries for orientation not supported.</li>
+
+<script>
+for (var i=step;i<maximumSize+1;i+=step) {
+	document.write('<li class="query" id="devicelarger' + i + '">Device width is between ' + i + ' and ' + (i+step-1) +  'px.</li>');
+}
+
+for (var i=0;i<aspectRatioTests.length;i+=1) {
+	document.write('<li class="query" id="ar' + i + '">Aspect ratio is ' + aspectRatioTests[i] +  '.</li>');
+	document.write('<li class="query" id="dar' + i + '">Device aspect ratio is ' + aspectRatioTests[i] +  '.</li>');
+}
+
+</script>
+
+<li class="query" id="dpimore96">Dpi is more than 96.</li>
+<li class="query" id="dpiless96">Dpi is less than 96.</li>
+<li class="query" id="dpi96">Dpi is 96.</li>
+
+<li class="query" id="portrait">Orientation is portrait.</li>
+<li class="query" id="landscape">Orientation is landscape.</li>
+</ul>
+
+<h2>Inches and pixels</h2>
+
+<p>One inch is defined as 96 pixels.</p>
+
+<p style="width: 96px; border:1px solid red">96 pixels</p>
+<p style="width: 1in; border:1px solid red">1 inch</p>
+
+
+
+</body>
+</html>

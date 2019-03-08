@@ -1,0 +1,188 @@
+/***************************************************************************
+                   Scrollbar Style
+***************************************************************************/
+.ui-scrollbar-bar-type {
+	position: absolute;
+}
+
+.ui-scrollbar-bar-type.ui-scrollbar-horizontal {
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 8px;
+}
+
+.ui-scrollbar-bar-type.ui-scrollbar-vertical {
+	right: 0;
+	top: 0;
+	width: 8 * @unit_base;
+	height: 100%;
+}
+
+.ui-scrollbar-bar-type .ui-scrollbar-indicator {
+	position: absolute;
+	background-color: @color_scroller_scrollbar_color;
+}
+
+.ui-scrollbar-bar-type.ui-scrollbar-horizontal .ui-scrollbar-indicator {
+	height: 4 * @unit_base;
+}
+
+.ui-scrollbar-bar-type.ui-scrollbar-vertical .ui-scrollbar-indicator {
+	width: 4 * @unit_base;
+}
+
+/***************************************************************************
+                   Scrollbar Bouncing Effect
+***************************************************************************/
+.ui-scrollbar-bouncing-effect {
+	display: none;
+	position: absolute;
+	background-repeat: no-repeat;
+	.animation-duration(.47s);
+	.animation-timing-function(step-start);
+	.animation-fill-mode(forwards);
+	background-color: @color_scroller_bouncing_effect_glow;
+	&::before {
+		content: "";
+		position: absolute;
+		background-color: @color_scroller_bouncing_effect_edge;
+	}
+}
+
+.ui-scrollbar-bouncing-effect {
+	&.ui-top,
+	&.ui-bottom {
+		width: 100%;
+		height: 50 * @unit_base;
+		left: 0;
+		-webkit-mask-size: 100% 50 * @unit_base;
+		&::before {
+			width: 100%;
+			height: 2 * @unit_base;
+			-webkit-mask-size: 100% 2 * @unit_base;
+		}
+	}
+	&.ui-left,
+	&.ui-right {
+		width: 50 * @unit_base;
+		height: 100%;
+		top: 0;
+		-webkit-mask-size: 50 * @unit_base 100%;
+		&::before {
+			width: 1 * @unit_base;
+			height: 100%;
+			-webkit-mask-size: 1 * @unit_base 100%;
+		}
+	}
+	&.ui-top {
+		top: 0;
+		mask-image: url(@bg_scroller_bouncing_effect_top_glow);
+		&::before {
+			mask-image: url(@bg_scroller_bouncing_effect_top_edge);
+		}
+	}
+	&.ui-bottom {
+		bottom: 0;
+		mask-image: url(@bg_scroller_bouncing_effect_bottom_glow);
+		&::before {
+			mask-image: url(@bg_scroller_bouncing_effect_bottom_edge);
+		}
+	}
+	&.ui-left {
+		left: 0;
+		mask-image: url(@bg_scroller_bouncing_effect_left_glow);
+		&::before {
+			mask-image: url(@bg_scroller_bouncing_effect_left_edge);
+		}
+	}
+	&.ui-right {
+		right: 0;
+		mask-image: url(@bg_scroller_bouncing_effect_right_glow);
+		&::before {
+			mask-image: url(@bg_scroller_bouncing_effect_right_edge);
+		}
+	}
+}
+
+@-webkit-keyframes ui-bouncing-show {
+	0% {
+		opacity: 0;
+	}
+	10% {
+		opacity: .1;
+	}
+	20% {
+		opacity: .2;
+	}
+	30% {
+		opacity: .3;
+	}
+	40% {
+		opacity: .4;
+	}
+	50% {
+		opacity: .5;
+	}
+	60% {
+		opacity: .6;
+	}
+	70% {
+		opacity: .7;
+	}
+	80% {
+		opacity: .8;
+	}
+	90% {
+		opacity: .9;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes ui-bouncing-hide {
+	0% {
+		opacity: 1;
+	}
+	10% {
+		opacity: .9;
+	}
+	20% {
+		opacity: .8;
+	}
+	30% {
+		opacity: .7;
+	}
+	40% {
+		opacity: .6;
+	}
+	50% {
+		opacity: .5;
+	}
+	60% {
+		opacity: .4;
+	}
+	70% {
+		opacity: .3;
+	}
+	80% {
+		opacity: .2;
+	}
+	90% {
+		opacity: .1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+.ui-scrollbar-bouncing-effect.ui-show {
+	display: block;
+	.animation-name(ui-bouncing-show);
+}
+
+.ui-scrollbar-bouncing-effect.ui-hide {
+	display: block;
+	.animation-name(ui-bouncing-hide);
+}

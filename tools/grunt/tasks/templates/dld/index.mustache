@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<script type="text/javascript" src="{{basedir}}/snippet.js"></script>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link href="{{basedir}}/styles.css" rel="StyleSheet" type="text/css">
+	<link href="{{basedir}}/snippet.css" rel="StyleSheet" type="text/css">
+	<title>{{title}}{{version}}</title>
+</head>
+<body onload="prettyPrint()" marginwidth="0" marginheight="0">
+<div>
+	{{#breadcrumb}}
+	<a href="{{href}}">{{title}}</a> &gt;
+	{{/breadcrumb}}
+
+<h1>{{title}}</h1>
+
+{{{description}}}
+
+<table cellspacing="0" cellpadding="5" style="width: 100%; border-top: solid 1px rgb(191, 191,
+191); border-left: solid 1px rgb(191, 191, 191)">
+	<caption>{{table.caption}}</caption>
+	<tbody>
+	<tr>
+		<th style="background: rgb(242, 242, 242); border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191, 191)">Component</th>
+		<th style="background: rgb(242, 242, 242); border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191, 191)">Module</th>
+		<th style="background: rgb(242, 242, 242); border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191, 191)">New Development /Modification / Reuse</th>
+		<th style="background: rgb(242, 242, 242); border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191, 191)">Description</th>
+	</tr>
+	{{#table.rows}}
+		<tr>
+			<td style="border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191,
+		191)"><a href="{{file}}">go</a></td>
+			<td style="border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191, 191)">{{namespace}}</td>
+			<td style="border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191, 191)">{{filename}}</td>
+			<td style="border-bottom: solid 1px rgb(191, 191,
+		191);border-right: solid 1px rgb(191, 191, 191)">{{description}}</td>
+		</tr>
+	{{/table.rows}}
+	</tbody>
+</table>
+
+{{longDescription}}
+
+<h2>Where to Go Next</h2>
+<ul>
+	{{#seeMore}}
+		<li><a href="{{file}}">{{name}}</a></li>
+	{{/seeMore}}
+</ul>
+<div id="footer">
+	<hr size="1">
+	<font size="1">Except as noted, this content - excluding the Code Examples - is licensed under <a
+			href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_blank">Creative Commons Attribution
+		3.0</a> and all of the Code Examples contained herein are licensed under <a
+			href="https://www.tizen.org/bsd-3-clause-license" target="_blank">BSD-3-Clause</a>.<br>For details, see the
+		<a href="https://www.tizen.org/content-license" target="_blank">Content License</a>.</font>
+	<!--start-->
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-25976949-1']);
+		_gaq.push(['_trackPageview']);
+		(function () {
+			var ga = document.createElement('script');
+			ga.type = 'text/javascript';
+			ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0];
+			s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+	<!--end-->
+</div>
+</body>
+</html>

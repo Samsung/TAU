@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/style-circle.css">
+</head>
+<body>
+<div class="ui-page" id="number-picker-pageCE">
+	<header class="ui-header">
+		<h2 class="ui-title">Title</h2>
+	</header>
+	<div class="ui-content">
+		<label for="number-pickerCE">unit</label>
+		<input type="number" id="number-pickerCE" max="50" min="0" step="1" value="17"/>
+	</div>
+	<script>
+		(function () {
+			var page = document.getElementById("number-picker-pageCE"),
+				element = page.querySelector("input[type=\"number\"]"),
+				widget = null;
+
+			function init() {
+				widget = tau.widget.NumberPicker(element);
+			}
+
+			function onPageHide() {
+				widget.destroy();
+			}
+
+			page.addEventListener("pagebeforeshow", init);
+			page.addEventListener("pagehide", onPageHide);
+		}());
+	</script>
+</div>
+</body>
+<script type="text/javascript" src="../lib/tau/wearable/js/tau.js" data-build-remove="false"></script>
+<script type="text/javascript" src="../js/circle-helper.js"></script>
+</html>

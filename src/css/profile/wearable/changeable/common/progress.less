@@ -1,0 +1,104 @@
+// Progressbar
+
+.w-progress-indeterminate() {
+	0% {
+		mask-image: url('./images/Progress/tw_progressbar_indeterminate1_holo_dark.png');
+		.mask-repeat(no-repeat);
+		background-color: @color_progressbar_indeterminate;
+	}
+	25% {
+		mask-image: url('./images/Progress/tw_progressbar_indeterminate2_holo_dark.png');
+		.mask-repeat(no-repeat);
+		background-color: @color_progressbar_indeterminate;
+	}
+	50% {
+		mask-image: url('./images/Progress/tw_progressbar_indeterminate3_holo_dark.png');
+		.mask-repeat(no-repeat);
+		background-color: @color_progressbar_indeterminate;
+	}
+	75% {
+		mask-image: url('./images/Progress/tw_progressbar_indeterminate4_holo_dark.png');
+		.mask-repeat(no-repeat);
+		background-color: @color_progressbar_indeterminate;
+	}
+	100% {
+		mask-image: url('./images/Progress/tw_progressbar_indeterminate5_holo_dark.png');
+		.mask-repeat(no-repeat);
+		background-color: @color_progressbar_indeterminate;
+	}
+}
+
+@-webkit-keyframes indeterminate {
+	.w-progress-indeterminate();
+}
+
+@-moz-keyframes indeterminate {
+	.w-progress-indeterminate();
+}
+
+@-ms-keyframes indeterminate {
+	.w-progress-indeterminate();
+}
+
+@-o-keyframes indeterminate {
+	.w-progress-indeterminate();
+}
+
+@keyframes indeterminate {
+	.w-progress-indeterminate();
+}
+
+progress {
+	position: relative;
+	padding-left: 16 * @unit_base;
+	padding-right: 16 * @unit_base;
+	margin-top: 14 * @unit_base;
+	margin-bottom: 14 * @unit_base;
+	width: 100%;
+	height: 6 * @unit_base;
+	.appearance(none);
+	border: none;
+}
+
+progress::-webkit-progress-bar {
+	position: relative;
+	background-color: @color_progressbar_normal_bg;
+	border-radius: 2 * @unit_base;
+	overflow: hidden;
+}
+
+progress::-webkit-progress-value {
+	background-color: @color_progressbar_value_bg;
+	height: 6 * @unit_base;
+	border-radius: 2 * @unit_base;
+	overflow: hidden;
+}
+
+progress.ui-progress-indeterminate::-webkit-progress-bar {
+	background-color: @color_progressbar_value_bg;
+}
+
+progress.ui-progress-indeterminate::-webkit-progress-value {
+	background-size: 100% 100%;
+	.animation(indeterminate 150ms infinite);
+}
+
+.ui-progress-proportion {
+	display: block;
+	float: left;
+	font-size: @fixed_progress_proportion_font_size;
+	padding-left: 16 * @unit_base;
+	padding-right: 16 * @unit_base;
+	margin-top: -10 * @unit_base;
+	color: @color_progressbar_text;
+}
+
+.ui-progress-ratio {
+	display: block;
+	float: right;
+	font-size: @fixed_progress_ratio_font_size;
+	padding-left: 16 * @unit_base;
+	padding-right: 16 * @unit_base;
+	margin-top: -10 * @unit_base;
+	color: @color_progressbar_text;
+}

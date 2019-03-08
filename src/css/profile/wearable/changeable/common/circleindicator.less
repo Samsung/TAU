@@ -1,0 +1,30 @@
+.ui-circleindicator {
+	// Circle indicator should always take full screen
+	position: fixed;
+	z-index: 0;
+
+	svg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 0;
+		width: 100%;
+		height: 100%;
+		&:nth-child(2) circle {
+			transition: stroke-dashoffset .5s linear;
+		}
+
+		.ui-big {
+			z-index: 4;
+		}
+
+		.ui-pointer {
+			z-index: 5;
+		}
+	}
+}
+
+/*implementation of animation added by polar*/
+.ui-animated {
+	transition: 1s linear;
+}

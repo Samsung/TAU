@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>jQuery Mobile Page Test Suite</title>
+
+	<link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css">
+	<script src="../../../../../../libs/jquery.js"></script>
+	<script src="../../../../../../libs/qunit-1.11.0.js"
+			type="text/javascript"></script>
+	<script src="../../../../../../libs/support.js"></script>
+	<script src="../../../../../../libs/jquery.testHelper.1.4.js"></script>
+	<script src="../../../../../../libs/dist/js/tau.js"></script>
+	<script src="page_core.js"></script>
+</head>
+<body>
+
+	<div id="qunit"></div>
+
+	<div id="a" data-role="page"></div>
+	<div id="b" data-role="page" data-theme="e"></div>
+	<div id="c" data-role="page"></div>
+
+<div>
+	<a href="#" id="enhanced-link"></a>
+</div>
+
+<div data-enhance="false">
+	<a href="#" id="ignored-link"></a>
+</div>
+</body>
+</html>

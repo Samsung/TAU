@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,user-scalable=no"/>
+	<link rel="stylesheet" href="lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" href="lib/tau/wearable/theme/default/tau.circle.css">
+	<link rel="stylesheet" href="./css/fonts.css">
+	<link rel="stylesheet" href="./css/style.css">
+	<link rel="stylesheet" href="./css/style-circle.css">
+	<title>Tizen ui</title>
+
+	<!-- for compatibility test -->
+	<meta name="apple-wearable-web-app-capable" content="yes" />
+	<meta name="apple-wearable-web-app-status-bar-style" content="black" />
+</head>
+
+<body>
+	<script type="text/javascript" src="lib/tau-test-engine.js"></script>
+	<script>
+		window.tauConfig = {
+			"popupTransition": "none",
+			"pageTransition": "none"
+		};
+	</script>
+	<script type="text/javascript" src="lib/tau/wearable/js/tau.js" data-build-remove="false"></script>
+	<script type="text/javascript" src="js/circle-helper.js"></script>
+</body>
+</html>

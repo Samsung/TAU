@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../libs/qunit-1.11.0.css" />
+	<title>Base Widget</title>
+</head>
+
+<body>
+
+<h1 id="qunit-header">Button</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+
+<div id="qunit-fixture">
+	<div data-role="page" id="page1">
+		<div data-role="contents">
+			<div id="test" disabled="true"></div>
+			<div id="value"></div>
+			<div id="widget" data-option1="new" data-option-a="new"></div>
+			<div class="option"></div>
+		</div>
+	</div>
+</div>
+	<script src="../../../../libs/qunit-1.11.0.js"></script>
+	<script src="../../../../libs/support.js"></script>
+	<script type="text/javascript">
+		var tauConfig = {
+			"autorun": false
+		};
+	</script>
+	<script type="text/javascript" src="../../../../libs/dist/js/tau.js"></script>
+
+	<script src="baseWidget.js"></script>
+</body>
+</html>

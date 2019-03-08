@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Canvas animation Test</title>
+
+	<style>
+		body {
+			background: #dddddd;
+		}
+
+		#canvas {
+			background: #ffffff;
+			cursor: pointer;
+			margin-left: 10px;
+			margin-top: 10px;
+			-webkit-box-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+			-moz-box-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+			box-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+		}
+
+		#controls {
+			margin-top: 10px;
+			margin-left: 15px;
+		}
+	</style>
+	</head>
+	<body>
+		<h4>
+			This page is canvas animation test page. You click the animate button then you can show canvas animation with fps value.
+			If you cannot show animation, your test environment don't provide canvas features.
+			And please note that, SVG is not supported in micro profile.
+		</h4>
+		<div id='controls'>
+			<input id='animateButton' type='button' value='Animate'/>
+		</div>
+
+		<canvas id='canvas' width='750' height='500'>
+			Canvas not supported
+		</canvas>
+
+		<script src='js/requestNextAnimationFrame.js'></script>
+		<script src='js/example.js'></script>
+	</body>
+</html>

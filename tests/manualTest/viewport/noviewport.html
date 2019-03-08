@@ -1,0 +1,35 @@
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title> set only device width </title>
+	<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<style type="text/css">
+		#p {
+			display: blcok;
+			background-color: black;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<p id="p1"></p>
+	<p id="p2"></p>
+	<p id="p3"></p>
+	<p id="p4"></p>
+	<p id="p5"></p>
+	<p id=""></p>
+	<p id=""></p>
+	<script type="text/javascript">
+	$( window ).load( function () {
+
+		$('#p1').text( "[P] screen.width, screen.height: (" + screen.width + ", " + screen.height + ")" );
+		$('#p2').text( "[L] window.outerWidth, window.outerHeight: (" + window.outerWidth + ", " + window.outerHeight + ")" );
+		$('#p3').text( "[P] screen.availWidth, screen.availHeight: (" + screen.availWidth + ", " + screen.availHeight + ")" );
+		$('#p4').text( "[L] window.innerWidth, window.innerHeight: (" + window.innerWidth + ", " + window.innerHeight + ")" );
+		$('#p5').text( "[L] document.body.clientWidth, document.body.clientHeight: (" + document.body.clientWidth + ", " + document.body.clientHeight + ")" );
+
+	});
+
+	</script>
+</body>
+</html>

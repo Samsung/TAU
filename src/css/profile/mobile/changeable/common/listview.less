@@ -1,0 +1,551 @@
+/*
+* Listview Style - divide single / multiline style for specific
+* If you want to see any style, search them using class name.
+*/
+/******************** custom elements styles *********************/
+tau-listview {
+	display: block;
+	list-style-type: disc;
+	-webkit-margin-before: 1em;
+	-webkit-margin-after: 1em;
+	-webkit-margin-start: 0;
+	-webkit-margin-end: 0;
+	-webkit-padding-start: 40px;
+}
+
+tau-expandable {
+	display: list-item;
+	text-align: -webkit-match-parent;
+}
+
+/******************** listview common style *********************/
+.ui-listview {
+	/**
+	 * Listview cannot have style "overflow: hidden"
+	 * because this widget has canvas which has to be visible outside the listview
+	 */
+	// overflow: hidden;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: listnumbering;
+	position: relative;
+	transform: translate3d(0, 0, 0);
+
+	li, tau-expandable {
+		position: relative;
+		box-sizing: content-box;
+		margin: 0;
+		overflow: visible;
+		text-align: left;
+		font-size: @font_size_list_main_text;
+		line-height: 54 * @unit_base;
+		padding: 33 * @unit_base 32 * @unit_base;
+
+		box-shadow: none;
+		.ui-link-inherit {
+			color: @color_list_main_text_normal;
+		}
+
+		&.ui-li-active {
+			background-color: @color_list_press;
+		}
+
+		& > a:not(.ui-btn) {
+			display: block;
+			width: 100%;
+			height: 100%;
+			margin: -33 * @unit_base -32 * @unit_base;
+			padding: 33 * @unit_base 32 * @unit_base;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			color: @color_list_main_text_normal;
+			text-decoration: none;
+			box-sizing: border-box;
+		}
+	}
+
+	.ui-listview-background {
+		display: block;
+		box-sizing: border-box;
+		position: absolute;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+
+		// this is feched from listview widget as values for
+		// base color and modifier (content value)
+		// format: BASE_COLOR::MODIFIER_COLOR
+		// color format: RRR,GGG,BBB,AAA
+		&::before {
+			content: "250,250,250,1::0,0,0,-0.04";
+			display: none;
+		}
+	}
+
+	&.ui-listview-background-disabled {
+		.ui-listview-background {
+			display: none;
+		}
+	}
+
+	.ui-li-static {
+		&.ui-li-select-all {
+			color: @color_list_select_all;
+
+			label {
+				display: block;
+				input[type=checkbox] {
+					float: right
+				}
+			}
+		}
+
+		&.li-has-thumb {
+			.li-thumb {
+				position: absolute;
+				left: 32 * @unit_base;
+				top: 50%;
+				margin-top: -26 * @unit_base;
+				width: 50 * @unit_base;
+				height: 50 * @unit_base;
+
+				&.li-thumb-circle {
+					border-radius: 100%;
+				}
+			}
+			&.li-thumbnail-right .li-thumb {
+				float: right;
+				left: auto;
+				right: 32 * @unit_base;
+			}
+
+		}
+
+		/**************** with progress bar ************/
+		&.li-has-progress {
+			// bottom padding is smaller because we have bottom border
+			padding: 24 * @unit_base 32 * @unit_base 22 * @unit_base;
+			.ui-progress {
+				margin: 32 * @unit_base 0 20 * @unit_base 0;
+			}
+		}
+
+		.ui-btn.ui-btn-icon.ui-btn-nobg::after {
+			width: 80 * @unit_base;
+			height: 80 * @unit_base;
+		}
+	}
+
+	li.ui-li-flex {
+		display: flex;
+		padding: 0;
+
+		// no wrap text
+		overflow-x: visible;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		&.ui-li-select-all {
+			color: @color_list_select_all;
+
+			label {
+				display: block;
+				input[type=checkbox] {
+					float: right
+				}
+			}
+		}
+
+		.ui-li-text {
+			display: flex;
+			// no wrap text
+			overflow-x: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			> *:not(.ui-li-text-sub-2) {
+				flex: 1;
+				// no wrap text
+				overflow-x: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.ui-li-text-sub-2 {
+				.align-self(flex-end);
+			}
+			width: 100%;
+		}
+		.ui-li-text-2 {
+			color: @color_list_secondary_text_normal;
+			line-height: 43 * @unit_base;
+			font-size: @font_size_list_secondary_text;
+			display: flex;
+			// no wrap text
+			overflow-x: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			> *:not(.ui-li-text-sub-3) {
+				.flex(1);
+				// no wrap text
+				overflow-x: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.ui-li-text-sub-3 {
+				.align-self(flex-end);
+				margin: auto 0 auto auto;
+			}
+			span + .ui-li-text-sub-3 {
+				margin-left: 32 * @unit_base;
+			}
+		}
+		.ui-li-text-sub {
+			line-height: 43 * @unit_base;
+			font-size: @font_size_list_sub_text;
+			color: @color_list_sub_text_normal;
+			display: flex;
+			// no wrap text
+			overflow-x: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			> *:not(.ui-li-text-sub-3) {
+				flex: 1;
+				// no wrap text
+				overflow-x: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.ui-li-text-sub-3 {
+				.align-self(flex-end);
+				margin: auto 0 auto auto;
+			}
+			span + .ui-li-text-sub-3 {
+				margin-left: 32 * @unit_base;
+			}
+		}
+		.ui-li-text-sub-2 {
+			line-height: 54 * @unit_base;
+			max-width: 218 * @unit_base;
+			margin-left: 32 * @unit_base;
+			font-size: @font_size_list_sub_text_2;
+			color: @color_list_sub_text_2_normal;
+			float: right;
+		}
+		.ui-li-text-sub-3 {
+			line-height: 44 * @unit_base;
+			max-width: 218 * @unit_base;
+			margin-left: 32 * @unit_base;
+			font-size: @font_size_list_sub_text_3;
+			color: @color_list_sub_text_3_normal;
+			float: right;
+		}
+		.ui-li-text-sub + .ui-li-text-sub-3 {
+			margin-top: -1rem;
+		}
+
+		.ui-li-area-a {
+			position: relative;
+			display: flex;
+			flex: 1;
+			order: 1;
+			min-width: 1%;
+			flex-direction: row;
+			justify-content: flex-start;
+			margin-top: 33 * @unit_base;
+			margin-bottom: 33 * @unit_base;
+			padding: 0 32 * @unit_base;
+		}
+		.ui-li-area-b {
+			order: 0;
+			align-self: center;
+			&.ui-li-image, &.ui-li-circle-image, &.ui-li-icon {
+				margin-left: 32 * @unit_base;
+			}
+		}
+		.ui-li-area-c {
+			order: 3;
+			align-self: center;
+			&.ui-li-image, &.ui-li-circle-image {
+				margin-right: 32 * @unit_base;
+			}
+			&.ui-li-icon {
+				margin-right: 17 * @unit_base;
+			}
+			.ui-toggle-container {
+				margin-right: 32 * @unit_base;
+			}
+		}
+		.ui-li-area-d {
+			order: 2;
+			align-self: center;
+			&.ui-li-image, &.ui-li-circle-image {
+				margin-right: 32 * @unit_base;
+			}
+			&.ui-li-icon {
+				margin-right: 32 * @unit_base;
+			}
+		}
+		input.ui-li-area-b {
+			&[type="checkbox"], &[type="radio"] {
+				margin-left: 32 * @unit_base;
+			}
+		}
+
+		input.ui-li-area-c {
+			&[type="checkbox"], &[type="radio"] {
+				margin-right: 32 * @unit_base;
+			}
+		}
+
+		input.ui-li-area-d {
+			&[type="checkbox"], &[type="radio"], .ui-li-image, .ui-li-circle-image {
+				margin-right: 32 * @unit_base;
+			}			
+		}
+
+		.ui-li-icon::after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			mask-size: 100%;
+			mask-position: center center;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+		.ui-li-area {
+			&.ui-li-image {
+				width: 120 * @unit_base;
+				height: 120 * @unit_base;
+			}
+			&.ui-li-circle-image {
+				width: 98 * @unit_base;
+				height: 98 * @unit_base;
+				border-radius: 100%;
+			}
+			&.ui-li-icon {
+				width: 64 * @unit_base;
+				height: 64 * @unit_base;
+				position: relative;
+			}
+
+			&.ui-li-area-a {
+				.ui-li-icon {
+					width: 50 * @unit_base;
+					min-width: 50 * @unit_base;
+					max-width: 50 * @unit_base;
+					height: 50 * @unit_base;
+					align-self: center;
+					position: relative;
+					margin-left: 32 * @unit_base;
+					&.ui-li-icon-left {
+						order: -1;
+						margin-right: 12 * @unit_base;
+						margin-left: 0;
+					}
+					&.ui-li-icon-middle {
+						top: 50%;
+						transform: translateY(-50%);
+					}
+				}
+			}
+			&.ui-li-area-c {
+				&.ui-li-icon {
+					width: 80 * @unit_base;
+					height: 80 * @unit_base;
+					align-items: center;
+					justify-content: center;
+					display: flex;
+					&:after {
+						width: 50 * @unit_base;
+						height: 50 * @unit_base;
+					}
+				}
+			}
+			&.ui-li-area-d {
+				&.ui-li-icon {
+					width: 50 * @unit_base;
+					height: 50 * @unit_base;
+				}
+			}
+		}
+		&.ui-li-multilines .ui-li-area-a {
+			margin-top: 24 * @unit_base;
+			margin-bottom: 24 * @unit_base;
+			flex-direction: column;
+			justify-content: center;
+			> .ui-li-icon {
+				position: absolute;
+				right: 32 * @unit_base;
+			}
+		}
+		&.ui-li-flex-reverse {
+			.ui-li-area {
+				flex-direction: column-reverse;
+			}
+		}
+	}
+
+	&.ui-details {
+		.ui-li-static {
+			color: @color_details_text;
+			padding: 24 * @unit_base 32 * @unit_base 23 * @unit_base 32 * @unit_base;
+			height: 97 * @unit_base;
+			line-height: 54 * @unit_base;
+
+			&.li-has_icon {
+				padding: 128 * @unit_base 32 * @unit_base 23 * @unit_base 32 * @unit_base;
+				img {
+					position: absolute;
+					top: 40 * @unit_base;
+					left: 32 * @unit_base;
+				}
+			}
+
+			.li-text-sub {
+				color: @color_details_sub_text;
+				height: 43 * @unit_base;
+				position: initial;
+				float: none;
+				text-align: left;
+				display: block;
+				line-height: 43 * @unit_base;
+			}
+		}
+		.ui-listview-background {
+			display: none;
+		}
+	}
+
+	.li-has-right-btn, .li-has-right-circle-btn {
+		.ui-btn {
+			position: absolute;
+			top: 50%;
+			right: 32 * @unit_base;
+			transform: translate(0, -50%);
+		}
+
+		.ui-toggle-container {
+			position: absolute;
+			top: 50%;
+			right: 32 * @unit_base;
+			transform: translate(0, -50%);
+
+			&:first-child:not(:only-child) {
+				right: 120 * @unit_base;
+			}
+		}
+
+		.ui-btn-icon.ui-btn-nobg {
+			right: 17 * @unit_base;
+		}
+
+		.ui-btn-icon.ui-btn-circle {
+			right: 32 * @unit_base;
+		}
+	}
+
+	.li-has-radio.li-has-right-radio .ui-radio {
+		margin-top: 0;
+		position: absolute;
+		right: 26 * @unit_base;
+		left: auto;
+		top: 36 * @unit_base;
+
+		&:first-child {
+			right: 120 * @unit_base;
+		}
+	}
+
+	/*when set the list in drag mode before dragging*/
+	&.dragMode li {
+		/*align-items: center;*/
+		.ui-listview-handler {
+			-webkit-mask-image: url("images/core_grid_button_reorder.png");
+			-webkit-mask-size: 100%;
+			background-color: @color_button_add;
+			display: block;
+			width: 50 * @unit_base;
+			height: 50 * @unit_base;
+
+			flex: 0 1 auto;
+			order: 10;
+			margin: 33 * @unit_base;
+			margin-right: -80 * @unit_base;
+			max-width: 50 * @unit_base;
+		}
+	}
+
+	/*When dragging element*/
+	&.snapshot {
+		li {
+			position: absolute;
+			width: 100%;
+			box-sizing: border-box;
+			transition: top 0.1s linear;
+
+			&.ui-listview-helper {
+				transition: none;
+			}
+
+			&.ui-listview-item.ui-listview-holder {
+				background: none;
+			}
+
+			&.ui-listview-item-moved {
+				opacity: 0.75;
+				transition: opacity 0.1s;
+			}
+
+			&:nth-last-child(2) {
+				transition: none;
+			}
+		}
+	}
+
+	&.activateHandlers {
+		li {
+			.ui-listview-handler {
+				.animation(button-handler-activate 200ms linear alternate);
+			}
+		}
+	}
+
+	&.deactivateHandlers {
+		li {
+			.ui-listview-handler {
+				.animation(button-handler-deactivate 200ms linear alternate);
+			}
+		}
+	}
+
+	&.cancelAnimation {
+		li {
+			.ui-listview-handler {
+				.animation(none);
+				animation: none;
+				margin-right: 0;
+			}
+		}
+	}
+}
+
+@keyframes button-handler-activate {
+	0% {
+		margin-right: -80 * @unit_base;
+	}
+	100% {
+		margin-right: 0;
+	}
+}
+
+@keyframes button-handler-deactivate {
+	0% {
+		margin-right: 0;
+	}
+	100% {
+		margin-right: -80 * @unit_base;
+	}
+}

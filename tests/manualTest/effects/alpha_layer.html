@@ -1,0 +1,77 @@
+<!-- This is test for the opacity property of multiple layers :
+It has alpha value inside the range 0.0(transparent) to 1.0(opaque).
+This page has below four layers.
+	- A background layer including a background image
+	- A layer that opacity is 0.5
+	- A layer including a gradient image and opacity is 0.8
+	- A multi-opacity layer
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Gradient alpha layer test</title>
+<style>
+.layer {
+	position: absolute;
+	width: 256px;
+	height: 128px;
+}
+#house {
+	top: 0px;
+	left: 0px;
+	background-image: url('house.png');
+	border: 1px solid black;
+}
+#darkgreen {
+	top: 15px;
+	left: 15px;
+	opacity: 0.5;
+	background-color: darkgreen;
+}
+#gradient {
+	top: 30px;
+	left: 30px;
+	opacity: 0.8;
+	background-image: url('gradient.png');
+	background-size: 105% 105%;
+}
+#alpha {
+	top: 45px;
+	left: 45px;
+}
+.subLayer {
+	position: absolute;
+	width: 32px;
+	height: 128px;
+	background-color: black;
+}
+</style>
+</head>
+<body onload="createAlphaLayer()">
+<script>
+function createAlphaLayer() {
+	var layerHTML = "", i;
+	for (i=1; i<9; i++)
+		layerHTML += "<div class='subLayer' id='alpha" + i + "'></div>";
+	document.getElementById("alpha").innerHTML = layerHTML;
+
+	setTimeout("applyLayerStyle()", 0);
+}
+
+function applyLayerStyle() {
+	var i, left = 32, opacity = 0.125,	alphaElement;
+	for (i=1; i<9; i++) {
+		alphaElement = document.getElementById("alpha" + i);
+		alphaElement.style.left = left * (i-1) + "px";
+		alphaElement.style.opacity = 1 - opacity * (i-1);
+	}
+}
+</script>
+
+<div class="layer" id="house"></div>
+<div class="layer" id="darkgreen"></div>
+<div class="layer" id="gradient"></div>
+<div class="layer" id="alpha"></div>
+</body>
+</html>

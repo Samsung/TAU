@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="../../../../../libs/qunit-1.11.0.css">
+<script src="../../../../../libs/jquery.js"></script>
+<script src="../../../../../libs/qunit-1.11.0.js"
+		type="text/javascript"></script>
+<script src="../../../../../libs/support.js"></script>
+<script type="text/javascript">
+	var tauConfig = {
+		autorun: false
+	};
+</script>
+<script type="text/javascript" src="../../../../../libs/dist/js/tau.js"></script>
+<title>ListDivider</title>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture">
+		<div id="listdivdier_group" data-role="page">
+			<div data-role="header" data-position="fixed">
+				<h1>List Divider</h1>
+			</div>
+			<div class="content" data-role="content" data-scroll="y">
+				<ul id="listview2" data-role="listview">
+					<li id="divider1" data-role="list-divider" data-style="check"><form>
+							<input type="checkbox" name="c2line-check1" />
+						</form>Item styles</li>
+					<li><a href="#">Normal lists</a></li>
+					<li><a href="#">Normal lists</a></li>
+					<li><a href="#">Normal lists</a></li>
+					<li id="divider2" data-role="list-divider" data-folded="true">Item styles</li>
+					<li><a href="#">Normal lists</a></li>
+					<li><a href="#">Normal lists</a></li>
+					<li><a href="#">Normal lists</a></li>
+					<li id="divider3" data-role="list-divider" data-line="true"></li>
+					<li><a href="#">Normal lists</a></li>
+					<li><a href="#">Normal lists</a></li>
+					<li><a href="#">Normal lists</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="../../../../../libs/dist/js/tau.support-2.3.js"></script>
+	<script src="listdivider-tests.js"></script>
+</body>
+</html>

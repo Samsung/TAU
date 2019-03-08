@@ -1,0 +1,64 @@
+.ui-page.ui-empty-state {
+	background-color: @color_empty_state_bg;
+	color: @color_empty_text;
+	header.ui-header {
+		height: 108 * @unit_base;
+	}
+	&:after {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		mask-image: url("images/Common/tw_no_item_bg.png");
+		background-color: @color_empty_state_pattern_bg;
+	}
+	.ui-title {
+		color: @color_empty_title_text;
+		font-size: 30 * @unit_base;
+		line-height: 39 * @unit_base;
+	}
+	.ui-content {
+		overflow: hidden;
+		color: @color_empty_text;
+		font-size: 28 * @unit_base;
+		line-height: 37 * @unit_base;
+		padding-left: 60 * @unit_base;
+		padding-right: 60 * @unit_base;
+		margin: 0 auto;
+		.ui-icon {
+			width: 98 * @unit_base;
+			height: 98 * @unit_base;
+		}
+		.ui-empty-state-label {
+			display: flex;
+			justify-content: center;
+			height: 74 * @unit_base;
+			margin-top: 8 * @unit_base;
+			align-items: center;
+			overflow: hidden;
+		}
+	}
+	&.ui-empty-state-add-item {
+		header.ui-header {
+			height: 125 * @unit_base;
+			.ui-title {
+				padding-top: 51 * @unit_base;
+			}
+			margin-top: 0;
+		}
+		.ui-content {
+			.ui-icon {
+				width: 130 * @unit_base;
+				height: 110 * @unit_base;
+			}
+			.ui-empty-state-label {
+				height: 37 * @unit_base;
+				margin-top: 28 * @unit_base;
+				&.ui-label-2-lines {
+					margin-top: 2 * @unit_base;
+					height: 74 * @unit_base;
+				}
+			}
+		}
+	}
+}

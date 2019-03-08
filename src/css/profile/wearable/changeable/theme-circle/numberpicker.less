@@ -1,0 +1,112 @@
+.ui-number-picker-container {
+	display: flex;
+	width: 100%;
+	height: 110 * @unit_base;
+	justify-content: center;
+	flex-direction: column;
+	position: relative;
+	top: 9 * @unit_base;
+
+	.ui-circleindicator {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: 1001;
+		pointer-events: none;
+	}
+	.ui-circleindicator .ui-animated {
+		transition-duration: 0.3s;
+	}
+	input[type="number"] {
+		display: none;
+	}
+	.ui-number-picker-label {
+		order: 1;
+		font-size: 24 * @unit_base;
+		line-height: 25 * @unit_base;
+		color: @color_number_picker_label;
+		display:block;
+		width: 80 * @unit_base;
+		opacity: 1;
+		transition-duration: 300ms, 300ms;
+		transition-property: opacity, top;
+		transition-timing-function: linear;
+		&.hidden {
+			opacity: 0;
+			display: block;
+			pointer-events: none;
+			top: -12 * @unit_base;
+		}
+	}
+	.ui-number-picker-number {
+		order: 2;
+		font-size: 50 * @unit_base;
+		line-height: 85 * @unit_base;
+		margin-top: -6 * @unit_base;
+		color: @color_number_picker_number;
+		min-width: 80 * @unit_base;
+		display:block;
+		padding-top: 7 * @unit_base;
+		margin-left: auto;
+		margin-right: auto;
+		&.ui-spin {
+			margin-top: 8 * @unit_base;
+			height: 50 * @unit_base;
+			width: auto;
+			&.enabled {
+				margin-top: 8 * @unit_base;
+				height: 100%;
+				.ui-spin-item {
+					color: rgba(77, 207, 255, 1);
+					opacity: 0.5;
+				}
+				.ui-spin-item-selected {
+					opacity: 1;
+				}
+			}
+			&-enabling {
+				height: 100%;
+			}
+		}
+	}
+	&.ui-number-picker-disabled .ui-number-picker-number {
+		color: @color_number_picker_number_disabled;
+	}
+	.ui-number-picker-number-pressed {
+		color: @color_number_picker_number_pressed;
+	}
+	.ui-number-picker-number-blink {
+		animation: ui-number-picker-number-blink 1s infinite;
+	}
+
+	.ui-spin {
+		height: 50 * @unit_base;
+		line-height: normal;
+		margin-top: 0;
+		padding: 0;
+		width: 60 * @unit_base;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.ui-spin.enabled {
+		height: 100%;
+	}
+	.hidden {
+		display: none;
+	}
+	.ui-spin-item {
+		font-size: 50 * @unit_base;
+		height: 38 * @unit_base;
+	}
+}
+.ui-number-picker-container:not(.ui-time-picker) span {
+	margin-left: 140 * @unit_base;
+}
+.ui-number-picker-container:not(.ui-time-picker) label {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translate(-50%);
+}

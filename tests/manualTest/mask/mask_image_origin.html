@@ -1,0 +1,45 @@
+<!-- This is a page to compare with -webkit-mask-image.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CSS -webkit-mask test</title>
+<style>
+body {
+	background-color: gray;
+	color: white;
+}
+.div {
+	width: 300px;
+	height: 130px;
+	background-color: green;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+.image {
+	width: 128px;
+	height: 128px;
+	background-image: url('lock.png');
+}
+.list {
+	font-size: 30px;
+	display: inline-block;
+	vertical-align: 100%;
+}
+</style>
+</head>
+
+<body onload="start()">
+<script>
+var total = 500, listText = "";
+function start() {
+	for (var i=1; i<total; i++)
+		listText += "<div class='div'><img class='image'></img><li class='list'>list " + i + "</li></div>";
+
+	document.getElementById("container").innerHTML = listText;
+}
+</script>
+<div id="container"></div>
+</body>
+</html>

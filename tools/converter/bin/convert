@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+var convert = require(".."),
+	dirIn,
+	dirOut,
+	params,
+	profile;
+
+function getParams(args) {
+	var i = 0,
+		keys = {},
+		temp;
+
+	args.forEach(function (value) {
+		if (value.indexOf("--") === -1) {
+			keys[i++] = value;
+		} else {
+			temp = value.replace("--", "").split("=");
+			keys[temp[0]] = temp[1];
+		}
+	});
+	return keys;
+}
+
+
+params = getParams(process.argv);
+dirIn = params[2];
+dirOut = params[3];
+profile = params["profile"];
+
+convert(dirIn, dirOut, profile);

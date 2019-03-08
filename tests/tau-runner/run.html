@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="libs/qunit-1.11.0.css"/>
+    <script src="libs/jquery.js"></script>
+    <script src="libs/qunit-1.11.0.js"></script>
+    <script src="tests.js"></script>
+    <script src="runner.js"></script>
+    <script src="currentTestIndex.js"></script>
+    <style type="text/css">
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #testFrame {
+            float: left;
+            border: 0;
+            height: 100%;
+            width: 60%;
+        }
+
+        #results {
+            float: left;
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+<div id="results">
+    <h1 id="qunit-header"><a href="#">Web UI Test Suite</a></h1>
+    <h2 id="qunit-banner"></h2>
+    <ol id="qunit-tests">
+    </ol>
+</div>
+<div>
+    <iframe data-src="{{testfile}}" name="testFrame" id="testFrame" scrolling="no"
+            style="height: 1500px;"></iframe>
+</div>
+</body>
+</html>

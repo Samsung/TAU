@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width,user-scalable=no"/>
+	<link rel="stylesheet" href="lib/tau/mobile/theme/default/tau.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<title>Tizen Web IDE - Template - Tizen - Tizen Web UI Framework - Multi Page</title>
+</head>
+
+<body>
+<!-- Start of first page: #one -->
+<div class="ui-page" id="one">
+	<header>
+		<h1>Multi-page application</h1>
+	</header><!-- /header -->
+
+	<div class="ui-content">
+		<div class="app-introduction">
+			<h2>One</h2>
+			<p>
+				This is a multi-page boilerplate template that you can copy to build
+				your first Tizen Web UI Framework page. This template contains multiple "page"
+				containers inside.
+			</p>
+			<p>
+				You link to internal pages by referring to the ID of the page you
+				want to show. For example, to <a href="#two">link</a> to the page
+				with an ID of "two", my link would have a
+				<code>href="#two"</code>
+				in the code.
+			</p>
+		</div>
+		<ul class="ui-listview">
+			<li class="ui-group-index">Show internal pages:</li>
+			<li><a href="#popup" data-rel="popup" data-position-to="window">Show page "popup"</a></li>
+			<li><a href="#two">Show page "two"</a></li>
+		</ul>
+		<div id="popup" class="ui-popup center_title_1btn">
+			<div class="ui-popup-header">Popup title</div>
+			<div class="ui-popup-content app-popup-content-padding">Pop-up dialog box, a child window that blocks user
+				interact to the parent windows
+			</div>
+			<div class="ui-popup-footer">
+				<a class="ui-btn ui-inline" data-rel="back">Button</a>
+			</div>
+		</div>
+	</div><!-- /content -->
+</div><!-- /page one -->
+
+
+<!-- Start of second page: #two -->
+<div class="ui-page" id="two">
+	<header>
+		<h1>Two</h1>
+	</header><!-- /header -->
+
+	<div class="ui-content">
+		<div class="app-introduction">
+			<h2>Two</h2>
+			<p>I have an id of "two" on my page container. I'm the second
+				page container in this multi-page template.</p>
+			<div class="app-items-center"><a href="#one" class="ui-btn ui-inline">Back to page "one"</a></div>
+		</div>
+	</div><!-- /content -->
+</div><!-- /page two -->
+
+<script type="text/javascript" src="lib/tau/mobile/js/tau.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

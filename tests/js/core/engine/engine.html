@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Engine tests</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../../../libs/qunit-1.11.0.css">
+		<script src="../../../libs/qunit-1.11.0.js"></script>
+		<script src="../../../libs/support.js"></script>
+		<script src="../../../karma/tests/helpers.js"></script>
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture">
+		</div>
+		<script>
+			var tauConfig = {
+				"autorun": false,
+				"pageContainer": document.getElementById("qunit-fixture")
+			};
+		</script>
+		<script src="../../../libs/dist/js/tau.js"></script>
+		<script src="tau.test.widget1.js"></script>
+		<script src="tau.test.widget2.js"></script>
+		<script src="tau.test.widget3.js"></script>
+		<script src="engine.js"></script>
+	</body>
+</html>
+

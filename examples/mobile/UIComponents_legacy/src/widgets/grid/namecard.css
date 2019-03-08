@@ -1,0 +1,118 @@
+.ui-demo-namecard {
+	display : inline-block;
+	width : 5.1rem;
+	height : 6.1rem;
+	margin-right: 0.4rem;
+	margin-left: 0.4rem;
+	margin-bottom: 1.5rem;
+}
+
+.ui-demo-rotation-namecard {
+	width : 4.4rem;
+	height : 6.1rem;
+	margin-top: 0.3rem;
+	margin-right: 0.3rem;
+	margin-left: 0.3rem;
+	margin-bottom: 0.3rem;
+}
+
+.ui-demo-namecard-pic {
+	float : left;
+	padding-top : 0.2rem;
+	padding-left : 0.2rem;
+	padding-bottom: 0rem;
+}
+
+.ui-demo-namecard-pic-img {
+	height : 4.3rem;
+	width : 4.3rem;
+}
+
+.ui-demo-namecard-contents {
+	float : left;
+	height : 1rem;
+	margin: 0rem;
+}
+
+.ui-demo-namecard-contents span {
+	color : #666;
+	border-bottom : 1px dashed;
+	margin-top: 0rem;
+}
+
+.ui-demo-rotation-x-namecard {
+	width : 5.1rem;
+	height : 6.1rem;
+	display: block;
+	margin-top: 0.1rem;
+	margin-right: 0.3rem;
+	margin-left: 0.3rem;
+	margin-bottom: 0.1rem;
+}
+
+.ui-demo-namecard-contents-x {
+	height : 1rem;
+	margin: 0rem;
+}
+
+.ui-demo-namecard-span-x {
+	color : gray;
+	font-size : 0.6rem;
+	text-align: center;
+	width: 5rem;
+	display: block;
+	white-space : nowrap;
+	overflow : hidden !important;
+	text-overflow : ellipsis !important;
+	-o-text-overflow:ellipsis;
+	resize:horizontal;
+}
+
+.ui-demo-namecard-contents span.name {
+	color : gray;
+	font-size : 0.6rem;
+	text-align: center;
+	width: 4rem;
+	display: inline-block;
+	white-space : nowrap;
+	overflow : hidden !important;
+	text-overflow : ellipsis !important;
+	-o-text-overflow:ellipsis;
+	resize:horizontal;
+}
+
+.ui-demo-rotation-list-namecard {
+	height : 70px;
+	display:block;
+	border-bottom-color: #444;
+	padding-top : 0.3rem;
+}
+
+.ui-demo-namecard-list-pic {
+	height : 2.7rem;
+	width : 2.7rem;
+	float : left;
+	padding-top : 0rem;
+	padding-left : 0.2rem;
+	padding-right : 1rem;
+	padding-bottom: 0rem;
+	border-width: 0;
+}
+
+.ui-demo-namecard-list-pic-img {
+	height : 2.7rem;
+	width : 2.7rem;
+}
+
+.ui-demo-namecard-list-contents {
+	height : 2.5rem;
+}
+
+.ui-demo-namecard-list-contents span{
+	left : 9.6rem;
+	font-weight : normal;
+	font-size : 0.8rem;
+	color : gray;
+	padding-top : 1rem;
+	margin-top: 0rem;
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css">
+<script src="../../../../../../libs/jquery.js"></script>
+<script src="../../../../../../libs/qunit-1.11.0.js"
+		type="text/javascript"></script>
+<script src="../../../../../../libs/support.js"></script>
+<script src="listview-autodivider.js"></script>
+<title>Autodivider</title>
+</head>
+<body>
+	<h1 id="qunit-header">Autodivider</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">
+		<div data-role="page" id="dummy-page">
+			<div data-role="header" data-position="fixed">
+					<h1>Dummy</h1>
+			</div>
+			<div data-role="contents"></div>
+		</div>
+
+		<div data-role="page" id="autodivider-unit-test"
+			data-add-back-btn="true">
+			<div data-role="header" data-position="fixed">
+				<h1>Autodividers</h1>
+				<input type="search" data-cancel-btn='true' name="search"
+						data-icon="call" id="searchInput" value="" />
+			</div>
+			<div data-role="content" id="autodivider-content">
+				<ul data-role="listview" id='autodividersample'
+					data-autodividers="true">
+
+					<li><a href="#">Adam Kinkaid</a></li>
+					<li><a href="#">Alex Wickerham</a></li>
+					<li><a href="#">Avery Johnson</a></li>
+
+					<li><a href="#">Bob Cabot</a></li>
+
+					<li><a href="#">Caleb Booth</a></li>
+					<li><a href="#">Christopher Adams</a></li>
+					<li><a href="#">Culver James</a></li>
+
+					<li><a href="#">David Walsh</a></li>
+					<li><a href="#">Drake Alfred</a></li>
+
+					<li><a href="#">Elizabeth Bacon</a></li>
+					<li><a href="#">Emery Parker</a></li>
+					<li><a href="#">Enid Voldon</a></li>
+
+					<li><a href="#">Francis Wall</a></li>
+
+					<li><a href="#">Graham Smith</a></li>
+					<li><a href="#">Greta Peete</a></li>
+
+					<li><a href="#">Harvey Walls</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div data-role="page" id="autodivider-unit-test-dynamic">
+			<div data-role="header" data-position="fixed">
+				<h1>Dynamic</h1>
+			</div>
+			<div data-role="contents"></div>
+		</div>
+
+	</div>
+	<script type="text/javascript"
+			src="../../../../../../libs/dist/js/tau.js"></script>
+	<script type="text/javascript"
+			src="../../../../../../libs/dist/js/tau.support-2.3.js"></script>
+</body>
+</html>

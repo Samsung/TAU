@@ -1,0 +1,96 @@
+.ui-tokentextarea {
+	display: table;
+	outline: none;
+	position: relative;
+	background-color: @color_tokentextarea_bg;
+	margin-left: -15 * @unit_base;
+	margin-right: -15 * @unit_base;
+	.ui-tokentextarea-input-area {
+		height: 53 * @unit_base;
+		.ui-text-line {
+			display: none;
+		}
+	}
+}
+
+.ui-scrollview-view > .ui-tokentextarea {
+	margin-left: -8 * @unit_base;
+	margin-right: -8 * @unit_base;
+}
+
+.ui-tokentextarea .ui-tokentextarea-label {
+	display: inline-block;
+	text-align: center;
+	position: relative;
+	margin-left: 13 * @unit_base;
+	margin-right: 6 * @unit_base;
+	padding: 23 * @unit_base 0;
+	color: @color_tokentextarea_label_text;
+	font-size: @font_size_tokentextarea_label_text;
+}
+
+.ui-tokentextarea .ui-tokentextarea-input.ui-input-text {
+	height: 53 * @unit_base;
+	outline: none;
+	position: relative;
+	border: 0;
+	padding: 0;
+	color: @color_tokentextarea_input_text;
+	background-color: @color_tokentextarea_bg;
+	text-align: left;
+	font-size: @font_size_tokentextarea_input_text;
+}
+
+.ui-tokentextarea-input-visible {
+	display: inline-block;
+}
+
+.ui-tokentextarea-input-invisible {
+	display: none;
+}
+
+.ui-tokentextarea div {
+	display: inline-block;
+	text-align: center;
+	cursor: pointer;
+	position: relative;
+	padding: .2em .5em;
+	font-size: @font_size_tokentextarea_block_text;
+	color: @color_tokentextarea_block_text;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin: 8 * @unit_base 2 * @unit_base;
+}
+
+.ui-tokentextarea-block {
+	.core-button-bg();
+	background-color: @color_tokentextarea_block_bg;
+	margin-left: 15 * @unit_base;
+	margin-top: 12 * @unit_base;
+}
+
+.ui-tokentextarea-sblock {
+	.core-button-bg-pressed();
+	background-color: @color_tokentextarea_press_bg;
+	color: @color_tokentextarea_block_text_press;
+	margin-left: 15 * @unit_base;
+	margin-top: 12 * @unit_base;
+}
+
+.ui-tokentextarea .ui-tokentextarea-desclabel {
+	display: inline-block;
+	outline: none;
+	position: relative;
+	border: 0;
+	color: @color_tokentextarea_label_text;
+	text-align: left;
+	font-size: @font_size_tokentextarea_label_text;
+	margin-left: 3 * @unit_base;
+}
+
+.ui-tokentextarea-link-base {
+	position: absolute;
+	right: 0;
+	bottom: 2px;
+	margin-right: 9 * @unit_base;
+}

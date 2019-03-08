@@ -1,0 +1,203 @@
+.ui-popup.ui-ctxpopup {
+	width: auto;
+	padding: 0;
+	background-color: transparent;
+	margin-top: 0;
+	max-width: 100%;
+
+	.ui-popup-content {
+		width: auto;
+		padding: 0;
+		overflow: hidden;
+		> ul {
+			overflow: auto;
+			&::-webkit-scrollbar {
+				height: 8 * @unit_base;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: @color_ctxpopup_scrollbar;
+				border-radius: 3 * @unit_base;
+				border-bottom: 2 * @unit_base solid #fff;
+			}
+
+			&::-webkit-scrollbar-button {
+				width: 4 * @unit_base;
+				height: 8 * @unit_base;
+				background-color: transparent;
+			}
+
+		}
+
+	}
+
+	.ui-popup-wrapper {
+		background-color: @color_ctxpopup_background;
+		border: 2 * @unit_base solid @color_ctxpopup_background_border;
+		border-radius: 10 * @unit_base;
+		box-shadow: none;
+		overflow: auto;
+		margin-left: 32 * @unit_base;
+		margin-right: 32 * @unit_base;
+	}
+	:focus {
+		outline: none;
+	}
+	&.slideup.in {
+		.slideupfade.in;
+	}
+	&.slideup.out {
+		.slideupfade.out.reverse;
+	}
+
+	.ui-listview {
+		margin: 0;
+		border: none;
+
+		.display-flex();
+
+		li {
+			.flex(1 0 auto);
+		}
+
+		.ui-li-anchor a {
+			font-size: @font_size_ctxpopup_text;
+			line-height: 41 * @unit_base;
+			padding: 0 32 * @unit_base;
+			min-height: 72 * @unit_base;
+			.display-flex();
+			.flex-direction(column);
+			.align-items(center);
+			.justify-content(center);
+		}
+	}
+
+	&.ui-ctxpopup-vertical {
+		.ui-listview {
+			.flex-direction(column);
+		}
+
+		.ui-listview .ui-li-anchor a {
+			height: 80 * @unit_base;
+			.flex-direction(row);
+			.align-items(center);
+			.justify-content(flex-start);
+			text-align: left;
+			padding-top: 0;
+			padding-bottom: 0;
+		}
+	}
+
+	.ui-listview li {
+		color: @color_ctxpopup_text;
+		font-size: @font_size_ctxpopup_text;
+
+		border-top: 0;
+		border-bottom: 0;
+
+		border-right: 0;
+		border-left: 2 * @unit_base solid @color_ctxpopup_divider;
+
+		&:first-of-type {
+			border-left-width: 0;
+		}
+
+		&.ui-li-anchor {
+			& > a {
+				box-sizing: border-box;
+				padding-top: 15 * @unit_base;
+				padding-bottom: 15 * @unit_base;
+			}
+
+			&.ui-li-active {
+				background-color: @color_ctxpopup_btn_press;
+			}
+
+		}
+	}
+
+	&.ui-ctxpopup-basic .ui-li-anchor {
+		padding: 0 32 * @unit_base;
+		height: 72 * @unit_base;
+
+		> a {
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	&.ui-ctxpopup-icons .ui-li-anchor {
+		padding: 0;
+		height: 80 * @unit_base;
+		width: 106 * @unit_base;
+
+		> a {
+			padding: 0;
+			margin: 0;
+
+			> span {
+				padding: 0;
+				margin: 0;
+			}
+		}
+	}
+
+	&.ui-ctxpopup-icons-text .ui-li-anchor {
+		padding: 0 32 * @unit_base;
+		height: 118 * @unit_base;
+		> a {
+			padding: 0;
+			margin: 0;
+			font-size: @font_size_ctxpopup_icons_text;
+			line-height: 40 * @unit_base;
+			> span {
+				padding: 0;
+				margin: 0 0 4 * @unit_base 0;
+			}
+		}
+	}
+
+	&.ui-ctxpopup-vertical {
+		.ui-listview li {
+			border-top: 2 * @unit_base solid @color_ctxpopup_divider;
+			border-bottom: 0;
+
+			border-right: 0;
+			border-left: 0;
+
+			&:first-of-type {
+				border-top-width: 0;
+			}
+
+			&.ui-li-anchor {
+				padding: 0 24 * @unit_base;
+				height: 80 * @unit_base;
+
+				> a {
+					margin: 0;
+					padding: 0;
+					overflow: visible;
+				}
+			}
+		}
+
+		.ui-icon {
+			display: inline-block;
+			vertical-align: middle;
+			margin-top: 0;
+			margin-bottom: 0;
+			margin-right: 20 * @unit_base;
+			margin-left: -4 * @unit_base; // UX Guide 4.3.12 (to avoid setting container class we use negative margin here)
+		}
+
+	}
+
+	.ui-icon {
+		width: 40 * @unit_base;
+		height: 40 * @unit_base;
+		display: block;
+		vertical-align: middle;
+		margin: 4 * @unit_base auto; // Margin from both to even up flex and give spacing from text
+	}
+
+}

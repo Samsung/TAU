@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="http://yourdomain/TAUGlobalization" version="1.0.0" viewmodes="maximized">
+    <access origin="*"></access>
+    <tizen:application id="qK5YVdTMpj.TAUGlobalization" package="qK5YVdTMpj" required_version="2.4"/>
+    <content src="index.html"/>
+    <feature name="http://tizen.org/feature/screen.size.all"/>
+    <icon src="icon.png"/>
+    <name>TAUGlobalization</name>
+    <tizen:privilege name="http://tizen.org/privilege/fullscreen"/>
+    <tizen:profile name="mobile"/>
+</widget>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Gear UI Navigation Test Suite</title>
+
+	<link rel="stylesheet"  href="../../../dist/themes/default/tau.css">
+	<link rel="stylesheet" href="../lib/qunit-1.13.0.css" />
+	<link rel="stylesheet" href="../test.css" />
+	<script type="text/javascript" src="../../../dist/js/tau.js"></script>
+	<script type="text/javascript" src="../lib/jquery-2.0.3.js"></script>
+	<script type="text/javascript" src="../lib/qunit-1.13.0.js"></script>
+	<script type="text/javascript" src="../helper.js"></script>
+	<script type="text/javascript" src="tests.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+
+<div id="main" class="ui-page"></div>
+<div id="internal-page-hide" class="ui-page"></div>
+<div id="internal-page-show" class="ui-page"></div>
+
+<div id="layout-test-header-footer" class="ui-page">
+	<header class="ui-header ui-has-more">
+		<h2 class="ui-title">Call menu</h2>
+		<button type="button" class="ui-more ui-icon-overflow">More Options</button>
+	</header>
+	<div class="ui-content">
+		Content message
+	</div>
+	<footer class="ui-footer">
+		<button class="ui-btn">footer</button>
+	</footer>
+</div>
+
+<div id="layout-test-header" class="ui-page">
+	<header class="ui-header ui-has-more">
+		<h2 class="ui-title">Call menu</h2>
+	</header>
+	<div class="ui-content">
+		Content message
+	</div>
+</div>
+
+<div id="layout-test-footer" class="ui-page">
+	<div class="ui-content">
+		Content message
+	</div>
+	<footer class="ui-footer">
+		<button class="ui-btn">footer</button>
+	</footer>
+</div>
+
+<div id="layout-test-only-content" class="ui-page">
+	<div class="ui-content">
+		Content message
+	</div>
+</div>
+
+<div id="layout-test-only-custom-header" class="ui-page">
+	<header class="ui-header" style="height:40px;">
+		<h2 class="ui-title">Call menu</h2>
+	</header>
+	<div class="ui-content">
+		Content message
+	</div>
+	<footer class="ui-footer">
+		<button class="ui-btn">footer</button>
+	</footer>
+</div>
+
+<div id="layout-test-only-custom-footer" class="ui-page">
+	<header class="ui-header">
+		<h2 class="ui-title">Call menu</h2>
+	</header>
+	<div class="ui-content">
+		Content message
+	</div>
+	<footer class="ui-footer" style="height:120px;">
+		<button class="ui-btn">footer</button>
+	</footer>
+</div>
+
+</body>
+</html>

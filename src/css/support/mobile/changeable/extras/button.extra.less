@@ -1,0 +1,21 @@
+.ui-btn-icon {
+	&.ui-icon-plus:not(.ui-btn-circle) {
+		background-color: transparent;
+		&::after {
+			background-color: @color_button_add;
+		}
+		&:active::after {
+			background-color: @color_button_add_press;
+		}
+	}
+
+	&.ui-icon-minus:not(.ui-btn-circle) {
+		background-color: transparent;
+		&::after {
+			background-color: @color_button_delete;
+		}
+		&:active::after {
+			background-color: @color_button_delete_press;
+		}
+	}
+}

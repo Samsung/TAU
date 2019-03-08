@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SVG animation used animateMotion tag</title>
+	</head>
+	<body>
+		<h4> This page is animateMotion tag test page. If you can show below animation, your test enviroment provide to animateMotion tag.
+		And please note that, SVG is not supported in micro profile.
+		</h4>
+		<svg width="300px" height="100px">
+			<rect x="0" y="0" width="300" height="100" stroke="black" stroke-width="1" />
+				<svg xmlns="http://www.w3.org/2000/svg" width="300px" height="100px">
+					<rect x="0" y="0" width="300" height="100" stroke="black" stroke-width="1" />
+					<circle cx="0" cy="50" r="15" fill="blue" stroke="black" stroke-width="1">
+						<animateMotion path="M 0 0 H 300 Z" dur="3s" repeatCount="indefinite" />
+					</circle>
+				</svg>
+			</rect>
+		</svg>
+	</body>
+</html>

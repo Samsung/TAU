@@ -1,0 +1,93 @@
+<!-- This is test for script-based animation-timing feature :
+It has method as follows.
+	matrix3d - a 3D transformation using a 4*4 matrix
+	translate3d - a 3D translation
+	scale3d - a 3D scale transformation
+	rotate3d - a 3D rotation
+	skew - a 2D skey transformation
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>CSS3 3D Transform test</title>
+<style>
+#container {
+	width: 360px;
+	height: 260px;
+	margin-top: 10px;
+	background-color: white;
+	border: 3px solid black;
+}
+#testBox {
+	width: 120px;
+	height: 90px;
+	margin: 23% auto;
+	padding: 0px 10px;
+	border: 5px solid green;
+}
+</style>
+</head>
+<body>
+
+<script>
+var timer = 10;
+var scaleFactor, translateFactor, angle;
+
+function start() {
+	scaleFactor = 0, translateFactor = 0, angle = 0;
+	setTimeout(event.currentTarget.innerText + "()", 0);
+}
+
+function matrix3d() {
+	document.getElementById("testBox").style.webkitTransform = "matrix3d("
+			+ scaleFactor + ", 0, 0, 0, "
+			+ "0, " + scaleFactor + ",0, 0, "
+			+ "0, 0, " + scaleFactor + ", 0, "
+			+ translateFactor + ", " + translateFactor + ", " + translateFactor + ", 2)";
+
+	scaleFactor += 0.01;
+	translateFactor++;
+	if (scaleFactor <= 2 && scaleFactor >= 0)
+		setTimeout("matrix3d()", timer);
+}
+
+function translate3d() {
+	document.getElementById("testBox").style.webkitTransform = "translate3d(" + translateFactor + "px, " + translateFactor + "px, 0)";
+	translateFactor++;
+	if (translateFactor <= 70)
+		setTimeout("translate3d()", timer);
+}
+
+function scale3d() {
+	document.getElementById("testBox").style.webkitTransform = "scale3d(" + scaleFactor + "," + scaleFactor + "," + scaleFactor + ")";
+	scaleFactor += 0.01;
+	if (scaleFactor <= 2 && scaleFactor >= 0)
+		setTimeout("scale3d()", timer);
+}
+
+function rotate3d() {
+	document.getElementById("testBox").style.webkitTransform = "rotate3d(1, 1, 1, " + angle + "deg)";
+	angle++;
+	if (angle <= 360)
+		setTimeout("rotate3d()", timer);
+}
+
+function skew() {
+	document.getElementById("testBox").style.webkitTransform = "skew(" + angle + "deg," + angle + "deg)";
+	angle++;
+	if (angle <= 180)
+		setTimeout("skew()", timer);
+}</script>
+
+<button onclick="start(event)">matrix3d</button>
+<button onclick="start(event)">translate3d</button>
+<button onclick="start(event)">scale3d</button>
+<button onclick="start(event)">rotate3d</button>
+<button onclick="start(event)">skew</button>
+<div id="container">
+	<div id="testBox">
+		<h4><p>CSS3 3D</p><p>Transform Test</p></h4>
+	</div>
+</div>
+</body>
+</html>

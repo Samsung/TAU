@@ -1,0 +1,76 @@
+div:before{	content:"No Media-query";	}
+div {
+	width: 200px;
+	height: 50px;
+	background-color: gray;
+}
+
+/********************** WATCH ***********************************/
+
+/* gear1, gear2, gear2 neo portrait / landscape */
+@media only screen and (max-width: 320px) and (device-aspect-ratio: 1/1) {
+	div:before
+	{
+		content:"Watch";
+	}
+	body {
+		background-color: red;
+	}
+}
+
+/********************** PHONE ***********************************/
+
+/* mobile phone portrait */
+@media only screen and (min-width: 320px) and (max-width: 360px) and (max-device-aspect-ratio: 9/10) {
+/*
+   On android, there is bug for device-aspect-ratio feature.
+   It needs "refresh page" when rotating the device.
+*/
+	div:before
+	{
+		content:"Phone portrait";
+	}
+	body {
+		background-color: blue;
+	}
+}
+
+/* mobile phone landscape */
+@media only screen and (min-width: 361px) and (max-width: 640px) and (min-device-aspect-ratio: 1/1) {
+/*
+   On android, there is bug for device-aspect-ratio feature.
+   It needs "refresh page" when rotating the device.
+*/
+	div:before
+	{
+		content:"Phone landscape";
+	}
+	body {
+		background-color: yellow;
+	}
+}
+
+/***************** TV/Tablet ***********************************/
+
+/* tv/tablet portrait */
+@media only screen and (min-width: 361px) and (max-device-aspect-ratio: 9/10) {
+	div:before
+	{
+		content:"TV/Tablet portrait";
+	}
+	body {
+		background-color: green;
+	}
+}
+
+/* tv/tablet landscape */
+@media only screen and (min-width: 641px) and (min-device-aspect-ratio: 1/1) {
+	div:before
+	{
+		content:"TV/Tablet landscape";
+	}
+	body {
+		color: white;
+		background-color: black;
+	}
+}

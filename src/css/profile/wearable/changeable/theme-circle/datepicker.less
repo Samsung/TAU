@@ -1,0 +1,128 @@
+.ui-date-picker {
+	&.ui-number-picker-container {
+		height: 110 * @unit_base;
+		display: block;
+
+		input {
+			display: none;
+		}
+
+		span {
+			margin: -6 * @unit_base 0 0 0;
+			text-align: center;
+			font-size: 50 * @unit_base;
+			width: inherit;
+		}
+
+		.ui-number-picker-label {
+			margin: 0;
+			text-align: center;
+			height: 31 * @unit_base;
+			line-height: 31 * @unit_base;
+			font-size: 24 * @unit_base;
+			width: inherit;
+			opacity: 1;
+			transition-duration: 300ms, 300ms;
+			transition-property: opacity, top;
+			transition-timing-function: linear;
+
+			&-hidden {
+				opacity: 0;
+				display: block;
+				pointer-events: none;
+				top: -12 * @unit_base;
+			}
+		}
+		.ui-spin-item {
+			height: 50 * @unit_base;
+		}
+	}
+
+	.ui-date-picker-active-label-animation {
+		animation: changeColor 1s infinite;
+		color: @color_time_picker_number_blink_on;
+	}
+
+	.ui-date-picker-container-month {
+		float: left;
+		height: inherit;
+		margin-left: 24 * @unit_base;
+		width: 96 * @unit_base;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		.ui-spin {
+			width: 110 * @unit_base;
+		}
+	}
+
+	.ui-date-picker-container-day {
+		float: left;
+		height: inherit;
+		margin-left: 8 * @unit_base;
+		width: 80 * @unit_base;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		.ui-spin {
+			width: 65 * @unit_base;
+		}
+	}
+
+	.ui-date-picker-container-year {
+		float: left;
+		height: inherit;
+		margin-left: 8 * @unit_base;
+		width: 120 * @unit_base;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		.ui-spin {
+			width: 120 * @unit_base;
+		}
+	}
+
+	.ui-date-picker-containter-dayname {
+		position: fixed;
+		width: 100%;
+		top: 231 * @unit_base;
+		opacity: 0.8;
+		font-size: 24 * @unit_base;
+		line-height: 32 * @unit_base;
+		height: 32 * @unit_base;
+		padding: 0 45 * @unit_base;
+		color: @color_date_picker_dayname;
+	}
+
+	&-hidden {
+		display: none;
+	}
+
+	.enabled {
+		.ui-spin-item {
+			color: rgba(77, 207, 255, 1);
+			opacity: 0.5;
+		}
+		.ui-spin-item-selected {
+			opacity: 1.0;
+		}
+	} 
+}
+
+@keyframes changeColor {
+	0% {
+		color: @color_time_picker_number_blink_on;
+	}
+	49% {
+		color: @color_time_picker_number_blink_on;
+	}
+	51% {
+		color: @color_time_picker_number_blink_off;
+	}
+	100% {
+		color: @color_time_picker_number_blink_off;
+	}
+}

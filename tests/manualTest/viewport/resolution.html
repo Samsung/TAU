@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Resolution tests</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+.query {
+	display: none;
+}
+</style>
+<script>
+
+var stepResolution = 5;
+var maximumSizeResolution = 400;
+
+document.write('<style>');
+
+for (var i=0;i<maximumSizeResolution+1;i+=stepResolution) {
+	document.write('@media all and (min-resolution: ' + (i+1) + 'dpi) and (max-resolution: ' + (i+stepResolution) + 'dpi) {');
+	document.write('#resolution' + i + '{display: list-item}');
+	document.write('#resolution {display: none;} }');
+}
+
+document.write('</style>');
+
+
+</script>
+
+</head>
+
+<body>
+
+<h2>Resolution tests</h2>
+
+<p>This page tests the resolution media query to a maximum of
+<script>
+document.write(maximumSizeResolution)
+</script>
+dpi.</p>
+
+plus target-densitydpi
+
+<ul>
+<li id="resolution">Media queries for resolution not supported.</li>
+
+<script>
+for (var i=0;i<maximumSizeResolution+1;i+=stepResolution) {
+	document.write('<li class="query" id="resolution' + i + '">Resolution is between ' + i + ' and ' + (i+stepResolution) +  'dpi.</li>');
+}
+
+</script>
+
+</ul>
+
+
+</body>
+</html>

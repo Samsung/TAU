@@ -1,0 +1,112 @@
+.ui-page.ui-empty-state {
+
+	.ui-header {
+		background-color: @color_emptystate_header_bg;
+	}
+
+	.ui-content {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		height: 100%;
+		background-color: @color_emptystate_content_bg;
+
+		&::before {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			mask-image: url('images/00_page_empty_bg.png');
+			mask-size: 100% auto;
+			mask-repeat: no-repeat;
+			background-color: @color_emptystate_content_pattern_bg;
+		}
+
+		.ui-scrollview-view {
+			padding-left: 32 * @unit_base;
+			padding-right: 32 * @unit_base;
+			text-align: center;
+			font-size: @font_size_emptystate_message_text;
+			color: @color_emptystate_message_text;
+			line-height: 43 * @unit_base;
+			min-height: 572 * @unit_base;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+
+			h1, h2, h3, h4, h5, h6 {
+				margin: 0;
+				margin-bottom: 54 * @unit_base;
+				line-height: 54 * @unit_base;
+				font-size: @font_size_emptystate_header_text;
+				font-weight: lighter;
+				color: @color_emptystate_message_header_text;
+			}
+		}
+
+		@media only screen and (orientation: landscape) {
+			&:before {
+				mask-image: url('images/00_page_empty_bg_h.png');
+				mask-size: 100% 200 * @unit_base;
+			}
+		}
+	}
+}
+
+.ui-listview.ui-listview-empty-state-show {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	.ui-li-empty-state {
+		display: flex;
+	}
+	.ui-li-static {
+		height: 54 * @unit_base;
+	}
+}
+
+.ui-listview .ui-li-empty-state {
+	width: 100%;
+	display: none;
+	flex-direction: column;
+	position: relative;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	align-self: center;
+	flex: 1;
+	box-sizing: border-box;
+	padding: 0 0 84 * @unit_base 0;
+}
+
+.ui-empty-state-content {
+	pointer-events: none;
+	padding-left: 32 * @unit_base;
+	padding-right: 32 * @unit_base;
+	text-align: center;
+	font-size: @font_size_emptystate_message_search_text;
+	color: @color_emptystate_message_search_text;
+	line-height: 43 * @unit_base;
+	height: 572 * @unit_base;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+
+	h1, h2, h3, h4, h5, h6 {
+		margin: 0;
+		margin-bottom: 54 * @unit_base;
+		line-height: 54 * @unit_base;
+		font-size: @font_size_emptystate_header_search_text;
+		font-weight: lighter;
+		color: @color_emptystate_message_header_search_text;
+	}
+}
+
+.ui-page-floatingactions .ui-listview .ui-li-empty-state {
+	padding: 0 0 188 * @unit_base 0;
+}
