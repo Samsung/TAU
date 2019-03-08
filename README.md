@@ -82,33 +82,24 @@ Contribution can be verified using command:
 
 `grunt eslint`
 
-## Deployment
+## Usage
 
-@todo
-
-## Built With
-
-@todo
+Refer to [samsung.github.io/TAU](https://samsung.github.io/TAU/) for library usage instructions
 
 ## Contributing
 
-@todo
-Please read [CONTRIBUTING.md] for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/Samsung/TAU/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-@todo
+You can find releases in the releases [tab]((https://github.com/Samsung/TAU/releases)
 
 ## Authors
 
-* Authors - [AUTHOR]
+* Authors - [AUTHOR](https://github.com/Samsung/TAU/blob/master/AUTHOR)
 
 See also the list of [contributors](https://github.com/SAMSUNG/TAU/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under MIT except some files under Flora license. For details see [COPYING]
-
-## Acknowledgments
-
-* @todo
+This project is licensed under MIT except some files under Flora license. For details see [COPYING](https://github.com/Samsung/TAU/blob/master/COPYING)
