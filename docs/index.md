@@ -62,13 +62,23 @@ TAU Profiles (mobile, TV, wearable) have differences, so some of the examples wi
 ## Where to get it
 
 The framework is included on all Tizen devices and the SDK emulator (starting from Tizen 2.3). Just create
-a new web application in the Tizen SDK IDE.
+a new web application in the Tizen SDK IDE. See also our [documentation](https://developer.tizen.org/dev-guide/5.0.0/org.tizen.web.apireference/html/ui_fw_api/ui_fw_api_cover.htm) and [github repository](https://github.com/Samsung/TAU).
 
 ## What next?
 
 If you are new to the whole standalone web application concept please checkout [Application visual layout](application_visual_layout.html) part.
 
-But if you can wait to get to the fun, checkout the widget guide or the tutorials.
+But if you can wait to get to the fun, checkout the more stuff like:
+* [widget introduction](introduction_to_widgets.md)
+* how tos
+  * [widget creation](how_to_create_own_widget.md)
+  * [controller usage](how_to_use_controller.md)
+  * [globalize usage](how_to_use_globalize.md)
+  * [declarative widgets](how_to_write_declarative.md)
+* tutorials
+  * [clock](tutorial_clock.md)
+  * [gallery](tutorial_gallery.md)
+  * [notes](tutorial_notes.md).
 
 __Have some coding fun!__
 
