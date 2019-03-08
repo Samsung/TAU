@@ -1,0 +1,24 @@
+#galleryPage .ui-scrollview-view {
+    padding: 0 !important;
+}
+#galleryPage #moveToTop {
+    clear: both;
+}
+#galleryPage .img-container {
+    float: left;
+    width: 50%;
+    height: 50%;
+    background-position: center, center;
+    background-size: cover;
+}
+
+#imagePage {
+    background-size: contain;
+    background: no-repeat center, center;
+    overflow-x: visible;
+    overflow-y: visible;
+}
+#imageToShow {
+    min-width: 100%;
+    min-height: 100%;
+}
