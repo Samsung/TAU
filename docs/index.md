@@ -23,13 +23,13 @@ When using TAU you will get many benefits usable in your code:
 There are few simple possibilites to get started using TAU
 
 ### Using Tizen Studio
-1. Download and install (Tizen SDK)[https://developer.tizen.org/]
-2. Create Sample Web App TAU project. TAU library will be already included
+1. Download and install [Tizen SDK](https://developer.tizen.org/)
+2. Use wizard to create Sample Web App TAU project. TAU library will be already included
 
 ### Using WATT
 Note: Online WATT server is currently under preparation.
 You can find out more about WATT
-(Tizen SDK)[https://github.com/Samsung/WATT]
+[here](https://github.com/Samsung/WATT/)
 
 ### Including TAU in your source code
 ```html
