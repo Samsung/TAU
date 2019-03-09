@@ -4,17 +4,9 @@ TAU is the standard web UI library for Tizen platform. The acronym stands for Ti
 Advanced UI Library. It is a collection of UI controls called *widgets* which simplify
 application coding.
 
-## History
-
-TAU originated from Tizen Web UI Framework Library (standard library for Tizen 2.2.1),
-which was mainly based as an extension to jQuery Mobile. Key features of the former were
-coding simplification and app creation speed. With that in mind TAU was created as the
-framework *advanced to the next level*. TAU is a standalone UI library, without jQuery
-overhead, but that duo can be used as explained in this [guide later](using_jquery_with_tau.html).
-
 ## Benefits
 
-When using TAU you will get many benefits usable in your code.
+When using TAU you will get many benefits usable in your code:
 
 * A standalone library, meaning no additional libraries are needed
 * Can be used with jQuery, TAU exposes a special API to the jQuery object which is
@@ -27,8 +19,27 @@ When using TAU you will get many benefits usable in your code.
 * Optimized for wearable, mobile and TV devices
 * Supports device profiles (mobile, wearable and TV)
 
-## Simple example
+## Getting started
+There are few simple possibilites to get started using TAU
 
+### Using Tizen Studio
+1. Download and install (Tizen SDK)[https://developer.tizen.org/]
+2. Create Sample Web App TAU project. TAU library will be already included
+
+### Using WATT
+Note: Online WATT server is currently under preparation.
+You can find out more about WATT
+(Tizen SDK)[https://github.com/Samsung/WATT]
+
+### Including TAU in your source code
+```html
+<script src="../lib/tau/mobile/js/tau.js"></script>
+```
+## Where to get it
+* [TAU source code](https://github.com/Samsung/TAU/)
+* [TAU releases](https://github.com/Samsung/TAU/releases)
+
+## Simple usage example
 ```html
 <div class="ui-page ui-page-active">
   <div class="ui-header">MyApplication</div>
@@ -47,26 +58,9 @@ When using TAU you will get many benefits usable in your code.
 </script>
 ```
 
-**Warning**
+## Documentation
 
-_Examples in browsers_
-
-Some of the functionality shown in the examples may not work properly in a desktop browser, to fully get the TAU experience use a real Tizen device or Tizen emulator from the Tizen SDK.
-
-The example above shows a simple application, with a header and a button in the footer
-that closes the application. Click on the preview to check out how it works on different
-framework profiles.
-
-_Examples for profiles_
-
-TAU Profiles (mobile, TV, wearable) have differences, so some of the examples will not have preview buttons for specific profiles.
-
-## Where to get it
-
-The framework is included on all Tizen devices and the SDK emulator (starting from Tizen 2.3). Just create
-a new web application in the Tizen SDK IDE. See also our [documentation](https://developer.tizen.org/dev-guide/5.0.0/org.tizen.web.apireference/html/ui_fw_api/ui_fw_api_cover.htm) and [github repository](https://github.com/Samsung/TAU).
-
-## What next?
+* [TAU API Reference](https://developer.tizen.org/dev-guide/5.0.0/org.tizen.web.apireference/html/ui_fw_api/ui_fw_api_cover.htm)
 
 If you are new to the whole standalone web application concept please checkout [Application visual layout](application_visual_layout.html) part.
 
@@ -81,6 +75,15 @@ But if you can wait to get to the fun, checkout the more stuff like:
   * [clock](tutorial_clock.md)
   * [gallery](tutorial_gallery.md)
   * [notes](tutorial_notes.md).
+
+
+## History
+
+TAU originated from Tizen Web UI Framework Library (standard library for Tizen 2.2.1),
+which was mainly based as an extension to jQuery Mobile. Key features of the former were
+coding simplification and app creation speed. With that in mind TAU was created as the
+framework *advanced to the next level*. TAU is a standalone UI library, without jQuery
+overhead, but that duo can be used as explained in this [guide later](using_jquery_with_tau.html).
 
 __Have some coding fun!__
 
