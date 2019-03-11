@@ -31,6 +31,10 @@ Note: Online WATT server is currently under preparation.
 You can find out more about WATT
 [here](https://github.com/Samsung/WATT/)
 
+### Using VSCode
+You can use [VSCode](https://code.visualstudio.com/) with set of extensions supporting web apps and TAU development.
+Note: Currently Tizen/TAU specific extensions are under development.
+
 ### Including TAU in your source code
 ```html
 <script src="../lib/tau/mobile/js/tau.js"></script>
@@ -38,6 +42,7 @@ You can find out more about WATT
 ## Where to get it
 * [TAU source code](https://github.com/Samsung/TAU/)
 * [TAU releases](https://github.com/Samsung/TAU/releases)
+* [latest release](https://github.com/Samsung/TAU/releases/latest)
 
 ## Simple usage example
 ```html
