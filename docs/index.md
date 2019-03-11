@@ -9,11 +9,8 @@ application coding.
 When using TAU you will get many benefits usable in your code:
 
 * A standalone library, meaning no additional libraries are needed
-* Can be used with jQuery, TAU exposes a special API to the jQuery object which is
-  identical to jQuery Mobile, migration is painless
 * Written with speed in mind, all of the code is tweaked for maximum performance
 * Application can be _built_ to dramatically improve startup performance
-* ECMAScript5 and HTML5 compliant
 * Large and open API, methods and core function (event utility functions) are available and not hidden to the developer
 * Customizable, easy to extend (and create new widgets)
 * Optimized for wearable, mobile and TV devices
