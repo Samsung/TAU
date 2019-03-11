@@ -94,7 +94,13 @@ Please read [CONTRIBUTING.md](https://github.com/Samsung/TAU/blob/master/CONTRIB
 
 ## Versioning
 
-You can find releases in the releases [tab]((https://github.com/Samsung/TAU/releases)
+You can find releases in the releases [tab](https://github.com/Samsung/TAU/releases)
+
+Each release number is composed from two parts: 
+
+**Tizen_version_number.TAU_version_for_given_Tizen_release.**
+
+E.g. in case of TAU for Tizen 5.0: 5.0.0...5.0.10, 5.0.11...
 
 ## Authors
 
