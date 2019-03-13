@@ -18,7 +18,7 @@ This is replacement and clone of previously existing https://review.tizen.org/ge
 
 `git checkout tizen_X.Y`
 
-eg. `git checkout tizen_5.0`
+eg. `git checkout tizen_4.0`
 
 ### Prerequisites
 
