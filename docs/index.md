@@ -38,7 +38,7 @@ Note: Currently Tizen/TAU specific extensions are under development.
 ```
 ## Where to get it
 * [TAU source code](https://github.com/Samsung/TAU/)
-* [TAU releases](https://github.com/Samsung/TAU/releases)
+* [TAU releases](releases.md)
   * [latest release](https://github.com/Samsung/TAU/releases/latest)
 
 ## Simple usage example
