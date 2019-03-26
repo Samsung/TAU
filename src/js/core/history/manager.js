@@ -180,7 +180,7 @@
 						ns.log("after trigger EVENT_HASHCHANGE:", resultOfTigger);
 						//>>excludeEnd("tauDebug");
 
-						// if EVENT HASHCHANGE has been triggered successfuly then skip trigger HistoryStateChange
+						// if EVENT HASHCHANGE has been triggered successfully then skip trigger HistoryStateChange
 						skipTriggerStateChange = resultOfTigger;
 					}
 
