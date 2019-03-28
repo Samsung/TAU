@@ -2,6 +2,8 @@
 
 The TAU library contains components which allows you to create Web Application UI. Each components represents UI element, such as a button or slider, which gives you interaction and manipulation features.
 
+This is replacement and clone of previously existing https://review.tizen.org/gerrit/#/admin/projects/platform/framework/web/tau
+
 ## Getting Started
 
 - Clone a copy of the master branch in the TAU Git repository:
@@ -16,7 +18,7 @@ The TAU library contains components which allows you to create Web Application U
 
 `git checkout tizen_X.Y`
 
-eg. `git checkout tizen_5.0`
+eg. `git checkout tizen_4.0`
 
 ### Prerequisites
 
@@ -82,33 +84,30 @@ Contribution can be verified using command:
 
 `grunt eslint`
 
-## Deployment
+## Usage
 
-@todo
-
-## Built With
-
-@todo
+Refer to [samsung.github.io/TAU](https://samsung.github.io/TAU/) for library usage instructions
 
 ## Contributing
 
-@todo
-Please read [CONTRIBUTING.md] for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/Samsung/TAU/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-@todo
+You can find releases in the releases [tab](https://github.com/Samsung/TAU/releases)
+
+Each release number is composed from two parts: 
+
+**Tizen_version_number.TAU_version_for_given_Tizen_release.**
+
+E.g. in case of TAU for Tizen 5.0: 5.0.0...5.0.10, 5.0.11...
 
 ## Authors
 
-* Authors - [AUTHOR]
+* Authors - [AUTHOR](https://github.com/Samsung/TAU/blob/master/AUTHOR)
 
 See also the list of [contributors](https://github.com/SAMSUNG/TAU/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under MIT except some files under Flora license. For details see [COPYING]
-
-## Acknowledgments
-
-* @todo
+This project is licensed under MIT except some files under Flora license. For details see [COPYING](https://github.com/Samsung/TAU/blob/master/COPYING)
