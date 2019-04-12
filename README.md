@@ -14,30 +14,20 @@ This is replacement and clone of previously existing https://review.tizen.org/ge
 
 `cd TAU`
 
-- Check out the latest version of TAU:
+- Check out the latest stable version of TAU:
 
-`git checkout tizen_X.Y`
-
-eg. `git checkout tizen_4.0`
+`git checkout master`
 
 ### Prerequisites
 
 To build a TAU library, ensure that you have both Git and Node.js (6.16.0) installed.
 
-Example install using `nvm`:
+Example of node install using [`nvm`](https://github.com/creationix/nvm):
 
 ```
 nvm install 6.16.0
-nvm alias default 6.16.0
+nvm use 6.16.0
 ```
-
-- Test that you have grunt installed:
-
-`grunt -V`
-
-If grunt is not installed, then run:
-
-`(sudo) npm install -g grunt-cli`
 
 ### Installing
 
@@ -47,34 +37,48 @@ If grunt is not installed, then run:
 
 Build TAU by running the following command in the tau directory:
 
-`grunt build`
+`npx grunt build`
 
 ## Running the tests
 
-TAU has automated tests. For run tests execute command:
+TAU has automated tests. To run tests execute command:
 
-`grunt test`
+`npx grunt test`
 
 ## Demo application:
 
 UIComponents sample web application demonstrating how to implement UI Components for wearable based on TAU.
 
-Path in repository:
+Demo application is available on https://samsung.github.io/TAU: 
 
-mobile: `examples\mobile\UIComponents`
+- https://samsung.github.io/TAU/examples/mobile/UIComponents/ (Mobile)
+- https://samsung.github.io/TAU/examples/wearable/UIComponents/ (Wearable)
 
-wearable: `examples\wearable\UIComponents`
+If you want to test your own version of demo app it is available under following paths in repository:
 
-- Install http-server
+* mobile: `examples\mobile\UIComponents`
+* wearable: `examples\wearable\UIComponents`
+
+In order to test it:
+
+- Install http-server in TAU directory
 
 `npm install http-server -g`
 
-- Launch server in app directory:
+- Launch server in TAU directory:
 
-`http-server -p <port> -a localhost`
+`npx http-server -p <port> -a localhost`
 
-eg. `http-server -p 8888 -a localhost`
+e.g. `npx http-server -p 8888 -a localhost`
 
+- Visit appropriate site:
+
+`http://localhost:PORT/examples/PROFILE/UIComponents/`
+
+e.g.
+
+* http://localhost:8888/examples/wearable/UIComponents/
+* http://localhost:8888/examples/mobile/UIComponents/
 
 ### Coding style tests
 
@@ -82,7 +86,7 @@ Project has defined eslint rules (.eslintrc.js)
 
 Contribution can be verified using command:
 
-`grunt eslint`
+`npx grunt eslint`
 
 ## Usage
 
