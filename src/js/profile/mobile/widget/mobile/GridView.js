@@ -66,11 +66,13 @@
 			"../../../../core/event/gesture/Instance",
 			"../../../../core/util/DOM",
 			"../../../../core/util/selectors",
+			"../../../../core/widget/BaseKeyboardSupport",
 			"../mobile"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.BaseWidget,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				utilsEvents = ns.event,
 				utilsSelectors = ns.util.selectors,
@@ -105,6 +107,8 @@
 				},
 				GridView = function () {
 					var self = this;
+
+					BaseKeyboardSupport.call(this);
 
 					self.options = {};
 					self._direction = 0;
@@ -157,23 +161,23 @@
 				/**
 				 * Options for widget.
 				 * @property {Object} options
-				 * @property {number} [options.cols=4] the number of columns to be displayed (for landscape 7)
+				 * @property {number} [options.cols=4] the number of columns to be displayed (for landscape 7 mobile)
 				 * @property {boolean} [options.reorder=false] represents whether grid view is reorder mode
 				 * @property {string} [options.label="none"] type of label to be attached to grid item("none", "in", "out")
-				 * @property {number} [options.minWidth=null] minimum width px of grid item(number or "auto")
+				 * @property {number} [options.minWidth="auto"] minimum width px of grid item(number or "auto")
 				 * @property {number} [options.minCols=1] the minimum number of columns
-				 * @property {number} [options.maxCols=5] the maximum number of columns (for landscape 7)
+				 * @property {number} [options.maxCols=5] the maximum number of columns (for landscape 7 mobile)
 				 * @member ns.widget.mobile.GridView
 				 */
 				this.options = {
 					cols: 4,
 					reorder: false,
 					label: labels.NONE,
-					minWidth: null,
+					minWidth: "auto",
 					minCols: 1,
 					maxCols: 5
 				};
-				// for landscape 7
+				// for landscape 7 (mobile profile)
 				if (window.innerWidth > window.innerHeight) {
 					this.options.cols = 7;
 					this.options.maxCols = 7;
@@ -244,7 +248,7 @@
 
 				self._onSetGridStyle = onSetGridStyle.bind(null, self);
 				if (popup) {
-					utilsEvents.on(popup.element, popupEvents.before_show, self._refreshSizesCallback);
+					utilsEvents.on(popup.element, popupEvents.transition_start, self._refreshSizesCallback);
 				}
 
 				self.on("animationend webkitAnimationEnd", animationEndCallback);
@@ -656,7 +660,7 @@
 					minWidth = parseFloat(firstLiComputed.getPropertyValue("width")) || 0;
 					options.minWidth = minWidth;
 				} else {
-					minWidth = parseInt(minWidth, 10);
+					minWidth = (minWidth) ? parseInt(minWidth, 10) : null;
 				}
 
 				cols = minWidth ? Math.floor(parentWidth / minWidth) : options.cols;
@@ -904,6 +908,8 @@
 
 				options.label = labelCheck;
 			};
+
+			BaseKeyboardSupport.registerActiveSelector("." + classes.GRIDLIST + " li." + classes.ITEM);
 
 			ns.widget.mobile.GridView = GridView;
 

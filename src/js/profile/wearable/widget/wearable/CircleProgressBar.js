@@ -343,6 +343,7 @@
 
 				progressbarContainer.appendChild(canvas);
 				progressbarContainer.appendChild(endPoint);
+				progressbarContainer.appendChild(progressElement);
 
 				return element;
 			};
@@ -466,8 +467,7 @@
 			prototype._destroy = function () {
 				var self = this;
 
-				// remove utilDOM
-				self.element.parentNode.removeChild(self._ui.progressContainer);
+				utilDOM.replaceWithNodes(self._ui.progressContainer, self.element);
 
 				// clear variables
 				self.element = null;
@@ -477,6 +477,18 @@
 				self._value = null;
 
 				return null;
+			};
+
+			/**
+			 * Get CircleProgressBar container
+			 * @method _getContainer
+			 * @member ns.widget.wearable.CircleProgressBar
+			 * @protected
+			 */
+			prototype._getContainer = function () {
+				var self = this;
+
+				return self._ui && self._ui.progressContainer;
 			};
 
 			CircleProgressBar.prototype = prototype;

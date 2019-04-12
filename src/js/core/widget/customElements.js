@@ -121,7 +121,11 @@
 					if (registeredTags[tagName]) {
 						ns.warn(tagName + " already registered");
 					} else {
-						registeredTags[tagName] = document.registerElement(tagName, registerQueue[tagName]);
+						try {
+							registeredTags[tagName] = document.registerElement(tagName, registerQueue[tagName]);
+						} catch (err) {
+							ns.warn("Custom Element (" + tagName + ") already registered");
+						}
 					}
 				});
 			});

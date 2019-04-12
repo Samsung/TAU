@@ -249,7 +249,8 @@
 			"../../util/DOM/attributes",
 			"../../util/DOM/css",
 			"../BaseWidget",
-			"../core"
+			"../core",
+			"../BaseKeyboardSupport"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
@@ -286,25 +287,27 @@
 				 * @static
 				 */
 				engine = ns.engine,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 
-				Page = function () {
+				Page = function (element, options) {
 					var self = this;
+
+					BaseKeyboardSupport.call(self);
+
 					/**
 					 * Callback on resize
 					 * @property {?Function} _contentFillAfterResizeCallback
 					 * @private
 					 * @member ns.widget.core.Page
 					 */
-
 					self._contentFillAfterResizeCallback = null;
 					self._initialContentStyle = {};
 					/**
 					 * Options for widget.
-					 * It is empty object, because widget Page does not have any options.
 					 * @property {Object} options
 					 * @member ns.widget.core.Page
 					 */
-					self.options = {};
+					self.options = options || {};
 
 					self._contentStyleAttributes = ["height", "width", "minHeight", "marginTop", "marginBottom"];
 
@@ -465,7 +468,24 @@
 						contentStyle.height = (screenHeight - top - bottom) + "px";
 					}
 				}
+
+				if (self.options.model) {
+					self._fillContentsFromModel();
+				}
 			};
+
+			prototype._fillContentsFromModel = function () {
+				var self = this,
+					model = self.options.model || {},
+					data = model;
+
+				Object.keys(data).forEach(function (key) {
+					[].slice.call(self.element.querySelectorAll("[data-bind='" + key + "']"))
+						.forEach(function (elem) {
+							elem.textContent = data[key];
+						});
+				});
+			}
 
 			prototype._storeContentStyle = function () {
 				var self = this,
@@ -863,7 +883,14 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeShow = function () {
-				this.trigger(EventType.BEFORE_SHOW);
+				var self = this;
+
+				if (typeof self.enableKeyboardSupport === "function") {
+					self.enableKeyboardSupport();
+					// add keyboard events
+					self._bindEventKey();
+				}
+				self.trigger(EventType.BEFORE_SHOW);
 			};
 
 			/**
@@ -888,7 +915,14 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeHide = function () {
-				this.trigger(EventType.BEFORE_HIDE);
+				var self = this;
+
+				if (typeof self.disableKeyboardSupport === "function") {
+					self.disableKeyboardSupport();
+					// remove keyboard events
+					self._destroyEventKey();
+				}
+				self.trigger(EventType.BEFORE_HIDE);
 			};
 
 			/**

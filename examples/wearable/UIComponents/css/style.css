@@ -968,3 +968,12 @@ input[type="checkbox"]#checkboxControl {
 	margin: 7px;
 	width: 320px;
 }
+
+/* -------------------------Dimmer Sample-------------------*/
+
+#dimmer-page .dimmer-content {
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}

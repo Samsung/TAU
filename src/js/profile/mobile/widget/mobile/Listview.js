@@ -117,7 +117,8 @@
 			"./Scrollview",
 			"../../../../core/widget/core/Listview",
 			"../mobile",
-			"./BaseWidgetMobile"
+			"./BaseWidgetMobile",
+			"../../../../core/widget/BaseKeyboardSupport"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
@@ -126,6 +127,7 @@
 				Scrollview = ns.widget.mobile.Scrollview,
 				CoreListview = ns.widget.core.Listview,
 				CoreListviewProto = CoreListview.prototype,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				utils = ns.util,
 				objectUtils = utils.object,
 				selectorUtils = utils.selectors,
@@ -157,6 +159,7 @@
 						};
 
 					CoreListview.call(self);
+					BaseKeyboardSupport.call(self);
 
 					// merge options from prototype
 					self.options = (!self.options) ?
@@ -220,7 +223,9 @@
 					"DRAG_MODE": "dragMode",
 					"ACTIVATE_HANDLERS": "activateHandlers",
 					"CANCEL_ANIMATION": "cancelAnimation",
-					"DEACTIVATE_HANDLERS": "deactivateHandlers"
+					"DEACTIVATE_HANDLERS": "deactivateHandlers",
+					"FOCUS": "ui-listview-focus",
+					"ITEMFOCUS": "ui-listview-item-focus"
 				},
 
 				/**
@@ -250,8 +255,8 @@
 				self._canvasHeight = 0;
 
 				self._dragMode = false;
-				self.originalListPosition = 0;
-				self.indexDraggingElement = 0;
+				self.orginalListPosition = 0;
+				self.indexDragingElement = 0;
 
 				self._ui = {
 					helper: {},
@@ -883,6 +888,32 @@
 				self._redraw = false;
 			};
 
+			prototype._focusItem = function (event) {
+				var target = event.detail.element,
+					liElement = selectorUtils.getClosestByTag(target, "li");
+
+				if (target.tagName === "A") {
+					liElement.classList.add(classes.ITEMFOCUS);
+				}
+			};
+
+			prototype._blurItem = function (event) {
+				var target = event.detail.element,
+					liElement = selectorUtils.getClosestByTag(target, "li");
+
+				if (target.tagName === "A") {
+					liElement.classList.remove(classes.ITEMFOCUS);
+				}
+			};
+
+			prototype._focus = function (element) {
+				element.classList.add(classes.FOCUS);
+			}
+
+			prototype._blur = function (element) {
+				element.classList.remove(classes.FOCUS);
+			}
+
 			/**
 			 * Bounds to events
 			 * @method _bindEvents
@@ -894,6 +925,8 @@
 					scrollableContainer = self._scrollableContainer,
 					pageContainer = self._pageContainer,
 					popupContainer = self._popupContainer;
+
+				self._bindEventMouse();
 
 				if (!self._isChildListview) {
 					if (scrollableContainer) {
@@ -922,6 +955,8 @@
 					}
 
 					utilsEvents.on(self.element, "animationend", self, true);
+					utilsEvents.on(self.element, "taufocus", self._focusItem, true);
+					utilsEvents.on(self.element, "taublur", self._blurItem, true);
 				}
 			};
 
@@ -938,6 +973,8 @@
 				//phantom hack
 				if (element) {
 					utilsEvents.off(element, "animationend", self, true);
+					utilsEvents.off(element, "focus", self._focus, true);
+					utilsEvents.off(element, "blur", self._blur, true);
 				}
 
 				if (self._context) {

@@ -104,7 +104,10 @@
 			"../../../core/widget/BaseWidget",
 			"./scroller/Scroller",
 			"./tab/TabIndicator",
-			"../core"
+			"./Page",
+			"../core",
+			"../../../core/util/selectors",
+			"../BaseKeyboardSupport"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
@@ -114,7 +117,11 @@
 				engine = ns.engine,
 				utilsObject = ns.util.object,
 				utilsEvents = ns.event,
-				eventType = ns.util.object.merge({
+				objectMerge = ns.util.object.merge,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				Page = ns.widget.core.Page,
+				selectors = ns.util.selectors,
+				eventType = objectMerge({
 					/**
 					 * Triggered when the section is changed.
 					 * @event sectionchange
@@ -124,10 +131,38 @@
 				}, Scroller.EventType),
 				classes = {
 					uiSectionChanger: "ui-section-changer"
+				},
+				/**
+				 * Options for widget
+				 * @property {Object} defaultOptions
+				 * @property {"horizontal"|"vertical"} [defaultOptions.orientation="horizontal"] Sets the section changer orientation:
+				 * @property {boolean} [defaultOptions.circular=false] Presents the sections in a circular scroll fashion.
+				 * @property {boolean} [defaultOptions.useBouncingEffect=false] Shows a scroll end effect on the scroll edge.
+				 * @property {string} [defaultOptions.items="section"] Defines the section element selector.
+				 * @property {string} [defaultOptions.activeClass="ui-section-active"] Specifies the CSS classes which define the active section element. Add the specified class (ui-section-active) to a *section* element to indicate which section must be shown first. By default, the first section is shown first.
+				 * @property {boolean} [defaultOptions.fillContent=true] declare to section tag width to fill content or not.
+				 * @member ns.widget.core.SectionChanger
+				 */
+				defaultOptions = {
+					items: "section",
+					activeClass: "ui-section-active",
+					circular: false,
+					animate: true,
+					animateDuration: 100,
+					orientation: "horizontal",
+					changeThreshold: -1,
+					useTab: false,
+					fillContent: true,
+					model: null,
+					directives: null
 				};
 
 			function SectionChanger() {
-				this.options = {};
+				this.options = objectMerge({}, defaultOptions);
+				BaseKeyboardSupport.call(this);
+				this._ui = {
+					page: null
+				};
 			}
 
 			function calculateCustomLayout(direction, elements, lastIndex) {
@@ -195,28 +230,100 @@
 
 				_configure: function () {
 					this._super();
-					/**
-					 * Options for widget
-					 * @property {Object} options
-					 * @property {"horizontal"|"vertical"} [options.orientation="horizontal"] Sets the section changer orientation:
-					 * @property {boolean} [options.circular=false] Presents the sections in a circular scroll fashion.
-					 * @property {boolean} [options.useBouncingEffect=false] Shows a scroll end effect on the scroll edge.
-					 * @property {string} [options.items="section"] Defines the section element selector.
-					 * @property {string} [options.activeClass="ui-section-active"] Specifies the CSS classes which define the active section element. Add the specified class (ui-section-active) to a *section* element to indicate which section must be shown first. By default, the first section is shown first.
-					 * @property {boolean} [options.fillContent=true] declare to section tag width to fill content or not.
-					 * @member ns.widget.core.SectionChanger
-					 */
-					this.options = utilsObject.merge(this.options, {
-						items: "section",
-						activeClass: "ui-section-active",
-						circular: false,
-						animate: true,
-						animateDuration: 100,
-						orientation: "horizontal",
-						changeThreshold: -1,
-						useTab: false,
-						fillContent: true
-					});
+					this.options = utilsObject.merge(this.options, defaultOptions);
+				},
+
+				/**
+				 * Generic method for data-bind for HTML element
+				 * @method _fillElementFromModel
+				 * @param {HTMLElement} element
+				 * @param {Object} dataItem
+				 * @param {Function[]} directive
+				 * @member ns.widget.core.SectionChanger
+				 * @protected
+				 */
+				_fillElementFromModel: function (element, dataItem, directive) {
+					var itemName,
+						dataBoundElement;
+
+					for (itemName in dataItem) {
+						if (dataItem.hasOwnProperty(itemName)) {
+							dataBoundElement = element.querySelector("[data-bind='" + itemName + "']");
+							if (dataBoundElement) {
+								if (typeof directive[itemName] === "function") {
+									directive[itemName].call(dataBoundElement, dataItem[itemName]);
+								} else {
+									dataBoundElement.innerText = dataItem[itemName];
+								}
+							}
+						}
+					}
+				},
+
+				/**
+				 * Specific method for widget filling from model
+				 * @method _fillElementFromModel
+				 * @param {string} key
+				 * @param {Array} data
+				 * @param {Function} directive
+				 * @member ns.widget.core.SectionChanger
+				 * @protected
+				 */
+				_fillWidgetFromModel: function (key, data, directive) {
+					var self = this,
+						element = self.element,
+						dataBoundElements,
+						dataBoundElement,
+						content,
+						parentElement;
+
+					// clone section for all items
+					dataBoundElements = element.querySelectorAll("[data-bind='" + key + "'] > section");
+
+					if (dataBoundElements.length === 1) { // clone element for each item
+						dataBoundElement = dataBoundElements[0];
+						content = dataBoundElement.innerHTML;
+						parentElement = dataBoundElement.parentElement;
+
+						parentElement.removeChild(dataBoundElement);
+						data.forEach(function (dataItem) {
+							var newElement = dataBoundElement.cloneNode();
+
+							newElement.innerHTML = content;
+							self._fillElementFromModel(newElement, dataItem, directive);
+
+							parentElement.appendChild(newElement);
+						});
+					} else {
+						// @todo
+						// fill existent elements by data
+					}
+				},
+
+				_findDataBinding: function () {
+					var model = this.options.model,
+						modelItem,
+						directives = this.options.directives,
+						directive,
+						key;
+
+					// create items for data
+					if (model) {
+						for (key in model) {
+							if (model.hasOwnProperty(key)) {
+								modelItem = model[key];
+								if (typeof modelItem === "string") {
+									// @todo
+									// innerText for item
+								} else if (Array.isArray(modelItem)) {
+									if (directives) {
+										directive = directives[key];
+									}
+									this._fillWidgetFromModel(key, modelItem, directive);
+								}
+							}
+						}
+					}
 				},
 
 				_init: function (element) {
@@ -225,42 +332,57 @@
 						scroller = self.scroller,
 						sectionLength,
 						i,
-						className;
+						className,
+						ui = self._ui;
 
 					if (options.scrollbar === "tab") {
 						options.scrollbar = false;
 						options.useTab = true;
 					}
 
-					self.sections = typeof options.items === "string" ?
-						scroller.querySelectorAll(options.items) :
-						options.items;
-					sectionLength = self.sections.length;
+					if (options.model) {
+						self._findDataBinding();
+					}
 
-					if (options.circular && sectionLength < 3) {
-						ns.error("[SectionChanger] if you use circular option, you must have at least three sections.");
-					} else {
-						for (i = 0; i < sectionLength; i++) {
-							className = self.sections[i].className;
-							if (className && className.indexOf(options.activeClass) > -1) {
-								self.activeIndex = i;
+					// find parent page
+					ui.page = selectors.getClosestBySelector(self.element, "." + Page.classes.uiPage);
+
+					if (scroller) {
+						self.sections = typeof options.items === "string" ?
+							scroller.querySelectorAll(options.items) :
+							options.items;
+
+						sectionLength = self.sections.length;
+
+						if (options.circular && sectionLength < 3) {
+							ns.error("[SectionChanger] if you use circular option, you must have at least three sections.");
+						} else {
+							for (i = 0; i < sectionLength; i++) {
+								className = self.sections[i].className;
+								if (className && className.indexOf(options.activeClass) > -1) {
+									self.activeIndex = i;
+								} else {
+									if (self.isKeyboardSupport === true) {
+										self.disableFocusableElements(self.sections[i]);
+									}
+								}
+
+								self.sectionPositions[i] = i;
 							}
 
-							self.sectionPositions[i] = i;
-						}
+							self._prepareLayout();
+							self._initLayout();
+							self._super(element);
+							self._repositionSections(true);
+							self.setActiveSection(self.activeIndex);
 
-						self._prepareLayout();
-						self._initLayout();
-						self._super(element);
-						self._repositionSections(true);
-						self.setActiveSection(self.activeIndex);
-
-						// set correct options values.
-						if (!options.animate) {
-							options.animateDuration = 0;
-						}
-						if (options.changeThreshold < 0) {
-							options.changeThreshold = self._sectionChangerHalfWidth;
+							// set correct options values.
+							if (!options.animate) {
+								options.animateDuration = 0;
+							}
+							if (options.changeThreshold < 0) {
+								options.changeThreshold = self._sectionChangerHalfWidth;
+							}
 						}
 					}
 
@@ -421,18 +543,23 @@
 
 					self._super();
 
-					ns.event.enableGesture(
-						self.scroller,
+					if (self.scroller) {
+						ns.event.enableGesture(
+							self.scroller,
 
-						new ns.event.gesture.Swipe({
-							orientation: self.orientation === Orientation.HORIZONTAL ?
-								gesture.Orientation.HORIZONTAL :
-								gesture.Orientation.VERTICAL
-						})
-					);
+							new ns.event.gesture.Swipe({
+								orientation: self.orientation === Orientation.HORIZONTAL ?
+									gesture.Orientation.HORIZONTAL :
+									gesture.Orientation.VERTICAL
+							})
+						);
 
-					utilsEvents.on(self.scroller,
-						"swipe transitionEnd webkitTransitionEnd mozTransitionEnd msTransitionEnd oTransitionEnd", self);
+						utilsEvents.on(self.scroller,
+							"swipe transitionEnd webkitTransitionEnd mozTransitionEnd msTransitionEnd oTransitionEnd", self);
+						if (self._ui.page) {
+							utilsEvents.on(self._ui.page, "taufocusborder", self);
+						}
+					}
 
 					document.addEventListener("rotarydetent", self, true);
 				},
@@ -446,6 +573,9 @@
 						ns.event.disableGesture(self.scroller);
 						utilsEvents.off(self.scroller,
 							"swipe transitionEnd webkitTransitionEnd mozTransitionEnd msTransitionEnd oTransitionEnd", self);
+						if (self._ui.page) {
+							utilsEvents.off(self._ui.page, "taufocusborder", self);
+						}
 					}
 
 					document.removeEventListener("rotarydetent", self, true);
@@ -463,6 +593,7 @@
 					switch (event.type) {
 						case "swipe":
 						case "rotarydetent" :
+						case "taufocusborder":
 							this._change(event);
 							break;
 						case "webkitTransitionEnd":
@@ -521,6 +652,11 @@
 
 					if (this.beforeIndex - index > 1 || this.beforeIndex - index < -1) {
 						scrollbarDuration = 0;
+					}
+
+					// disable keyboard on latest section
+					if (this.activeIndex !== index && this.isKeyboardSupport === true) {
+						this.disableFocusableElements(this.sections[this.activeIndex]);
 					}
 
 					this.activeIndex = index;
@@ -606,8 +742,16 @@
 				_change: function (event) {
 					var self = this,
 						direction = event.detail.direction,
-						offset = direction === gesture.Direction.UP || direction === gesture.Direction.LEFT || direction === "CW" ? 1 : -1,
-						newIndex = self._calculateIndex(self.beforeIndex + offset);
+						offset = direction === gesture.Direction.UP ||
+							direction === gesture.Direction.LEFT ||
+							direction === "CW" ? 1 : -1,
+						newIndex;
+
+					if (event.type === "taufocusborder") {
+						offset *= -1; // invert direction;
+					}
+
+					newIndex = self._calculateIndex(self.beforeIndex + offset);
 
 					if (self.enabled && !self.scrollCanceled) {
 						// bouncing effect
@@ -616,22 +760,35 @@
 						}
 
 						if (self.activeIndex !== newIndex) {
+							// disable keyboard on latest section
+							if (self.isKeyboardSupport === true && self.sections) {
+								self.disableFocusableElements(self.sections[self.activeIndex]);
+								self.blurOnActiveElement();
+							}
 							self.activeIndex = newIndex;
 							self._notifyChangedSection(newIndex);
 						}
 
 						self.setActiveSection(newIndex, self.options.animateDuration, false);
+
 						self.dragging = false;
 					}
 				},
 
 				_endScroll: function () {
-					if (!this.enabled || !this.scrolled || this.scrollCanceled) {
+					var self = this;
+
+					// enable keyboard focus on section at current index
+					if (this.isKeyboardSupport === true) {
+						self.enableDisabledFocusableElements(self.sections[self.activeIndex]);
+					}
+
+					if (!self.enabled || !self.scrolled || self.scrollCanceled) {
 						return;
 					}
 
-					this._repositionSections();
-					this._super();
+					self._repositionSections();
+					self._super();
 				},
 
 				_repositionSections: function (init) {

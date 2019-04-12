@@ -12,7 +12,7 @@
 
 			helpers.checkWidgetBuild("Slider", element, ns);
 
-			ok(element.previousElementSibling.classList.contains("ui-progressbar"), "Slider has ui-progressbar class");
+			ok(element.parentElement.classList.contains("ui-progressbar"), "Slider has ui-progressbar class");
 		});
 	}
 

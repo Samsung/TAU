@@ -56,7 +56,7 @@
 			 * @param {HTMLElement} element
 			 * @param {Object} options Configure options
 			 * @member ns.widget.mobile.BaseWidgetMobile
-			 * @return {ns.widget.mobile.BaseWidgetMobile}
+			 * @return {HTMLElement}
 			 * @instance
 			 */
 			prototype.configure = function (definition, element, options) {
@@ -64,7 +64,7 @@
 					definitionName,
 					widgetName;
 
-				parentConfigure.call(self, definition, element, options);
+				element = parentConfigure.call(self, definition, element, options);
 				if (definition) {
 					definitionName = definition.name;
 					widgetName = definitionName && definitionName.toLowerCase();
@@ -102,7 +102,7 @@
 					self.defaultElement = "<div>";
 				}
 
-				return this;
+				return element;
 			};
 
 			/**

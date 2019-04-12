@@ -177,7 +177,8 @@
 			"../../../event/gesture/Drag",
 			"../Scrollview",
 			"../Tab",
-			"../Page"
+			"../Page",
+			"../../BaseKeyboardSupport"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
@@ -186,9 +187,12 @@
 				engine = ns.engine,
 				Page = ns.widget.core.Page,
 				domUtils = ns.util.DOM,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 
 				TabBar = function () {
 					var self = this;
+
+					BaseKeyboardSupport.call(this);
 
 					self._type = {
 						orientation: "portrait",
@@ -634,6 +638,11 @@
 
 				ui.links[options.active].classList.remove(classes.TAB_ACTIVE);
 				ui.links[index].classList.add(classes.TAB_ACTIVE);
+				// if keyboard support
+				if (self.isKeyboardSupport === true) {
+					ui.links[index].focus();
+				}
+
 				options.active = index;
 				self._setTabbarPosition();
 				TabPrototype._setActive.call(self, index);

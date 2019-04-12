@@ -8,7 +8,7 @@ module("profile/wearable/widget/wearable/CircleProgressBar", {
 test("simple CircleProgressbar test", 3, function () {
 	var progressBar = document.getElementById("circleprogress"),
 		progressBarWidget = new tau.widget.CircleProgressBar(progressBar),
-		progressContainer = progressBar.previousElementSibling;
+		progressContainer = progressBar.parentElement;
 
 	ok(progressContainer.classList.contains("ui-progressbar"),
 		"container of CircleProgressBar has ui-progressbar classname");
@@ -27,7 +27,7 @@ test("CircleProgressbar with options", 5, function () {
 			endPoint: true,
 			pressed: true},
 		progressBarWidget = new tau.widget.CircleProgressBar(progressBar, options),
-		progressContainer = progressBar.previousElementSibling;
+		progressContainer = progressBar.parentElement;
 
 	equal(progressBarWidget.option("thickness"), options.thickness, "Progress Size is defined " + options.thickness);
 	equal(progressBarWidget.option("size"), options.size, "Progress Size is defined " + options.size);

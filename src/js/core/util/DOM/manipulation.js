@@ -272,15 +272,17 @@
 			 * @static
 			 */
 			DOM.replaceWithNodes = function (context, elements) {
-				var returnElements;
+				var returnElements = null;
 
-				if (elements instanceof Array || elements instanceof NodeList ||
-					elements instanceof HTMLCollection) {
-					returnElements = this.insertNodesBefore(context, elements);
-					context.parentNode.removeChild(context);
-				} else {
-					context.parentNode.replaceChild(elements, context);
-					returnElements = elements;
+				if (context.parentNode) {
+					if (elements instanceof Array || elements instanceof NodeList ||
+						elements instanceof HTMLCollection) {
+						returnElements = this.insertNodesBefore(context, elements);
+						context.parentNode.removeChild(context);
+					} else {
+						context.parentNode.replaceChild(elements, context);
+						returnElements = elements;
+					}
 				}
 				return returnElements;
 			};
@@ -437,6 +439,28 @@
 
 				return resultElements;
 			};
+
+			/**
+			 * Check if element is child of element
+			 * @method isChildElementOf
+			 * @param {HTMLElement|null} child
+			 * @param {HTMLElement|null} parent
+			 * @return {boolean}
+			 * @member ns.util.DOM
+			 * @static
+			 */
+			DOM.isChildElementOf = function (child, parent) {
+				if (parent) {
+					while (child && child.parentElement) {
+						if (parent === child.parentElement) {
+							return true;
+						}
+						child = child.parentElement
+					}
+				}
+				return false;
+			};
+
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.util.DOM;
 		}

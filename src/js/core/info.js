@@ -65,6 +65,9 @@
 
 						parent.appendChild(el);
 						themeName = window.getComputedStyle(el, ":after").content;
+						if (themeName) {
+							themeName = themeName.replace(/\"/g, "");
+						}
 						parent.removeChild(el);
 
 						if (themeName && themeName.length > 0) {

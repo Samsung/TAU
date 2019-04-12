@@ -107,6 +107,22 @@
 			routePage.firstPage = null;
 
 			/**
+			 * Property contains href of original Base element if exists
+			 * @property {string} _originalBaseHref
+			 * @member ns.router.route.page
+			 * @static
+			 */
+			routePage._originalBaseHref = "";
+
+			/**
+			 * Property contains start URI
+			 * @property {string} _originalLocation
+			 * @member ns.router.route.page
+			 * @static
+			 */
+			routePage._originalLocationHref = "";
+
+			/**
 			 * Returns default route options used inside Router.
 			 * @method option
 			 * @static
@@ -322,7 +338,10 @@
 				// Find base element
 				if (!baseElement) {
 					baseElement = document.querySelector("base");
-					if (!baseElement) {
+					if (baseElement) {
+						this._originalBaseHref = baseElement.href;
+						this._originalLocationHref = path.documentUrl.hrefNoHash;
+					} else {
 						baseElement = document.createElement("base");
 						baseElement.href = path.documentBase.hrefNoHash;
 						head.appendChild(baseElement);
@@ -340,9 +359,18 @@
 			 */
 			routePage._setBase = function (url) {
 				var base = this._getBaseElement(),
-					baseHref = base.href;
+					baseHref = base.href,
+					rel = "";
 
-				if (path.isPath(url)) {
+				if (this._originalBaseHref) { // update url refering to exists base
+					if (this._originalLocationHref !== path.parseUrl(url).hrefNoSearch) {
+						rel = path.parseUrl(url).hrefNoSearch.replace(this._originalLocationHref, "");
+						path.documentBase = path.parseUrl(path.makeUrlAbsolute(rel, path.documentBase.href));
+					} else {
+						url = this._originalBaseHref;
+					}
+				}
+				if (path.isPath(url)) { // set base
 					url = path.makeUrlAbsolute(url, path.documentBase);
 					if (path.parseUrl(baseHref).hrefNoSearch !== path.parseUrl(url).hrefNoSearch) {
 						base.href = url;

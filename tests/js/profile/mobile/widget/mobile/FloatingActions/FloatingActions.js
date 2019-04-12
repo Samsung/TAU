@@ -16,11 +16,10 @@
 			setup: initHTML
 		});
 
-		test("constructor", 7, function (assert) {
+		test("constructor", 6, function (assert) {
 			var widget = new FloatingActions(),
 				element = document.getElementById("floatingactions");
 
-			assert.equal(Object.keys(widget).length, 9, "Object widget has 9 properties.");
 			assert.equal(widget.element, null, "Property element is set to null.");
 			assert.equal(widget._style, null, "Property _style is set to null.");
 			assert.equal(widget._startX, 0, "Property _startX is set to 0.");

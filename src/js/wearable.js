@@ -50,6 +50,7 @@
 			"./core/util/polar",
 			"./core/util/rotaryScrolling",
 			"./core/util/date",
+			"./core/util/load",
 			// widget list
 			// core widgets
 			"./core/widget/customElements",
@@ -65,6 +66,10 @@
 			"./core/widget/core/SectionChanger",
 			"./core/widget/core/VirtualListviewSimple",
 			"./core/widget/core/Page",
+			"./core/widget/core/Interactive3D",
+			"./core/widget/core/CoverFlow",
+			"./core/widget/core/Dimmer",
+			"./core/widget/core/Graph",
 			// wearable widgets
 			"./profile/wearable/widget/wearable/Scrollview",
 			"./profile/wearable/widget/wearable/Popup",

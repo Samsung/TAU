@@ -88,18 +88,21 @@
 			"../../../../core/event",
 			"../../../../core/engine",
 			"../../../../core/util/selectors",
-			"./BaseWidgetMobile"
+			"./BaseWidgetMobile",
+			"../../../../core/widget/BaseKeyboardSupport"
 		],
 
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.mobile.BaseWidgetMobile,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				events = ns.event,
 				selectors = ns.util.selectors,
 				Navigation = function () {
 					var self = this;
 
+					BaseKeyboardSupport.call(this);
 					self._clickBound = null;
 					self._ui = {};
 					self._navigationStack = [];
@@ -287,8 +290,9 @@
 					list.appendChild(arrow);
 				}
 
-				text = document.createElement("span");
+				text = document.createElement("a");
 				text.classList.add("ui-text");
+				text.setAttribute("href", "#" + id);
 				text.innerHTML = id;
 				list.appendChild(text);
 
@@ -320,6 +324,8 @@
 				self._ui = null;
 				self._navigationStack = null;
 			};
+
+			BaseKeyboardSupport.registerActiveSelector(".ui-navigation .ui-text");
 
 			ns.widget.mobile.Navigation = Navigation;
 			engine.defineWidget(

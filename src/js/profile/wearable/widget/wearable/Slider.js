@@ -533,6 +533,23 @@
 				}
 			};
 
+			/**
+			 * Get slider container
+			 * @method _getContainer
+			 * @member ns.widget.wearable.Slider
+			 * @protected
+			 */
+			prototype._getContainer = function () {
+				var self = this,
+					options = self.options;
+
+				if (options.type === "circle") {
+					return CircleProgressBarPrototype._getContainer.call(self);
+				} else {
+					return CoreSliderPrototype._getContainer.call(self);
+				}
+			};
+
 			ns.widget.wearable.Slider = Slider;
 			engine.defineWidget(
 				"Slider",

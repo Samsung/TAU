@@ -50,6 +50,10 @@ input[type="radio"].ui-radio {
 			background-color: @color_checkboxradio_radio_bg_dim;
 		}
 	}
+
+	&.ui-radio-focus {
+		outline: 4 * @unit_base solid @color_focus_border;
+	}
 }
 
 input[type="checkbox"].ui-checkbox:disabled:not(.favorite) {

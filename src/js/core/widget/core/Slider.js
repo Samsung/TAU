@@ -62,7 +62,8 @@
 			"../../history/manager",
 			"../core", // fetch namespace
 			"./Page",
-			"../BaseWidget"
+			"../BaseWidget",
+			"../BaseKeyboardSupport"
 		],
 
 		function () {
@@ -74,11 +75,13 @@
 			 * @static
 			 */
 			var BaseWidget = ns.widget.BaseWidget,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				selectors = ns.util.selectors,
 				utilDOM = ns.util.DOM,
 				events = ns.event,
 				Gesture = ns.event.gesture,
+				utilSelector = ns.util.selectors,
 				COLORS = {
 					BACKGROUND: "rgba(145, 145, 145, 0.7)",
 					ACTIVE: "rgba(61, 185, 204, 1)",
@@ -103,8 +106,11 @@
 						expand: false,
 						warning: false,
 						warningLevel: 0,
-						disabled: false
+						disabled: false,
+						toggle: ""
 					};
+
+					BaseKeyboardSupport.call(self);
 
 					self._ui = {};
 				},
@@ -120,7 +126,8 @@
 					SLIDER_WARNING: "ui-slider-warning",
 					SLIDER_DISABLED: "ui-disabled",
 					SLIDER_HANDLER_VALUE: "ui-slider-handler-value",
-					SLIDER_HANDLER_SMALL: "ui-slider-handler-small"
+					SLIDER_HANDLER_SMALL: "ui-slider-handler-small",
+					SLIDER_FOCUS: "ui-slider-focus"
 				},
 				prototype = new BaseWidget();
 
@@ -136,7 +143,9 @@
 			 * @static
 			 */
 			function bindEvents(self) {
-				var element = self._ui.barElement;
+				var ui = self._ui,
+					element = ui.barElement,
+					toggle = ui.toggle;
 
 				events.enableGesture(
 					element,
@@ -146,7 +155,15 @@
 						threshold: 0
 					})
 				);
-				events.on(element, "dragstart drag dragend dragcancel", self, false);
+				// @todo remove drag handlers
+				//events.on(element, "dragstart drag dragend dragcancel", self, false);
+				events.on(self.element, "input change touchstart touchend", self, false);
+				events.on(self.element, "focus", self, false);
+				events.on(self.element, "blur", self, false);
+				events.on(self.element, "keyup", self, false);
+				if (toggle) {
+					events.on(toggle, "change", self);
+				}
 			}
 
 			/**
@@ -158,10 +175,17 @@
 			 * @static
 			 */
 			function unbindEvents(self) {
-				var element = self._ui.barElement;
+				var ui = self._ui,
+					element = ui.barElement,
+					toggle = ui.toggle;
 
 				events.disableGesture(element);
-				events.off(element, "dragstart drag dragend dragcancel", self, false);
+				// @todo remove drag handlers
+				//events.off(element, "dragstart drag dragend dragcancel", self, false);
+				events.off(self.element, "input change touchstart touchend", self, false);
+				if (toggle) {
+					events.off(toggle, "change", self);
+				}
 			}
 
 			/**
@@ -179,7 +203,6 @@
 					valueElement = document.createElement("div"),
 					handlerElement = document.createElement("div");
 
-				element.style.display = "none";
 				barElement.classList.add(classes.SLIDER);
 
 				valueElement.classList.add(classes.SLIDER_VALUE);
@@ -191,6 +214,15 @@
 				ui.valueElement = valueElement;
 				ui.handlerElement = handlerElement;
 				ui.barElement = barElement;
+
+				element.parentNode.replaceChild(barElement, element);
+				barElement.appendChild(element);
+
+				if (self.isKeyboardSupport) {
+					self.preventFocusOnElement(element);
+					barElement.setAttribute("data-focus-lock", "true");
+					barElement.setAttribute("tabindex", "0");
+				}
 
 				return element;
 			};
@@ -207,7 +239,9 @@
 				var self = this,
 					attrMin = parseFloat(element.getAttribute("min")),
 					attrMax = parseFloat(element.getAttribute("max")),
-					attrValue = parseFloat(element.getAttribute("value"));
+					attrValue = parseFloat(element.getAttribute("value")),
+					ui = self._ui,
+					options = self.options;
 
 				self._min = attrMin ? attrMin : 0;
 				self._max = attrMax ? attrMax : 100;
@@ -216,11 +250,27 @@
 				self._value = attrValue ? attrValue : parseFloat(self.element.value);
 				self._interval = self._max - self._min;
 				self._previousValue = self._value;
-				self._warningLevel = parseInt(self.options.warningLevel, 10);
+				self._warningLevel = parseInt(options.warningLevel, 10);
 				self._setDisabled(element);
+				self._locked = false;
+
+				if (!ui.toggle && options.toggle) {
+					ui.toggle = document.querySelector(options.toggle);
+				}
 
 				self._initLayout();
 				return element;
+			};
+
+			prototype._setInputRangeSize = function () {
+				var self = this,
+					input = self.element,
+					barElement = self._ui.barElement,
+					rectBar = barElement.getBoundingClientRect();
+
+				input.style.width = (rectBar.width + 16) + "px";
+				input.style.top = "-12px"; // @todo change this hardcoded size;
+				input.style.left = "-8px";
 			};
 
 			/**
@@ -255,6 +305,8 @@
 				}
 				self._setValue(self._value);
 				self._setSliderColors(self._value);
+
+				self._setInputRangeSize();
 			};
 
 			/**
@@ -337,10 +389,11 @@
 					ui = self._ui,
 					options = self.options,
 					element = self.element,
+					toggle = ui.toggle,
 					floatValue,
 					expendedClasses;
 
-				self._previousValue = self.element.value;
+				self._previousValue = self._value;
 
 				if (value < self._min) {
 					value = self._min;
@@ -367,13 +420,32 @@
 					ui.handlerElement.innerHTML = "<span class=" + expendedClasses + ">" + floatValue + "</span>";
 				}
 
-				if (element.value - 0 !== floatValue) {
+				if (self._previousValue !== floatValue) {
 					element.setAttribute("value", floatValue);
 					element.value = floatValue;
 					self._value = floatValue;
-					events.trigger(element, "input");
+
+					if (toggle) {
+						if (floatValue === 0 && !toggle.checked) {
+							toggle.checked = true;
+						}
+
+						if (floatValue !== 0 && toggle.checked) {
+							toggle.checked = false;
+						}
+					}
+
+					//events.trigger(element, "input");
 				}
 			};
+
+			prototype._getValue = function () {
+				return this._value;
+			};
+
+			prototype._getContainer = function () {
+				return this._ui.barElement;
+			}
 
 			/**
 			 * Set background as a gradient
@@ -511,10 +583,14 @@
 			 * @protected
 			 */
 			prototype.handleEvent = function (event) {
-				var self = this;
+				var self = this,
+					toggle = self._ui.toggle,
+					eventType = event.type;
 
-				if (!this.options.disabled) {
-					switch (event.type) {
+				if (eventType === "change" && toggle && toggle === event.target) {
+					self._handleToggle(event);
+				} else if (!this.options.disabled) {
+					switch (eventType) {
 						case "dragstart":
 							self._onDragstart(event);
 							break;
@@ -525,7 +601,47 @@
 						case "drag":
 							self._onDrag(event);
 							break;
+						case "input" :
+						case "change" :
+							self._setValue(self.element.value);
+							break;
+						case "touchstart":
+							self._onTouchStart(event);
+							break;
+						case "touchend":
+							self._onTouchEnd(event);
+							break;
+						// case "focus":
+						// 	self._onFocus(event);
+						// 	break;
+						// case "blur":
+						// 	self._onBlur(event);
+						// 	break;
+						case "keyup":
+							self._onKeyUp(event);
+							break;
 					}
+				}
+			};
+
+			prototype._handleToggle = function (event) {
+				var self = this,
+					options = self.options,
+					element = self.element,
+					target = event.target,
+					mute = target.checked,
+					value;
+
+				if (mute && self.value() > 0) {
+					utilDOM.setNSData(target, "slider-value", self.value());
+					self.value(self._minValue);
+					options.disabled = true;
+					self._setDisabled(element);
+				} else if (self.value() === 0) {
+					value = parseFloat(utilDOM.getNSData(target, "slider-value")) || 0
+					options.disabled = false;
+					self._setDisabled(element);
+					self.value(value);
 				}
 			};
 
@@ -599,6 +715,88 @@
 				self._previousValue = self.element.value;
 			};
 
+			prototype._onTouchStart = function () {
+				this._ui.handlerElement.classList.add(classes.SLIDER_HANDLER_ACTIVE);
+			};
+
+			prototype._onTouchEnd = function () {
+				this._ui.handlerElement.classList.remove(classes.SLIDER_HANDLER_ACTIVE);
+			};
+
+			// prototype._onFocus = function () {
+			// 	var container = this._ui.barElement.parentElement;
+
+			// 	container && container.classList.add("ui-listview-item-focus");
+			// };
+
+			// prototype._onBlur = function () {
+			// 	var container = this._ui.barElement.parentElement;
+
+			// 	container && container.classList.remove("ui-listview-item-focus");
+			// };
+
+			prototype._decreaseValue = function () {
+				var self = this;
+
+				self._setValue(self._value - (parseFloat(self.element.step) || 1));
+			};
+
+			prototype._increaseValue = function () {
+				var self = this;
+
+				self._setValue(self._value + (parseFloat(self.element.step) || 1));
+			};
+
+			// prototype._lockKeyboard = function () {
+			// 	var self = this,
+			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
+			// 		listviewWidget = engine.getBinding(listview, "Listview");
+
+			// 	self._locked = true;
+			// 	listviewWidget.saveKeyboardSupport();
+			// 	listviewWidget.disableKeyboardSupport();
+			// 	self.enableKeyboardSupport();
+			// 	self._ui.barElement.classList.add(classes.SLIDER_FOCUS);
+			// };
+
+			// prototype._unlockKeyboard = function () {
+			// 	var self = this,
+			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
+			// 		listviewWidget = engine.getBinding(listview, "Listview");
+
+			// 	self._locked = false;
+			// 	listviewWidget.restoreKeyboardSupport();
+			// 	listviewWidget.enableKeyboardSupport();
+			// 	self.disableKeyboardSupport();
+			// 	self._ui.barElement.classList.remove(classes.SLIDER_FOCUS);
+			// };
+
+			prototype._onKeyUp = function (event) {
+				var self = this,
+					KEY_CODES = BaseKeyboardSupport.KEY_CODES;
+
+				if (self._locked) {
+					switch (event.keyCode) {
+						// case KEY_CODES.escape :
+						// case KEY_CODES.enter :
+						// 	self._unlockKeyboard();
+						// 	break;
+						case KEY_CODES.left :
+							self._decreaseValue();
+							break;
+						case KEY_CODES.right :
+							self._increaseValue();
+							break;
+					}
+				} else {
+					// switch (event.keyCode) {
+					// 	case KEY_CODES.enter :
+					// 		self._lockKeyboard();
+					// 		break;
+					// }
+				}
+			};
+
 			/**
 			 * Refresh to Slider component
 			 * @method refresh
@@ -621,10 +819,13 @@
 					barElement = self._ui.barElement;
 
 				unbindEvents(self);
-				barElement.parentNode.removeChild(barElement);
+				if (barElement.parentNode) {
+					barElement.parentNode.removeChild(barElement);
+				}
 				self._ui = null;
 				self._options = null;
 			};
+
 			ns.widget.core.Slider = Slider;
 			engine.defineWidget(
 				"Slider",
@@ -635,6 +836,9 @@
 				Slider,
 				"core"
 			);
+
+			BaseKeyboardSupport.registerActiveSelector("input[data-role='slider'], input[type='range'], input[data-type='range'], .ui-slider-handler");
+
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.widget.core.Slider;
 		}

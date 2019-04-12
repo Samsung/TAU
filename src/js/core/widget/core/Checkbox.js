@@ -49,17 +49,25 @@
 		[
 			"../core",
 			"../../engine",
-			"../BaseWidget"
+			"../../event",
+			"../BaseWidget",
+			"../BaseKeyboardSupport"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.BaseWidget,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				keyCodes = BaseKeyboardSupport.KEY_CODES,
 				engine = ns.engine,
+				eventUtils = ns.event,
 				Checkbox = function () {
 					this.element = null;
+
+					BaseKeyboardSupport.call(this);
 				},
 				classes = {
-					checkbox: "ui-checkbox"
+					checkbox: "ui-checkbox",
+					focus: "ui-checkbox-focus"
 				},
 				prototype = new BaseWidget();
 
@@ -103,8 +111,119 @@
 				this.element.value = value;
 			};
 
+			/**
+			 * Set focus on widget
+			 * @method _focus
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._focus = function () {
+				var self = this,
+					element = self.element;
+
+				element.focus();
+			};
+
+			/**
+			 * Blurs focus from widget
+			 * @method _blur
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._blur = function () {
+				var self = this,
+					element = self.element;
+
+				element.blur();
+			};
+
+			/**
+			 * Checkbox element focus callback
+			 * @method _onFocus
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onFocus = function () {
+				var self = this,
+					element = self.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.classList.add(classes.focus);
+				}
+			};
+
+			/**
+			 * Checkbox element blur callback
+			 * @method _onBlur
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onBlur = function () {
+				var self = this,
+					element = self.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.classList.remove(classes.focus);
+				}
+			};
+
+			/**
+			 * Checkbox element keyup callback
+			 * @method _onKeyUp
+			 * @param {Event} event
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onKeyUp = function (event) {
+				var self = this,
+					element = self.element;
+
+				if (event.keyCode === keyCodes.enter) {
+					eventUtils.trigger(element, "input");
+					element.checked = !element.checked;
+					eventUtils.trigger(element, "change");
+				}
+			}
+
+			/**
+			 * Bind events to widgets
+			 * @method _bindEvents
+			 * @param {HTMLElement} element
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._bindEvents = function (element) {
+				var self = this;
+
+				self._focusCallbackBound = self._onFocus.bind(self);
+				self._blurCallbackBound = self._onBlur.bind(self);
+				self._keyupCallbackBound = self._onKeyUp.bind(self);
+
+				element.addEventListener("focus", self._focusCallbackBound, false);
+				element.addEventListener("blur", self._blurCallbackBound, false);
+				element.addEventListener("keyup", self._keyupCallbackBound, false);
+			}
+
+			/**
+			 * Unbinds events from widget
+			 * @method _unbindEvents
+			 * @param {HTMLElement} element
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._unbindEvents = function (element) {
+				var self = this;
+
+				element.removeEventListener("focus", self._focusCallbackBound, false);
+				element.removeEventListener("blur", self._blurCallbackBound, false);
+				element.reEventListener("keyup", self._keyupCallbackBound, false);
+			}
+
 			// definition
 			ns.widget.core.Checkbox = Checkbox;
+
+			BaseKeyboardSupport.registerActiveSelector("input[type='checkbox'], input.ui-checkbox");
+
 			engine.defineWidget(
 				"Checkbox",
 				"input[type='checkbox']:not(.ui-slider-switch-input):not([data-role='toggleswitch'])" +

@@ -622,7 +622,7 @@
 				ns.log("Processing widget:", definition.name, "on element:", element.tagName + "#" + (element.id || "--no--id--"));
 				//>>excludeEnd("tauDebug");
 
-				widgetInstance.configure(definition, element, options);
+				element = widgetInstance.configure(definition, element, options);
 
 				// Run .create method from widget options when a [widgetName]create event is triggered
 				if (typeof createFunction === TYPE_FUNCTION) {
@@ -687,7 +687,7 @@
 					existingBinding;
 
 				element = ensureElement(element, Widget);
-				widgetInstance = Widget ? new Widget(element) : false;
+				widgetInstance = Widget ? new Widget(element, options) : false;
 
 				// if any parent has attribute data-enhance=false then stop building widgets
 				parentEnhance = selectors.getParentsBySelectorNS(element, "enhance=false");

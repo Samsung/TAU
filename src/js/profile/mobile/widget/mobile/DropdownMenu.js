@@ -134,12 +134,14 @@
 			"../../../../core/util/DOM/manipulation",
 			"../../../../core/widget/core/Page",
 			"../mobile",
-			"./BaseWidgetMobile"
+			"./BaseWidgetMobile",
+			"../../../../core/widget/BaseKeyboardSupport"
 		],
 
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.mobile.BaseWidgetMobile,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				domUtils = ns.util.DOM,
 				eventUtils = ns.event,
@@ -181,12 +183,14 @@
 					 * @property {boolean} [options.nativeMenu=true] Sets the DropdownMenu widget as native/custom type.
 					 * @property {boolean} [options.inline=false] Sets the DropdownMenu widget as inline/normal type.
 					 * @property {boolean} [options.hidePlaceholderMenuItems=true] Hide/Reveal the placeholder option in dropdown list of the DropdownMenu.
+					 * @property {string}  [options.items=''] List of <option>: 'key1:value1, key2:value2, key3:value3 .....'
 					 * @member ns.widget.mobile.DropdownMenu
 					 */
 					self.options = {
 						nativeMenu: true,
 						inline: false,
-						hidePlaceholderMenuItems: true
+						hidePlaceholderMenuItems: true,
+						items: ""
 					};
 					/**
 					 * @property {Function|null} _toggleMenuBound callback for select action
@@ -226,7 +230,14 @@
 					self._blurBound = null;
 					// event callbacks
 					self._callbacks = {};
+
+					BaseKeyboardSupport.call(self);
 				},
+				widgetSelector = "select:not([data-role='slider']):not([data-role='range'])" +
+					":not([data-role='toggleswitch']):not(.ui-toggleswitch):not(.ui-slider)," +
+					"select.ui-select-menu:not([data-role='slider']):not([data-role='range'])" +
+					":not([data-role='toggleswitch'])," +
+					".ui-dropdownmenu",
 				/**
 				 * Dictionary for DropdownMenu related css class names
 				 * @property {Object} classes
@@ -381,9 +392,60 @@
 				if (isDisabled) {
 					classList.add(classes.disabled);
 					classList.add(classes.widgetDisabled);
+					classList.add(BaseWidget.classes.disable);
 				} else {
 					classList.remove(classes.disabled);
 					classList.remove(classes.widgetDisabled);
+					classList.remove(BaseWidget.classes.disable);
+				}
+			}
+			/**
+			 * Return data array used to fill select tag options elements
+			 * @method dataItemsToArray
+			 * @private
+			 * @static
+			 * @member ns.widget.mobile.DropdownMenu
+			 */
+			function dataItemsToArray(dataItems) {
+				var items = dataItems,
+					it,
+					len = 0,
+					i = 0,
+					result = [];
+
+				items = items.split(",");
+				len = items.length;
+
+				for (i = 0; i < len; i++) {
+					it = items[i].split(":");
+					result.push({
+						textContent: it[0],
+						value: it[1]
+					});
+				}
+
+				return result;
+			}
+
+			/**
+			 * Add opitions element to DropdownMenu (if element has data-item)
+			 * @method addSelectDataItems
+			 * @private
+			 * @static
+			 * @param {HTMLElement} element
+			 * @member ns.widget.mobile.DropdownMenu
+			 */
+			function addSelectDataItems(element, dataIt) {
+				var dataItems = dataItemsToArray(dataIt),
+					len = dataItems.length,
+					val = 0,
+					i = 0;
+
+				element.innerHTML = "";
+				for (i = 0; i < len; i++) {
+					val = typeof dataItems[i].value !== "undefined" ? dataItems[i].value : (i + 1);
+					element.innerHTML += "<option value=\"" + val + "\">" +
+					dataItems[i].textContent + "</option>";
 				}
 			}
 
@@ -509,6 +571,20 @@
 				this.options.inline = value;
 			};
 
+			prototype._configure = function (element) {
+				// check if the element is widget wrapper
+				if (element.webkitMatchesSelector("." + classes.selectWrapper)) {
+					element = element.querySelector(DropdownMenu.widgetSelector);
+					if (element) {
+						return element;
+					}
+				}
+			}
+
+			prototype._getContainer = function () {
+				return this._ui.elSelectWrapper;
+			}
+
 			/**
 			 * Build structure of DropdownMenu widget
 			 * @method _build
@@ -537,6 +613,10 @@
 					elementId = element.id,
 					ui = self._ui,
 					pageClasses = Page.classes;
+
+				if (self.options.items) {
+					addSelectDataItems(element, self.options.items);
+				}
 
 				ui.elSelect = element;
 				ui.page = selectors.getParentsByClass(element, pageClasses.uiPage)[0] || document.body;
@@ -575,8 +655,8 @@
 				selectWrapperElement.setAttribute("tabindex", "0");
 
 				domUtils.insertNodesBefore(element, selectWrapperElement);
-				selectWrapperElement.appendChild(element);
 
+				selectWrapperElement.appendChild(element);
 				this._ui.elSelectWrapper = selectWrapperElement;
 			};
 
@@ -661,7 +741,8 @@
 					optionsAsText = self._constructOption();
 					elOptionContainer.innerHTML = optionsAsText;
 					optionElements = elOptionContainer.querySelectorAll("li[data-value]");
-					optionElements[self._selectedIndex].classList.add(classes.selected);
+					optionElements[self._selectedIndex] &&
+						optionElements[self._selectedIndex].classList.add(classes.selected);
 				}
 
 				ui.elOptions = optionElements;
@@ -805,12 +886,15 @@
 					optionHeight = ui.elOptionContainer.offsetHeight,
 					options = self.options,
 					scrollTop = ui.elOptionWrapper.parentNode.querySelector(".ui-scrollview-clip").scrollTop,
-					height;
+					height,
+					widgetParent = ui.elSelectWrapper.parentNode,
+					widgetParentStyle = window.getComputedStyle(widgetParent),
+					maxContainerWidth;
 
 				self._offset = getOffsetOfElement(ui.elSelectWrapper, ui.page);
 				areaInfo = self._chooseDirection();
 				// the option list width is shorter than the placeholder.
-				width = ui.elPlaceHolder.offsetWidth - (parseFloat(placeholderStyle.paddingLeft) * 2) + "px;";
+				width = ui.elPlaceHolder.offsetWidth - (parseFloat(placeholderStyle.paddingLeft) * 2);
 				height = optionHeight;
 				// This part decides the location and direction of option list.
 				offsetLeft = self._offset.left;
@@ -818,7 +902,9 @@
 
 				if (options.inline === true) {
 					height = ui.elOptionContainer.children[0].offsetHeight * 5;
-					width = "auto;";
+					maxContainerWidth = widgetParent.offsetWidth -
+										(parseFloat(widgetParentStyle.paddingLeft) + parseFloat(widgetParentStyle.paddingRight));
+					width = Math.min(maxContainerWidth, Math.max(width, ui.elOptionContainer.offsetWidth));
 				}
 
 				if (areaInfo.direction === "top") {
@@ -836,7 +922,7 @@
 					}
 					ui.elOptionWrapper.classList.add(classes.bottom);
 				}
-				optionStyle += "top: " + offsetTop + "px; width: " + width + " max-height: " + height + "px;";
+				optionStyle += "top: " + offsetTop + "px; width: " + width + "px; max-height: " + height + "px;";
 				return optionStyle;
 			};
 
@@ -941,13 +1027,23 @@
 			prototype._hide = function () {
 				var self = this,
 					ui = self._ui,
+					options = self.options,
 					wrapper = ui.elOptionWrapper;
 
 				if (ui.screenFilter) {
 					ui.screenFilter.classList.add(classes.filterHidden);
 				}
+
+				if (options.inline) {
+					ui.elSelectWrapper.style.removeProperty("width");
+				}
+
 				self._ui.elSelectWrapper.classList.remove(classes.active);
 				wrapper.classList.add(classes.closing);
+
+				if (self.isKeyboardSupport) {
+					self.enableDisabledFocusableElements(ui.page);
+				}
 			};
 
 			/**
@@ -959,6 +1055,7 @@
 			prototype._show = function () {
 				var self = this,
 					ui = self._ui,
+					options = self.options,
 					wrapper = ui.elOptionWrapper;
 
 				wrapper.setAttribute("style", self._coordinateOption());
@@ -967,8 +1064,19 @@
 				}
 				ui.elSelectWrapper.classList.add(classes.active);
 				wrapper.classList.add(classes.active);
+
+				if (options.inline) {
+					ui.elSelectWrapper.style.width = wrapper.offsetWidth + "px";
+				}
+
 				wrapper.setAttribute("tabindex", "0");
 				wrapper.firstElementChild.focus();
+
+				if (self.isKeyboardSupport) {
+					self.disableFocusableElements(ui.page);
+					self.enableDisabledFocusableElements(wrapper);
+					BaseKeyboardSupport.focusElement(wrapper);
+				}
 			};
 
 			/**
@@ -997,6 +1105,28 @@
 					selectedOption.classList.add(classes.selected);
 				}
 			};
+
+			/**
+			 * Method returns widget value
+			 * @method _getValue
+			 * @protected
+			 * @member ns.widget.mobile.DropdownMenu
+			 * @return {string}
+			 */
+			prototype._getValue = function () {
+				var self = this,
+					optionsElements = self.element.options,
+					selected,
+					value = "";
+
+				if (optionsElements) {
+					selected = optionsElements[self._selectedIndex];
+					if (selected) {
+						value = selected.value;
+					}
+				}
+				return value;
+			}
 
 			/**
 			 * Destroy DropdownMenu widget
@@ -1030,14 +1160,16 @@
 				}
 			};
 
+			DropdownMenu.widgetSelector = widgetSelector;
+
 			ns.widget.mobile.DropdownMenu = DropdownMenu;
+
+			BaseKeyboardSupport.registerActiveSelector(".ui-dropdownmenu:not(.ui-disabled):not(.ui-dropdownmenu-disabled), " +
+				".ui-dropdownmenu-options li:not(.ui-dropdownmenu-disabled):not(.ui-dropdownmenu-optiongroup):not(.ui-disabled)");
 
 			engine.defineWidget(
 				"DropdownMenu",
-				"select:not([data-role='slider']):not([data-role='range'])" +
-				":not([data-role='toggleswitch']):not(.ui-toggleswitch):not(.ui-slider)," +
-				"select.ui-select-menu:not([data-role='slider']):not([data-role='range'])" +
-				":not([data-role='toggleswitch'])",
+				widgetSelector,
 				["open", "close"],
 				DropdownMenu,
 				"mobile",

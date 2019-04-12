@@ -313,6 +313,30 @@ QUnit.config.reorder = false;
 			equal(this.sectionChanger.getActiveSectionIndex(), newActiveId, "Active section index is correct");
 		});
 
+		test("set option data-model", function test() {
+			var element = document.getElementById("sectionchanger-data-bind"),
+				sectionChanger = new ns.widget.SectionChanger(element);
+
+			sectionChanger.option({
+				"model": {
+					news: [{
+						content: "test"
+					}]
+				},
+				"directives": {
+					"news": {
+						"content": function (data) {
+							return this.innerText = data;
+						}
+					}
+				}
+			});
+
+			equal(document.getElementById("data-bind-test-element").textContent, "test",
+				"SectionChanger has been updated from model");
+		});
+
+
 		// unit test, some cases
 		test("_init", 3, function test() {
 			var element = document.getElementById("emptysectionchanger"),

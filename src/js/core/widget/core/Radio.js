@@ -34,18 +34,25 @@
 		[
 			"../core",
 			"../../engine",
-			"../BaseWidget"
+			"../BaseWidget",
+			"../BaseKeyboardSupport",
+			"../../event"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.BaseWidget,
 				engine = ns.engine,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				KEY_CODES = BaseKeyboardSupport.KEY_CODES,
 				Radio = function () {
+					BaseKeyboardSupport.call(self);
 					this.element = null;
 				},
 				classes = {
-					radio: "ui-radio"
+					radio: "ui-radio",
+					focus: "ui-radio-focus"
 				},
+				events = ns.event,
 				prototype = new BaseWidget();
 
 			Radio.prototype = prototype;
@@ -64,6 +71,92 @@
 				}
 
 				return element;
+			};
+
+			/**
+			 * Focus callback
+			 * @protected
+			 * @member ns.widget.Radio
+			 */
+			prototype._onFocus = function () {
+				var element = this.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.focus();
+					element.classList.add(classes.focus)
+				}
+			}
+
+			/**
+			 * Blur callback
+			 * @protected
+			 * @member ns.widget.Radio
+			 */
+			prototype._onBlur = function () {
+				var element = this.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.blur();
+					element.classList.remove(classes.focus)
+				}
+			}
+
+			/**
+			 * KeyUp callback
+			 * @protected
+			 * @param {Event} event
+			 * @member ns.widget.Radio
+			 */
+			prototype._onKeyUp = function (event) {
+				var element = this.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					if (event.keyCode === KEY_CODES.enter) {
+						element.checked = true;
+						events.trigger(element, "change");
+					}
+				}
+			}
+
+			/**
+			 * Handle events
+			 * @protected
+			 * @member ns.widget.Radio
+			 */
+			prototype.handleEvent = function (event) {
+				var self = this;
+
+				switch (event.type) {
+					case "focus":
+						self._onFocus(event);
+						break;
+					case "blur":
+						self._onBlur(event);
+						break;
+					case "keyup":
+						self._onKeyUp(event);
+						break;
+				}
+			}
+
+			/**
+			 * Binds events to a Radio widget
+			 * @method _bindEvents
+			 * @member ns.widget.core.Radio
+			 * @protected
+			 */
+			prototype._bindEvents = function (element) {
+				events.on(element, "focus blur keyup", this, false);
+			}
+
+			/**
+			 * Unbinds events from a Radio widget
+			 * @method _bindEvents
+			 * @member ns.widget.core.Radio
+			 * @protected
+			 */
+			prototype._unbindEvents = function (element) {
+				events.off(element, "focus blur keyup", this, false);
 			};
 
 			/**
@@ -101,6 +194,9 @@
 				false,
 				HTMLInputElement
 			);
+
+			BaseKeyboardSupport.registerActiveSelector("input[type='radio'], input.ui-radio");
+
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.widget.core.Radio;
 		}

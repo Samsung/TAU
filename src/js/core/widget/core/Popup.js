@@ -36,7 +36,8 @@
 			"../../util/selectors",
 			"../../router/Router",
 			"../BaseWidget",
-			"../core"
+			"../core",
+			"../BaseKeyboardSupport"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
@@ -90,11 +91,15 @@
 				 */
 				Router = ns.router && ns.router.Router,
 
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+
 				POPUP_SELECTOR = "[data-role='popup'], .ui-popup",
 
 				Popup = function () {
 					var self = this,
 						ui = {};
+
+					BaseKeyboardSupport.call(self);
 
 					self.selectors = selectors;
 					self.options = objectUtils.merge({}, Popup.defaults);
@@ -743,6 +748,11 @@
 				var self = this;
 
 				self._setActive(true);
+				if (self.isKeyboardSupport) {
+					self.disableFocusableElements(this._ui.page);
+					self.enableDisabledFocusableElements(this.element);
+					ns.widget.core.BaseKeyboardSupport.focusElement(this.element);
+				}
 				self.trigger(events.show);
 			};
 
@@ -792,6 +802,10 @@
 					overlay = self._ui.overlay;
 
 				self._setActive(false);
+
+				if (self.isKeyboardSupport) {
+					self.enableDisabledFocusableElements(this._ui.page);
+				}
 
 				if (overlay) {
 					overlay.style.display = "";

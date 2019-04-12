@@ -92,6 +92,10 @@ tau-gridview {
 			font-size: @font_size_gridview_badge;
 			text-align: center;
 		}
+
+		&.ui-focus {
+			filter: invert(0.2);
+		}
 	}
 	&.ui-gridview-label-in .ui-gridview-label {
 		position: absolute;
@@ -176,5 +180,44 @@ tau-gridview {
 		width: 181 * @unit_base;
 		height: 181 * @unit_base;
 		pointer-events: none;
+	}
+}
+
+@media (min-width: 1920px) {
+	.ui-content:not(.ui-popup-content-gridview) {
+		.ui-gridview.ui-gridview-label-out {
+			min-width: 3840 * @unit_base;
+			.ui-gridview-item {
+				.ui-gridview-image {
+					width: 480 * @unit_base;
+					height: 476 * @unit_base;
+				}
+				.ui-gridview-label {
+					height: 78 * @unit_base;
+					line-height: 78 *@unit_base;
+					padding: 0 20 * @unit_base;
+					font-size: @font_size_gridview_tv;
+					margin: 0;
+					margin-bottom: 46 * @unit_base;
+				}	
+			}
+		}
+		.ui-gridview:not(.ui-gridview-label-out) {
+			min-width: 3840 * @unit_base;
+			.ui-gridview-item {
+				width: 480 * @unit_base;
+				height: 476 * @unit_base;
+				.ui-gridview-image {
+					width: 480 * @unit_base;
+					height: 476 * @unit_base;
+				}
+				.ui-gridview-label {
+					height: 78 * @unit_base;
+					line-height: 78 *@unit_base;
+					padding: 0 20 * @unit_base;
+					font-size: @font_size_gridview_tv;
+				}	
+			}
+		}
 	}
 }

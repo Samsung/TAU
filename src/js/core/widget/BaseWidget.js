@@ -153,6 +153,7 @@
 			"../util",
 			"../util/object",
 			"../util/string",
+			"../util/selectors",
 			"../util/DOM/attributes",
 			"../util/DOM/css",
 			"../util/Set",
@@ -194,6 +195,7 @@
 				 * @static
 				 */
 				objectUtils = util.object,
+				selectorUtils = util.selectors,
 				Set = util.Set,
 				BaseWidget = function () {
 					this.flowState = "created";
@@ -301,6 +303,7 @@
 			 */
 			prototype.configure = function (definition, element, options) {
 				var self = this;
+
 				/**
 				 * Object with options for widget
 				 * @property {Object} [options={}]
@@ -320,7 +323,7 @@
 				self._configureDefinition(definition);
 
 				if (typeof self._configure === TYPE_FUNCTION) {
-					self._configure(element);
+					element = self._configure(element) || element;
 				}
 
 				self.isCustomElement = !!element.createdCallback;
@@ -329,7 +332,15 @@
 
 				objectUtils.fastMerge(self.options, options);
 
+				// move style attribute to another attribute for recovery in init method
+				// this feature is required in widgets with container
+				if (element.style.cssText) {
+					element.dataset.originalStyle = element.style.cssText;
+				}
+
 				self.flowState = "configured";
+
+				return element;
 			};
 
 			/**
@@ -354,8 +365,11 @@
 						if (prefixedValue !== null) {
 							options[option] = prefixedValue;
 						} else {
-							if (typeof options[option] === "boolean") {
-								self._readBooleanOptionFromElement(element, option);
+							if (typeof options[option] === "boolean" &&
+								!self._readBooleanOptionFromElement(element, option)) {
+								if (typeof self._getDefaultOption === TYPE_FUNCTION) {
+									options[option] = self._getDefaultOption(option);
+								}
 							}
 						}
 
@@ -368,6 +382,7 @@
 						}
 					});
 				}
+
 				return options;
 			};
 
@@ -449,11 +464,39 @@
 			 * @ignore
 			 */
 			prototype.init = function (element) {
-				var self = this;
+				var self = this,
+					container,
+					originalStyleText;
 
 				self.id = element.id;
 
 				self.flowState = "initiating";
+
+				// Move style properties that was defined before building to container element
+				if (element.dataset.originalStyle) {
+					container = self.getContainer();
+					if (container != element) {
+						originalStyleText = element.dataset.originalStyle;
+
+						originalStyleText.split(";").forEach(function (keyValue) {
+							var key,
+								value,
+								keyValuePair;
+
+							keyValuePair = keyValue.split(":");
+							if (keyValuePair.length === 2) {
+								key = keyValuePair[0].trim();
+								value = keyValuePair[1].trim();
+
+								container.style[key] = element.style[key];
+
+								if (element.style[key] === value) {
+									element.style[key] = "";
+								}
+							}
+						});
+					}
+				}
 
 				if (typeof self._init === TYPE_FUNCTION) {
 					self._init(element);
@@ -464,6 +507,7 @@
 				} else {
 					self.enable();
 				}
+
 				self.flowState = "initiated";
 				return self;
 			};
@@ -545,6 +589,8 @@
 				var self = this,
 					element = self.element,
 					blurElement,
+					scrollview,
+					scrollviewElement,
 					blurWidget;
 
 				options = options || {};
@@ -564,10 +610,21 @@
 				}
 
 				options = objectUtils.merge({}, options, {element: element});
+				scrollviewElement = selectorUtils.getClosestBySelector(element, "[data-tau-name='Scrollview']");
+				if (scrollviewElement) {
+					scrollview = engine.getBinding(scrollviewElement);
+				}
 
 				// set focus on element
 				eventUtils.trigger(document, "taufocus", options);
-				element.focus();
+				if (typeof self._focus === TYPE_FUNCTION) {
+					if (options.event) {
+						scrollview && scrollview.ensureElementIsVisible(element);
+					}
+					self._focus(element);
+				} else {
+					element.focus();
+				}
 
 				return true;
 			};
@@ -596,7 +653,11 @@
 
 				// blur element
 				eventUtils.trigger(document, "taublur", options);
-				element.blur();
+				if (typeof self._blur === TYPE_FUNCTION) {
+					self._blur(element);
+				} else {
+					element.blur();
+				}
 				return true;
 			};
 
@@ -632,6 +693,10 @@
 				}
 				if (self.element) {
 					self.trigger(self.widgetEventPrefix + "destroy");
+					if (self.element.dataset.originalStyle) {
+						self.element.style.cssText = self.element.dataset.originalStyle;
+						delete self.element.dataset.originalStyle;
+					}
 				}
 				if (element) {
 					engine.removeBinding(element, self.name);
@@ -739,7 +804,8 @@
 			/**
 			 * Reads class based on name conversion option value, for all options which have boolean value
 			 * we can read option value by check that exists classname connected with option name. To
-			 * correct use this method is required define in widget property _classesPrefix.
+			 * correct use this method is required define in widget property _classesPrefix. If this
+			 * condition is not met method returns false, otherwise returns true.
 			 *
 			 * For example for option middle in Button widget we will check existing of class
 			 * ui-btn-middle.
@@ -747,7 +813,7 @@
 			 * @method _readBooleanOptionFromElement
 			 * @param {HTMLElement} element Main element of widget
 			 * @param {string} name Name of option which should be used
-			 * @return {boolean}
+			 * @return {boolean} If option value was successfully read
 			 * @member ns.widget.BaseWidget
 			 * @protected
 			 */
@@ -758,7 +824,11 @@
 				if (classesPrefix) {
 					className = classesPrefix + utilString.camelCaseToDashes(name);
 					this.options[name] = element.classList.contains(className);
+
+					return true;
 				}
+
+				return false;
 			};
 
 			/**
@@ -888,18 +958,27 @@
 
 				if (value === undefined) {
 					methodName = "_get" + (field[0].toUpperCase() + field.slice(1));
+
 					if (typeof self[methodName] === TYPE_FUNCTION) {
 						return self[methodName]();
 					}
+
 					return self.options[field];
 				}
+
 				methodName = "_set" + (field[0].toUpperCase() + field.slice(1));
 				if (typeof self[methodName] === TYPE_FUNCTION) {
 					refresh = self[methodName](self.element, value);
+					if (self.element) {
+						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
+							return "-" + c.toLowerCase();
+						})), value);
+					}
 				} else if (typeof value === "boolean") {
 					refresh = self._setBooleanOption(self.element, field, value);
 				} else {
 					self.options[field] = value;
+
 					if (self.element) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
@@ -907,6 +986,13 @@
 						refresh = true;
 					}
 				}
+
+				if (value === "" && self.element) {
+					self.element.removeAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
+						return "-" + c.toLowerCase();
+					})));
+				}
+
 				return refresh;
 			};
 

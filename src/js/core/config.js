@@ -47,6 +47,7 @@
 			// same as above, but for wearable version
 			ns.setConfig("pageContainer", document.body, true);
 			ns.setConfig("findProfileFile", false, true);
+			ns.setConfig("keyboardSupport", false);
 
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 		}

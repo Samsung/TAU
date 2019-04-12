@@ -129,6 +129,10 @@ a.ui-btn {
 		}
 	}
 
+	&.ui-btn-focus {
+		outline: 4 * @unit_base solid @color_focus_border;
+	}
+
 	&.ui-btn-nobg {
 		.LESSui-btn-nobg();
 	}
@@ -267,8 +271,6 @@ a.ui-btn {
 		min-width: 96 * @unit_base;
 		font-size: @font_size_button_text_light_dark;
 		padding: 8 * @unit_base 24 * @unit_base;
-		-webkit-mask-box-image-source: url('images/nine-patch/core_button_on_bg.png');
-		.mask-box-image-slice(24 42 fill);
 
 		&.ui-btn-active {
 			font-size: @font_size_button_text_light_dark_pressed;

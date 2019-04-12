@@ -168,10 +168,9 @@ tau-progress {
 	background-color: @color_progress_value;
 	.transition(width 100ms);
 	mask-image: url('./images/controls/core_progress_pending_bg.svg');
-	.mask-size(100% 100%);
-	.mask-repeat(no-repeat);
+	.mask-repeat(repeat-x);
 	border-radius: 10 * @unit_base;
-	.animation(activitybar 300ms infinite linear);
+	.animation(activitybar 1000ms infinite linear);
 }
 
 .m-progress-activitybar() {
@@ -179,7 +178,7 @@ tau-progress {
 		.mask-position(0 0);
 	}
 	to {
-		.mask-position(15 * @unit_base 0);
+		.mask-position(50 * @unit_base 0);
 	}
 }
 

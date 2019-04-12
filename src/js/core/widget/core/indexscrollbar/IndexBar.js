@@ -31,17 +31,21 @@
 		[
 			"../indexscrollbar",
 			"../../../util/object",
-			"../../../util/DOM/css"
+			"../../../util/DOM/css",
+			"../../BaseKeyboardSupport"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var utilsObject = ns.util.object,
-				utilsDOM = ns.util.DOM;
+				utilsDOM = ns.util.DOM,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport;
 
 			function IndexBar(element, options) {
 				this.element = element;
 				this.options = utilsObject.merge(options, this._options, false);
 				this.container = this.options.container;
+
+				BaseKeyboardSupport.call(self);
 
 				this.indices = {
 					original: this.options.index,
@@ -198,6 +202,7 @@
 						text,
 						frag,
 						li,
+						a,
 						i,
 						m;
 
@@ -205,8 +210,12 @@
 					for (i = 0; i < indexLen; i++) {
 						m = indices[i];
 						text = m.length === 1 ? origIndices[m.start] : moreChar;
+						a = document.createElement("a");
 						li = document.createElement("li");
-						li.innerText = text.toUpperCase();
+
+						a.innerText = text.toUpperCase();
+						a.setAttribute("href", "#" + text.toUpperCase());
+						li.appendChild(a);
 
 						li.style.height = ((i === indexLen - 1) ? lastElementHeight : indexHeight) + "px";
 						li.style.lineHeight = text === moreChar ? indexHeight + addMoreCharLineHeight + "px" : indexHeight + "px";

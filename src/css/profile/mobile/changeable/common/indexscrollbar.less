@@ -55,6 +55,21 @@
 			.align-items(center);
 			max-height: 40 * @unit_base;
 			min-height: 40 * @unit_base;
+
+			a {
+				text-decoration: none;
+				width: 36 * @unit_base;
+				height: 38 * @unit_base;
+				color: inherit;
+				border: none;
+				outline: none;
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				&:focus {
+					background-color: @color_focus_background;
+				}
+			}
 		}
 		li.ui-state-selected {
 			border-left: 2 * @px_base solid @color_indexscrollbar_divider;

@@ -26,7 +26,7 @@
 		ok(slider.parentNode.classList.contains("ui-slider-with-text-right"));
 		ok(slider.parentNode.querySelector(".ui-slider-text-left"));
 		ok(slider.parentNode.querySelector(".ui-slider-text-right"));
-		ok(slider.parentNode.querySelector(".ui-slider").classList.contains("ui-slider-center"));
+		ok(slider.parentNode.classList.contains("ui-slider-center"));
 	});
 
 }(window.document));

@@ -25,10 +25,17 @@
 
 		"tv": [
 			{
-				"name": "black",
+				"name": "changeable",
 				"images": "images/",
 				"src": "theme.less",
 				"default": "true",
+				"changeable-path": "mobile/changeable/theme-changeable/"
+			},
+			{
+				"name": "black",
+				"images": "images/",
+				"src": "theme.less",
+				"default": "false",
 				"default-path": "tv/default/theme-black/"
 			}
 		]

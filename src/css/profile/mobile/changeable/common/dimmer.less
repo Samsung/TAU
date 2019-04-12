@@ -1,0 +1,56 @@
+// Dimmer style
+.ui-dimmer {
+	position: relative;
+	border: 60px solid rgba(0, 151, 216, 0.5);
+	border-radius: 100%;
+	max-width: 720px;/* @TODO: temp fix for mobile on tv usage */
+
+	&::after {
+		display: block;
+		content: " ";
+		padding-bottom: 100%;
+	}
+
+	.ui-dimmer-hidden {
+		display: none;
+	}
+
+	.ui-dimmer-text {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	&.ui-dimmer-lightbulb {
+		width: 50%;
+		left: 50%;
+		transform: translateX(-50%);
+		padding-bottom: 50%;
+		border-radius: 0;
+		border: none;
+		background-image: url("./images/dimmer/lightbulb.png");
+		background-size: contain;
+		display: block;
+
+		&::after {
+			display: none;
+		}
+
+		.ui-dimmer-lightbulb-light {
+			display: block;
+			position: absolute;
+			width: 60%;
+			height: 60%;
+			left: 50%;
+			top: 5%;
+			opacity: 0.7;
+			transform: translateX(-50%);
+			background-color: yellow;
+			filter: blur(1.3rem);
+			border-radius: 50%;
+			border: none;
+			transition: background-color 0.3s;
+		}
+	}
+}
