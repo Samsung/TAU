@@ -58,8 +58,14 @@
 				padding: 6 * @unit_base 14 * @unit_base 9 * @unit_base;
 				line-height: 43 * @unit_base;
 				margin-top: 5 * @unit_base;
+				text-decoration: none;
 				.user-select(none);
 				opacity: .6;
+
+				&.ui-focus {
+					background-color: @color_focus_header_background;
+					outline: none;
+				}
 			}
 
 			&:last-child {

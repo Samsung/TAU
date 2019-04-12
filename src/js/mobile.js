@@ -84,6 +84,7 @@
 			"./core/widget/core/scroller/Scroller",
 			"./core/widget/core/scroller/scrollbar/ScrollBar",
 			"./core/widget/core/SectionChanger",
+			"./core/widget/core/Dimmer",
 			// widget list
 			"./core/widget/core/Checkbox",
 			"./core/widget/core/Radio",
@@ -92,6 +93,9 @@
 			"./core/widget/core/Slider",
 			"./core/widget/core/progress/Progress",
 			"./core/widget/core/Page",
+			"./core/widget/core/Interactive3D",
+			"./core/widget/core/CoverFlow",
+			"./core/widget/core/Graph",
 			"./profile/mobile/widget/mobile/Popup",
 			"./profile/mobile/widget/mobile/Scrollview",
 			"./profile/mobile/widget/mobile/Expandable",

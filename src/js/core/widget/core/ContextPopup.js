@@ -702,13 +702,9 @@
 			 */
 			prototype._placementCoordsWindow = function (element) {
 				var elementStyle = element.style,
-					elementWidth = element.offsetWidth,
-					elementHeight = element.offsetHeight,
-					elementMarginTop = domUtils.getCSSProperty(element, "margin-top", 0, "float"),
-					elementMarginBottom = domUtils.getCSSProperty(element, "margin-bottom", 0, "float"),
-					elementTop = window.innerHeight - elementHeight - elementMarginTop - elementMarginBottom;
+					elementWidth = element.offsetWidth;
 
-				elementStyle.top = elementTop + "px";
+				elementStyle.bottom = "0px";
 				elementStyle.left = "50%";
 				elementStyle.marginLeft = -(elementWidth / 2) + "px";
 			};

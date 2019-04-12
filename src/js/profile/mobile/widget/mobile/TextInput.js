@@ -118,11 +118,13 @@
 			"../../../../core/widget/core/Popup",
 			"../../../../core/event",
 			"./BaseWidgetMobile",
+			"../../../../core/widget/BaseKeyboardSupport",
 			"../mobile"
 		],
 		function () {
 		//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.mobile.BaseWidgetMobile,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				util = ns.util,
 				domUtils = util.DOM,
@@ -139,6 +141,8 @@
 						textClearButtonElement: null
 					};
 					self._callbacks = {};
+
+					BaseKeyboardSupport.call(self);
 				},
 				buttonClasses = ns.widget.core.Button.classes,
 
@@ -166,7 +170,8 @@
 					HEADER_WITH_SEARCH: "ui-header-searchbar",
 					SEARCHINPUT: "ui-search-input",
 					HEADER: "ui-header",
-					CONTAINER: CLASSES_PREFIX + "-container"
+					CONTAINER: CLASSES_PREFIX + "-container",
+					WIDGET_FOCUSED: CLASSES_PREFIX + "-widget-focused"
 				},
 				/**
 				 * Selector for clear button appended to TextInput
@@ -449,12 +454,14 @@
 			};
 
 			prototype._setOutsideDiv = function (element, newDiv) {
-				var container = document.createElement("div");
+				var container = document.createElement("div"),
+					ui = this._ui;
 
 				if (newDiv) {
 					container.className = classes.CONTAINER;
 					element.parentElement.replaceChild(container, element);
 					container.appendChild(element);
+					ui.container = container;
 				}
 
 				this.options.outsideDiv = newDiv;
@@ -681,7 +688,7 @@
 
 				self._unbindEvents();
 
-				if (textLine.parentElement) {
+				if (textLine && textLine.parentElement) {
 					textLine.parentElement.removeChild(ui.textLineElement);
 				}
 
@@ -689,6 +696,60 @@
 					clearButton.parentElement.removeChild(ui.textClearButtonElement);
 				}
 			};
+
+			/**
+			 * Returns widget container if it has one,
+			 * otherwise returns base element
+			 * @method _getContainer
+			 * @protected
+			 * @member ns.widget.mobile.TextInput
+			 */
+			prototype._getContainer = function () {
+				var self = this,
+					ui = self._ui,
+					container = ui.container,
+					element = self.element;
+
+				return container ? container : element;
+			}
+
+
+			prototype._focus = function (element) {
+				var classList = element.classList;
+
+				classList.add(classes.WIDGET_FOCUSED);
+			}
+
+			prototype._blur = function (element) {
+				var classList = element.classList;
+
+				classList.remove(classes.WIDGET_FOCUSED);
+				element.blur();
+			}
+
+			prototype._actionEnter = function (element) {
+				var self = this;
+
+				self._blur(element);
+				element.focus();
+			}
+
+			prototype._actionEscape = function (element) {
+				var self = this;
+
+				element.blur();
+				self.focus();
+			}
+
+			BaseKeyboardSupport.registerActiveSelector("input[type='text']:not([data-role])" +
+				", input[type='number']:not([data-role])" +
+				", input[type='password']:not([data-role])" +
+				", input[type='email']:not([data-role])" +
+				", input[type='url']:not([data-role])" +
+				", input[type='tel']:not([data-role])" +
+				", input[type='search']:not([data-role]), .ui-search-input" +
+				", textarea" +
+				", input:not([type])." + classes.uiTextInput);
 
 			ns.widget.mobile.TextInput = TextInput;
 			engine.defineWidget(

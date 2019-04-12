@@ -1,0 +1,49 @@
+.ui-toggle-slider-container {
+    position: relative;
+    display: inline-block;
+    width: 100 * @unit_base;
+    height: 52 * @unit_base;
+
+      input {
+        background-color: #CCCCCC;
+        transition: 0.5s;
+        border-radius: 52 * @unit_base;
+        width: 100 * @unit_base;
+        height: 52 * @unit_base;
+        appearance: none;
+        outline: 0;
+        margin: 0;
+        backface-visibility: hidden;
+
+        &:checked {
+            background-color: #3695DD;
+        }
+
+        &:disabled {
+            background-color: @color_toggle_handle_dim_bg;
+        }
+      }
+
+      .ui-toggle-slider {
+          &:before {
+              position: absolute;
+              content: '';
+              height: 44 * @unit_base;
+              width: 44 * @unit_base;
+              left: 2 * @unit_base;
+              bottom: 4 * @unit_base;
+              background-color: #FFFFFF;
+              transition: 0.5s;
+              border-radius: 50%;
+              pointer-events: none;
+          }
+      }
+
+      input:checked {
+          + .ui-toggle-slider {
+              &:before {
+                  transform: translateX(51 * @unit_base);
+              }
+          }
+      }
+}

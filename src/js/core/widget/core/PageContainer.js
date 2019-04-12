@@ -176,13 +176,13 @@
 
 					toPageElement.classList.add(classes.uiBuild);
 
-					toPageWidget = engine.instanceWidget(toPageElement, calculatedOptions.widget);
+					toPageWidget = engine.instanceWidget(toPageElement, calculatedOptions.widget, options);
 
 					// set sizes of page for correct display
 					toPageWidget.layout();
 
-					if (toPageWidget.option("autoBuildWidgets")) {
-						engine.createWidgets(toPageElement);
+					if (toPageWidget.option("autoBuildWidgets") || toPageElement.querySelector('.ui-i3d')) {
+						engine.createWidgets(toPageElement, options);
 					}
 
 					if (fromPageWidget) {

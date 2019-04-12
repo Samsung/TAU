@@ -12,7 +12,7 @@ module("Slider tests (circular)", {
 test("simple Slider test", 3, function () {
 	var progressBar = document.getElementById("slider"),
 		sliderWidget = new tau.widget.Slider(progressBar),
-		sliderContainer = progressBar.previousElementSibling;
+		sliderContainer = progressBar.parentElement;
 
 	ok(sliderContainer.classList.contains("ui-progressbar"), "container of Slider has ui-progressbar classname");
 	equal(sliderWidget.option("size"), "full", "Default size of Slider is full");
@@ -31,8 +31,8 @@ test("Slider with options", 6, function () {
 			margin: 10,
 			endPoint: false,
 			bgcolor: "red"},
-		progressBarWidget = new tau.widget.Slider(progressBar,options),
-		progressContainer = progressBar.previousElementSibling;
+		progressBarWidget = new tau.widget.Slider(progressBar, options),
+		progressContainer = progressBar.parentElement;
 
 	equal(progressBarWidget.option("thickness"), options.thickness, "Progress Thickness is defined " + options.thickness);
 	equal(progressBarWidget.option("size"), options.size, "Progress Size is defined " + options.size);
@@ -57,5 +57,20 @@ test("value method of Slider", 5, function () {
 	equal(slider.value(), 100, "progress value(with over-value) check");
 	slider.value(-20);
 	equal(slider.value(), 0, "progress value(with over-value) check");
+	slider.destroy();
+});
+
+test("Slider getContainer method", 4, function () {
+	var progressBar = document.getElementById("slider"),
+		slider = new tau.widget.Slider(progressBar, {type: "circle"}),
+		sliderContainer;
+
+	sliderContainer = slider.getContainer();
+
+	ok(sliderContainer instanceof HTMLElement, "Slider.getContainer returns HTMLElement");
+	equal(sliderContainer.tagName, "DIV", "Container is div element");
+	ok(sliderContainer !== progressBar, "Container element is different than original input element");
+	ok(sliderContainer.classList.contains("ui-progressbar"), "Slider container has ui-progressbar class");
+
 	slider.destroy();
 });

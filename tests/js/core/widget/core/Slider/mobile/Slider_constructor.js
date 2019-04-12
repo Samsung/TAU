@@ -12,7 +12,7 @@
 
 			helpers.checkWidgetBuild("Slider", element, ns);
 
-			ok(element.nextElementSibling.classList.contains("ui-slider"), "Slider has ui-slider class");
+			ok(element.parentElement.classList.contains("ui-slider"), "Slider has ui-slider class");
 		});
 	}
 

@@ -158,7 +158,7 @@
  *      <div class="ui-grid-col-3" style="height:76px">
  *          <button type="button" class="ui-btn">Button Circle</button>
  *          <a href="#" class="ui-btn ui-color-red" >A Button Circle</a>
- *          <input type="button" class="ui-btn ui-color-orange" value="Input Button Circle" />
+ *          <input type="button" class="ui-btn ui-color-orange" value="Value" />
  *      </div>
  *
  * #### For rows:
@@ -167,7 +167,7 @@
  *      <div class="ui-grid-row">
  *          <button type="button" class="ui-btn">Button Circle</button>
  *          <a href="#" class="ui-btn ui-color-red" >A Button Circle</a>
- *          <input type="button" class="ui-btn ui-color-orange" value="Input Button Circle" />
+ *          <input type="button" class="ui-btn ui-color-orange" value="Value" />
  *      </div>
  *
  * @since 2.0
@@ -186,11 +186,14 @@
 			"../core",
 			"../../util/DOM/css",
 			"./Page",
-			"../BaseWidget"
+			"../BaseWidget",
+			"../BaseKeyboardSupport",
+			"../../util/object"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.BaseWidget,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				/**
 				 * Create instance of widget
@@ -217,8 +220,10 @@
 					BTN_CIRCLE: "ui-btn-circle",
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
+					BTN_TEXT: "ui-btn-text",
 					BTN_TEXT_LIGHT: "ui-btn-text-light",
 					BTN_TEXT_DARK: "ui-btn-text-dark",
+					FOCUS: "ui-btn-focus",
 					/**
 					 * Change background color of button to red
 					 * @style ui-color-red
@@ -253,11 +258,25 @@
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
+				defaultOptions = {
+					// common options
+					inline: true,
+					icon: null,
+					disabled: false,
+					// mobile options
+					style: null,
+					iconpos: "left",
+					size: null,
+					middle: false,
+					value: null
+				},
 				Button = function () {
 					var self = this;
 
+					BaseKeyboardSupport.call(self);
 					self.options = {};
 					self._classesPrefix = classes.BTN + "-";
+
 				},
 				buttonStyle = {
 					CIRCLE: "circle",
@@ -296,17 +315,7 @@
 				 * @member ns.widget.core.Button
 				 * @static
 				 */
-				this.options = {
-					// common options
-					inline: false, //url
-					icon: null,
-					disabled: false,
-					// mobile options
-					style: null,
-					iconpos: "left",
-					size: null,
-					middle: false
-				};
+				this.options = ns.util.object.copy(defaultOptions);
 			};
 
 			/**
@@ -324,14 +333,17 @@
 
 				style = style || options.style;
 
+				buttonClassList.remove(classes.BTN_CIRCLE);
+				buttonClassList.remove(classes.BTN_NOBG);
+				buttonClassList.remove(classes.BTN_TEXT_LIGHT);
+				buttonClassList.remove(classes.BTN_TEXT_DARK);
+
 				switch (style) {
 					case buttonStyle.CIRCLE:
-						buttonClassList.remove(classes.BTN_NOBG);
 						buttonClassList.add(classes.BTN_CIRCLE);
 						change = true;
 						break;
 					case buttonStyle.NOBG:
-						buttonClassList.remove(classes.BTN_CIRCLE);
 						buttonClassList.add(classes.BTN_NOBG);
 						change = true;
 						break;
@@ -348,6 +360,8 @@
 
 				if (change) {
 					options.style = style;
+
+					this._saveOption("style", style);
 				}
 			};
 
@@ -362,12 +376,14 @@
 			prototype._setInline = function (element, inline) {
 				var options = this.options;
 
-				inline = inline || options.inline;
-
-				if (inline) {
-					element.classList.add(classes.INLINE);
-					options.inline = inline;
+				if (inline === undefined) {
+					inline = element.getAttribute("data-inline");
 				}
+
+				element.classList.toggle(classes.INLINE, inline);
+				options.inline = inline;
+
+				this._saveOption("inline", inline);
 			};
 
 			/**
@@ -386,8 +402,13 @@
 					urlIcon,
 					iconCSSRule = self._iconCSSRule;
 
+				element.className = element.className
+					.replace(RegExp("(\\" + classes.ICON_PREFIX + "([a-z-]*))", "g"), "");
+
 				icon = icon || options.icon;
 				options.icon = icon;
+
+				self._saveOption("icon", icon);
 
 				if (icon) {
 					classList.add(classes.BTN_ICON);
@@ -405,6 +426,7 @@
 						self._iconCSSRule = utilDOM.setStylesForPseudoClass("#" + element.id, "after", styles);
 					}
 				} else {
+					classList.remove(classes.BTN_ICON);
 					if (iconCSSRule) {
 						utilDOM.removeCSSRule(iconCSSRule);
 					}
@@ -422,7 +444,10 @@
 			prototype._setIconpos = function (element, iconpos) {
 				var options = this.options,
 					style = options.style,
-					innerTextLength = element.textContent.length || (element.value ? element.value.length : 0);
+					innerTextLength = element.textContent.length;
+
+				element.classList.remove(classes.BTN_ICON_POSITION_PREFIX + options.iconpos);
+				element.classList.remove(classes.BTN_ICON_ONLY);
 
 				iconpos = iconpos || options.iconpos;
 
@@ -433,6 +458,8 @@
 						element.classList.add(classes.BTN_ICON_ONLY);
 					}
 					options.iconpos = iconpos;
+
+					this._saveOption("iconpos", iconpos);
 				}
 			};
 
@@ -451,6 +478,28 @@
 				if (options.iconpos === "notext" && !element.getAttribute("title")) {
 					element.setAttribute("title", buttonText);
 					ns.warn("iconpos='notext' is deprecated.");
+				}
+			};
+
+			prototype._focus = function () {
+				var elementClassList;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					elementClassList = this.element.classList;
+
+					elementClassList.add(classes.FOCUS);
+					this.element.focus();
+				}
+			};
+
+			prototype._blur = function () {
+				var elementClassList;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					elementClassList = this.element.classList;
+
+					elementClassList.remove(classes.FOCUS);
+					this.element.blur();
 				}
 			};
 
@@ -474,6 +523,8 @@
 				} else {
 					options.disabled = false;
 				}
+
+				self._saveOption("disabled", options.disabled);
 			};
 			/**
 			 * Build Button
@@ -497,6 +548,11 @@
 				self._setIcon(element);
 				self._setSize(element);
 				self._setDisabled(element);
+				self._setTextButton(element);
+
+				if (!element.hasAttribute("tabindex")) {
+					element.setAttribute("tabindex", 0);
+				}
 
 				return element;
 			};
@@ -511,12 +567,8 @@
 				var self = this,
 					element = this.element;
 
-				self._setStyle(element);
-				self._setInline(element);
-				self._setIconpos(element);
-				self._setIcon(element);
-				self._setSize(element);
-				self._setDisabled(element);
+				self.options = self._getCreateOptions(element);
+				self._build(element);
 
 				return null;
 			};
@@ -555,6 +607,21 @@
 			};
 
 			/**
+			 * Set text of the button
+			 * @method _setTextButton
+			 * @param {HTMLElement} element
+			 * @protected
+			 * @member ns.widget.core.Button
+			 */
+			prototype._setTextButton = function (element) {
+				if (element.textContent) {
+					element.classList.add(classes.BTN_TEXT);
+				} else {
+					element.classList.remove(classes.BTN_TEXT);
+				}
+			};
+
+			/**
 			 * Set value of button
 			 * @method _setValue
 			 * @param {string} value
@@ -585,7 +652,26 @@
 					}
 					element.classList.remove(classes.DISABLED);
 					options.disabled = false;
+
+					self._saveOption("disabled", false);
 				}
+			};
+
+			prototype._bindEvents = function (element) {
+				var self = this;
+
+				self._focusCallback = self._focus.bind(self);
+				self._blurCallback = self._blur.bind(self);
+
+				element.addEventListener("focus", self._focusCallback);
+				element.addEventListener("blur", self._blurCallback);
+			};
+
+			prototype._unbindEvents = function (element) {
+				var self = this;
+
+				element.removeEventListener("focus", self._focusCallback);
+				element.removeEventListener("blur", self._blurCallback);
 			};
 
 			/**
@@ -607,10 +693,48 @@
 					}
 					element.classList.add(classes.DISABLED);
 					options.disabled = true;
+
+					this._saveOption("disabled", true);
 				}
 			};
 
+			/**
+			 * Store widget option value in element as data attribute
+			 * @method _saveOption
+			 * @param {string} name
+			 * @param {*} value
+			 * @protected
+			 * @member ns.widget.core.Button
+			 */
+			prototype._saveOption = function (name, value) {
+				var self = this,
+					element = self.element,
+					defaultValue = defaultOptions[name];
+
+				if (element) {
+					if (defaultValue !== value) {
+						element.dataset[name] = value;
+					} else {
+						delete element.dataset[name];
+					}
+				}
+			}
+
+			/**
+			 * Returns default option value for given name
+			 * @method _getDefaultOption
+			 * @param {string} optionName
+			 * @return {*} default widget option value
+			 * @protected
+			 * @member ns.widget.core.Button
+			 */
+			prototype._getDefaultOption = function (optionName) {
+				return defaultOptions[optionName];
+			}
+
 			ns.widget.core.Button = Button;
+
+			Button.defaultOptions = defaultOptions;
 
 			engine.defineWidget(
 				"Button",
@@ -641,6 +765,9 @@
 				false,
 				HTMLButtonElement
 			);
+
+			BaseKeyboardSupport.registerActiveSelector("[data-role='button'], button, [type='button'], [type='submit'], [type='reset'], .ui-button, .ui-btn");
+
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.widget.core.Button;
 		}

@@ -88,6 +88,10 @@
 		width: 100%;
 		display: none;
 	}
+
+	&.ui-focus {
+		background-color: @color_dropdownmenu_placeholder_bg_press_effect;
+	}
 }
 
 .ui-dropdownmenu-inline {
@@ -242,6 +246,7 @@
 			&:first-child {
 				border-top: 0;
 			}
+			&.ui-focus,
 			&:not(.ui-dropdownmenu-optiongroup):not(.ui-dropdownmenu-disabled):active {
 				background-color: @color_dropdownmenu_list_item_bg_press;
 			}

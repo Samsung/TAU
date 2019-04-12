@@ -66,6 +66,19 @@ tau-expandable {
 		}
 	}
 
+	&.ui-listview-focus {
+		box-sizing: border-box;
+		border: 4 * @unit_base solid blue;
+	}
+
+	.ui-listview-item-focus {
+		background-color: @color_focus_background;
+
+		a {
+			outline: none;
+		}
+	}
+
 	.ui-listview-background {
 		display: block;
 		box-sizing: border-box;

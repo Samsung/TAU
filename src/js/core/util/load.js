@@ -103,6 +103,51 @@
 			}
 
 			/**
+			 * Load JSON file
+			 * (asynchronous loading)
+			 * @method loadJSON
+			 * @param {string} scriptPath
+			 * @param {?Function} successCB
+			 * @param {?Function} errorCB
+			 * @static
+			 * @member ns.util.load
+			 */
+			function loadJSON(scriptPath, successCB, errorCB) {
+				var xhrObj = new XMLHttpRequest(),
+					responseJSON,
+					onsuccess = function () {
+						if (xhrObj.status === 200) {
+							if (typeof successCB === "function") {
+								try {
+									responseJSON = JSON.parse(xhrObj.responseText);
+									successCB(responseJSON, xhrObj.status);
+								} catch (err) {
+									errorCB(xhrObj, xhrObj.status, new Error(err));
+								}
+							}
+						} else {
+							if (typeof errorCB === "function") {
+								errorCB(xhrObj, xhrObj.status, new Error(xhrObj.statusText));
+							}
+						}
+					},
+					onreadystatechange = function () {
+						if (xhrObj.status === 4) {
+							onsuccess();
+						}
+					};
+
+				// open and send a synchronous request
+				xhrObj.open("GET", scriptPath, true);
+				xhrObj.onreadystatechange = onreadystatechange;
+				xhrObj.onload = onsuccess;
+				xhrObj.onerror = function (err) {
+					errorCB(xhrObj, xhrObj.status, new Error(err));
+				};
+				xhrObj.send();
+			}
+
+			/**
 			 * Callback function on javascript load success
 			 * @method scriptSyncSuccess
 			 * @private
@@ -291,6 +336,7 @@
 			load.addElementToHead = addElementToHead;
 			load.makeLink = makeLink;
 			load.themeCSS = themeCSS;
+			load.JSON = loadJSON;
 
 			ns.util.load = load;
 			//>>excludeStart('tauBuildExclude', pragmas.tauBuildExclude);

@@ -40,7 +40,7 @@
 
 		});
 
-		test("_setSliderColors", 3, function () {
+		test("_setSliderColors", 4, function () {
 			var element = document.getElementById("normal"),
 				widget = new Slider();
 
@@ -48,9 +48,14 @@
 			helpers.stub(widget, "_setValue", function (value) {
 				ok(true, "method: _setValue was run");
 			});
+
+			helpers.stub(widget, "_setInputRangeSize", function (value) {
+				ok(true, "method: _setInputRangeSize was run");
+			});
+
 			widget._init(element);
 			helpers.restoreStub(widget, "_setValue");
-
+			helpers.restoreStub(widget, "_setInputRangeSize");
 			widget._setSliderColors(4);
 			ok(widget._ui.barElement.firstElementChild.style.background.indexOf("rgb") >= 0, "standard color is set");
 
@@ -59,7 +64,7 @@
 			ok(widget._ui.barElement.firstElementChild.style.background.indexOf("gradient"), "linear gradient is set");
 		});
 
-		test("setBackground", 4, function () {
+		test("setBackground", 5, function () {
 			var element = document.getElementById("normal"),
 				widget = new Slider();
 
@@ -67,8 +72,14 @@
 			helpers.stub(widget, "_setValue", function (value) {
 				ok(true, "method: _setValue was run");
 			});
+
+			helpers.stub(widget, "_setInputRangeSize", function (value) {
+				ok(true, "method: _setInputRangeSize was run");
+			});
+
 			widget._init(element);
 			helpers.restoreStub(widget, "_setValue");
+			helpers.restoreStub(widget, "_setInputRangeSize");
 
 			widget.options.warning = 1;
 			widget._setSliderColors(4);
@@ -82,6 +93,47 @@
 			ok(true, "Slider has ui-slider class");
 		});
 
+		test("Slider getContainer method", 4, function () {
+			var input = document.getElementById("normal"),
+				slider = new tau.widget.Slider(input, {type: "normal"}),
+				sliderContainer;
+
+			sliderContainer = slider.getContainer();
+
+			ok(sliderContainer instanceof HTMLElement, "Slider.getContainer returns HTMLElement");
+			equal(sliderContainer.tagName, "DIV", "Container is div element");
+			ok(sliderContainer !== input, "Container element is different than original input element");
+			ok(sliderContainer.classList.contains("ui-slider"), "Slider container has ui-slider class");
+		});
+
+		test("value method of Slider", 5, function () {
+			var input = document.getElementById("normal"),
+				slider = new tau.widget.Slider(input);
+
+			equal(slider.value(), 5, "slider value check");
+			slider.value(7);
+			equal(slider.value(), 7, "slider value check");
+			slider.value(10);
+			equal(slider.value(), 10, "slider value check");
+			slider.value(15);
+			equal(slider.value(), 10, "slider value(with over-value) check");
+			slider.value(-2);
+			equal(slider.value(), 0, "slider value(with over-value) check");
+		});
+
+		test("Check if styles defined on base element will be moved to container", 3, function () {
+			var element = document.getElementById("slider-with-additional-styles"),
+				slider = tau.widget.Slider(element),
+				container = slider.getContainer();
+
+			equal(container.style.width, "150px", "Check if container width style has been set");
+
+			slider.destroy();
+
+			equal(element.style.width, "150px", "Check if style has been saved after calling destroy");
+
+			equal(element.hasAttribute("data-original-style"), false, "Check if original-style attribute has been removed")
+		});
 	}
 
 	if (typeof define === "function") {

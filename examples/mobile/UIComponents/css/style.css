@@ -657,3 +657,17 @@
 	margin-right:0px;
 	width:328px;
 }
+
+@media(max-width: 480px) {
+	.coverflow-image {
+		width: 100px;
+		height: 100px;
+	}
+}
+
+@media(min-width: 480px) {
+	.coverflow-image {
+		width: 800px;
+		height: auto;
+	}
+}

@@ -51,19 +51,19 @@
 
 			strictEqual(gridView.options.cols, undefined, "Option header is set correct");
 			strictEqual(gridView.options.reorder, undefined, "Option content is set correct");
-			strictEqual(gridView.options.label, undefined, "Option footer is set correct");
-			strictEqual(gridView.options.minWidth, undefined, "Option footer is set correct");
-			strictEqual(gridView.options.minCols, undefined, "Option footer is set correct");
-			strictEqual(gridView.options.maxCols, undefined, "Option footer is set correct");
+			strictEqual(gridView.options.label, undefined, "Option label is set correct");
+			strictEqual(gridView.options.minWidth, undefined, "Option minWidth is set correct");
+			strictEqual(gridView.options.minCols, undefined, "Option minCols is set correct");
+			strictEqual(gridView.options.maxCols, undefined, "Option maxCols is set correct");
 			gridView._configure();
 			strictEqual(gridView.options.cols, (window.innerWidth > window.innerHeight) ? 7 : 4,
-				"Option header is set correct");
-			strictEqual(gridView.options.reorder, false, "Option content is set correct");
-			strictEqual(gridView.options.label, "none", "Option footer is set correct");
-			strictEqual(gridView.options.minWidth, null, "Option footer is set correct");
-			strictEqual(gridView.options.minCols, 1, "Option footer is set correct");
+				"Option cols is set correct");
+			strictEqual(gridView.options.reorder, false, "Option reorder is set correct");
+			strictEqual(gridView.options.label, "none", "Option label is set correct");
+			strictEqual(gridView.options.minWidth, "auto", "Option minWidth is set correct");
+			strictEqual(gridView.options.minCols, 1, "Option minCols is set correct");
 			strictEqual(gridView.options.maxCols, (window.innerWidth > window.innerHeight) ? 7 : 5,
-				"Option footer is set correct");
+				"Option maxCols is set correct");
 		});
 
 		test("onSetGridStyle", 4, function () {

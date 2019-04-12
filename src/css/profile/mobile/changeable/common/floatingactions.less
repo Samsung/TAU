@@ -57,6 +57,11 @@
 				mask-image: url("images/controls/core_floating_icon_search.png");
 			}
 		}
+
+		&-focus {
+			outline: none;
+			background-color: @color_focus_header_background;
+		}
 	}
 	.ui-btn ~ .ui-btn {
 		margin-left: -20 * @unit_base;
@@ -69,6 +74,14 @@
 
 	&.ui-floatingactions-expand-to-left {
 		padding-left: 60 * @unit_base;
+	}
+
+	&:focus {
+		outline: none;
+		background-color: rgba(78,97,173,0.8);
+	}
+	&-reposition:focus {
+		background-color: @color_focus_background;
 	}
 }
 
@@ -92,6 +105,13 @@
 		&::before {
 			background-color: @color_floatingactions_icon_press_effect;
 		}
+	}
+	&:focus {
+		outline: none;
+		background-color: rgba(78,97,173,0.8);
+	}
+	&-reposition:focus {
+		background-color: @color_focus_background;
 	}
 }
 

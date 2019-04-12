@@ -36,13 +36,29 @@ if (!Function.prototype.bind) {
 	};
 }
 
-if (!CustomEvent) {
-	function CustomEvent(type, data) {
+if (!window.CustomEvent) {
+	window.CustomEvent = function (type, data) {
 		var evt = document.createEvent("Event");
 
 		evt.initEvent(type, data.bubbles, data.cancelable);
 		evt.detail = data.detail;
 		return evt;
+	}
+}
+
+/**
+ * Mockup for MutationObserver
+ */
+if (!window.MutationObserver) {
+	window.MutationObserver = function (callback) {
+		this.mockup = true;
+		this._callback = callback;
+		this.observe = function (element, attributes) {
+			console.warn("(Mock)MutationObserver.observe", element, attributes); // eslint-disable-line no-console
+		};
+		this.disconnect = function () {
+			console.warn("(Mock)MutationObserver.disconnect"); // eslint-disable-line no-console
+		};
 	}
 }
 

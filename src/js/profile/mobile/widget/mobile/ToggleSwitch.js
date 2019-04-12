@@ -77,8 +77,10 @@
 			"../../../../core/engine",
 			"../../../../core/util/DOM/attributes",
 			"../../../../core/util/DOM/manipulation",
+			"../../../../core/util/string",
 			"../../../../core/event",
 			"../../../../core/widget/core/Button",
+			"../../../../core/widget/BaseKeyboardSupport",
 			"../mobile", // fetch namespace
 			"./BaseWidgetMobile"
 		],
@@ -87,16 +89,30 @@
 			var ToggleSwitch = function () {
 					var self = this;
 
+					/**
+					 * Options for widget
+					 * @property {Object} options
+					 * @property {"circle"|"slider"} [options.style="circle"] ToggleSwitch display style
+					 * @member ns.widget.mobile.ToggleSwitch
+					 */
+					self.options = {
+						style: "circle"
+					},
 					self._ui = {};
 				},
 				BaseWidget = ns.widget.mobile.BaseWidgetMobile,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
+				stringUtils = ns.util.string,
 				events = ns.event,
 
 				classes = {
 					toggleContainer: "ui-toggle-container",
 					toggle: "ui-toggle-switch",
-					toggleHandler: "ui-switch-handler"
+					toggleHandler: "ui-switch-handler",
+					toggleSliderContainer: "ui-toggle-slider-container",
+					toggleSlider: "ui-toggle-slider",
+					toggleContainerFocus: "ui-toggle-switch-focus"
 				},
 				keyCode = {
 					HOME: 36,
@@ -106,7 +122,9 @@
 					UP: 38,
 					RIGHT: 39,
 					DOWN: 40,
-					LEFT: 37
+					LEFT: 37,
+					ENTER: 13,
+					SPACE: 32
 				};
 
 			ToggleSwitch.prototype = new BaseWidget();
@@ -200,6 +218,12 @@
 				}
 
 				inputElement.className = classes.toggle;
+				toggleContainer.className = stringUtils.removeExactTags(
+					element.className,
+					classes.toggleContainer,
+					inputElement.className
+				);
+
 				toggleContainer.className = classes.toggleContainer;
 
 				toggleContainer.appendChild(inputElement);
@@ -219,12 +243,40 @@
 			 * @member ns.widget.mobile.ToggleSwitch
 			 */
 			function buildToggleBasedOnInputTag(element, divHandler, toggleContainer) {
+				toggleContainer.className = stringUtils.removeExactTags(
+					element.className,
+					classes.toggleContainer
+				) + " " + classes.toggleContainer;
 				element.className = classes.toggle;
-				toggleContainer.className = classes.toggleContainer;
 
 				element.parentNode.insertBefore(toggleContainer, element);
 				toggleContainer.appendChild(element);
 				toggleContainer.appendChild(divHandler);
+			}
+
+			/**
+			 * Build Toggle Slider on Input Tag
+			 * @method buildToggleSliderBasedOnInputTag
+			 * @param {HTMLElement} element
+			 * @param {HTMLElement} toggleContainer
+			 * @private
+			 * @static
+			 * @member ns.widget.mobile.ToggleSwitch
+			 */
+			function buildToggleSliderBasedOnInputTag(element, toggleContainer) {
+				var slider;
+
+				toggleContainer.classList.add(classes.toggleSliderContainer);
+
+				slider = createElement("div");
+				slider.classList.add(classes.toggleSlider);
+
+				element.parentNode.insertBefore(toggleContainer, element);
+
+				toggleContainer.appendChild(element);
+				toggleContainer.appendChild(slider);
+
+				return element;
 			}
 
 			/**
@@ -240,7 +292,11 @@
 				var inputElement = setUpInput();
 
 				inputElement.className = classes.toggle;
-				toggleContainer.className = classes.toggleContainer;
+				toggleContainer.className = stringUtils.removeExactTags(
+					divHandler.className,
+					classes.toggleContainer,
+					inputElement.className
+				);
 
 				toggleContainer.appendChild(inputElement);
 				toggleContainer.appendChild(divHandler);
@@ -261,11 +317,15 @@
 			ToggleSwitch.prototype._build = function (element) {
 				var divHandler = createElement("div"),
 					toggleContainer = createElement("div"),
-					controlType = element.nodeName.toLowerCase();
-
+					controlType = element.nodeName.toLowerCase(),
+					options = this.options;
 
 				if (controlType === "input") {
-					buildToggleBasedOnInputTag(element, divHandler, toggleContainer);
+					if (options.style === "slider") {
+						buildToggleSliderBasedOnInputTag(element, toggleContainer);
+					} else {
+						buildToggleBasedOnInputTag(element, divHandler, toggleContainer);
+					}
 				}
 				if (controlType === "select") {
 					buildToggleBasedOnSelectTag(element, divHandler, toggleContainer);
@@ -277,6 +337,7 @@
 				divHandler.className = classes.toggleHandler;
 
 				this._type = controlType;
+				this._ui.toggleContainer = toggleContainer;
 
 				return element;
 			};
@@ -322,6 +383,11 @@
 				if (self._type === "input") {
 					element.value = value;
 				}
+
+				if (["checkbox", "radio"].indexOf(element.type) > -1) {
+					element.checked = !!value;
+				}
+
 				if (self._type === "select") {
 					element.selectedIndex = value;
 				}
@@ -335,11 +401,17 @@
 			 * @instance
 			 */
 			ToggleSwitch.prototype._bindEvents = function () {
-				var self = this;
+				var self = this,
+					input = self._ui.input,
+					onChangeBound = onChangeValue.bind(null, self),
+					onFocusBound = self._focus.bind(self),
+					onBlurBound = self._blur.bind(self),
+					onKeyUpBound = self._keyUp.bind(self);
 
-				self._onChangeValue = onChangeValue.bind(null, self);
-				self._ui.input.addEventListener("change",
-					self._onChangeValue, true);
+				input.addEventListener("change", onChangeBound, true);
+				input.addEventListener("focus", onFocusBound, true);
+				input.addEventListener("blur", onBlurBound, true);
+				input.addEventListener("keyup", onKeyUpBound, true);
 			};
 
 			/**
@@ -376,8 +448,10 @@
 
 				//remove visible representative
 				if (tagName === "input" || tagName === "select") {
-					container.parentElement.insertBefore(element, container);
-					container.parentElement.removeChild(container);
+					if (container.parentElement) {
+						container.parentElement.insertBefore(element, container);
+						container.parentElement.removeChild(container);
+					}
 				}
 
 				if (tagName === "input") {
@@ -390,6 +464,36 @@
 				});
 			};
 
+			ToggleSwitch.prototype._focus = function () {
+				var elementClassList;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					elementClassList = this.element.parentElement.classList;
+					elementClassList.add(classes.toggleContainerFocus);
+					this.element.focus();
+				}
+			};
+
+			ToggleSwitch.prototype._blur = function () {
+				var elementClassList;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					elementClassList = this.element.parentElement.classList;
+					elementClassList.remove(classes.toggleContainerFocus);
+					this.element.blur();
+				}
+			};
+
+			ToggleSwitch.prototype._keyUp = function (event) {
+				if (event.keyCode === keyCode.ENTER) {
+					this._ui.input.checked = !this._ui.input.checked;
+				}
+			};
+
+			ToggleSwitch.prototype._getContainer = function () {
+				return this._ui.toggleContainer;
+			}
+
 			ns.widget.mobile.ToggleSwitch = ToggleSwitch;
 			engine.defineWidget(
 				"ToggleSwitch",
@@ -401,6 +505,9 @@
 				ToggleSwitch,
 				"mobile"
 			);
+
+			BaseKeyboardSupport.registerActiveSelector("input[data-role='toggleswitch'], select[data-role='toggleswitch'], select.ui-toggleswitch, input.ui-toggleswitch, input.ui-toggle-switch");
+
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.widget.mobile.ToggleSwitch;
 		}

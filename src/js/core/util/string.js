@@ -136,11 +136,41 @@
 				return arrayUtil.map(arrayProperty, mapToNumber);
 			}
 
+			/* eslint-disable jsdoc/check-param-names */
+			/**
+			 * Returns a string of tags that exist in the first param but do not exist
+			 * in rest of the params
+			 * @param {string} baseWithTags
+			 * @param {...string} compare
+			 * @return {string}
+			 */
+			function removeExactTags(baseWithTags) {
+				var tags = [];
+
+				[].slice
+					.call(arguments)
+					.slice(1)
+					.forEach(function (arg) {
+						arg.split(" ")
+							.forEach(function (tag) {
+								tags.push(tag.trim());
+							});
+					});
+
+				return baseWithTags
+					.split(" ")
+					.filter(function (tag) {
+						return tags.indexOf(tag) === -1;
+					}).join(" ");
+			}
+			/* eslint-enable jsdoc/check-param-names */
+
 			ns.util.string = {
 				dashesToCamelCase: dashesToCamelCase,
 				camelCaseToDashes: camelCaseToDashes,
 				firstToUpperCase: firstToUpperCase,
-				parseProperty: parseProperty
+				parseProperty: parseProperty,
+				removeExactTags: removeExactTags
 			};
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.util.string;

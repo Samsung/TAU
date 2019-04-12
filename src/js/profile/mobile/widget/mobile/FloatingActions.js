@@ -49,6 +49,7 @@
 			"../../../../core/widget/core/Page",
 			"../../../../core/widget/BaseWidget",
 			"../../../../core/widget/core/Button",
+			"../../../../core/widget/BaseKeyboardSupport",
 			"../mobile"
 		],
 		function () {
@@ -56,6 +57,8 @@
 
 			var BaseWidget = ns.widget.BaseWidget,
 				PageClasses = ns.widget.core.Page.classes,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				KEY_CODES = BaseKeyboardSupport.KEY_CODES,
 				engine = ns.engine,
 				utilsEvents = ns.event,
 				selectorUtils = ns.util.selectors,
@@ -63,17 +66,29 @@
 				MATRIX_REGEXP = /matrix\((.*), (.*), (.*), (.*), (.*), (.*)\)/,
 				SNAP_WIDTH = 19,
 				FloatingActions = function () {
-					this.element = null;
-					this.options = {};
-					this._style = null;
-					this._startX = 0;
-					this._currentX = 0;
-					this._hasSingle = true;
-					this._padding = {};
-					this._position = {};
-					this._scope = {};
+					var self = this;
+
+					BaseKeyboardSupport.call(self);
+					self.element = null;
+					self.options = {};
+					self._style = null;
+					self._startX = 0;
+					self._currentX = 0;
+					self._hasSingle = true;
+					self._padding = {};
+					self._position = {};
+					self._scope = {};
 				},
 				WIDGET_CLASS = "ui-floatingactions",
+				WIDGET_POSITION = [
+					"left-min",
+					"left-2nd-icon",
+					"left-1st-icon",
+					"center",
+					"right-1st-icon",
+					"right-2nd-icon",
+					"right-min"
+				],
 				classes = {
 					WIDGET: WIDGET_CLASS,
 					TRANSITIONS: WIDGET_CLASS + "-transitions",
@@ -113,6 +128,9 @@
 				var self = this;
 
 				self._style = element.style;
+				if (!self.element.hasAttribute("tabindex")) {
+					self.element.setAttribute("tabindex", "0");
+				}
 				self._hasSingle = element.children.length <= 1;
 				self._buildInsideButtons();
 				self._positionCalculation();
@@ -140,7 +158,7 @@
 					})
 				);
 
-				utilsEvents.on(element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup", self);
+				utilsEvents.on(element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup keyup", self);
 			};
 
 			/**
@@ -151,7 +169,7 @@
 			*/
 			prototype._unbindEvents = function () {
 				utilsEvents.disableGesture(this.element);
-				utilsEvents.off(this.element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup", this);
+				utilsEvents.off(this.element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup keyup", this);
 			};
 
 			/**
@@ -473,6 +491,88 @@
 				);
 			};
 
+			prototype._moveOnLeft = function () {
+				var positionIndex = Math.max(
+					WIDGET_POSITION.indexOf(this.options.position) - 1, 0
+					);
+
+				this.option("position", WIDGET_POSITION[positionIndex]);
+			};
+
+			prototype._moveOnRight = function () {
+				var positionIndex = Math.min(
+					WIDGET_POSITION.indexOf(this.options.position) + 1,
+					WIDGET_POSITION.length - 1
+					);
+
+				this.option("position", WIDGET_POSITION[positionIndex]);
+			};
+
+			prototype._onkeyup = function (event) {
+				var options = event,
+					self = this;
+
+				switch (options.keyCode) {
+					case KEY_CODES.left:
+						if (self._reposition) {
+							self._moveOnLeft();
+						}
+						break;
+					case KEY_CODES.right:
+						if (self._reposition) {
+							self._moveOnRight();
+						}
+						break;
+					case KEY_CODES.enter:
+						// @TODO context enter
+						// re-enter in reposition mode back from reposition (position confirm by enter)
+						if (event.target === this.element) {
+							self._toggleRepositionMode(!self._reposition);
+						}
+						break;
+					case KEY_CODES.escape:
+						// this also is done by hwkey
+						self._toggleRepositionMode(false);
+						break;
+					default:
+						return;
+				}
+			}
+
+			prototype._toggleRepositionMode = function (enable) {
+				var self = this;
+
+				if (enable) {
+					self.element.classList.add("ui-floatingactions-reposition");
+					self.disableFocusableElements(self.element);
+				} else {
+					self.element.classList.remove("ui-floatingactions-reposition");
+					self.enableDisabledFocusableElements(self.element);
+				}
+				self._reposition = enable;
+			}
+
+			/**
+			 * @static
+			 */
+			prototype._focus = function (element) {
+				if (!element.hasAttribute("tabindex")) {
+					element.setAttribute("tabindex", 0);
+				}
+				element.classList.add("ui-focus");
+				element.focus();
+			}
+
+			/**
+			 * @static
+			 */
+			prototype._blur = function (element) {
+				if (element.hasAttribute("tabindex")) {
+					element.removeAttribute("tabindex", 0);
+				}
+				element.classList.remove("ui-focus");
+			}
+
 			/**
 			 * Handle events
 			 * @method handleEvent
@@ -493,6 +593,9 @@
 					case "dragend":
 					case "dragcancel":
 						self._end(event);
+						break;
+					case "keyup":
+						self._onkeyup(event);
 						break;
 				}
 			};
