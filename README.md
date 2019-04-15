@@ -54,31 +54,14 @@ Demo application is available on https://samsung.github.io/TAU:
 - https://samsung.github.io/TAU/examples/mobile/UIComponents/ (Mobile)
 - https://samsung.github.io/TAU/examples/wearable/UIComponents/ (Wearable)
 
-If you want to test your own version of demo app it is available under following paths in repository:
+If you want to test your own version of demo app run:
 
-* mobile: `examples\mobile\UIComponents`
-* wearable: `examples\wearable\UIComponents`
+`npm run http-server`
 
-In order to test it:
+and visit appropriate local site:
 
-- Install http-server in TAU directory
-
-`npm install http-server`
-
-- Launch server in TAU directory:
-
-`npx http-server -p <port> -a localhost`
-
-e.g. `npx http-server -p 8888 -a localhost`
-
-- Visit appropriate site:
-
-`http://localhost:PORT/examples/PROFILE/UIComponents/`
-
-e.g.
-
-* http://localhost:8888/examples/wearable/UIComponents/
 * http://localhost:8888/examples/mobile/UIComponents/
+* http://localhost:8888/examples/wearable/UIComponents/
 
 ### Coding style tests
 
