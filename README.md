@@ -37,13 +37,13 @@ nvm use 6.16.0
 
 Build TAU by running the following command in the tau directory:
 
-`npx grunt build`
+`npm run build`
 
 ## Running the tests
 
 TAU has automated tests. To run tests execute command:
 
-`npx grunt test`
+`npm run test`
 
 ## Demo application:
 
@@ -63,7 +63,7 @@ In order to test it:
 
 - Install http-server in TAU directory
 
-`npm install http-server -g`
+`npm install http-server`
 
 - Launch server in TAU directory:
 
