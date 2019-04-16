@@ -975,6 +975,7 @@
 				} else if (optionWrapperClassList.contains(classes.closing) || optionWrapperClassList.contains(classes.opening)) {
 					return;
 				} else {
+					ui.elSelectWrapper.focus();
 					optionWrapperClassList.add(classes.opening);
 					self._callbacks.showAnimationEnd = showAnimationEndHandler.bind(null, self);
 					eventUtils.prefixedFastOn(optionContainer, "animationEnd", self._callbacks.showAnimationEnd, false);
