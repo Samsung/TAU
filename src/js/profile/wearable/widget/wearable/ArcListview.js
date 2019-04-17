@@ -215,7 +215,8 @@
 					DIVIDER: "ui-listview-divider",
 					FORCE_RELATIVE: "ui-force-relative-li-children",
 					LISTVIEW: "ui-listview",
-					SELECTED: "ui-arc-listview-selected"
+					SELECTED: "ui-arc-listview-selected",
+					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden"
 				},
 				events = {
 					CHANGE: "change"
@@ -515,8 +516,6 @@
 					carouselItem,
 					carouselElement,
 					itemElement,
-					carouselItem,
-					carouselElement,
 					carouselSeparator,
 					upperSeparator,
 					lowerSeparator,
@@ -647,6 +646,13 @@
 
 					carouselItemElement.style.transform = "translateY(" + top + "px)";
 					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
+
+					// hide unsed carousel items
+					if (carouselItemElement.firstElementChild === null) {
+						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
+					} else {
+						carouselItemElement.classList.remove(classes.HIDDEN_CAROUSEL_ITEM);
+					}
 				}
 			};
 
@@ -1142,12 +1148,12 @@
 						return item.element;
 					}).indexOf(li);
 
-				if (toIndex && toIndex !== state.currentIndex) {
+				if (toIndex > -1 && toIndex !== state.currentIndex) {
 					self.trigger(events.CHANGE, {
 						"unselected": state.currentIndex
 					});
 
-					if (toIndex >= 0 && toIndex < state.items.length) {
+					if (toIndex < state.items.length) {
 						state.toIndex = toIndex;
 					}
 
