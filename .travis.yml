@@ -1,0 +1,8 @@
+language: node_js
+
+git:
+  submodules: false
+
+os: linux
+dist: xenial
+sudo: enabled
