@@ -110,6 +110,8 @@
 
 				inputElement.focus();
 
+				inputElement.selectionStart = inputElement.value.length;
+
 				utilEvent.on(inputElement, "blur", self._hideInputPaneBound, true);
 				utilEvent.on(window, "resize", self._windowResizeBound, true);
 				utilEvent.on(window, "tizenhwkey", self._onHWKeyBound, true);
