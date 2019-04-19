@@ -203,10 +203,11 @@
 			 * @member ns.engine
 			 * @static
 			 */
-			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement) {
+			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement, buildOptions) {
 				var definition;
 				// Widget name is absolutely required
 
+				buildOptions = buildOptions || {};
 				if (name) {
 					if (!widgetDefinitions[name] || redefine) {
 						//>>excludeStart("tauDebug", pragmas.tauDebug);
@@ -222,7 +223,8 @@
 							widgetClass: widgetClass || null,
 							namespace: namespace || "",
 							widgetNameToLowercase: widgetNameToLowercase === undefined ? true : !!widgetNameToLowercase,
-							BaseElement: BaseElement
+							BaseElement: BaseElement,
+							buildOptions: buildOptions
 						};
 
 						widgetDefinitions[name] = definition;
@@ -1186,6 +1188,10 @@
 					// If didn't found binding build new widget
 					if (!binding && widgetDefinitions[name]) {
 						definition = widgetDefinitions[name];
+						if (definition.buildOptions.requireMatchSelector &&
+							!ns.util.selectors.matchesSelector(element, definition.selector)) {
+							return null;
+						}
 						element = processHollowWidget(element, definition, options);
 						binding = getBinding(element, name);
 					} else if (binding) {
