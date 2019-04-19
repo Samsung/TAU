@@ -1196,6 +1196,14 @@ textarea.ui-text-input ~ .ui-text-input-clear-hidden {
   width: 58px;
   height: 32.5px;
 }
+.ui-textinput-box-with-right-button input.ui-text-input ~ .ui-text-input-clear {
+  right: 5px;
+  left: 5px;
+}
+.ui-textinput-box-with-right-button input.ui-text-input:focus.ui-text-input-clear-active {
+  padding-right: 20px;
+  margin-right: -15px;
+}
 .ui-listview li.ui-textinput-box-with-right-button {
   padding-right: 0;
 }
@@ -2505,6 +2513,7 @@ tau-toggleswitch {
   height: 23px;
   padding-bottom: 1.5px;
   margin-top: 1.5px;
+  line-height: 23px;
 }
 .ui-tabbar.ui-tabbar-with-icon a::after {
   content: "";
@@ -8772,6 +8781,9 @@ tau-textenveloper {
 }
 .ui-text-enveloper .ui-text-enveloper-input-new-line.ui-text-enveloper-input-blur {
   display: none;
+}
+.ui-text-enveloper input.ui-text-input ~ .ui-text-input-clear {
+  top: auto;
 }
 .ui-listview .ui-li-static .ui-text-enveloper,
 .ui-listview .ui-li-flex .ui-text-enveloper {
