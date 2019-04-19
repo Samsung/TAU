@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '4.0.46';
+ns.version = '0.14.1';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2767,10 +2767,11 @@ ns.version = '4.0.46';
 			 * @member ns.engine
 			 * @static
 			 */
-			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement) {
+			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement, buildOptions) {
 				var definition;
 				// Widget name is absolutely required
 
+				buildOptions = buildOptions || {};
 				if (name) {
 					if (!widgetDefinitions[name] || redefine) {
 												methods = methods || [];
@@ -2783,7 +2784,8 @@ ns.version = '4.0.46';
 							widgetClass: widgetClass || null,
 							namespace: namespace || "",
 							widgetNameToLowercase: widgetNameToLowercase === undefined ? true : !!widgetNameToLowercase,
-							BaseElement: BaseElement
+							BaseElement: BaseElement,
+							buildOptions: buildOptions
 						};
 
 						widgetDefinitions[name] = definition;
@@ -3681,6 +3683,10 @@ ns.version = '4.0.46';
 					// If didn't found binding build new widget
 					if (!binding && widgetDefinitions[name]) {
 						definition = widgetDefinitions[name];
+						if (definition.buildOptions.requireMatchSelector &&
+							!ns.util.selectors.matchesSelector(element, definition.selector)) {
+							return null;
+						}
 						element = processHollowWidget(element, definition, options);
 						binding = getBinding(element, name);
 					} else if (binding) {
@@ -30666,7 +30672,7 @@ function pathToRegexp (path, keys, options) {
 				canvasHeight = Math.max(rect.height, canvasHeight) + self._topOffset;
 
 				// limit canvas for better performance
-				canvasHeight = Math.min(canvasHeight, 3 * window.innerHeight);
+				canvasHeight = Math.min(canvasHeight, 4 * window.innerHeight);
 				self._canvasHeight = canvasHeight;
 				self._canvasWidth = canvasWidth;
 
@@ -34464,6 +34470,7 @@ function pathToRegexp (path, keys, options) {
 				} else if (optionWrapperClassList.contains(classes.closing) || optionWrapperClassList.contains(classes.opening)) {
 					return;
 				} else {
+					ui.elSelectWrapper.focus();
 					optionWrapperClassList.add(classes.opening);
 					self._callbacks.showAnimationEnd = showAnimationEndHandler.bind(null, self);
 					eventUtils.prefixedFastOn(optionContainer, "animationEnd", self._callbacks.showAnimationEnd, false);

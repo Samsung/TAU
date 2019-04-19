@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '4.0.46';
+ns.version = '0.14.1';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2393,10 +2393,11 @@ ns.version = '4.0.46';
 			 * @member ns.engine
 			 * @static
 			 */
-			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement) {
+			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement, buildOptions) {
 				var definition;
 				// Widget name is absolutely required
 
+				buildOptions = buildOptions || {};
 				if (name) {
 					if (!widgetDefinitions[name] || redefine) {
 												methods = methods || [];
@@ -2409,7 +2410,8 @@ ns.version = '4.0.46';
 							widgetClass: widgetClass || null,
 							namespace: namespace || "",
 							widgetNameToLowercase: widgetNameToLowercase === undefined ? true : !!widgetNameToLowercase,
-							BaseElement: BaseElement
+							BaseElement: BaseElement,
+							buildOptions: buildOptions
 						};
 
 						widgetDefinitions[name] = definition;
@@ -3307,6 +3309,10 @@ ns.version = '4.0.46';
 					// If didn't found binding build new widget
 					if (!binding && widgetDefinitions[name]) {
 						definition = widgetDefinitions[name];
+						if (definition.buildOptions.requireMatchSelector &&
+							!ns.util.selectors.matchesSelector(element, definition.selector)) {
+							return null;
+						}
 						element = processHollowWidget(element, definition, options);
 						binding = getBinding(element, name);
 					} else if (binding) {
@@ -30613,7 +30619,8 @@ function pathToRegexp (path, keys, options) {
 					DIVIDER: "ui-listview-divider",
 					FORCE_RELATIVE: "ui-force-relative-li-children",
 					LISTVIEW: "ui-listview",
-					SELECTED: "ui-arc-listview-selected"
+					SELECTED: "ui-arc-listview-selected",
+					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden"
 				},
 				events = {
 					CHANGE: "change"
@@ -30913,8 +30920,6 @@ function pathToRegexp (path, keys, options) {
 					carouselItem,
 					carouselElement,
 					itemElement,
-					carouselItem,
-					carouselElement,
 					carouselSeparator,
 					upperSeparator,
 					lowerSeparator,
@@ -31045,6 +31050,13 @@ function pathToRegexp (path, keys, options) {
 
 					carouselItemElement.style.transform = "translateY(" + top + "px)";
 					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
+
+					// hide unsed carousel items
+					if (carouselItemElement.firstElementChild === null) {
+						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
+					} else {
+						carouselItemElement.classList.remove(classes.HIDDEN_CAROUSEL_ITEM);
+					}
 				}
 			};
 
@@ -31540,12 +31552,12 @@ function pathToRegexp (path, keys, options) {
 						return item.element;
 					}).indexOf(li);
 
-				if (toIndex && toIndex !== state.currentIndex) {
+				if (toIndex > -1 && toIndex !== state.currentIndex) {
 					self.trigger(events.CHANGE, {
 						"unselected": state.currentIndex
 					});
 
-					if (toIndex >= 0 && toIndex < state.items.length) {
+					if (toIndex < state.items.length) {
 						state.toIndex = toIndex;
 					}
 
@@ -31947,11 +31959,16 @@ function pathToRegexp (path, keys, options) {
 
 			engine.defineWidget(
 				"Listview",
-				".ui-listview",
+				".ui-listview:not(.ui-arc-listview-carousel-item)",
 				[],
 				Listview,
 				"wearable",
-				true
+				true,
+				false,
+				null,
+				{
+					requireMatchSelector: true
+				}
 			);
 			}(window.document, ns));
 
@@ -44524,6 +44541,8 @@ function pathToRegexp (path, keys, options) {
 				self._isInputPaneVisible = true;
 
 				inputElement.focus();
+
+				inputElement.selectionStart = inputElement.value.length;
 
 				utilEvent.on(inputElement, "blur", self._hideInputPaneBound, true);
 				utilEvent.on(window, "resize", self._windowResizeBound, true);
