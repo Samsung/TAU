@@ -14,6 +14,9 @@
 			});
 		}
 
+		function nop() {
+			// nop method;
+		}
 		function clearHTML() {
 			helpers.removeTAUStyle(document);
 		}
@@ -549,15 +552,30 @@
 				scroll: {
 					current: 5
 				},
-				selectors: [],
+				selectors: []
 			};
 			arclistWidget._carousel = {
 				items: [
-					{carouselElement: {style: {}}, carouselSeparator: {style: {}}},
-					{carouselElement: {style: {}}, carouselSeparator: {style: {}}},
-					{carouselElement: {style: {}}, carouselSeparator: {style: {}}},
-					{carouselElement: {style: {}}, carouselSeparator: {style: {}}},
-					{carouselElement: {style: {}}, carouselSeparator: {style: {}}}
+					{carouselElement: {style: {}, "classList": {
+						"add": nop,
+						"remove": nop
+					}}, carouselSeparator: {style: {}}},
+					{carouselElement: {style: {}, "classList": {
+						"add": nop,
+						"remove": nop
+					}}, carouselSeparator: {style: {}}},
+					{carouselElement: {style: {}, "classList": {
+						"add": nop,
+						"remove": nop
+					}}, carouselSeparator: {style: {}}},
+					{carouselElement: {style: {}, "classList": {
+						"add": nop,
+						"remove": nop
+					}}, carouselSeparator: {style: {}}},
+					{carouselElement: {style: {}, "classList": {
+						"add": nop,
+						"remove": nop
+					}}, carouselSeparator: {style: {}}}
 				]
 			};
 			arclistWidget._carouselUpdate(2);
@@ -567,6 +585,10 @@
 						"carouselElement": {
 							"style": {
 								"transform": "translateY(22px)"
+							},
+							"classList": {
+								"add": nop,
+								"remove": nop
 							}
 						},
 						"carouselSeparator": {
@@ -578,7 +600,10 @@
 					{
 						"carouselElement": {
 							"style": {
-
+							},
+							"classList": {
+								"add": nop,
+								"remove": nop
 							}
 						},
 						"carouselSeparator": {
@@ -590,7 +615,10 @@
 					{
 						"carouselElement": {
 							"style": {
-
+							},
+							"classList": {
+								"add": nop,
+								"remove": nop
 							}
 						},
 						"carouselSeparator": {
@@ -602,7 +630,10 @@
 					{
 						"carouselElement": {
 							"style": {
-
+							},
+							"classList": {
+								"add": nop,
+								"remove": nop
 							}
 						},
 						"carouselSeparator": {
@@ -614,7 +645,10 @@
 					{
 						"carouselElement": {
 							"style": {
-
+							},
+							"classList": {
+								"add": nop,
+								"remove": nop
 							}
 						},
 						"carouselSeparator": {

@@ -431,7 +431,7 @@
 				canvasHeight = Math.max(rect.height, canvasHeight) + self._topOffset;
 
 				// limit canvas for better performance
-				canvasHeight = Math.min(canvasHeight, 3 * window.innerHeight);
+				canvasHeight = Math.min(canvasHeight, 4 * window.innerHeight);
 				self._canvasHeight = canvasHeight;
 				self._canvasWidth = canvasWidth;
 

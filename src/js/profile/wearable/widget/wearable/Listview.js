@@ -106,11 +106,16 @@
 
 			engine.defineWidget(
 				"Listview",
-				".ui-listview",
+				".ui-listview:not(.ui-arc-listview-carousel-item)",
 				[],
 				Listview,
 				"wearable",
-				true
+				true,
+				false,
+				null,
+				{
+					requireMatchSelector: true
+				}
 			);
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return Listview;
