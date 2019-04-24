@@ -101,11 +101,9 @@ TAU version comply with [Semantic Versioning specification - 2.0](https://semver
 
 *MAJOR.MINOR.PATCH*
 
-MAJOR - assures public API compatibility
-
-MINOR - adds new functionalities (e.g. new API) with backward compatibility for old API
-
-PATCH - backward compatible bug fixes
+- *MAJOR* - assures public API compatibility
+- *MINOR* - adds new functionalities (e.g. new API) with backward compatibility for old API
+- *PATCH* - backward compatible bug fixes
 
 ## TAU vs Tizen compatibility
 
