@@ -62,8 +62,11 @@
 	 * @param {HTMLLIElement} li element to select
 	 */
 	function selectItem(li) {
+		var selected = document.createElement("span");
+
+		selected.classList.add("tag-selected");
 		li.classList.add("select");
-		li.appendChild(document.createElement("span"));
+		li.appendChild(selected);
 		selectCount++;
 		modeShow();
 	}
@@ -74,8 +77,8 @@
 	 */
 	function deselectItem(li) {
 		li.classList.remove("select");
-		if (li.firstElementChild) {
-			li.removeChild(li.firstElementChild);
+		if (li.querySelector(".tag-selected")) {
+			li.removeChild(li.querySelector(".tag-selected"));
 		}
 		selectCount--;
 		if (selectCount < 0) {
@@ -102,8 +105,7 @@
 	 * @param {Event} event
 	 */
 	addFunction = function (event) {
-		var target = event.target,
-			li = (target.nodeName.toLowerCase() === "span") ? target.parentElement : target;
+		var li = tau.util.selectors.getClosestByTag(event.target, "li");
 
 		toggleSelectedItem(li);
 	};
@@ -224,7 +226,7 @@
 				addFunction,
 				false);
 		} else {
-			listview.addEventListener(listview, addFunction, false);
+			listview.addEventListener("click", addFunction, false);
 		}
 		selectAll.addEventListener("click", fnSelectAll, false);
 		deselectAll.addEventListener("click", fnDeselectAll, false);
