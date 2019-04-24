@@ -267,6 +267,9 @@
 			prototype._calculateStandardGradient = function (state, diff, from, current) {
 				var returnValue;
 
+				if (isNaN(state)) {
+					return null;
+				}
 				if (state === 1) {
 					returnValue = GRADIENTS.LEFT;
 				} else if (state > 0) {
@@ -517,8 +520,10 @@
 
 				self.state = null;
 				self._stateDOM = null;
+				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
+				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 			};
 
 			/**
