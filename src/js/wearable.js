@@ -32,6 +32,7 @@
 			// config
 			"./profile/wearable/config",
 			"./core/config",
+			"./core/defaults",
 			// information about environment
 			"./core/support/tizen",
 			"./core/info",
