@@ -97,10 +97,21 @@ Refer to [samsung.github.io/TAU](https://samsung.github.io/TAU/) for library usa
 Please read [CONTRIBUTING.md](https://github.com/Samsung/TAU/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
+TAU version comply with [Semantic Versioning specification - 2.0](https://semver.org/spec/v2.0.0.html)
 
+*MAJOR.MINOR.PATCH*
+
+- *MAJOR* - assures public API compatibility
+- *MINOR* - adds new functionalities (e.g. new API) with backward compatibility for old API
+- *PATCH* - backward compatible bug fixes
+
+## TAU vs Tizen compatibility
+
+TAU 1.0 is compatible with Tizen 4.0/5.0 Web API
+TAU 1.1 is compatible with Tizen 5.5 Web API and backward compatible with 4.0/5.0 (apps using Tizen 4.0/5.0 Web API can use TAU 1.1 instead of TAU 1.0)
+
+## Releases
 You can find releases in the releases [tab](https://github.com/Samsung/TAU/releases)
-
-Each release number is composed from two parts: 
 
 **Tizen_version_number.TAU_version_for_given_Tizen_release.**
 
