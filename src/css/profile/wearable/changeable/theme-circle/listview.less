@@ -48,6 +48,11 @@
 		transition-property: max-height;
 		transition-duration: 1ms;
 
+		justify-content: space-around;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
 		&.ui-listview-divider, &.ui-li-group-index {
 			height: 33 * @unit_base;
 			min-height: 33 * @unit_base;
@@ -55,6 +60,7 @@
 			background-color: transparent;
 			color: @color_list_divider_text;
 			display: flex;
+			flex-direction: row;
 			padding: 0;
 			&::before {
 				content: "";
@@ -106,9 +112,6 @@
 			&:first-child:last-child {
 				padding: 0;
 				margin: 0;
-				justify-content: space-around;
-				display: flex;
-				align-items: center;
 			}
 		}
 
