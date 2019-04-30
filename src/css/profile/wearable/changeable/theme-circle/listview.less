@@ -334,6 +334,18 @@
 		}
 	}
 
+	&.ui-snap-listview {
+		li {
+			&:not(.ui-li-has-multiline):not(.li-has-multiline) {
+				a {
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+				}
+			}
+		}
+	}
+
 	&.ui-arc-listview-carousel-item-separator {
 		height: auto;
 	}
