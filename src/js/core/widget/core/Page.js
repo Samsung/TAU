@@ -440,7 +440,8 @@
 					header = ui.header,
 					top = 0,
 					bottom = 0,
-					footer = ui.footer;
+					footer = ui.footer,
+					footerRect;
 
 				elementStyle.width = screenWidth + "px";
 				elementStyle.height = screenHeight + "px";
@@ -456,9 +457,12 @@
 					}
 
 					if (footer) {
-						bottom = utilsDOM.getElementHeight(footer);
-						contentStyle.marginBottom = bottom + "px";
-						contentStyle.paddingBottom = (-bottom) + "px";
+						footerRect = footer.getBoundingClientRect();
+						if (footerRect) {
+							bottom = footerRect.height;
+							contentStyle.marginBottom = bottom + "px";
+							contentStyle.paddingBottom = (-bottom) + "px";
+						}
 					}
 
 					if (!self.options.enablePageScroll) {
