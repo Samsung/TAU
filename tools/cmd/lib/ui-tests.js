@@ -14,6 +14,7 @@ var TIME_TICK = 0,
 	requestFileName = "test-request.txt",
 	responseFileName = "test-response.txt",
 	remoteFolder = "/opt/usr/home/owner/media/Downloads",
+	DEVICE_IMAGE_FOLDER = "/opt/usr/home/owner/media/Downloads",
 	requestFullFileName = path.join(remoteFolder, requestFileName),
 	responseFullFileName = path.join(remoteFolder, responseFileName),
 	localResponseFullFileName,
@@ -296,7 +297,7 @@ function tick(done) {
 function removeAllScreenshots(deviceParam, done) {
 	console.log("removing all screenshots");
 	exec("sdb" + deviceParam + " root on &", function () {
-		exec("sdb" + deviceParam + " shell \"rm -r \\\`find /opt/usr/media -name topvwins-*\\\`\"", function () {
+		exec("sdb" + deviceParam + " shell \"rm -r \\\`find " + DEVICE_IMAGE_FOLDER + " -name topvwins-*\\\`\"", function () {
 			exec("sdb" + deviceParam + " root off &", function () {
 				done();
 			});
@@ -330,7 +331,7 @@ function createCircle(path, size, outputTempFilePath, outputFilePath, callback) 
 }
 
 function saveWindow(deviceParam, app, profile, type, screen, onSuccess, onError) {
-	exec("sdb" + deviceParam + " shell 'cd /opt/usr/media;enlightenment_info -dump_topvwins'",
+	exec("sdb" + deviceParam + " shell 'cd " + DEVICE_IMAGE_FOLDER + ";enlightenment_info -dump topvwins'",
 		function (error, result) {
 			var dir,
 				resultDir;

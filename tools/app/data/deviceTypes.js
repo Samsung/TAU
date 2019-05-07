@@ -56,6 +56,10 @@ module.exports = {
 			"device": "w-0424-1"
 		},
 		{
+			"type": "c-3.0",
+			"device": "TW1"
+		},
+		{
 			"type": "c-3.0-d",
 			"device": "TW1"
 		},
