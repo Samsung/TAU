@@ -115,6 +115,11 @@ body {
 				}
 			}
 		}
+
+		/* patch for backward compatibility. Current selector for "ui-header" display:flex is too strong */
+		&.ui-hidden, &.hidden {
+			display: none;
+		}
 	}
 
 	.ui-more {
@@ -252,6 +257,11 @@ body {
 			&.ui-btn-icon-only {
 				padding: 14 * @unit_base 0 14 * @unit_base 0;
 			}
+		}
+
+		/* patch for backward compatibility. Current selector for "ui-header" display:flex is too strong */
+		&.ui-hidden, &.hidden {
+			display: none;
 		}
 	}
 }
