@@ -11,6 +11,7 @@
 	//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 	define(
 		[
+			"../util/selectors",
 			"../support/tizen",
 			"../util",
 			"../util/polar",
@@ -20,13 +21,15 @@
 			//>>excludeEnd("tauBuildExclude");
 			var eventUtil = ns.event,
 				polarUtil = ns.util.polar,
+				selectorUtil = ns.util.selectors,
 				classes = {
 					circular: "scrolling-circular",
 					direction: "scrolling-direction",
 					scrollbar: "scrolling-scrollbar",
 					path: "scrolling-path",
 					thumb: "scrolling-scrollthumb",
-					fadeIn: "fade-in"
+					fadeIn: "fade-in",
+					container: "scrolling-container"
 				},
 				bounceBack = false,
 				EVENTS = {
@@ -444,8 +447,8 @@
 							"translate(" + lastRenderedPosition + "px, 0)" :
 							"translate(0, " + lastRenderedPosition + "px)";
 					}
-
 					renderScrollbar();
+
 					requestAnimationFrame(render);
 				}
 			}
@@ -471,7 +474,9 @@
 			 */
 			function enable(element, setDirection, setVirtualMode) {
 				var parentRectangle,
-					contentRectangle;
+					contentRectangle,
+					children,
+					existingContainerElement;
 
 				virtualMode = setVirtualMode;
 				bounceBack = false;
@@ -483,14 +488,26 @@
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
 
-					// we are creating a container to position transform
-					childElement = document.createElement("div");
-					// ... and appending all children to it
-					while (element.firstElementChild) {
-						childElement.appendChild(element.firstElementChild);
-					}
-					element.appendChild(childElement);
+					existingContainerElement = element.querySelector("div." + classes.container);
+					if (existingContainerElement) {
+						childElement = existingContainerElement;
+						childElement.style.transform = "";
+					} else {
+						// we are creating a container to position transform
+						childElement = document.createElement("div");
+						// ... and appending all children to it
 
+						children = Array.prototype.slice.call(element.childNodes)
+
+						children.forEach(function (node) {
+							if (!ns.support.shape.circle || selectorUtil.matchesSelector(node, ".ui-header:not(.ui-fixed), :not(.ui-footer)")) {
+								childElement.appendChild(node);
+							}
+						});
+
+						element.insertBefore(childElement, element.firstElementChild);
+						childElement.classList.add(classes.container);
+					}
 					// setting scrolling element
 					scrollingElement = element;
 					// calculate maxScroll
@@ -506,6 +523,7 @@
 
 					// cache style element
 					elementStyle = childElement.style;
+
 					initPosition();
 					// cache current overflow value to restore in disable
 					previousOverflow = window.getComputedStyle(element).getPropertyValue("overflow");
