@@ -231,12 +231,16 @@
 				removeChild = function () {
 					assert.ok("remove child was called");
 				},
+				querySelector = function () {
+					assert.ok("find text content");
+				},
 				item = {
 					element: {
 						style: {},
 						parentNode: {
 							removeChild: removeChild
-						}
+						},
+						querySelector: querySelector
 					},
 					current: {
 						scale: 1
@@ -244,7 +248,7 @@
 					repaint: true
 				};
 
-			expect(4);
+			expect(5);
 			listWidget.element = element;
 			listWidget._state.currentIndex = 2;
 			listWidget._carousel = {
@@ -274,7 +278,8 @@
 						},
 						"parentNode": {
 							"removeChild": removeChild
-						}
+						},
+						"querySelector": querySelector
 					},
 					"repaint": false
 				}, "_state.items are correctly updated");
@@ -295,7 +300,8 @@
 						"style": {
 							"opacity": 1.15,
 							"transform": "translateY(-50%) scale3d(1,1,1)"
-						}
+						},
+						"querySelector": querySelector
 					},
 					"repaint": false
 				}, "_state.items are correctly updated");
