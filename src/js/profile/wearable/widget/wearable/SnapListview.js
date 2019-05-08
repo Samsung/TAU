@@ -430,6 +430,7 @@
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
 					scrolling.setSnapSize(elementHeight);
+
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
 
@@ -607,9 +608,15 @@
 			 * @member ns.widget.wearable.SnapListview
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					scroller;
 
 				self._unbindEvents();
+
+				scroller = getScrollableParent(self.element);
+				if (scroller) {
+					scroller.scrollTop = 0;
+				}
 
 				self._ui = null;
 				self._callbacks = null;
