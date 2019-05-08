@@ -251,6 +251,20 @@ textarea.ui-text-input {
 			}
 		}
 	}
+
+	input.ui-text-input {
+		& ~ .ui-text-input-clear {
+			right: 10 * @unit_base;
+			left: 10 * @unit_base;
+		}
+		&:focus {
+			&.ui-text-input-clear-active {
+				padding-right: 40 * @unit_base;
+				margin-right: -30 * @unit_base;
+			}
+		}
+	} 
+
 }
 
 .ui-listview li.ui-textinput-box-with-right-button {

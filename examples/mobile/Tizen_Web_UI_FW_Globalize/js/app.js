@@ -86,6 +86,9 @@
 		/* Updates the text of current language element */
 		currentLanguage.innerHTML = selectedLocaleInstance.getLocale();
 		output(syntaxHighlight(calendarData));
+
+		// Update colored list
+		tau.widget.Listview(document.querySelector(".ui-page-active .ui-listview")).refresh();
 	}
 
 	/**

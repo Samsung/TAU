@@ -456,7 +456,7 @@
 					}
 
 					if (footer) {
-						bottom = utilsDOM.getElementHeight(footer);
+						bottom = footer.getBoundingClientRect().height;
 						contentStyle.marginBottom = bottom + "px";
 						contentStyle.paddingBottom = (-bottom) + "px";
 					}

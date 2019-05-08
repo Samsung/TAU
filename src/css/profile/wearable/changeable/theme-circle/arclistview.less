@@ -21,6 +21,10 @@
 				top: 54 * @unit_base;
 				transform: translateY(-50%);
 			}
+
+			&-hidden {
+				display: none;
+			}
 		}
 	}
 
@@ -74,6 +78,30 @@
 
 			~ li:not(.ui-li-group-index):not(.ui-listview-divider) {
 				margin-top: 0;
+			}
+		}
+		
+	}
+
+	.ui-arc-listview-carousel-item {
+		li {
+			/* below style is not prefixed "ui-" for backward compatibility */
+			&.li-has-thumb {
+				&-left {
+					padding-left: 100 * @unit_base;
+				}
+
+				&-right {
+					padding-right: 100 * @unit_base;
+				}
+			}
+			&.ui-li-grid {
+				.ui-arc-listview-text-content {
+					margin-left: 0;
+					div {
+						margin-left: 0;
+					}
+				}
 			}
 		}
 	}

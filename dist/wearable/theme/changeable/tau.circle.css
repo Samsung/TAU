@@ -1150,7 +1150,7 @@ a {
 }
 .ui-popup.ui-popup-toast.ui-popup-toast-small .ui-popup-wrapper .ui-popup-content {
   padding: 0 1.1875rem;
-  max-height: 6rem;
+  max-height: 8rem;
   color: rgba(255, 255, 255, 1);
   font-size: 1.5rem;
   line-height: 2rem;
@@ -3319,6 +3319,9 @@ a.ui-hyperlink:hover {
   -webkit-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
+}
+.ui-arc-listview-carousel-item-hidden {
+  display: none;
 }
 .ui-arc-listview-5 .ui-arc-listview-carousel-item {
   height: 4.375rem;
