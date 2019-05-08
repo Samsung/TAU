@@ -412,7 +412,7 @@
 					ui = self._ui,
 					scroller,
 					visibleOffset,
-					elementHeight = listview.firstElementChild.getBoundingClientRect().height,
+					elementHeight,
 					scrollMargin;
 
 				// finding page  and scroller
@@ -423,6 +423,8 @@
 					if (!scrolling.isElement(scroller)) {
 						scrolling.enable(scroller, "y");
 					}
+
+					elementHeight = (listview.firstElementChild) ? listview.firstElementChild.getBoundingClientRect().height : 0;
 
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
