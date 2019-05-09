@@ -98,9 +98,6 @@
 			function deferredFunction(fromPageWidget, toPageWidget, self, options) {
 				if (fromPageWidget) {
 					fromPageWidget.onHide();
-					if (options.reverse) {
-						fromPageWidget.destroy();
-					}
 					self._removeExternalPage(fromPageWidget, options);
 				}
 				toPageWidget.onShow();
@@ -372,6 +369,7 @@
 
 				if (options && options.reverse && DOM.hasNSData(fromPageElement, "external") &&
 					fromPageElement.parentNode) {
+					fromPageWidget.destroy();
 					fromPageElement.parentNode.removeChild(fromPageElement);
 					this.trigger(EventType.PAGE_REMOVE);
 				}

@@ -148,7 +148,7 @@
 			var pageContainer = new PageContainer(),
 				pageElement = document.getElementById("page6");
 
-			expect(22);
+			expect(21);
 
 			helpers.stub(ns.engine, "instanceWidget", function (element, widgetName) {
 				assert.strictEqual(element, pageElement, "page element is correct");
@@ -197,9 +197,6 @@
 				calculatedOptions.deferred.resolve({
 					onHide: function () {
 						assert.ok(1, "called onHide");
-					},
-					destroy: function () {
-						assert.ok(1, "called destroy");
 					}
 				}, {
 					onShow: function () {
@@ -270,12 +267,15 @@
 		});
 
 
-		test("_removeExternalPage", 2, function () {
+		test("_removeExternalPage", 3, function () {
 			var pageContainer = new PageContainer(),
 				pageContainerElement = document.getElementById("qunit-fixture"),
 				pageElement = document.getElementById("page-not-in-container"),
 				newPageWidget = {
-					element: pageElement
+					element: pageElement,
+					destroy: function() {
+						ok(1, "called Page widget destroy");
+					}
 				},
 				options = {
 					reverse: true
@@ -402,6 +402,9 @@
 								count++;
 							}
 						}
+					},
+					destroy: function () {
+						assert.ok(1, "called Page widget destroy");
 					}
 				},
 				toPageWidget = {
