@@ -18,6 +18,7 @@
  * #DatePicker Widget
  *
  * @class ns.widget.wearable.DatePicker
+ * @component-selector .ui-date-picker
  * @since 4.0
  * @extends ns.widget.BaseWidget
  */

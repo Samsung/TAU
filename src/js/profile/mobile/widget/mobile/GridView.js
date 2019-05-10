@@ -50,6 +50,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.GridView
+ * @component-selector .ui-gridview, [data-role]="gridview"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {

@@ -90,6 +90,7 @@
  * @since 2.4
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  * @class ns.widget.mobile.TextEnveloper
+ * @component-selector .ui-text-enveloper, [data-role]="textenveloper"
  * @extends ns.widget.BaseWidget
  */
 

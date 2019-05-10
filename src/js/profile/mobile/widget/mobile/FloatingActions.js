@@ -35,6 +35,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.FloatingActions
+ * @component-selector .ui-floatingactions, [data-role]="floatingactions"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {

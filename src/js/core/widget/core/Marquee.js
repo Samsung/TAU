@@ -40,6 +40,7 @@
  *
  * @author Heeju Joo <heeju.joo@samsung.com>
  * @class ns.widget.core.Marquee
+ * @component-selector .ui-marquee
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {

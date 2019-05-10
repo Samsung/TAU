@@ -39,6 +39,7 @@
  *
  * @class ns.widget.wearable.TimePicker
  * @since 4.0
+ * @component-selector .ui-time-picker
  * @extends ns.widget.wearable.NumberPicker
  * @author Maciej Moczulski <m.moczulski@samsung.com>
  */

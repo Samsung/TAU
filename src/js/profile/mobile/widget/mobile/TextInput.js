@@ -93,6 +93,7 @@
  *
  * @since 2.0
  * @class ns.widget.mobile.TextInput
+ * @component-selector .ui-text-input
  * @extends ns.widget.BaseWidget
  * @author Maciej Urbanski <m.urbanski@samsung.com>
  * @author Jadwiga Sosnowska <j.sosnowska@samsung.com>

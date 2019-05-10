@@ -67,6 +67,7 @@
  *
  * @since 2.0
  * @class ns.widget.mobile.ToggleSwitch
+ * @component-selector .ui-toggleswitch, [data-role]="toggleswitch"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {

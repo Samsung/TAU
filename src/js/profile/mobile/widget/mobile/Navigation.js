@@ -69,6 +69,7 @@
  *
  * @since 2.3
  * @class ns.widget.mobile.Navigation
+ * @component-selector .ui-navigation, [data-role]="navigation"
  * @extends ns.widget.BaseWidget
  * @author Junhyeon Lee <juneh.lee@samsung.com>
  * @author Maciej Moczulski <m.moczulsku@samsung.com>

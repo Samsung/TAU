@@ -75,6 +75,7 @@
  *
  * @since 2.4
  * @class ns.widget.core.Tabs
+ * @component-selector .ui-tabs, [data-role]="tabs"
  * @extends ns.widget.core.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */

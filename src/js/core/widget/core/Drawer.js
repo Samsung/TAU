@@ -39,6 +39,7 @@
  * documentation of profiles
  *
  * @class ns.widget.core.Drawer
+ * @component-selector .ui-drawer, [data-role]="drawer"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */

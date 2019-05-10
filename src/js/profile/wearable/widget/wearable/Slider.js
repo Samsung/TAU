@@ -20,6 +20,7 @@
  * ## JavaScript API
  *
  * @class ns.widget.wearable.Slider
+ * @component-selector .ui-slider
  * @extends ns.widget.core.Slider
  */
 (function (document, ns) {

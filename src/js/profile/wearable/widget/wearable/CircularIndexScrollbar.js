@@ -125,6 +125,7 @@
  * @author Junyoung Park <jy-.park@samsung.com>
  * @author Hagun Kim <hagun.kim@samsung.com>
  * @class ns.widget.wearable.CircularIndexScrollbar
+ * @component-selector .ui-circularindexscrollbar
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {

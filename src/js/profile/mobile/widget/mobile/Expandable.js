@@ -87,6 +87,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.Expandable
+ * @component-selector .ui-expandable [data-role]="expandable"
  * @author Piotr Karny <p.karny@samsung.com>
  * @author Marcin Jakuszko <m.jakuszko@samsung.com>
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>

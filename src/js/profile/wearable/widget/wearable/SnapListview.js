@@ -45,6 +45,7 @@
  *
  * @author Heeju Joo <heeju.joo@samsung.com>
  * @class ns.widget.wearable.SnapListview
+ * @component-selector .ui-snap-listview
  * @extends ns.widget.BaseWidget
  */
 (function (window, document, ns) {

@@ -28,6 +28,7 @@
  * You can set or get the active index as the setActiveIndex() and getActiveIndex()
  *
  * @class ns.widget.core.viewswitcher.ViewSwitcher
+ * @component-selector .ui-view-switcher, [data-role] ='viewSwitcher'
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */

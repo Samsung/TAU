@@ -22,6 +22,7 @@
  * @since 2.0
  * @author Hyunkook Cho <hk0713.cho@samsung.com>
  * @class ns.widget.mobile.Popup
+ * @component-selector .ui-popup, [data-role]="popup"
  * @extends ns.widget.core.BaseWidget
  */
 (function () {

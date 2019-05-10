@@ -120,6 +120,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.DropdownMenu
+ * @component-selector .ui-dropdownmenu
  * @extends ns.widget.mobile.BaseWidgetMobile
  * @author Hagun Kim <hagun.kim@samsung.com>
  */

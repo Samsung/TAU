@@ -96,6 +96,7 @@
  * creation.
  *
  * @class ns.widget.mobile.Listview
+ * @component-selector .ui-listview, [data-role]="listview"
  * @extends ns.widget.core.Listview
  * @author Krzysztof Antoszek <k.antoszek@samsung.com>
  * @since 2.0

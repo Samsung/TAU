@@ -19,6 +19,7 @@
  *
  * @class ns.widget.wearable.NumberPicker
  * @since 3.0
+ * @component-selector .ui-number-picker input[type='number']
  * @extends ns.widget.core.BaseWidget
  * @author Tomasz Lukawski <t.lukawski@samsung.com>
  */

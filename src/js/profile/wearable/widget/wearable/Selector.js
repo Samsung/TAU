@@ -97,6 +97,7 @@
  * your indicator manually, change this options to false.
  *
  * @class ns.widget.wearable.Selector
+ * @component-selector .ui-selector
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
 (function (document, ns) {
