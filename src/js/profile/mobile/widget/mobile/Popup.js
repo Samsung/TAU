@@ -460,6 +460,7 @@
 
  * @since 2.0
  * @class ns.widget.mobile.Popup
+ * @component-selector .ui-popup, [data-role]="popup"
  * @extends ns.widget.core.Popup
  * @author Jadwiga Sosnowska <j.sosnowska@samsung.com>
  * @author Maciej Urbanski <m.urbanski@samsung.com>

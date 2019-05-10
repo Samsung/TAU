@@ -21,7 +21,8 @@
  *
  * @since 2.0
  * @author Hyunkook Cho <hk0713.cho@samsung.com>
- * @class ns.widget.mobile.Popup
+ * @class ns.widget.core.Popup
+ * @component-selector .ui-popup, [data-role]="popup"
  * @extends ns.widget.core.BaseWidget
  */
 (function () {
@@ -160,26 +161,74 @@
 				 * @static
 				 */
 				/**
-				 * Toast style of popup
-				 * @style ui-popup-toast
-				 * @member ns.widget.core.Popup
-				 * @wearable
-				 */
-				/**
 				 * Toast style of popup with graphic
 				 * @style ui-popup-toast-graphic
 				 * @member ns.widget.core.Popup
 				 * @wearable
 				 */
 				classes = {
+				/**
+				 * Style for normal popup widget
+				 * @style ui-popup
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					popup: CLASSES_PREFIX,
+				/**
+				 * Set style for active popup widget
+				 * @style ui-popup-active
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					active: CLASSES_PREFIX + "-active",
+				/**
+				 * Set style for overlay popup widget
+				 * @style ui-popup-overlay
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					overlay: CLASSES_PREFIX + "-overlay",
+				/**
+				 * Set header for popup widget
+				 * @style ui-popup-header
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					header: CLASSES_PREFIX + "-header",
+				/**
+				 * Set footer for popup widget
+				 * @style ui-popup-footer
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					footer: CLASSES_PREFIX + "-footer",
+				/**
+				 * Set content for popup widget
+				 * @style ui-popup-content
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					content: CLASSES_PREFIX + "-content",
+				/**
+				 * Style for wrapper of popup widget
+				 * @style ui-popup-wrapper
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					wrapper: CLASSES_PREFIX + "-wrapper",
+				/**
+				 * Toast style of popup
+				 * @style ui-popup-toast
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					toast: CLASSES_PREFIX + "-toast",
+				/**
+				 * Small toast style of popup
+				 * @style ui-popup-toast-small
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					toastSmall: CLASSES_PREFIX + "-toast-small",
 					build: "ui-build"
 				},

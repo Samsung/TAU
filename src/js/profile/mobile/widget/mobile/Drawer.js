@@ -20,6 +20,7 @@
  *
  * @since 2.3
  * @class ns.widget.mobile.Drawer
+ * @component-selector .ui-drawer, [data-role]="drawer"
  * @extends ns.widget.core.Drawer
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */

@@ -39,6 +39,7 @@
  *
  * @class ns.widget.wearable.TimePicker
  * @since 4.0
+ * @component-selector .ui-time-picker
  * @extends ns.widget.wearable.NumberPicker
  * @author Maciej Moczulski <m.moczulski@samsung.com>
  */
@@ -67,23 +68,108 @@
 				NumberPicker = ns.widget.wearable.NumberPicker,
 				prototype = Object.create(NumberPicker.prototype),
 
+				/**
+				* Standard time picker widget
+				* @style ui-time-picker
+				* @member ns.widget.wearable.TimePicker
+				*/
 				WIDGET_CLASS = "ui-time-picker",
 				classes = {
+					/**
+					* Container for time picker widget
+					* @style ui-time-picker-container
+					* @member ns.widget.wearable.TimePicker
+					*/
 					CONTAINER: WIDGET_CLASS + "-container",
+					/**
+					* Container with hours for time picker widget
+					* @style ui-time-picker-container-hours
+					* @member ns.widget.wearable.TimePicker
+					*/
 					HOURS_CONTAINER: WIDGET_CLASS + "-container-hours",
+					/**
+					* Container with minutes for time picker widget
+					* @style ui-time-picker-container-minutes
+					* @member ns.widget.wearable.TimePicker
+					*/
 					MINUTES_CONTAINER: WIDGET_CLASS + "-container-minutes",
+					/**
+					* AM/PM container for time picker widget
+					* @style ui-time-picker-container-ampm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM_CONTAINER: WIDGET_CLASS + "-container-ampm",
+					/**
+					* AM/PM container pressed class for time picker widget
+					* @style ui-time-picker-container-ampm-pressed
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM_PRESSED: WIDGET_CLASS + "-container-ampm-pressed",
+					/**
+					* Colon container class for time picker widget
+					* @style ui-time-picker-colon-container
+					* @member ns.widget.wearable.TimePicker
+					*/
 					COLON: WIDGET_CLASS + "-colon-container",
+					/**
+					* Set am, pm for time picker widget
+					* @style ui-time-picker-am-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM: WIDGET_CLASS + "-am-pm",
+					/**
+					* Set inner AM/PM container class for time picker widget
+					* @style ui-time-picker-am-pm-inner-container
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM_INNER_CONTAINER: WIDGET_CLASS + "-am-pm-inner-container",
+					/**
+					* Set time picker widget with no AM/PM
+					* @style ui-time-picker-no-am-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					NO_AMPM: WIDGET_CLASS + "-no-am-pm",
+					/**
+					* Set active label for time picker widget
+					* @style ui-time-picker-active-label
+					* @member ns.widget.wearable.TimePicker
+					*/
 					ACTIVE_LABEL: WIDGET_CLASS + "-active-label",
+					/**
+					* Set animation for active label in time picker widget
+					* @style ui-time-picker-active-label-animation
+					* @member ns.widget.wearable.TimePicker
+					*/
 					ACTIVE_LABEL_ANIMATION: WIDGET_CLASS + "-active-label-animation",
+					/**
+					* Set animation for showing PM in time picker widget
+					* @style ui-time-picker-show-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					SHOW_PM_ANIMATION: WIDGET_CLASS + "-show-pm",
+					/**
+					* Set animation for hiding PM in time picker widget
+					* @style ui-time-picker-hide-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					HIDE_PM_ANIMATION: WIDGET_CLASS + "-hide-pm",
+					/**
+					* Disable animation in time picker widget
+					* @style ui-time-picker-show-disable-animation
+					* @member ns.widget.wearable.TimePicker
+					*/
 					DISABLE_ANIMATION: WIDGET_CLASS + "-disable-animation",
+					/**
+					* Set circle indicator background in time picker widget
+					* @style ui-time-picker-background
+					* @member ns.widget.wearable.TimePicker
+					*/
 					CIRCLE_INDICATOR_BACKGROUND: WIDGET_CLASS + "-background",
+					/**
+					* Set time picker widget as hidden
+					* @style ui-time-picker-hidden
+					* @member ns.widget.wearable.TimePicker
+					*/
 					HIDDEN: WIDGET_CLASS + "-hidden",
 					HIDDEN_LABEL: "ui-number-picker-label-hidden"
 				},

@@ -119,6 +119,7 @@
  *
  * @class ns.widget.wearable.VirtualListview
  * @since 2.2
+ * @component-selector .ui-virtuallistview
  * @extends ns.widget.BaseWidget
  * @author Maciej Urbanski <m.urbanski@samsung.com>
  * @author Piotr Karny <p.karny@samsung.com>

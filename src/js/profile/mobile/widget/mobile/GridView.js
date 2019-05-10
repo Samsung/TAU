@@ -50,6 +50,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.GridView
+ * @component-selector .ui-gridview, [data-role]="gridview"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -93,14 +94,59 @@
 					NONE: "none"
 				},
 				classes = {
+					/**
+					 * Standard gridview widget
+					 * @style ui-gridview
+					 * @member ns.widget.mobile.GridView
+					 */
 					GRIDLIST: "ui-gridview",
+					/**
+					 * Set element as item of gridview items list
+					 * @style ui-gridview-item
+					 * @member ns.widget.mobile.GridView
+					 */
 					ITEM: "ui-gridview-item",
+					/**
+					 * Set item of gridview as active
+					 * @style ui-gridview-item-active
+					 * @member ns.widget.mobile.GridView
+					 */
 					ITEM_ACTIVE: "ui-gridview-item-active",
+					/**
+					 * Set helper for gridview items list
+					 * @style ui-gridview-helper
+					 * @member ns.widget.mobile.GridView
+					 */
 					HELPER: "ui-gridview-helper",
+					/**
+					 * Create holder element to help reordering
+					 * @style ui-gridview-holder
+					 * @member ns.widget.mobile.GridView
+					 */
 					HOLDER: "ui-gridview-holder",
+					/**
+					 * Set label-type as label in gridview
+					 * @style ui-gridview-label
+					 * @member ns.widget.mobile.GridView
+					 */
 					LABEL: "ui-gridview-label",
+					/**
+					 * Set label-type as label-in in gridview
+					 * @style ui-gridview-label-in
+					 * @member ns.widget.mobile.GridView
+					 */
 					LABEL_IN: "ui-gridview-label-in",
+					/**
+					 * Set label-type as label-out in gridview
+					 * @style ui-gridview-label-out
+					 * @member ns.widget.mobile.GridView
+					 */
 					LABEL_OUT: "ui-gridview-label-out",
+					/**
+					 * Set handler for gridview items list
+					 * @style ui-gridview-handler
+					 * @member ns.widget.mobile.GridView
+					 */
 					HANDLER: "ui-gridview-handler"
 				},
 				GridView = function () {

@@ -80,10 +80,35 @@
 				CLASSES_PREFIX = "ui-progressbar",
 
 				classes = {
+					/**
+					 * Standard circle progress bar widget
+					 * @style ui-circle-progress
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					uiProgressbar: CLASSES_PREFIX,
+					/**
+					 * Full circle progress bar widget
+					 * @style ui-circle-progress-full
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					uiProgressbarFull: CLASSES_PREFIX + "-full",
+					/**
+					 * Circle progress bar widget with endpoint
+					 * @style ui-circle-progress-end-point
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					endPoint: CLASSES_PREFIX + "-end-point",
+					/**
+					 * Circle progress bar widget with active endpoint
+					 * @style ui-circle-progress-end-point-active
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					endPointActive: CLASSES_PREFIX + "-end-point-active",
+					/**
+					 * Circle progress bar widget with pressed endpoint
+					 * @style ui-circle-progress-end-point-pressed
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					endPointPressed: CLASSES_PREFIX + "-end-point-pressed"
 				},
 

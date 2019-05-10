@@ -24,6 +24,7 @@
  *
  * @since 2.4
  * @class ns.widget.core.PanelChanger
+ * @component-selector .ui-panel-changer, [data-role]="panel-changer"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */

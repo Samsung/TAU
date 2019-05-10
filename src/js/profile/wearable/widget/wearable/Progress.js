@@ -54,6 +54,7 @@
  * Progress widget hasn't JavaScript API.
  *
  * @class ns.widget.wearable.Progress
+ * @component-selector .ui-progress-indeterminate, .ui-progress-proportion, .ui-progress-ratio
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {

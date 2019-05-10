@@ -18,6 +18,7 @@
  * #DatePicker Widget
  *
  * @class ns.widget.wearable.DatePicker
+ * @component-selector .ui-date-picker
  * @since 4.0
  * @extends ns.widget.BaseWidget
  */
@@ -43,13 +44,43 @@
 				prototype = new BaseWidget(),
 				getClosestByClass = ns.util.selectors.getClosestByClass,
 
+				/**
+				* Standard date picker widget
+				* @style ui-date-picker
+				* @member ns.widget.wearable.DatePicker
+				*/
 				WIDGET_CLASS = "ui-date-picker",
 				classes = {
+					/**
+					* Container for date picker widget
+					* @style ui-date-picker-container
+					* @member ns.widget.wearable.DatePicker
+					*/
 					CONTAINER: WIDGET_CLASS + "-container",
 					CONTAINER_PREFIX: WIDGET_CLASS + "-container-",
-					DAYNAME_CONTAINER: WIDGET_CLASS + "-containter-dayname",
+					/**
+					* Container with dayname for date picker widget
+					* @style ui-date-picker-container-dayname
+					* @member ns.widget.wearable.DatePicker
+					*/
+					DAYNAME_CONTAINER: WIDGET_CLASS + "-container-dayname",
+					/**
+					* Active label animation in date picker widget
+					* @style ui-date-picker-active-label-animation
+					* @member ns.widget.wearable.DatePicker
+					*/
 					ACTIVE_LABEL_ANIMATION: WIDGET_CLASS + "-active-label-animation",
+					/**
+					* Hidden date picker widget
+					* @style ui-date-picker-hidden
+					* @member ns.widget.wearable.DatePicker
+					*/
 					HIDDEN: WIDGET_CLASS + "-hidden",
+					/**
+					* Hidden label in date picker widget
+					* @style ui-number-picker-label-hidden
+					* @member ns.widget.wearable.DatePicker
+					*/
 					LABEL_HIDDEN: "ui-number-picker-label-hidden"
 				},
 
