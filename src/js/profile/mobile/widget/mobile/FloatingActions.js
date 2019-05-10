@@ -35,6 +35,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.FloatingActions
+ * @component-selector .ui-floatingactions, [data-role]="floatingactions"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -75,10 +76,35 @@
 				},
 				WIDGET_CLASS = "ui-floatingactions",
 				classes = {
+					/**
+					 * Standard floating actions widget
+					 * @style ui-floatingactions
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					WIDGET: WIDGET_CLASS,
+					/**
+					 * Enable transition for floating actions widget
+					 * @style ui-floatingactions-transitions
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					TRANSITIONS: WIDGET_CLASS + "-transitions",
+					/**
+					 * Expand floating actions to the left
+					 * @style ui-floatingactions-expand-to-left
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					EXPAND_TO_LEFT: WIDGET_CLASS + "-expand-to-left",
+					/**
+					 * Expand floating actions to the right
+					 * @style ui-floatingactions-expand-to-right
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					EXPAND_TO_RIGHT: WIDGET_CLASS + "-expand-to-right",
+					/**
+					 * Set page to implement floating actions
+					 * @style ui-page-floatingactions
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					PAGE_WITH_FLOATING_ACTIONS: "ui-page-floatingactions"
 				};
 

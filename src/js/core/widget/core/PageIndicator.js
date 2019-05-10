@@ -45,11 +45,41 @@
 					self.options = {};
 				},
 				classes = {
+					/**
+					 * Standard page indicator widget
+					 * @style ui-page-indicator
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicator: "ui-page-indicator",
+					/**
+					 * Set dots of page indicator to be active
+					 * @style ui-page-indicator-active
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorActive: "ui-page-indicator-active",
+					/**
+					 * Create items for page indicator widget
+					 * @style ui-page-indicator-item
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorItem: "ui-page-indicator-item",
+					/**
+					 * Set style of page indicator dots to dashed
+					 * @style ui-page-indicator-dashed
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorDashed: "ui-page-indicator-dashed",
+					/**
+					 * Set page indicator to set dots in linear order
+					 * @style ui-page-indicator-linear
+					 * @member ns.widget.core.PageIndicator
+					 */
 					linearIndicator: "ui-page-indicator-linear",
+					/**
+					 * Set page indicator to set dots in circular order
+					 * @style ui-page-indicator-circular
+					 * @member ns.widget.core.PageIndicator
+					 */
 					circularIndicator: "ui-page-indicator-circular"
 				},
 				maxDots = {

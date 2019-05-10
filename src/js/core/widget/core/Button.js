@@ -211,13 +211,43 @@
 					 * @member ns.widget.core.Button
 					 */
 					DISABLED: "ui-state-disabled",
+					/**
+					 * Make inline button
+					 * @style ui-inline
+					 * @member ns.widget.core.Button
+					 */
 					INLINE: "ui-inline",
+					/**
+					 * Creates an icon button
+					 * @style ui-btn-icon
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON: "ui-btn-icon",
 					ICON_PREFIX: "ui-icon-",
+					/**
+					 * Creates a circle icon button
+					 * @style ui-btn-circle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_CIRCLE: "ui-btn-circle",
+					/**
+					 * Creates a button without background
+					 * @style ui-btn-nobg
+					 * @member ns.widget.core.Button
+					 */
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
+					/**
+					 * Creates a button widget with light text
+					 * @style ui-btn-text-light
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_LIGHT: "ui-btn-text-light",
+					/**
+					 * Creates a button widget with dark text
+					 * @style ui-btn-text-dark
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_DARK: "ui-btn-text-dark",
 					/**
 					 * Change background color of button to red
@@ -251,6 +281,11 @@
 					 * @member ns.widget.core.Button
 					 */
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
+					/**
+					 * Creates a button widget with position in middle
+					 * @style ui-btn-text-middle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
 				Button = function () {

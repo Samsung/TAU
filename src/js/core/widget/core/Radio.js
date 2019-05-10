@@ -44,6 +44,11 @@
 					this.element = null;
 				},
 				classes = {
+					/**
+					 * Standard radio widget
+					 * @style ui-radio
+					 * @member ns.widget.core.Radio
+					 */
 					radio: "ui-radio"
 				},
 				prototype = new BaseWidget();

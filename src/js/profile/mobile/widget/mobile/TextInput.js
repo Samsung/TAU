@@ -93,6 +93,7 @@
  *
  * @since 2.0
  * @class ns.widget.mobile.TextInput
+ * @component-selector .ui-text-input
  * @extends ns.widget.BaseWidget
  * @author Maciej Urbanski <m.urbanski@samsung.com>
  * @author Jadwiga Sosnowska <j.sosnowska@samsung.com>
@@ -156,16 +157,61 @@
 				 * @static
 				 */
 				classes = {
+					/**
+					 * Standard text input widget
+					 * @style ui-text-input
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInput: CLASSES_PREFIX,
+					/**
+					 * Create text input widget with clear button
+					 * @style ui-text-input-clear
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputClear: CLASSES_PREFIX + "-clear",
+					/**
+					 * Hide clear button in text input widget
+					 * @style ui-text-input-clear-hidden
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputClearHidden: CLASSES_PREFIX + "-clear-hidden",
+					/**
+					 * Set clear button to active in text input widget
+					 * @style ui-text-input-clear-active
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputClearActive: CLASSES_PREFIX + "-clear-active",
+					/**
+					 * Set text input to text input widget
+					 * @style ui-text-input-textline
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputTextLine: CLASSES_PREFIX + "-textline",
+					/**
+					 * Set text input as disabled in text input widget
+					 * @style ui-text-input-disabled
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputDisabled: CLASSES_PREFIX + "-disabled",
+					/**
+					 * Set text input as focus in text input widget
+					 * @style ui-text-input-focused
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputFocused: CLASSES_PREFIX + "-focused",
 					HEADER_WITH_SEARCH: "ui-header-searchbar",
+					/**
+					 * Set search-input widget in text input widget
+					 * @style ui-search-input
+					 * @member ns.widget.mobile.TextInput
+					 */
 					SEARCHINPUT: "ui-search-input",
 					HEADER: "ui-header",
+					/**
+					 * Set container for text input widget
+					 * @style ui-text-input-container
+					 * @member ns.widget.mobile.TextInput
+					 */
 					CONTAINER: CLASSES_PREFIX + "-container"
 				},
 				/**

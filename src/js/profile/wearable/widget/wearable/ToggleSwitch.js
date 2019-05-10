@@ -51,7 +51,7 @@
  * ToggleSwitch widget hasn't JavaScript API.
  *
  * @class ns.widget.wearable.ToggleSwitch
- * @component-selector .ui-toggleswitch
+ * @component-selector .ui-switch
  * @component-type standalone-component
  * @extends ns.widget.BaseWidget
  */
@@ -82,16 +82,41 @@
 				events = {},
 				classesPrefix = "ui-switch",
 				classes = {
+				/**
+				 * Style for handler in toggleswitch
+				 * @style ui-switch-handler
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					handler: classesPrefix + "-handler",
+				/**
+				 * Style for inneroffset in toggleswitch
+				 * @style ui-switch-inneroffset
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					inneroffset: classesPrefix + "-inneroffset",
+				/**
+				 * Style for activation in toggleswitch
+				 * @style ui-switch-activation
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					activation: classesPrefix + "-activation",
+				/**
+				 * Style for input in toggleswitch
+				 * @style ui-switch-input
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					input: classesPrefix + "-input",
+				/**
+				 * Style for text in toggleswitch
+				 * @style ui-switch-text
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					text: classesPrefix + "-text"
-					/**
-					 * Set big size
-					 * @style ui-toggleswitch-large
-					 * @member ns.widget.wearable.ToggleSwitch
-					 */
+				/**
+				* Set big size
+				* @style ui-toggleswitch-large
+				* @member ns.widget.wearable.ToggleSwitch
+				*/
 				},
 				prototype = new BaseWidget();
 

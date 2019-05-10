@@ -20,6 +20,7 @@
  * Shows an index scroll bar with indices, usually for the list.
  *
  * @class ns.widget.wearable.IndexScrollbar
+ * @component-selector .ui-indexscrollbar
  * @extends ns.widget.core.IndexScrollbar
  * @since 2.0
  */
