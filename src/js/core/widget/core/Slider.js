@@ -46,6 +46,7 @@
  *
  * @since 2.0
  * @class ns.widget.core.Slider
+ * @component-selector .ui-slider [data-type]="slider"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */

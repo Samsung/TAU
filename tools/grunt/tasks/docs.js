@@ -239,6 +239,7 @@ module.exports = function (grunt) {
 					component: docsStructure.component,
 					raw: JSON.stringify({
 						label: shortName,
+						description: description,
 						selector: docsStructure.component.selector,
 						resources: {
 							"css": [
@@ -252,21 +253,6 @@ module.exports = function (grunt) {
 								"mobile": "./mobile-" + shortName.toLowerCase() + ".png"
 							}
 						},
-						type: docsStructure.component.type,
-						constraint: docsStructure.component.constraint,
-						attachable: true,
-						template: docsStructure.examples.filter(function (example) {
-							return example.isTemplate;
-						}).map(function (example) {
-							return unescapeHTML(example.code);
-						})[0],
-						snippet: docsStructure.examples.map((example) => {
-							return {
-								snippet: example.snippet,
-								displayText: example.id + "",
-								description: example.description
-							}
-						}),
 						class: docsStructure.styles.map((style) => {
 							return {
 								text: style.name,
@@ -276,9 +262,12 @@ module.exports = function (grunt) {
 								leftLabelHTML: style.preview
 							}
 						}),
-						data: options.map((option) => {
+						dataoptions: options.map((option) => {
 							return {
+								name: option.name + ": " + option.types,
 								option: option.name,
+								type: option.types,
+								default: option.defaultValue,
 								values: option.values.map((value) => {
 									return {
 										text: value.value,
@@ -286,10 +275,43 @@ module.exports = function (grunt) {
 									}
 								}),
 								version: option.since,
-								description: option.description[0] ? option.description[0].description : "",
-								default: option.defaultValue
+								description: option.description[0] ? option.description[0].description : ""
 							}
 						}),
+						events: events.filter((event) => {
+							return !event.inherited;
+						}).map((ev) => {
+							return {
+								name: ev.name,
+								description: ev.description
+							}
+						}),
+						methods: methods.filter((method) => {
+							return !method.inherited;
+						}).map((met) => {
+							return {
+								name: met.name,
+								hasParams: met.hasParams,
+								params: met.params.map((param) => {
+									return {
+										type: param.types,
+										name: param.name,
+										description: param.description,
+										isOptional: param.isOptional
+									}
+								}),
+								description: met.description,
+								brief: met.brief
+							}
+						}),
+						type: docsStructure.component.type,
+						constraint: docsStructure.component.constraint,
+						attachable: true,
+						template: docsStructure.examples.filter(function (example) {
+							return example.isTemplate;
+						}).map(function (example) {
+							return unescapeHTML(example.code);
+						})[0],
 						resizable: true,
 						draggable: true
 					}, null, "  ")

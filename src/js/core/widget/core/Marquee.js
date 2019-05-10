@@ -40,6 +40,7 @@
  *
  * @author Heeju Joo <heeju.joo@samsung.com>
  * @class ns.widget.core.Marquee
+ * @component-selector .ui-marquee
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -89,6 +90,11 @@
 
 				prototype = new BaseWidget(),
 
+				/**
+				* Standard marquee widget
+				* @style ui-marquee
+				* @member ns.widget.core.Marquee
+				*/
 				CLASSES_PREFIX = "ui-marquee",
 
 				eventType = {
@@ -108,11 +114,41 @@
 				 * @static
 				 */
 				classes = {
+					/**
+					* Content for marquee widget
+					* @style ui-marquee-content
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_CONTENT: CLASSES_PREFIX + "-content",
+					/**
+					* Add gradient for marquee widget
+					* @style ui-marquee-gradient
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_GRADIENT: CLASSES_PREFIX + "-gradient",
+					/**
+					* Set ellipsis effect for marquee widget
+					* @style ui-marquee-ellipsis
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_ELLIPSIS: CLASSES_PREFIX + "-ellipsis",
+					/**
+					* Start animation for marquee widget
+					* @style ui-marquee-anim-running
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_RUNNING: CLASSES_PREFIX + "-anim-running",
+					/**
+					* Stop animation for marquee widget
+					* @style ui-marquee-anim-stopped
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_STOPPED: CLASSES_PREFIX + "-anim-stopped",
+					/**
+					* Idle animation for marquee widget
+					* @style ui-marquee-anim-idle
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_IDLE: CLASSES_PREFIX + "-anim-idle"
 				},
 

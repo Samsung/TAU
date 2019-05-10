@@ -321,7 +321,17 @@
 			 * @member ns.widget.core.VirtualListview
 			 */
 			VirtualListview.classes = {
+				/**
+				* Container for virtual list widget
+				* @style ui-virtual-list-container
+				* @member ns.widget.core.VirtualListview
+				*/
 				uiVirtualListContainer: "ui-virtual-list-container",
+				/**
+				* Prepare spacer - element which makes scrollBar proper size
+				* @style ui-virtual-list-spacer
+				* @member ns.widget.core.VirtualListview
+				*/
 				spacer: "ui-virtual-list-spacer"
 			};
 

@@ -90,6 +90,7 @@
  * @since 2.4
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  * @class ns.widget.mobile.TextEnveloper
+ * @component-selector .ui-text-enveloper, [data-role]="textenveloper"
  * @extends ns.widget.BaseWidget
  */
 
@@ -135,21 +136,91 @@
 				 * @member ns.widget.mobile.TextEnveloper
 				 */
 				classes = {
+					/**
+					 * Standard text enveloper widget
+					 * @style ui-text-enveloper
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER: "ui-text-enveloper",
+					/**
+					 * Create text enveloper widget with container
+					 * @style ui-text-enveloper-with-container
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					WITH_CONTAINER: "ui-text-enveloper-with-container",
+					/**
+					 * Set container for text enveloper widget
+					 * @style ui-text-enveloper-container
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					CONTAINER: "ui-text-enveloper-container",
+					/**
+					 * Set input for text enveloper widget
+					 * @style ui-text-enveloper-input
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_INPUT: "ui-text-enveloper-input",
+					/**
+					 * Set button for text enveloper widget
+					 * @style ui-text-enveloper-btn
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN: "ui-text-enveloper-btn",
+					/**
+					 * Set selected to button in text enveloper widget
+					 * @style ui-text-enveloper-btn-selected
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					BTN_SELECTED: "ui-text-enveloper-btn-selected",
+					/**
+					 * Set active to button in text enveloper widget
+					 * @style ui-text-enveloper-btn-active
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_ACTIVE: "ui-text-enveloper-btn-active",
+					/**
+					 * Set blur to button in text enveloper widget
+					 * @style ui-text-enveloper-btn-blur
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_BLUR: "ui-text-enveloper-btn-blur",
+					/**
+					 * Set button as expanded in text enveloper widget
+					 * @style ui-text-enveloper-btn-expanded
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_EXPANDED: "ui-text-enveloper-btn-expanded",
+					/**
+					 * Set a label to text enveloper widget
+					 * @style ui-text-enveloper-start
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_START: "ui-text-enveloper-start",
 					TEXT_ENVELOPER_TEXTLINE: "ui-text-input-textline",
+					/**
+					 * Add slash to text enveloper widget
+					 * @style ui-text-enveloper-slash
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					SLASH: "ui-text-enveloper-slash",
+					/**
+					 * Hide slash in text enveloper widget
+					 * @style ui-text-enveloper-slash-hidden
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					SLASH_HIDDEN: "ui-text-enveloper-slash-hidden",
+					/**
+					 * Add slash to be a separator for button in text enveloper widget
+					 * @style ui-text-enveloper-btn-separator
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_SLASH: "ui-text-enveloper-btn-separator",
 					INPUT_STYLE_PREFIX: "ui-text-enveloper-input-",
+					/**
+					 * Add blur to input in text enveloper widget
+					 * @style ui-text-enveloper-input-blur
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					INPUT_BLUR: "ui-text-enveloper-input-blur"
 				},
 

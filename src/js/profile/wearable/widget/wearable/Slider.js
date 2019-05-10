@@ -20,6 +20,7 @@
  * ## JavaScript API
  *
  * @class ns.widget.wearable.Slider
+ * @component-selector .ui-slider
  * @extends ns.widget.core.Slider
  */
 (function (document, ns) {
@@ -70,16 +71,66 @@
 					 */
 					CHANGE: "change"
 				},
+				/**
+				* Standard slider widget
+				* @style ui-slider
+				* @member ns.widget.wearable.Slider
+				*/
 				PREFIX = "ui-slider",
 				classes = {
+					/**
+					* Set container for slider widget
+					* @style ui-slider-container
+					* @member ns.widget.wearable.Slider
+					*/
 					container: PREFIX + "-container",
+					/**
+					* Set titles for slider widget
+					* @style ui-slider-titles
+					* @member ns.widget.wearable.Slider
+					*/
 					titles: PREFIX + "-titles",
+					/**
+					* Set buttons for slider widget
+					* @style ui-slider-buttons
+					* @member ns.widget.wearable.Slider
+					*/
 					buttons: PREFIX + "-buttons",
+					/**
+					* Plus value for slider widget
+					* @style ui-slider-plus
+					* @member ns.widget.wearable.Slider
+					*/
 					plus: PREFIX + "-plus",
+					/**
+					* Minus value for slider widget
+					* @style ui-slider-minus
+					* @member ns.widget.wearable.Slider
+					*/
 					minus: PREFIX + "-minus",
+					/**
+					* Number for slider widget
+					* @style ui-slider-number
+					* @member ns.widget.wearable.Slider
+					*/
 					number: PREFIX + "-number",
+					/**
+					* Icon for slider widget
+					* @style ui-slider-icon
+					* @member ns.widget.wearable.Slider
+					*/
 					icon: PREFIX + "-icon",
+					/**
+					* Title for slider widget
+					* @style ui-slider-title
+					* @member ns.widget.wearable.Slider
+					*/
 					title: PREFIX + "-title",
+					/**
+					* Subtitle for slider widget
+					* @style ui-slider-subtitle
+					* @member ns.widget.wearable.Slider
+					*/
 					subtitle: PREFIX + "-subtitle"
 				},
 				slice = Array.prototype.slice;

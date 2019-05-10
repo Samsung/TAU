@@ -69,6 +69,7 @@
  *         </script>
  * @class ns.widget.wearable.SwipeList
  * @since 2.2
+ * @component-selector .ui-swipelist
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {

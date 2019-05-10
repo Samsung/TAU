@@ -19,6 +19,7 @@
  *
  * @class ns.widget.wearable.NumberPicker
  * @since 3.0
+ * @component-selector .ui-number-picker input[type='number']
  * @extends ns.widget.core.BaseWidget
  * @author Tomasz Lukawski <t.lukawski@samsung.com>
  */
@@ -46,15 +47,56 @@
 				prototype = new ns.widget.BaseWidget(),
 				Spin = ns.widget.wearable.Spin,
 				SPIN_CLASS = Spin.classes.SPIN,
+
+				/**
+				* Standard number picker widget
+				* @style ui-number-picker
+				* @member ns.widget.wearable.NumberPicker
+				*/
 				WIDGET_CLASS = "ui-number-picker",
 				WIDGET_SELECTOR = "input[type='number']",
 				classes = {
+					/**
+					* Set container for number picker widget
+					* @style ui-number-picker-container
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					CONTAINER: WIDGET_CLASS + "-container",
+					/**
+					* Number for number picker widget
+					* @style ui-number-picker-number
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					NUMBER: WIDGET_CLASS + "-number",
+					/**
+					* Number blink for number picker widget
+					* @style ui-number-picker-number-blink
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					NUMBER_BLINK: WIDGET_CLASS + "-number-blink",
+					/**
+					* Label for number picker widget
+					* @style ui-number-picker-label
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					LABEL: WIDGET_CLASS + "-label",
+					/**
+					* Pressed label for number picker widget
+					* @style ui-number-picker-label-pressed
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					LABEL_PRESSED: WIDGET_CLASS + "-label-pressed",
+					/**
+					* Set button for number picker widget
+					* @style ui-number-picker-set
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					BUTTON_SET: WIDGET_CLASS + "-set",
+					/**
+					* Set disabled for number picker widget
+					* @style ui-number-picker-disabled
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					DISABLED: WIDGET_CLASS + "-disabled",
 					HIDDEN: "hidden"
 				};

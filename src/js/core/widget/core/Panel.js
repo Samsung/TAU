@@ -44,7 +44,17 @@
 				engine = ns.engine,
 				events = ns.event,
 				classes = {
+					/**
+					 * Standard panel widget
+					 * @style ui-panel
+					 * @member ns.widget.core.Panel
+					 */
 					PANEL: "ui-panel",
+					/**
+					 * Set panel widget as active
+					 * @style ui-panel-active
+					 * @member ns.widget.core.Panel
+					 */
 					ACTIVE_PANEL: "ui-panel-active"
 				},
 				EVENT_TYPE = {
