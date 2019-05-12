@@ -264,6 +264,8 @@
 				canvas = document.createElement("canvas"),
 				listview;
 
+			element.appendChild(canvas);
+
 			listview = new Listview();
 			assert.ok(!!listview, "Listview exists");
 			assert.equal(typeof listview._refreshBackgroundCanvas, "function", "Method exists");
