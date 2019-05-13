@@ -40,7 +40,7 @@
 			//>>excludeEnd("tauBuildExclude");
 			var panelChanger = ns.widget.core.PanelChanger,
 				selectors = ns.util.selectors,
-				history = ns.router.history,
+				history = ns.history,
 				engine = ns.engine,
 				classes = {
 					PANEL_CHANGER: panelChanger.classes.PANEL_CHANGER
