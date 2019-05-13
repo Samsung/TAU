@@ -647,19 +647,30 @@
 			 */
 			prototype._setTabbarPosition = function () {
 				var self = this,
-					offsetWidth = self.element.offsetWidth,
 					activeIndex = self.options.active,
-					relativeWidth = -self._lastX + offsetWidth,
 					tabs = self._ui.tabs,
-					activeTabOffsetWidth = tabs[0].offsetWidth * ((activeIndex - 0) + 1);
+					tabBarRect = self.element.getBoundingClientRect(),
+					parentElementWidth = self.element.parentElement.offsetWidth,
+					previousElementLeftPos,
+					transformX;
 
-				if (activeTabOffsetWidth > relativeWidth) {
-					self._translate(offsetWidth - activeTabOffsetWidth, DEFAULT_NUMBER.DURATION);
-				} else if (activeTabOffsetWidth < relativeWidth) {
-					if (activeTabOffsetWidth < offsetWidth) {
+				if (tabBarRect.width >= parentElementWidth) {
+					if (activeIndex <= 1) {
 						self._translate(0, DEFAULT_NUMBER.DURATION);
-					} else if (activeTabOffsetWidth <= relativeWidth + self._lastX) {
-						self._translate(offsetWidth - activeTabOffsetWidth, DEFAULT_NUMBER.DURATION);
+					} else if (activeIndex >= (tabs.length - 2)) {
+						// Show last element on the right edge.
+						self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+					} else {
+						previousElementLeftPos = tabs[activeIndex - 1].getBoundingClientRect().left;
+						transformX = previousElementLeftPos - tabBarRect.left;
+
+						if (tabBarRect.width - transformX >= parentElementWidth) {
+							self._translate(-transformX, DEFAULT_NUMBER.DURATION);
+						} else {
+							// Rest of the elements too narrow to cover whole tabbar.
+							// Set scroll to show last element on the right edge.
+							self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+						}
 					}
 				}
 			};
