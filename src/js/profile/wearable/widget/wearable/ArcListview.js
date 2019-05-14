@@ -652,7 +652,7 @@
 					carouselItemElement.style.transform = "translateY(" + top + "px)";
 					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
 
-					// hide unsed carousel items
+					// hide unused carousel items
 					if (carouselItemElement.firstElementChild === null) {
 						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
 					} else {
