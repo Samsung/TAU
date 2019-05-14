@@ -6,3 +6,7 @@ git:
 os: linux
 dist: xenial
 sudo: enabled
+
+script:
+        - npm run lint-check
+        - npm test
