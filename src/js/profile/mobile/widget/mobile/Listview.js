@@ -767,7 +767,7 @@
 					scrollableContainerTop = scrollableContainerRect.top;
 				}
 
-					// Reset first color step if listview is above top egde of scroll container
+					// Reset first color step if listview is above top edge of scroll container
 				if (scrollableContainerRect && top < scrollableContainerTop) {
 					if (self.options.firstColorStep !== 0) {
 						self.options.firstColorStep = 0;
