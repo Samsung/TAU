@@ -1209,6 +1209,18 @@ a {
   box-sizing: content-box;
   transition-property: max-height;
   transition-duration: 1ms;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .ui-listview li.ui-listview-divider,
 .ui-listview li.ui-li-group-index {
@@ -1220,6 +1232,9 @@ a {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
   padding: 0;
 }
 .ui-listview li.ui-listview-divider::before,
@@ -1299,15 +1314,6 @@ a {
 .ui-listview li button:first-child:last-child {
   padding: 0;
   margin: 0;
-  -webkit-justify-content: space-around;
-      -ms-flex-pack: distribute;
-          justify-content: space-around;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
 }
 .ui-listview li.li-has-multiline.ui-arc-listview-selected.li-has-2line-sub {
   padding-top: 0.5625rem;
@@ -1557,17 +1563,28 @@ a {
 .ui-listview.ui-arc-listview-carousel-item li li.ui-li-active::before {
   background-color: transparent;
 }
+.ui-listview.ui-snap-listview li:not(.ui-li-has-multiline):not(.li-has-multiline) a {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
 .ui-listview.ui-arc-listview-carousel-item-separator {
   height: auto;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider) {
   padding: 1.5625rem 1.875rem 1.625rem;
   min-height: auto;
   color: rgba(250, 250, 250, 1);
   overflow: hidden;
   line-height: 3rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li::before {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider)::before {
   display: block;
   position: absolute;
   bottom: 0;
@@ -1581,13 +1598,13 @@ a {
   background-color: white;
   -webkit-mask-box-image: url("images/List/tw_list_divider.png") 0 128 0 128 repeat repeat;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:active,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:active a,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-active,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-active a {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider):active,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider):active a,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-active,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-active a {
   color: rgba(250, 250, 250, 0.4);
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-text {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-text {
   white-space: normal;
   color: rgba(204, 204, 204, 1);
   padding-top: 0.5625rem;
@@ -1595,15 +1612,15 @@ a {
   font-size: 1.9375rem;
   line-height: 2.3125rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-text:active {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-text:active {
   color: rgba(204, 204, 204, 0.4);
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline {
   padding-top: 0.5625rem;
   padding-bottom: 0.625rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline a {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline a {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -1611,24 +1628,24 @@ a {
       -ms-flex-direction: column;
           flex-direction: column;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline .ui-li-sub-text,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline a .ui-li-sub-text {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline .ui-li-sub-text,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline a .ui-li-sub-text {
   color: rgba(179, 179, 179, 1);
   font-size: 1.5rem;
   line-height: 2rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline.ui-li-active .ui-li-sub-text,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline.ui-li-active a .ui-li-sub-text {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline.ui-li-active .ui-li-sub-text,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline.ui-li-active a .ui-li-sub-text {
   color: T9262P;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left {
   padding-left: 6.25rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right {
   padding-right: 6.25rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left img,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right img {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left img,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right img {
   background-color: unset;
   position: absolute;
   top: calc(49.5%);
@@ -1636,12 +1653,12 @@ a {
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left img.ui-li-thumb-left,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right img.ui-li-thumb-left {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left img.ui-li-thumb-left,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right img.ui-li-thumb-left {
   left: 1rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left img.ui-li-thumb-right,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right img.ui-li-thumb-right {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left img.ui-li-thumb-right,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right img.ui-li-thumb-right {
   right: 1rem;
 }
 input[type="checkbox"]:not(.ui-switch-input),
@@ -3388,6 +3405,26 @@ a.ui-hyperlink:hover {
 .ui-arc-listview-carousel li.ui-listview-divider ~ li:not(.ui-li-group-index):not(.ui-listview-divider) {
   margin-top: 0;
 }
+.ui-arc-listview .ui-arc-listview-carousel-item li,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li {
+  /* below style is not prefixed "ui-" for backward compatibility */
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.li-has-thumb-left,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.li-has-thumb-left {
+  padding-left: 6.25rem;
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.li-has-thumb-right,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.li-has-thumb-right {
+  padding-right: 6.25rem;
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content {
+  margin-left: 0;
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content div,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content div {
+  margin-left: 0;
+}
 .ui-arc-listview.ui-arc-listview-5 li:not(.ui-li-group-index):not(.ui-listview-divider),
 .ui-arc-listview-carousel.ui-arc-listview-5 li:not(.ui-li-group-index):not(.ui-listview-divider) {
   min-height: 4.375rem;
@@ -3419,6 +3456,16 @@ a.ui-hyperlink:hover {
     margin-top: auto;
     padding: 1.625rem 3.125rem 0.3125rem 3.125rem;
   }
+}
+.ui-marquee {
+  height: 3.0625rem;
+  line-height: 3.0625rem;
+}
+.ui-arc-listview-text-content {
+  margin-left: 0;
+}
+.ui-arc-listview-5 .ui-marquee {
+  line-height: 4.375rem;
 }
 .ui-number-picker-container {
   display: -webkit-flex;
