@@ -2,7 +2,7 @@
   "name": "tau",
   "title": "tau",
   "description": "Tizen Advanced UI",
-  "version": "0.14.1",
+  "version": "0.14.2",
   "scripts": {
     "test": "grunt test",
     "lint-check": "lint-diff $TRAVIS_COMMIT_RANGE",

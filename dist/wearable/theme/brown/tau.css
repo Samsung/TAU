@@ -623,6 +623,7 @@ tau-page {
 .ui-page .ui-footer {
   width: 100%;
   position: absolute;
+  display: inline-block;
   bottom: 0;
   left: 0;
 }
@@ -2728,7 +2729,6 @@ tau-listview {
   margin-right: 0.5rem;
 }
 .ui-listview li.ui-li-grid div:first-child {
-  width: calc(100% -  5.5rem);
   text-align: left;
   height: 100%;
   margin-left: 1rem;
@@ -2745,7 +2745,7 @@ tau-listview {
 .ui-listview li.ui-li-grid.ui-li-grid-full .ui-btn.ui-btn-no-bg.ui-btn-icon::after {
   background-color: transparent;
 }
-.ui-listview li.ui-li-grid.ui-li-grid-full div::after {
+.ui-listview li.ui-li-grid.ui-li-grid-full > div::after {
   content: "";
   position: absolute;
   height: 3.5rem;
@@ -3605,6 +3605,7 @@ tau-listview {
   -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
   background-color: rgba(255, 145, 0, 0.4);
+  z-index: 2000;
 }
 .ui-scrollbar-bouncing-effect::before {
   content: "";
