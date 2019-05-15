@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '0.14.1';
+ns.version = '0.14.2';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -11304,7 +11304,7 @@ function pathToRegexp (path, keys, options) {
 					lastState = history.activeState,
 					options = {},
 					reverse,
-					resultOfTigger = true,
+					resultOfTrigger = true,
 					skipTriggerStateChange = false;
 
 								if (manager.locked) {
@@ -11321,12 +11321,12 @@ function pathToRegexp (path, keys, options) {
 					});
 
 					if (lastState) {
-						resultOfTigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
+						resultOfTrigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
 							{url: pathUtils.getLocation(), stateUrl: lastState.stateUrl}), true, true);
 
 						
 						// if EVENT HASHCHANGE has been triggered successfully then skip trigger HistoryStateChange
-						skipTriggerStateChange = resultOfTigger;
+						skipTriggerStateChange = resultOfTrigger;
 					}
 
 					state.url = pathUtils.getLocation();
@@ -11934,7 +11934,7 @@ function pathToRegexp (path, keys, options) {
 					}
 
 					if (footer) {
-						bottom = utilsDOM.getElementHeight(footer);
+						bottom = footer.getBoundingClientRect().height;
 						contentStyle.marginBottom = bottom + "px";
 						contentStyle.paddingBottom = (-bottom) + "px";
 					}
@@ -12623,9 +12623,6 @@ function pathToRegexp (path, keys, options) {
 			function deferredFunction(fromPageWidget, toPageWidget, self, options) {
 				if (fromPageWidget) {
 					fromPageWidget.onHide();
-					if (options.reverse) {
-						fromPageWidget.destroy();
-					}
 					self._removeExternalPage(fromPageWidget, options);
 				}
 				toPageWidget.onShow();
@@ -12890,6 +12887,7 @@ function pathToRegexp (path, keys, options) {
 
 				if (options && options.reverse && DOM.hasNSData(fromPageElement, "external") &&
 					fromPageElement.parentNode) {
+					fromPageWidget.destroy();
 					fromPageElement.parentNode.removeChild(fromPageElement);
 					this.trigger(EventType.PAGE_REMOVE);
 				}
@@ -30399,7 +30397,10 @@ function pathToRegexp (path, keys, options) {
 						 * @property {boolean} options.coloredBackground=true enables/disables colored background
 						 */
 						options = {
-							coloredBackground: true
+							coloredBackground: true,
+							colorRestOfScreen: true,
+							firstColorStep: 0,
+							lastColorStep: 0
 						};
 
 					CoreListview.call(self);
@@ -30437,9 +30438,12 @@ function pathToRegexp (path, keys, options) {
 					self._colorStep = [0, 0, 0, -0.04];
 					// _lastChange
 					self._lastChange = 0;
+					// array of neighbor colored listview related to parent
+					self._siblingLists = [];
 
 					initializeGlobalsForDrag(self);
 				},
+				WIDGET_SELECTOR = "[data-role='listview'], .ui-listview",
 				/**
 				 * @property {Object} classes
 				 * @property {string} classes.BACKGROUND_LAYER
@@ -30573,6 +30577,13 @@ function pathToRegexp (path, keys, options) {
 			Listview.classes = objectUtils.fastMerge(classes, CoreListview.classes);
 			Listview.events = events;
 
+			prototype._setFirstColorStep = function (element, value) {
+				value = parseInt(value, 10);
+				this.options.firstColorStep = value;
+
+				return true;
+			}
+
 			/**
 			 * Enables / disables colored background
 			 * @method _setColoredBackground
@@ -30586,6 +30597,17 @@ function pathToRegexp (path, keys, options) {
 				this.options.coloredBackground = value;
 			};
 
+			prototype._addCanvas = function (element) {
+				var canvas = document.createElement("canvas"),
+					context = canvas.getContext("2d");
+
+				canvas.classList.add(classes.BACKGROUND_LAYER);
+				element.insertBefore(canvas, element.firstElementChild);
+				this._context = context;
+
+				return canvas;
+			}
+
 			/**
 			 * Builds widget
 			 * @method _build
@@ -30598,22 +30620,36 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					newElement = CoreListviewProto._build.call(self, element),
 					isChildListview = element &&
-						selectorUtils.getClosestByClass(element.parentElement, "ui-listview"),
-					canvas,
-					context;
+						selectorUtils.getClosestByClass(element.parentElement, "ui-listview");
 
 				self._isChildListview = isChildListview;
 
 				if (!isChildListview) {
-					canvas = document.createElement("canvas");
-					context = canvas.getContext("2d");
-					canvas.classList.add(classes.BACKGROUND_LAYER);
-					newElement.insertBefore(canvas, newElement.firstElementChild);
-					self._context = context;
+					self._addCanvas(newElement);
 				}
 
 				return newElement;
 			};
+
+			prototype._getCanvas = function () {
+				var self = this,
+					canvas;
+
+				// If reference to canvas has been changed.
+				// Developer can remove canvas from list, eg. by element.innerHTML = "<li>item</li>"
+				if (self._context) {
+					canvas = self._context.canvas;
+				}
+				if (!canvas || !canvas.parentElement) {
+					canvas = self.element.querySelector("." + classes.BACKGROUND_LAYER);
+					if (!canvas) {
+						canvas = self._addCanvas(self.element);
+					}
+					self._context = canvas.getContext("2d");
+				}
+
+				return canvas;
+			}
 
 			/**
 			 * Init colors used to draw colored bars
@@ -30623,24 +30659,29 @@ function pathToRegexp (path, keys, options) {
 			 * */
 			prototype._prepareColors = function () {
 				var self = this,
-					canvas = self._context.canvas,
-					computedAfter = window.getComputedStyle(canvas, ":before"),
-					colorCSSDefinition = computedAfter.getPropertyValue("content"),
+					canvas = self._getCanvas(),
+					computedAfter,
+					colorCSSDefinition,
 					baseColor,
 					modifierColor,
 					colors;
 
-				if (colorCSSDefinition.length > 0) {
-					colorCSSDefinition = colorCSSDefinition.replace(colorDefinitionRegex, "");
-					colors = colorCSSDefinition.split("::");
-					if (colors.length === 2) {
-						baseColor = colors[0].split(",").filter(isNumber).map(toNumber);
-						modifierColor = colors[1].split(",").filter(isNumber).map(toNumber);
-						if (baseColor.length > 0) {
-							copyColor(baseColor, self._colorBase);
-						}
-						if (modifierColor.length > 0) {
-							copyColor(modifierColor, self._colorStep);
+				if (canvas) {
+					computedAfter = window.getComputedStyle(canvas, ":before");
+					colorCSSDefinition = computedAfter.getPropertyValue("content");
+
+					if (colorCSSDefinition.length > 0) {
+						colorCSSDefinition = colorCSSDefinition.replace(colorDefinitionRegex, "");
+						colors = colorCSSDefinition.split("::");
+						if (colors.length === 2) {
+							baseColor = colors[0].split(",").filter(isNumber).map(toNumber);
+							modifierColor = colors[1].split(",").filter(isNumber).map(toNumber);
+							if (baseColor.length > 0) {
+								copyColor(baseColor, self._colorBase);
+							}
+							if (modifierColor.length > 0) {
+								copyColor(modifierColor, self._colorStep);
+							}
 						}
 					}
 				}
@@ -30656,31 +30697,38 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._refreshBackgroundCanvas = function (container, element) {
 				var self = this,
-					canvas = self._context.canvas,
-					canvasStyle = canvas.style,
-					rect = element.getBoundingClientRect(),
+					canvas = self._getCanvas(),
+					canvasStyle,
+					rect,
 					// canvasHeight of canvas element
-					canvasHeight = 0,
+					canvasHeight,
 					// canvasWidth of canvas element
+					canvasWidth;
+
+				if (canvas) {
+					canvasStyle = canvas.style;
+					rect = element.getBoundingClientRect();
+					canvasHeight = 0;
 					canvasWidth = rect.width;
 
-				// calculate canvasHeight of canvas
-				if (container) {
-					canvasHeight = container.getBoundingClientRect().height;
+					// calculate canvasHeight of canvas
+					if (container) {
+						canvasHeight = container.getBoundingClientRect().height;
+					}
+
+					canvasHeight = Math.max(rect.height, canvasHeight) + self._topOffset;
+
+					// limit canvas for better performance
+					canvasHeight = Math.min(canvasHeight, 4 * window.innerHeight);
+					self._canvasHeight = canvasHeight;
+					self._canvasWidth = canvasWidth;
+
+					// init canvas
+					canvas.setAttribute("width", canvasWidth);
+					canvas.setAttribute("height", canvasHeight);
+					canvasStyle.width = canvasWidth + "px";
+					canvasStyle.height = canvasHeight + "px";
 				}
-
-				canvasHeight = Math.max(rect.height, canvasHeight) + self._topOffset;
-
-				// limit canvas for better performance
-				canvasHeight = Math.min(canvasHeight, 4 * window.innerHeight);
-				self._canvasHeight = canvasHeight;
-				self._canvasWidth = canvasWidth;
-
-				// init canvas
-				canvas.setAttribute("width", canvasWidth);
-				canvas.setAttribute("height", canvasHeight);
-				canvasStyle.width = canvasWidth + "px";
-				canvasStyle.height = canvasHeight + "px";
 			};
 
 			/**
@@ -30727,7 +30775,8 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._refreshColoredBackground = function () {
 				var self = this,
-					element = self.element;
+					element = self.element,
+					canvas;
 
 				// if listview contains in popup then add specific class
 				self._checkClosestPopup();
@@ -30738,14 +30787,18 @@ function pathToRegexp (path, keys, options) {
 				self._prepareColors();
 				self._refreshBackgroundCanvas(self._scrollableContainer, element);
 
-				if (element.firstElementChild &&
+				canvas = self._getCanvas();
+				if (canvas) {
+					if (element.firstElementChild &&
 						element.firstElementChild.tagName.toLowerCase() !== "canvas") {
-					element.insertBefore(self._context.canvas, element.firstElementChild);
-				} else if (!(element.firstElementChild instanceof HTMLElement)) {
-					element.appendChild(self._context.canvas);
+						element.insertBefore(canvas, element.firstElementChild);
+					} else if (!(element.firstElementChild instanceof HTMLElement)) {
+						element.appendChild(canvas);
+					}
+					if (typeof self._frameCallback === "function") {
+						self._frameCallback();
+					}
 				}
-
-				self._frameCallback();
 			};
 
 			/**
@@ -30780,7 +30833,10 @@ function pathToRegexp (path, keys, options) {
 			prototype._init = function (element) {
 				var self = this,
 					context = self._context,
-					canvas;
+					canvas,
+					foundSelf = false;
+
+				self.options.firstColorStep = parseInt(self.options.firstColorStep, 10);
 
 				if (!self._isChildListview) {
 					if (!context) {
@@ -30798,6 +30854,21 @@ function pathToRegexp (path, keys, options) {
 
 						self.refresh();
 					}
+				}
+
+				// check other sibling colored lists
+				self._siblingLists = [].slice.call(self.element.parentElement.querySelectorAll(WIDGET_SELECTOR));
+				// remove itself listview from list and above listview elements
+				self._siblingLists = self._siblingLists.filter(function (listviewElement) {
+					if (foundSelf) {
+						return true;
+					}
+					foundSelf = listviewElement === self.element;
+					return false;
+				});
+				if (self._siblingLists.length > 0) {
+					// disable coloring the test of space below current listview
+					self.options.colorRestOfScreen = false;
 				}
 			};
 
@@ -30924,6 +30995,8 @@ function pathToRegexp (path, keys, options) {
 					// scrollable container, connected with scrollview
 					scrollableContainer = self._scrollableContainer,
 					scrollTop = scrollableContainer ? scrollableContainer.scrollTop : 0,
+					scrollableContainerRect = null,
+					scrollableContainerTop = 0,
 					// top of element to calculate offset top
 					top = element.getBoundingClientRect().top,
 					previousVisibleElement = self._previousVisibleElement,
@@ -30933,17 +31006,30 @@ function pathToRegexp (path, keys, options) {
 					liOffsetTop,
 					height;
 
+				if (scrollableContainer) {
+					scrollableContainerRect = scrollableContainer.getBoundingClientRect();
+					scrollableContainerTop = scrollableContainerRect.top;
+				}
+
+					// Reset first color step if listview is above top edge of scroll container
+				if (scrollableContainerRect && top < scrollableContainerTop) {
+					if (self.options.firstColorStep !== 0) {
+						self.options.firstColorStep = 0;
+						self._redraw = true;
+					}
+				}
+
 				while (currentVisibleLiElement) {
 					// store size of current element
 					rectangle = getElementRectangle(currentVisibleLiElement);
-					liOffsetTop = rectangle.top - top;
+					liOffsetTop = rectangle.top - top ;
 					// get next element to calculate difference
 					nextVisibleLiElement = getNextVisible(liElements);
 					height = calculateElementHeight(nextVisibleLiElement, rectangle);
-					if (liOffsetTop + height >= scrollTop) {
-						if (currentVisibleLiElement !== previousVisibleElement) {
+					if (liOffsetTop + height - (scrollableContainerTop - top - scrollTop) >= scrollTop) {
+						if (currentVisibleLiElement !== previousVisibleElement && self._context) {
 							self._previousVisibleElement = currentVisibleLiElement;
-							self._canvasStyle.transform = "translateY(" + (liOffsetTop - topOffset) + "px)";
+							self._context.canvas.style.transform = "translateY(" + (liOffsetTop - topOffset) + "px)";
 							self._redraw = true;
 						}
 						currentVisibleLiElement = null;
@@ -31017,10 +31103,18 @@ function pathToRegexp (path, keys, options) {
 			 * @protected
 			 */
 			prototype._prepareCanvas = function () {
-				var self = this;
+				var self = this,
+					i;
 
 				// prepare first color
 				copyColor(self._colorBase, colorTmp);
+
+				// modify first color refer to option "firstColorStep"
+				for (i = 0; i < self.options.firstColorStep; i++) {
+					modifyColor(colorTmp, self._colorStep);
+				}
+				self.options.lastColorStep = self.options.firstColorStep;
+
 				// clear canvas
 				self._context.clearRect(0, 0, self._canvasWidth, self._canvasHeight);
 			};
@@ -31044,14 +31138,15 @@ function pathToRegexp (path, keys, options) {
 					element = self.element,
 					elements = slice.call(element.querySelectorAll("li")),
 					visibleLiElement = getNextVisible(elements),
+					nextVisibleLiElement,
 					context = self._context,
 					step = self._colorStep,
 					rectangleList = element.getBoundingClientRect(),
-					listTop = rectangleList.top,
 					listLeft = rectangleList.left,
 					// get scroll top
 					scrollableContainer = self._scrollableContainer,
-					scrollTop = scrollableContainer ? scrollableContainer.scrollTop : 0,
+					scrollableContainerTop = (scrollableContainer) ?
+						scrollableContainer.getBoundingClientRect().top : 0,
 					// store dimensions of li
 					rectangle = null,
 					// top on each last element
@@ -31060,33 +31155,48 @@ function pathToRegexp (path, keys, options) {
 					topOffset = self._topOffset,
 					changeColor;
 
+				// clear space above list;
+				if (visibleLiElement) {
+					rectangle = getElementRectangle(visibleLiElement);
+					rectangle.height = 0;
+					rectangle.height = calculateElementHeight(visibleLiElement, rectangle);
+					rectangle = adjustRectangle(rectangle, topOffset, listLeft, previousTop);
+					topOffset = 0;
+					self._context.clearRect(rectangle.left, rectangle.top, rectangle.width, rectangle.height);
+					previousTop += rectangle.height;
+				}
+
 				while (visibleLiElement) {
 					// if li element is group index, the color of next element wont change
 					changeColor = (!visibleLiElement.classList.contains(classes.GROUP_INDEX) &&
 						!visibleLiElement.classList.contains(classes.EXPANDABLE));
 					//calculate size of li element
 					rectangle = getElementRectangle(visibleLiElement);
-					// get visibleLiElement element
-					visibleLiElement = getNextVisible(elements);
-					rectangle.height = calculateElementHeight(visibleLiElement, rectangle);
+					nextVisibleLiElement = getNextVisible(elements);
+					rectangle.height = calculateElementHeight(nextVisibleLiElement, rectangle);
 					//check if next element is group index, if yes then change its color
-					if (!changeColor && visibleLiElement &&
-						(visibleLiElement.classList.contains(classes.GROUP_INDEX) ||
-						visibleLiElement.classList.contains(classes.EXPANDABLE))) {
+					if (!changeColor && nextVisibleLiElement &&
+						(nextVisibleLiElement.classList.contains(classes.GROUP_INDEX) ||
+						nextVisibleLiElement.classList.contains(classes.EXPANDABLE))) {
 						changeColor = true;
 					}
 					// check that element is visible (can be partially visible)
-					if (ceil(rectangle.top - listTop + rectangle.height) >= scrollTop) {
+					if (ceil(rectangle.top + rectangle.height) >= scrollableContainerTop) {
 						// adjust height for first element
 						rectangle = adjustRectangle(rectangle, topOffset, listLeft, previousTop);
 						topOffset = 0;
 						drawRectangle(context, rectangle);
 						previousTop += rectangle.height;
-						// check if we want to change the bg color of next li element, stop when all done
-						if (changeColor && !modifyColor(colorTmp, step)) {
-							visibleLiElement = null;
+						if (changeColor) {
+							// check if we want to change the bg color of next li element, stop when all done
+							if (!modifyColor(colorTmp, step)) {
+								visibleLiElement = null;
+							}
+							self.options.lastColorStep++;
 						}
 					}
+					// get visibleLiElement element
+					visibleLiElement = nextVisibleLiElement;
 				}
 				return rectangle;
 			};
@@ -31121,11 +31231,22 @@ function pathToRegexp (path, keys, options) {
 			prototype._handleDraw = function () {
 				var self = this,
 					// store dimensions of li
-					rectangle;
+					rectangle,
+					nextListview;
 
 				self._prepareCanvas();
 				rectangle = self._drawLiElements();
-				self._drawEndOfList(rectangle, self._context);
+				if (self.options.colorRestOfScreen) {
+					self._drawEndOfList(rectangle, self._context);
+				}
+				// change first color of next listviews
+				self._siblingLists.forEach(function (listviewElement) {
+					nextListview = ns.engine.getBinding(listviewElement);
+					if (nextListview) {
+						nextListview.option("firstColorStep", self.options.lastColorStep);
+					}
+				});
+
 				self._redraw = false;
 			};
 
@@ -31762,7 +31883,7 @@ function pathToRegexp (path, keys, options) {
 			ns.widget.mobile.Listview = Listview;
 			engine.defineWidget(
 				"Listview",
-				"[data-role='listview'], .ui-listview",
+				WIDGET_SELECTOR,
 				[],
 				Listview,
 				"mobile",
@@ -32402,19 +32523,30 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._setTabbarPosition = function () {
 				var self = this,
-					offsetWidth = self.element.offsetWidth,
 					activeIndex = self.options.active,
-					relativeWidth = -self._lastX + offsetWidth,
 					tabs = self._ui.tabs,
-					activeTabOffsetWidth = tabs[0].offsetWidth * ((activeIndex - 0) + 1);
+					tabBarRect = self.element.getBoundingClientRect(),
+					parentElementWidth = self.element.parentElement.offsetWidth,
+					previousElementLeftPos,
+					transformX;
 
-				if (activeTabOffsetWidth > relativeWidth) {
-					self._translate(offsetWidth - activeTabOffsetWidth, DEFAULT_NUMBER.DURATION);
-				} else if (activeTabOffsetWidth < relativeWidth) {
-					if (activeTabOffsetWidth < offsetWidth) {
+				if (tabBarRect.width >= parentElementWidth) {
+					if (activeIndex <= 1) {
 						self._translate(0, DEFAULT_NUMBER.DURATION);
-					} else if (activeTabOffsetWidth <= relativeWidth + self._lastX) {
-						self._translate(offsetWidth - activeTabOffsetWidth, DEFAULT_NUMBER.DURATION);
+					} else if (activeIndex >= (tabs.length - 2)) {
+						// Show last element on the right edge.
+						self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+					} else {
+						previousElementLeftPos = tabs[activeIndex - 1].getBoundingClientRect().left;
+						transformX = previousElementLeftPos - tabBarRect.left;
+
+						if (tabBarRect.width - transformX >= parentElementWidth) {
+							self._translate(-transformX, DEFAULT_NUMBER.DURATION);
+						} else {
+							// Rest of the elements too narrow to cover whole tabbar.
+							// Set scroll to show last element on the right edge.
+							self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+						}
 					}
 				}
 			};
@@ -35913,13 +36045,15 @@ function pathToRegexp (path, keys, options) {
 	"use strict";
 				var eventUtil = ns.event,
 				polarUtil = ns.util.polar,
+				selectorUtil = ns.util.selectors,
 				classes = {
 					circular: "scrolling-circular",
 					direction: "scrolling-direction",
 					scrollbar: "scrolling-scrollbar",
 					path: "scrolling-path",
 					thumb: "scrolling-scrollthumb",
-					fadeIn: "fade-in"
+					fadeIn: "fade-in",
+					container: "scrolling-container"
 				},
 				bounceBack = false,
 				EVENTS = {
@@ -36337,8 +36471,8 @@ function pathToRegexp (path, keys, options) {
 							"translate(" + lastRenderedPosition + "px, 0)" :
 							"translate(0, " + lastRenderedPosition + "px)";
 					}
-
 					renderScrollbar();
+
 					requestAnimationFrame(render);
 				}
 			}
@@ -36364,7 +36498,9 @@ function pathToRegexp (path, keys, options) {
 			 */
 			function enable(element, setDirection, setVirtualMode) {
 				var parentRectangle,
-					contentRectangle;
+					contentRectangle,
+					children,
+					existingContainerElement;
 
 				virtualMode = setVirtualMode;
 				bounceBack = false;
@@ -36376,14 +36512,26 @@ function pathToRegexp (path, keys, options) {
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
 
-					// we are creating a container to position transform
-					childElement = document.createElement("div");
-					// ... and appending all children to it
-					while (element.firstElementChild) {
-						childElement.appendChild(element.firstElementChild);
-					}
-					element.appendChild(childElement);
+					existingContainerElement = element.querySelector("div." + classes.container);
+					if (existingContainerElement) {
+						childElement = existingContainerElement;
+						childElement.style.transform = "";
+					} else {
+						// we are creating a container to position transform
+						childElement = document.createElement("div");
+						// ... and appending all children to it
 
+						children = Array.prototype.slice.call(element.childNodes)
+
+						children.forEach(function (node) {
+							if (!ns.support.shape.circle || selectorUtil.matchesSelector(node, ".ui-header:not(.ui-fixed), :not(.ui-footer)")) {
+								childElement.appendChild(node);
+							}
+						});
+
+						element.insertBefore(childElement, element.firstElementChild);
+						childElement.classList.add(classes.container);
+					}
 					// setting scrolling element
 					scrollingElement = element;
 					// calculate maxScroll
@@ -36399,6 +36547,7 @@ function pathToRegexp (path, keys, options) {
 
 					// cache style element
 					elementStyle = childElement.style;
+
 					initPosition();
 					// cache current overflow value to restore in disable
 					previousOverflow = window.getComputedStyle(element).getPropertyValue("overflow");
@@ -46916,7 +47065,7 @@ function pathToRegexp (path, keys, options) {
 	"use strict";
 				var panelChanger = ns.widget.core.PanelChanger,
 				selectors = ns.util.selectors,
-				history = ns.router.history,
+				history = ns.history,
 				engine = ns.engine,
 				classes = {
 					PANEL_CHANGER: panelChanger.classes.PANEL_CHANGER
