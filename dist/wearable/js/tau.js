@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '0.14.1';
+ns.version = '0.14.2';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -362,6 +362,113 @@ ns.version = '0.14.1';
 			// same as above, but for wearable version
 			ns.setConfig("pageContainer", document.body, true);
 			ns.setConfig("findProfileFile", false, true);
+
+			}());
+
+/*global define, ns */
+/*
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * #Defaults settings object
+ *
+ * This module is deprecated, please use tau.setConfig and tau.getConfig functions or tauConfig
+ * object.
+ *
+ * @author Hyunkook Cho <hk0713.cho@samsung.com>
+ * @author Tomasz Lukawski <t.lukawski@samsung.com>
+ * @author junhyeonLee <juneh.lee@samsung.com>
+ * @author heeju Joo <heeju.joo@samsung.com>
+ * @author Maciej Urbanski <m.urbanski@samsung.com>
+ * @author Piotr Karny <p.karny@samsung.com>
+ * @author hagun.kim <hagun.kim@samsung.com>
+ * @class ns.defaults
+ * @since 2.0
+ * @deprecated 3.0
+ */
+(function () {
+	"use strict";
+				var defaults = {};
+
+			/**
+			 * Helper function to define property on object defaults
+			 * @param {string} name Property name to define
+			 */
+			function defineProperty(name) {
+				Object.defineProperty(ns.defaults, name, {
+					get: function () {
+						ns.warn("tau.defaults are deprecated from Tizen 3.0, please use tau.getConfig.");
+						return ns.getConfig(name);
+					},
+					set: function (value) {
+						ns.warn("tau.defaults are deprecated from Tizen 3.0, please use tau.setConfig.");
+						return ns.setConfig(name, value);
+					}
+				});
+			}
+
+			ns.defaults = defaults;
+
+			/**
+			 * @property {boolean} autoInitializePage=true
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("autoInitializePage");
+			/**
+			 * @property {boolean} dynamicBaseEnabled=true
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("dynamicBaseEnabled");
+			/**
+			 * @property {string} pageTransition="none"
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("pageTransition");
+			/**
+			 * @property {string} popupTransition="none"
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("popupTransition");
+			/**
+			 * @property {boolean} popupFullSize=false
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("popupFullSize");
+			/**
+			 * @property {boolean} enablePageScroll=false
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("enablePageScroll");
+			/**
+			 * @property {string} scrollEndEffectArea="content
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("scrollEndEffectArea");
+			/**
+			 * @property {boolean} enablePopupScroll=false
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("enablePopupScroll");
 
 			}());
 
@@ -5984,7 +6091,7 @@ function pathToRegexp (path, keys, options) {
 					lastState = history.activeState,
 					options = {},
 					reverse,
-					resultOfTigger = true,
+					resultOfTrigger = true,
 					skipTriggerStateChange = false;
 
 								if (manager.locked) {
@@ -6001,12 +6108,12 @@ function pathToRegexp (path, keys, options) {
 					});
 
 					if (lastState) {
-						resultOfTigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
+						resultOfTrigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
 							{url: pathUtils.getLocation(), stateUrl: lastState.stateUrl}), true, true);
 
 						
 						// if EVENT HASHCHANGE has been triggered successfully then skip trigger HistoryStateChange
-						skipTriggerStateChange = resultOfTigger;
+						skipTriggerStateChange = resultOfTrigger;
 					}
 
 					state.url = pathUtils.getLocation();
@@ -8548,7 +8655,7 @@ function pathToRegexp (path, keys, options) {
 					}
 
 					if (footer) {
-						bottom = utilsDOM.getElementHeight(footer);
+						bottom = footer.getBoundingClientRect().height;
 						contentStyle.marginBottom = bottom + "px";
 						contentStyle.paddingBottom = (-bottom) + "px";
 					}
@@ -9237,9 +9344,6 @@ function pathToRegexp (path, keys, options) {
 			function deferredFunction(fromPageWidget, toPageWidget, self, options) {
 				if (fromPageWidget) {
 					fromPageWidget.onHide();
-					if (options.reverse) {
-						fromPageWidget.destroy();
-					}
 					self._removeExternalPage(fromPageWidget, options);
 				}
 				toPageWidget.onShow();
@@ -9504,6 +9608,7 @@ function pathToRegexp (path, keys, options) {
 
 				if (options && options.reverse && DOM.hasNSData(fromPageElement, "external") &&
 					fromPageElement.parentNode) {
+					fromPageWidget.destroy();
 					fromPageElement.parentNode.removeChild(fromPageElement);
 					this.trigger(EventType.PAGE_REMOVE);
 				}
@@ -15464,13 +15569,15 @@ function pathToRegexp (path, keys, options) {
 	"use strict";
 				var eventUtil = ns.event,
 				polarUtil = ns.util.polar,
+				selectorUtil = ns.util.selectors,
 				classes = {
 					circular: "scrolling-circular",
 					direction: "scrolling-direction",
 					scrollbar: "scrolling-scrollbar",
 					path: "scrolling-path",
 					thumb: "scrolling-scrollthumb",
-					fadeIn: "fade-in"
+					fadeIn: "fade-in",
+					container: "scrolling-container"
 				},
 				bounceBack = false,
 				EVENTS = {
@@ -15888,8 +15995,8 @@ function pathToRegexp (path, keys, options) {
 							"translate(" + lastRenderedPosition + "px, 0)" :
 							"translate(0, " + lastRenderedPosition + "px)";
 					}
-
 					renderScrollbar();
+
 					requestAnimationFrame(render);
 				}
 			}
@@ -15915,7 +16022,9 @@ function pathToRegexp (path, keys, options) {
 			 */
 			function enable(element, setDirection, setVirtualMode) {
 				var parentRectangle,
-					contentRectangle;
+					contentRectangle,
+					children,
+					existingContainerElement;
 
 				virtualMode = setVirtualMode;
 				bounceBack = false;
@@ -15927,14 +16036,26 @@ function pathToRegexp (path, keys, options) {
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
 
-					// we are creating a container to position transform
-					childElement = document.createElement("div");
-					// ... and appending all children to it
-					while (element.firstElementChild) {
-						childElement.appendChild(element.firstElementChild);
-					}
-					element.appendChild(childElement);
+					existingContainerElement = element.querySelector("div." + classes.container);
+					if (existingContainerElement) {
+						childElement = existingContainerElement;
+						childElement.style.transform = "";
+					} else {
+						// we are creating a container to position transform
+						childElement = document.createElement("div");
+						// ... and appending all children to it
 
+						children = Array.prototype.slice.call(element.childNodes)
+
+						children.forEach(function (node) {
+							if (!ns.support.shape.circle || selectorUtil.matchesSelector(node, ".ui-header:not(.ui-fixed), :not(.ui-footer)")) {
+								childElement.appendChild(node);
+							}
+						});
+
+						element.insertBefore(childElement, element.firstElementChild);
+						childElement.classList.add(classes.container);
+					}
 					// setting scrolling element
 					scrollingElement = element;
 					// calculate maxScroll
@@ -15950,6 +16071,7 @@ function pathToRegexp (path, keys, options) {
 
 					// cache style element
 					elementStyle = childElement.style;
+
 					initPosition();
 					// cache current overflow value to restore in disable
 					previousOverflow = window.getComputedStyle(element).getPropertyValue("overflow");
@@ -18780,6 +18902,9 @@ function pathToRegexp (path, keys, options) {
 			prototype._calculateStandardGradient = function (state, diff, from, current) {
 				var returnValue;
 
+				if (isNaN(state)) {
+					return null;
+				}
 				if (state === 1) {
 					returnValue = GRADIENTS.LEFT;
 				} else if (state > 0) {
@@ -19030,8 +19155,10 @@ function pathToRegexp (path, keys, options) {
 
 				self.state = null;
 				self._stateDOM = null;
+				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
+				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 			};
 
 			/**
@@ -30449,6 +30576,7 @@ function pathToRegexp (path, keys, options) {
 			var nsWidget = ns.widget,
 				Listview = nsWidget.core.Listview,
 				Page = nsWidget.core.Page,
+				Popup = nsWidget.core.Popup,
 				eventUtils = ns.event,
 				slice = [].slice,
 				// constants
@@ -30590,6 +30718,7 @@ function pathToRegexp (path, keys, options) {
 					self._rendering = false;
 					self._lastRenderRequest = 0;
 					self._carouselIndex = 0;
+					self._disabledByPopup = false;
 					/**
 					 * Cache for widget UI HTMLElements
 					 * @property {Object} _ui
@@ -30944,6 +31073,7 @@ function pathToRegexp (path, keys, options) {
 								carouselSeparator = carouselItem.carouselSeparator;
 								if (itemElement.parentElement !== carouselElement) {
 									carouselElement.appendChild(itemElement);
+									self._wrapTextContent(itemElement);
 								}
 
 								if (upperSeparator) {
@@ -30964,6 +31094,7 @@ function pathToRegexp (path, keys, options) {
 											nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
 										}
 										nextCarouselSeparatorElement.appendChild(lowerSeparator.itemElement.element);
+										self._wrapTextContent(itemElement);
 									} else if (nextCarouselSeparatorElement.firstChild) {
 										nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
 									}
@@ -31051,7 +31182,7 @@ function pathToRegexp (path, keys, options) {
 					carouselItemElement.style.transform = "translateY(" + top + "px)";
 					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
 
-					// hide unsed carousel items
+					// hide unused carousel items
 					if (carouselItemElement.firstElementChild === null) {
 						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
 					} else {
@@ -31492,6 +31623,34 @@ function pathToRegexp (path, keys, options) {
 				arcListviewSelection.classList.add(classes.SELECTION_SHOW);
 			}
 
+			prototype._wrapTextContent = function (element) {
+				var child = element.firstChild,
+					TEXT_NODE_TYPE = document.TEXT_NODE,
+					wrapper;
+
+				if (!element.querySelector(".ui-arc-listview-text-content")) {
+					while (child) {
+						if (child.classList && child.classList.contains("ui-arc-listview-text-content") ||
+							child.textContent.trim() === "") {
+							child = child.nextSibling;
+							continue;
+						} else if (child.firstChild !== null) {
+							if (this._wrapTextContent(child)) {
+								return true;
+							}
+						} else if (child.nodeType === TEXT_NODE_TYPE) {
+							wrapper = document.createElement("div");
+							wrapper.className = "ui-arc-listview-text-content ui-marquee";
+							child.parentNode.replaceChild(wrapper, child);
+							wrapper.appendChild(child);
+							return true;
+						}
+						child = child.nextSibling;
+					}
+				}
+				return false;
+			}
+
 			/**
 			 * Handler for event select
 			 * @method _selectItem
@@ -31502,7 +31661,23 @@ function pathToRegexp (path, keys, options) {
 			prototype._selectItem = function (selectedIndex) {
 				var ui = this._ui,
 					state = this._state,
-					selectedElement = state.items[selectedIndex].element;
+					selectedElement = state.items[selectedIndex].element,
+					marqueeDiv,
+					widget;
+
+				marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+				if (marqueeDiv) {
+					marqueeDiv.style.width = "inherit";
+					marqueeDiv.classList.add("ui-marquee");
+				}
+				widget = ns.widget.Marquee(marqueeDiv, {
+					marqueeStyle: "scroll",
+					ellipsisEffect: "gradient",
+					iteration: "infinite",
+					delay: "300"
+				});
+				widget.start();
+
 
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
@@ -31524,14 +31699,27 @@ function pathToRegexp (path, keys, options) {
 			prototype._onChange = function (event) {
 				var selectedIndex = event.detail.selected,
 					unselectedIndex = event.detail.unselected,
-					classList = this._ui.arcListviewSelection.classList;
+					classList = this._ui.arcListviewSelection.classList,
+					selectedElement,
+					marqueeDiv,
+					widget;
 
 				if (!event.defaultPrevented) {
 					if (selectedIndex !== undefined) {
 						this._selectItem(selectedIndex);
 					} else {
 						classList.remove(classes.SELECTION_SHOW);
-						this._state.items[unselectedIndex].element.classList.remove(classes.SELECTED);
+						selectedElement = this._state.items[unselectedIndex].element,
+						selectedElement.classList.remove(classes.SELECTED);
+						// stop marque;
+						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+						if (marqueeDiv) {
+							widget = ns.widget.Marquee(marqueeDiv);
+							if (widget) {
+								widget.reset();
+								widget.destroy();
+							}
+						}
 					}
 				}
 			};
@@ -31568,6 +31756,39 @@ function pathToRegexp (path, keys, options) {
 			prototype._onPageInit = function () {
 				this._init();
 			};
+
+			/**
+			 * Handler for popupbeforeshow event
+			 * @method _onPopupShow
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupShow = function (event) {
+				var self = this,
+					popup = event.target;
+
+				if (!popup.classList.contains(Popup.classes.toastSmall)) {
+					self.disableList();
+					self._disabledByPopup = true;
+				}
+			};
+
+
+			/**
+			 * Handler for popupbeforehide event
+			 * @method _onPopupHide
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupHide = function (event) {
+				var self = this;
+
+				if (self._disabledByPopup) {
+					self.enableList();
+				}
+			}
 
 			prototype._buildArcListviewSelection = function (page) {
 				// find or add selection for current list element
@@ -31721,6 +31942,13 @@ function pathToRegexp (path, keys, options) {
 							break;
 						case "vclick" :
 							self._onClick(event);
+							break;
+						case "popupbeforehide":
+							self._onPopupHide(event);
+							break;
+						case "popupbeforeshow":
+							self._onPopupShow(event);
+							break;
 					}
 				}
 			};
@@ -31740,6 +31968,8 @@ function pathToRegexp (path, keys, options) {
 				page.addEventListener("touchmove", self, true);
 				page.addEventListener("touchend", self, true);
 				page.addEventListener("pageinit", self, true);
+				page.addEventListener("popupbeforeshow", self, true);
+				page.addEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.addEventListener("vclick", self, true);
 				}
@@ -31800,6 +32030,8 @@ function pathToRegexp (path, keys, options) {
 				page.removeEventListener("touchmove", self, true);
 				page.removeEventListener("touchend", self, true);
 				page.removeEventListener("pageinit", self, true);
+				page.removeEventListener("popupbeforeshow", self, true);
+				page.removeEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.removeEventListener("vclick", self, true);
 				}
@@ -36649,7 +36881,7 @@ function pathToRegexp (path, keys, options) {
 					ui = self._ui,
 					scroller,
 					visibleOffset,
-					elementHeight = listview.firstElementChild.getBoundingClientRect().height,
+					elementHeight,
 					scrollMargin;
 
 				// finding page  and scroller
@@ -36661,12 +36893,15 @@ function pathToRegexp (path, keys, options) {
 						scrolling.enable(scroller, "y");
 					}
 
+					elementHeight = (listview.firstElementChild) ? listview.firstElementChild.getBoundingClientRect().height : 0;
+
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
 
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
 					scrolling.setSnapSize(elementHeight);
+
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
 
@@ -36844,9 +37079,15 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.wearable.SnapListview
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					scroller;
 
 				self._unbindEvents();
+
+				scroller = getScrollableParent(self.element);
+				if (scroller) {
+					scroller.scrollTop = 0;
+				}
 
 				self._ui = null;
 				self._callbacks = null;

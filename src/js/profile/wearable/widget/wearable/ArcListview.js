@@ -36,6 +36,7 @@
 			"../../../../core/widget/core/Listview",
 			"../../../../core/widget/core/Page",
 			"../../../../core/widget/core/scroller/effect/Bouncing",
+			"../../../../core/widget/core/Popup",
 			// fetch namespace
 			"../wearable"
 		],
@@ -45,6 +46,7 @@
 			var nsWidget = ns.widget,
 				Listview = nsWidget.core.Listview,
 				Page = nsWidget.core.Page,
+				Popup = nsWidget.core.Popup,
 				eventUtils = ns.event,
 				slice = [].slice,
 				// constants
@@ -186,6 +188,7 @@
 					self._rendering = false;
 					self._lastRenderRequest = 0;
 					self._carouselIndex = 0;
+					self._disabledByPopup = false;
 					/**
 					 * Cache for widget UI HTMLElements
 					 * @property {Object} _ui
@@ -649,7 +652,7 @@
 					carouselItemElement.style.transform = "translateY(" + top + "px)";
 					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
 
-					// hide unsed carousel items
+					// hide unused carousel items
 					if (carouselItemElement.firstElementChild === null) {
 						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
 					} else {
@@ -1224,6 +1227,39 @@
 				this._init();
 			};
 
+			/**
+			 * Handler for popupbeforeshow event
+			 * @method _onPopupShow
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupShow = function (event) {
+				var self = this,
+					popup = event.target;
+
+				if (!popup.classList.contains(Popup.classes.toastSmall)) {
+					self.disableList();
+					self._disabledByPopup = true;
+				}
+			};
+
+
+			/**
+			 * Handler for popupbeforehide event
+			 * @method _onPopupHide
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupHide = function (event) {
+				var self = this;
+
+				if (self._disabledByPopup) {
+					self.enableList();
+				}
+			}
+
 			prototype._buildArcListviewSelection = function (page) {
 				// find or add selection for current list element
 				var arcListviewSelection = page.querySelector(selectors.SELECTION);
@@ -1376,6 +1412,13 @@
 							break;
 						case "vclick" :
 							self._onClick(event);
+							break;
+						case "popupbeforehide":
+							self._onPopupHide(event);
+							break;
+						case "popupbeforeshow":
+							self._onPopupShow(event);
+							break;
 					}
 				}
 			};
@@ -1395,6 +1438,8 @@
 				page.addEventListener("touchmove", self, true);
 				page.addEventListener("touchend", self, true);
 				page.addEventListener("pageinit", self, true);
+				page.addEventListener("popupbeforeshow", self, true);
+				page.addEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.addEventListener("vclick", self, true);
 				}
@@ -1455,6 +1500,8 @@
 				page.removeEventListener("touchmove", self, true);
 				page.removeEventListener("touchend", self, true);
 				page.removeEventListener("pageinit", self, true);
+				page.removeEventListener("popupbeforeshow", self, true);
+				page.removeEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.removeEventListener("vclick", self, true);
 				}
