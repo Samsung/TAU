@@ -242,6 +242,9 @@ body {
 .ui-page .ui-header.ui-has-more .ui-more.ui-icon-overflow:active {
   background-color: transparent;
 }
+.ui-page .ui-header.ui-header-has-only-more-button {
+  position: absolute;
+}
 .ui-page .ui-more {
   position: fixed;
   top: 50%;
@@ -1314,6 +1317,15 @@ a {
 .ui-listview li button:first-child:last-child {
   padding: 0;
   margin: 0;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .ui-listview li.li-has-multiline.ui-arc-listview-selected.li-has-2line-sub {
   padding-top: 0.5625rem;
