@@ -539,6 +539,7 @@
 
 				self._redraw = true;
 				self._lastChange = Date.now();
+				self._previousVisibleElement = null;
 
 				self._prepareColors();
 				self._refreshBackgroundCanvas(self._scrollableContainer, element);
