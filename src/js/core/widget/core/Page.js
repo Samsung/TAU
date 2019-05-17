@@ -378,6 +378,8 @@
 					uiPageActive: "ui-page-active",
 					uiSection: "ui-section",
 					uiHeader: "ui-header",
+					uiMore: "ui-more",
+					uiHeaderOnlyMoreButton: "ui-header-has-only-more-button",
 					uiFooter: "ui-footer",
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
@@ -390,6 +392,7 @@
 				//same level as content, other wise page content is build on
 				//indexscrollbar element
 				CONTENT_SELECTOR = "[data-role='content'],." + classes.uiContent,
+				ONLY_CHILD_MORE_BUTTON_SELECTOR = "." + classes.uiMore + ":first-child:last-child",
 				prototype = new BaseWidget();
 
 			Page.classes = classes;
@@ -565,6 +568,15 @@
 						// if is string fill content by string value
 						if (typeof value === "string") {
 							ui.header.textContent = value;
+						}
+
+						if (ns.support && ns.support.shape && ns.support.shape.circle) {
+							// patch for backward compability - if header has only more button
+							// (it was common for rectangle devices) header should be marked
+							// and take no place at all.
+							if (header.querySelector(ONLY_CHILD_MORE_BUTTON_SELECTOR) && header.textContent.trim() === "") {
+								header.classList.add(classes.uiHeaderOnlyMoreButton);
+							}
 						}
 					}
 					// and remember options
