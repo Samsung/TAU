@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '0.14.2';
+ns.version = '1.0.0';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -11859,6 +11859,8 @@ function pathToRegexp (path, keys, options) {
 					uiPageActive: "ui-page-active",
 					uiSection: "ui-section",
 					uiHeader: "ui-header",
+					uiMore: "ui-more",
+					uiHeaderOnlyMoreButton: "ui-header-has-only-more-button",
 					uiFooter: "ui-footer",
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
@@ -11871,6 +11873,7 @@ function pathToRegexp (path, keys, options) {
 				//same level as content, other wise page content is build on
 				//indexscrollbar element
 				CONTENT_SELECTOR = "[data-role='content'],." + classes.uiContent,
+				ONLY_CHILD_MORE_BUTTON_SELECTOR = "." + classes.uiMore + ":first-child:last-child",
 				prototype = new BaseWidget();
 
 			Page.classes = classes;
@@ -12043,6 +12046,15 @@ function pathToRegexp (path, keys, options) {
 						// if is string fill content by string value
 						if (typeof value === "string") {
 							ui.header.textContent = value;
+						}
+
+						if (ns.support && ns.support.shape && ns.support.shape.circle) {
+							// patch for backward compability - if header has only more button
+							// (it was common for rectangle devices) header should be marked
+							// and take no place at all.
+							if (header.querySelector(ONLY_CHILD_MORE_BUTTON_SELECTOR) && header.textContent.trim() === "") {
+								header.classList.add(classes.uiHeaderOnlyMoreButton);
+							}
 						}
 					}
 					// and remember options
@@ -30783,6 +30795,7 @@ function pathToRegexp (path, keys, options) {
 
 				self._redraw = true;
 				self._lastChange = Date.now();
+				self._previousVisibleElement = null;
 
 				self._prepareColors();
 				self._refreshBackgroundCanvas(self._scrollableContainer, element);
@@ -36918,6 +36931,8 @@ function pathToRegexp (path, keys, options) {
 
 				utilScrolling = ns.util.scrolling,
 
+				filter = [].filter,
+
 				/**
 				 * Local constructor function
 				 * @method VirtualListview
@@ -37219,7 +37234,8 @@ function pathToRegexp (path, keys, options) {
 					i,
 					offset,
 					index,
-					isLastBuffer = false;
+					isLastBuffer = false,
+					children = filter.call(element.children, isListItem);
 
 				//Get size of scroll clip depended on scroll direction
 				scrollClipSize = options.orientation === VERTICAL ? scrollInfo.clipHeight :
@@ -37266,7 +37282,7 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				for (i = 0; i < indexCorrection; i += 1) {
-					offset += _computeElementSize(element.children[i], options.orientation);
+					offset += _computeElementSize(children[i], options.orientation);
 				}
 
 				if (options.orientation === VERTICAL) {
@@ -37282,6 +37298,18 @@ function pathToRegexp (path, keys, options) {
 				}
 				blockEvent = false;
 				self._currentIndex = index;
+			}
+
+			function getFirstElementChild(element) {
+				var firstLiElement = element.firstElementChild;
+
+				while (firstLiElement) {
+					if (firstLiElement.tagName === "LI") {
+						return firstLiElement;
+					}
+					firstLiElement = firstLiElement.nextElementSibling;
+				}
+				return null;
 			}
 
 			/**
@@ -37310,12 +37338,13 @@ function pathToRegexp (path, keys, options) {
 			function _loadListElementRange(self, element, domBuffer, sizeGetter, loadIndex,
 				indexDirection, elementsToLoad) {
 				var temporaryElement,
+					children = filter.call(element.children, isListItem),
 					jump = 0,
 					i;
 
 				if (indexDirection > 0) {
 					for (i = elementsToLoad; i > 0; i--) {
-						temporaryElement = element.firstElementChild;
+						temporaryElement = children.shift();
 
 						// move to offscreen buffer
 						domBuffer.appendChild(temporaryElement);
@@ -37331,7 +37360,7 @@ function pathToRegexp (path, keys, options) {
 					self._currentIndex += elementsToLoad;
 				} else {
 					for (i = elementsToLoad; i > 0; i--) {
-						temporaryElement = element.lastElementChild;
+						temporaryElement = children.shift();
 
 						// move to offscreen buffer
 						domBuffer.appendChild(temporaryElement);
@@ -37339,7 +37368,7 @@ function pathToRegexp (path, keys, options) {
 						//Updates list item using template
 						self._updateListItem(temporaryElement, loadIndex);
 
-						element.insertBefore(temporaryElement, element.firstElementChild);
+						element.insertBefore(temporaryElement, getFirstElementChild(element));
 						jump -= sizeGetter(temporaryElement, loadIndex--);
 					}
 					self._currentIndex -= elementsToLoad;
@@ -37427,6 +37456,10 @@ function pathToRegexp (path, keys, options) {
 				return result;
 			}
 
+			function isListItem(element) {
+				return element.tagName === "LI";
+			}
+
 			/**
 			 *
 			 * @param {Array} sizeMap
@@ -37475,7 +37508,7 @@ function pathToRegexp (path, keys, options) {
 					domBuffer = self._domBuffer,
 					avgListItemSize = self._avgListItemSize,
 					resultsetSize = sumProperty(
-						element.children,
+						filter.call(element.children, isListItem),
 						options.orientation === VERTICAL ? "clientHeight" : "clientWidth"
 					),
 					sizeMap = self._sizeMap,
@@ -37764,15 +37797,15 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._loadData = function (index) {
 				var self = this,
-					children = self.element.firstElementChild;
+					child = self.element.firstElementChild;
 
 				if (self._currentIndex !== index) {
 					self._currentIndex = index;
 					do {
-						self._updateListItem(children, index);
+						self._updateListItem(child, index);
 						++index;
-						children = children.nextElementSibling;
-					} while (children);
+						child = child.nextElementSibling;
+					} while (child);
 				}
 			};
 

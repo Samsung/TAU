@@ -143,6 +143,8 @@
 
 				utilScrolling = ns.util.scrolling,
 
+				filter = [].filter,
+
 				/**
 				 * Local constructor function
 				 * @method VirtualListview
@@ -444,7 +446,8 @@
 					i,
 					offset,
 					index,
-					isLastBuffer = false;
+					isLastBuffer = false,
+					children = filter.call(element.children, isListItem);
 
 				//Get size of scroll clip depended on scroll direction
 				scrollClipSize = options.orientation === VERTICAL ? scrollInfo.clipHeight :
@@ -491,7 +494,7 @@
 				}
 
 				for (i = 0; i < indexCorrection; i += 1) {
-					offset += _computeElementSize(element.children[i], options.orientation);
+					offset += _computeElementSize(children[i], options.orientation);
 				}
 
 				if (options.orientation === VERTICAL) {
@@ -507,6 +510,18 @@
 				}
 				blockEvent = false;
 				self._currentIndex = index;
+			}
+
+			function getFirstElementChild(element) {
+				var firstLiElement = element.firstElementChild;
+
+				while (firstLiElement) {
+					if (firstLiElement.tagName === "LI") {
+						return firstLiElement;
+					}
+					firstLiElement = firstLiElement.nextElementSibling;
+				}
+				return null;
 			}
 
 			/**
@@ -535,12 +550,13 @@
 			function _loadListElementRange(self, element, domBuffer, sizeGetter, loadIndex,
 				indexDirection, elementsToLoad) {
 				var temporaryElement,
+					children = filter.call(element.children, isListItem),
 					jump = 0,
 					i;
 
 				if (indexDirection > 0) {
 					for (i = elementsToLoad; i > 0; i--) {
-						temporaryElement = element.firstElementChild;
+						temporaryElement = children.shift();
 
 						// move to offscreen buffer
 						domBuffer.appendChild(temporaryElement);
@@ -556,7 +572,7 @@
 					self._currentIndex += elementsToLoad;
 				} else {
 					for (i = elementsToLoad; i > 0; i--) {
-						temporaryElement = element.lastElementChild;
+						temporaryElement = children.shift();
 
 						// move to offscreen buffer
 						domBuffer.appendChild(temporaryElement);
@@ -564,7 +580,7 @@
 						//Updates list item using template
 						self._updateListItem(temporaryElement, loadIndex);
 
-						element.insertBefore(temporaryElement, element.firstElementChild);
+						element.insertBefore(temporaryElement, getFirstElementChild(element));
 						jump -= sizeGetter(temporaryElement, loadIndex--);
 					}
 					self._currentIndex -= elementsToLoad;
@@ -652,6 +668,10 @@
 				return result;
 			}
 
+			function isListItem(element) {
+				return element.tagName === "LI";
+			}
+
 			/**
 			 *
 			 * @param {Array} sizeMap
@@ -700,7 +720,7 @@
 					domBuffer = self._domBuffer,
 					avgListItemSize = self._avgListItemSize,
 					resultsetSize = sumProperty(
-						element.children,
+						filter.call(element.children, isListItem),
 						options.orientation === VERTICAL ? "clientHeight" : "clientWidth"
 					),
 					sizeMap = self._sizeMap,
@@ -989,15 +1009,15 @@
 			 */
 			prototype._loadData = function (index) {
 				var self = this,
-					children = self.element.firstElementChild;
+					child = self.element.firstElementChild;
 
 				if (self._currentIndex !== index) {
 					self._currentIndex = index;
 					do {
-						self._updateListItem(children, index);
+						self._updateListItem(child, index);
 						++index;
-						children = children.nextElementSibling;
-					} while (children);
+						child = child.nextElementSibling;
+					} while (child);
 				}
 			};
 
