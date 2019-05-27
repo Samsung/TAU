@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.0';
+ns.version = '1.0.1';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -8488,6 +8488,7 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				engine = ns.engine,
+				arrayUtil = ns.util.array,
 
 				Page = function () {
 					var self = this;
@@ -8927,22 +8928,26 @@ function pathToRegexp (path, keys, options) {
 					dataPageTitle = utilsDOM.getNSData(element, "title"),
 					header = self._ui.header,
 					pageTitle = dataPageTitle,
-					titleElement;
+					titleElements,
+					mainTitleElement;
 
 				if (header) {
-					titleElement = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6")[0];
-					if (titleElement) {
-						titleElement.classList.add(classes.uiTitle);
-					}
+					titleElements = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6");
 
-					if (!pageTitle && titleElement) {
-						pageTitle = titleElement.innerText;
-						self._ui.title = titleElement;
+					mainTitleElement = titleElements[0];
+
+					if (!pageTitle && mainTitleElement) {
+						pageTitle = mainTitleElement.innerText;
+						self._ui.title = mainTitleElement;
 					}
 
 					if (!dataPageTitle && pageTitle) {
 						utilsDOM.setNSData(element, "title", pageTitle);
 					}
+
+					arrayUtil.forEach(titleElements, function (titleElement) {
+						titleElement.classList.add(classes.uiTitle)
+					});
 				}
 			};
 
