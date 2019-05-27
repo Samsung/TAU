@@ -8438,8 +8438,9 @@ tau-progress {
   right: 16px;
   bottom: 3.5px;
 }
-.ui-listview .ui-group-index + .ui-li-static:not(.li-has-checkbox) {
-  padding: 16.5px 8.5px 16.5px 16px;
+.ui-listview .ui-group-index + .ui-li-static {
+  padding-top: 16.5px;
+  padding-bottom: 16.5px;
 }
 .ui-listview .ui-group-index ~ .ui-li-static > input[type=checkbox] {
   position: absolute;
