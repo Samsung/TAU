@@ -246,6 +246,7 @@
 		[
 			"../../engine",
 			"../../util/selectors",
+			"../../util/array",
 			"../../util/DOM/attributes",
 			"../../util/DOM/css",
 			"../BaseWidget",
@@ -286,6 +287,7 @@
 				 * @static
 				 */
 				engine = ns.engine,
+				arrayUtil = ns.util.array,
 
 				Page = function () {
 					var self = this;
@@ -728,22 +730,26 @@
 					dataPageTitle = utilsDOM.getNSData(element, "title"),
 					header = self._ui.header,
 					pageTitle = dataPageTitle,
-					titleElement;
+					titleElements,
+					mainTitleElement;
 
 				if (header) {
-					titleElement = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6")[0];
-					if (titleElement) {
-						titleElement.classList.add(classes.uiTitle);
-					}
+					titleElements = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6");
 
-					if (!pageTitle && titleElement) {
-						pageTitle = titleElement.innerText;
-						self._ui.title = titleElement;
+					mainTitleElement = titleElements[0];
+
+					if (!pageTitle && mainTitleElement) {
+						pageTitle = mainTitleElement.innerText;
+						self._ui.title = mainTitleElement;
 					}
 
 					if (!dataPageTitle && pageTitle) {
 						utilsDOM.setNSData(element, "title", pageTitle);
 					}
+
+					arrayUtil.forEach(titleElements, function (titleElement) {
+						titleElement.classList.add(classes.uiTitle)
+					});
 				}
 			};
 
