@@ -923,7 +923,7 @@
 				var self = this,
 					ui = self._ui,
 					options = self.options,
-					scrollview = self.scrollview || self._getScrollView(options, element),
+					scrollview = ui.scrollview || self._getScrollView(options, element),
 					elementRect,
 					scrollviewRect;
 
@@ -1029,6 +1029,7 @@
 			 */
 			prototype._refreshScrollbar = function () {
 				var self = this,
+					currentIndex = self._currentIndex,
 					element = self.element,
 					options = self.options,
 					ui = self._ui,
@@ -1039,7 +1040,7 @@
 				if (options.orientation === VERTICAL) {
 					//Note: element.clientHeight is variable
 					bufferSizePx = parseFloat(element.clientHeight) || 0;
-					listSize = bufferSizePx / options.bufferSize * options.dataLength;
+					listSize = bufferSizePx / options.bufferSize * (options.dataLength - currentIndex);
 
 					if (options.optimizedScrolling) {
 						utilScrolling.setMaxScroll(listSize);
