@@ -39,7 +39,9 @@
 				visibleItems: 3,
 				ellipsisA: 333,
 				ellipsisB: 180,
-				selectedIndex: 0
+				selectedIndex: 0,
+				dataLength: 0,
+				listItemUpdater: null
 			}, "options was correct initialized");
 		});
 
@@ -549,6 +551,7 @@
 		QUnit.test("_carouselUpdate", function (assert) {
 			var arclistWidget = new ArcListview();
 
+			arclistWidget.element = document.createElement("ul");
 			arclistWidget._state = {
 				items: [
 					{y: 2, height: 10},
@@ -676,6 +679,8 @@
 				}
 			};
 			arclistWidget._scrollAnimationEnd = false;
+			arclistWidget._items = [{id: 0}];
+
 			arclistWidget._calc = function () {
 				assert.ok(true, "_calc was called");
 			};
