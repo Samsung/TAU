@@ -21,7 +21,7 @@
 		if (pageElement.classList.contains("page-snaplistview")) {
 			options.snap = {animate: "scale"};
 		}
-		virtualListWidget = tau.widget.VirtualListviewSimple(listElement, options);
+		virtualListWidget = tau.widget.Listview(listElement, options);
 		/* Update list items */
 		virtualListWidget.setListItemUpdater(function (listElement, newIndex) {
 			var data = JSON_DATA[newIndex];
@@ -39,13 +39,6 @@
 				});
 			}
 		});
-		if (pageId.indexOf("marquee") > -1) {
-			listHelper = tau.helper.SnapListMarqueeStyle.create(listElement, {
-				marqueeDelay: 1000,
-				marqueeStyle: "endToEnd",
-				animate: "scale"
-			});
-		}
 	});
 
 	/**
