@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.0';
+ns.version = '1.0.1';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -11767,6 +11767,7 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				engine = ns.engine,
+				arrayUtil = ns.util.array,
 
 				Page = function () {
 					var self = this;
@@ -12206,22 +12207,26 @@ function pathToRegexp (path, keys, options) {
 					dataPageTitle = utilsDOM.getNSData(element, "title"),
 					header = self._ui.header,
 					pageTitle = dataPageTitle,
-					titleElement;
+					titleElements,
+					mainTitleElement;
 
 				if (header) {
-					titleElement = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6")[0];
-					if (titleElement) {
-						titleElement.classList.add(classes.uiTitle);
-					}
+					titleElements = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6");
 
-					if (!pageTitle && titleElement) {
-						pageTitle = titleElement.innerText;
-						self._ui.title = titleElement;
+					mainTitleElement = titleElements[0];
+
+					if (!pageTitle && mainTitleElement) {
+						pageTitle = mainTitleElement.innerText;
+						self._ui.title = mainTitleElement;
 					}
 
 					if (!dataPageTitle && pageTitle) {
 						utilsDOM.setNSData(element, "title", pageTitle);
 					}
+
+					arrayUtil.forEach(titleElements, function (titleElement) {
+						titleElement.classList.add(classes.uiTitle)
+					});
 				}
 			};
 
@@ -34235,6 +34240,10 @@ function pathToRegexp (path, keys, options) {
 				this.options.inline = value;
 			};
 
+			prototype._getContainer = function () {
+				return this._ui.elSelectWrapper;
+			}
+
 			/**
 			 * Build structure of DropdownMenu widget
 			 * @method _build
@@ -34337,24 +34346,31 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._buildFilter = function (element, elementId) {
 				var ui = this._ui,
-					screenFilterElement = document.createElement("div"),
-					optionWrapperElement = document.createElement("div"),
-					optionContainerElement = document.createElement("ul"),
+					screenFilterElement = ui.screenFilter,
+					optionWrapperElement = ui.elOptionWrapper,
+					optionContainerElement = ui.elOptionContainer,
 					fragment = document.createDocumentFragment();
 
-				screenFilterElement.classList.add(classes.filter, classes.filterHidden);
-				screenFilterElement.id = elementId + "-overlay";
+				if (!screenFilterElement) {
+					screenFilterElement = document.createElement("div");
+					screenFilterElement.classList.add(classes.filter, classes.filterHidden);
+					screenFilterElement.id = elementId + "-overlay";
+					fragment.appendChild(screenFilterElement);
+				}
 
-				optionWrapperElement.className = classes.optionsWrapper;
-				optionWrapperElement.id = elementId + "-options-wrapper";
+				if (!optionWrapperElement) {
+					optionWrapperElement = document.createElement("div");
+					optionWrapperElement.className = classes.optionsWrapper;
+					optionWrapperElement.id = elementId + "-options-wrapper";
+					fragment.appendChild(optionWrapperElement);
+				}
 
-				optionContainerElement.className = classes.optionList;
-				optionContainerElement.id = elementId + "-options";
-
-				optionWrapperElement.appendChild(optionContainerElement);
-
-				fragment.appendChild(screenFilterElement);
-				fragment.appendChild(optionWrapperElement);
+				if (!optionContainerElement) {
+					optionContainerElement = document.createElement("ul"),
+					optionContainerElement.className = classes.optionList;
+					optionContainerElement.id = elementId + "-options";
+					optionWrapperElement.appendChild(optionContainerElement);
+				}
 				ui.page.appendChild(fragment);
 
 				ui.elOptionContainer = optionContainerElement;
