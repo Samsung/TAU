@@ -1771,27 +1771,22 @@ a.ui-color-blue.ui-state-disabled,
 ***************************************************************************/
 @-webkit-keyframes indeterminate {
   0% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate1_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   25% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate2_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   50% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate3_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   75% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate4_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   100% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate5_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
