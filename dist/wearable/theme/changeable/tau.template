@@ -468,7 +468,6 @@ tau-page {
 }
 .ui-page .ui-header .ui-more.ui-icon-detail {
   background-color: B052L1;
-  mask-image: url("images/Actionbar/tw_ic_menu_detail_normal_holo_dark.png");
   -webkit-mask-size: 3.25rem 3.75rem;
   -moz-mask-size: 3.25rem 3.75rem;
   -ms-mask-size: 3.25rem 3.75rem;
@@ -489,7 +488,6 @@ tau-page {
   cursor: default;
   background-color: transparent;
   background-color: B052L1D;
-  mask-image: url("images/Actionbar/tw_ic_menu_detail_disable_holo_dark.png");
   -webkit-mask-size: 3.25rem 3.75rem;
   -moz-mask-size: 3.25rem 3.75rem;
   -ms-mask-size: 3.25rem 3.75rem;
@@ -508,7 +506,6 @@ tau-page {
 }
 .ui-page .ui-header .ui-more.ui-icon-overflow {
   background-color: B052L1;
-  mask-image: url("images/Actionbar/tw_ic_menu_moreoverflow_holo_dark.png");
   -webkit-mask-size: 3.25rem 3.75rem;
   -moz-mask-size: 3.25rem 3.75rem;
   -ms-mask-size: 3.25rem 3.75rem;
@@ -529,7 +526,6 @@ tau-page {
   cursor: default;
   background-color: transparent;
   background-color: B052L1D;
-  mask-image: url("images/Actionbar/tw_ic_menu_moreoverflow_holo_dark.png");
   -webkit-mask-size: 3.25rem 3.75rem;
   -moz-mask-size: 3.25rem 3.75rem;
   -ms-mask-size: 3.25rem 3.75rem;
@@ -548,7 +544,6 @@ tau-page {
 }
 .ui-page .ui-header .ui-more.ui-icon-selectall {
   background-color: B052L1;
-  mask-image: url("images/Actionbar/tw_ic_menu_selectall_normal_holo_dark.png");
   -webkit-mask-size: 3.25rem 3.75rem;
   -moz-mask-size: 3.25rem 3.75rem;
   -ms-mask-size: 3.25rem 3.75rem;
@@ -569,7 +564,6 @@ tau-page {
   cursor: default;
   background-color: transparent;
   background-color: B052L1D;
-  mask-image: url("images/Actionbar/tw_ic_menu_selectall_disable_holo_dark.png");
   -webkit-mask-size: 3.25rem 3.75rem;
   -moz-mask-size: 3.25rem 3.75rem;
   -ms-mask-size: 3.25rem 3.75rem;
@@ -638,7 +632,6 @@ tau-page {
 }
 @-webkit-keyframes indeterminate {
   0% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate1_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -647,7 +640,6 @@ tau-page {
     background-color: B065L6;
   }
   25% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate2_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -656,7 +648,6 @@ tau-page {
     background-color: B065L6;
   }
   50% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate3_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -665,7 +656,6 @@ tau-page {
     background-color: B065L6;
   }
   75% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate4_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -674,7 +664,6 @@ tau-page {
     background-color: B065L6;
   }
   100% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate5_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -685,7 +674,6 @@ tau-page {
 }
 @-moz-keyframes indeterminate {
   0% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate1_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -694,7 +682,6 @@ tau-page {
     background-color: B065L6;
   }
   25% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate2_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -703,7 +690,6 @@ tau-page {
     background-color: B065L6;
   }
   50% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate3_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -712,7 +698,6 @@ tau-page {
     background-color: B065L6;
   }
   75% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate4_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -721,7 +706,6 @@ tau-page {
     background-color: B065L6;
   }
   100% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate5_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -732,7 +716,6 @@ tau-page {
 }
 @-ms-keyframes indeterminate {
   0% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate1_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -741,7 +724,6 @@ tau-page {
     background-color: B065L6;
   }
   25% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate2_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -750,7 +732,6 @@ tau-page {
     background-color: B065L6;
   }
   50% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate3_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -759,7 +740,6 @@ tau-page {
     background-color: B065L6;
   }
   75% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate4_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -768,7 +748,6 @@ tau-page {
     background-color: B065L6;
   }
   100% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate5_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -779,7 +758,6 @@ tau-page {
 }
 @-o-keyframes indeterminate {
   0% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate1_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -788,7 +766,6 @@ tau-page {
     background-color: B065L6;
   }
   25% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate2_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -797,7 +774,6 @@ tau-page {
     background-color: B065L6;
   }
   50% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate3_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -806,7 +782,6 @@ tau-page {
     background-color: B065L6;
   }
   75% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate4_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -815,7 +790,6 @@ tau-page {
     background-color: B065L6;
   }
   100% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate5_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -826,7 +800,6 @@ tau-page {
 }
 @keyframes indeterminate {
   0% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate1_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -835,7 +808,6 @@ tau-page {
     background-color: B065L6;
   }
   25% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate2_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -844,7 +816,6 @@ tau-page {
     background-color: B065L6;
   }
   50% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate3_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -853,7 +824,6 @@ tau-page {
     background-color: B065L6;
   }
   75% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate4_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -862,7 +832,6 @@ tau-page {
     background-color: B065L6;
   }
   100% {
-    mask-image: url('images/Progress/tw_progressbar_indeterminate5_holo_dark.png');
     -webkit-mask-repeat: no-repeat;
     -moz-mask-repeat: no-repeat;
     -ms-mask-repeat: no-repeat;
@@ -2396,15 +2365,12 @@ tau-listview {
   margin: 0;
 }
 .ui-listview li.ui-li-has-action-icon .ui-action-delete {
-  mask-image: url('images/listview/tw_list_delete_holo_dark.png');
   background-color: F022L1i;
 }
 .ui-listview li.ui-li-has-action-icon .ui-action-setting {
-  mask-image: url('images/listview/tw_list_setting_holo_dark.png');
   background-color: F022L1i;
 }
 .ui-listview li.ui-li-has-action-icon .ui-action-add {
-  mask-image: url('images/listview/tw_list_add_holo_dark.png');
   background-color: F022L1i;
 }
 .ui-listview li.ui-li-has-action-icon .ui-action-delete:active,
@@ -2466,7 +2432,6 @@ tau-listview {
   height: 100%;
   float: left;
   width: 18px;
-  background: transparent url('images/Datetimepicker/tw_timepicker_num_dot.png');
 }
 .ui-datefield > .ui-btn:enabled:focus {
   background-color: rgba(255, 255, 255, 0.15);
@@ -2536,32 +2501,6 @@ tau-listview {
 }
 .ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus {
   float: right;
-  background: transparent url('images/Datetimepicker/tw_timepicker_dialbtn_plus_normal.png') center center no-repeat;
-}
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus:active:hover,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus:enabled:active,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus:enabled:active:hover {
-  background: transparent url('images/Datetimepicker/tw_timepicker_dialbtn_plus_pressed.png') center center no-repeat;
-}
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus:disabled,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus:disabled:active:hover,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus.ui-state-disabled,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-plus.ui-state-disabled:active:hover {
-  background: transparent url('images/Datetimepicker/tw_timepicker_dialbtn_plus_dim.png') center center no-repeat;
-}
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus {
-  background: transparent url('images/Datetimepicker/tw_timepicker_dialbtn_minus_normal.png') center center no-repeat;
-}
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus:active:hover,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus:enabled:active,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus:enabled:active:hover {
-  background: transparent url('images/Datetimepicker/tw_timepicker_dialbtn_minus_pressed.png') center center no-repeat;
-}
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus:disabled,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus:disabled:active:hover,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus.ui-state-disabled,
-.ui-datetime-wheel .ui-btn.ui-datetime-wheel-minus.ui-state-disabled:active:hover {
-  background: transparent url('images/Datetimepicker/tw_timepicker_dialbtn_minus_dim.png') center center no-repeat;
 }
 .ui-datetime-wheel .ui-wheel {
   display: block;
@@ -2570,7 +2509,6 @@ tau-listview {
   height: 68px;
   padding: 10px 0;
   box-sizing: border-box;
-  background: url('images/Datetimepicker/tw_timepicker_wheel_01.png') center center no-repeat;
 }
 .ui-datetime-btns {
   position: absolute;
@@ -2603,12 +2541,10 @@ tau-listview {
 .ui-datetime-btns .ui-btn-left {
   width: 160px;
   float: left;
-  background: url('images/Datetimepicker/tw_timepicker_left_softbtn.png') center center no-repeat;
 }
 .ui-datetime-btns .ui-btn-right {
   width: 159px;
   float: right;
-  background: url('images/Datetimepicker/tw_timepicker_right_softbtn.png') center center no-repeat;
 }
 .ui-datetime-btns .ui-btn:disabled,
 .ui-datetime-btns .ui-btn.ui-state-disabled {
@@ -2641,7 +2577,6 @@ tau-listview {
 .ui-datetime-periods .ui-btn.ui-state-active:enabled:active {
   color: inherit;
   text-decoration: none;
-  background: url('images/Datetimepicker/tw_timepicker_time_bg.png') center center no-repeat;
 }
 .ui-datetime-periods .ui-btn.ui-selected:enabled,
 .ui-datetime-periods .ui-btn.ui-state-active:enabled {
@@ -2650,7 +2585,6 @@ tau-listview {
 }
 .ui-datetime-periods .ui-datetime-periods-separator {
   width: 24px;
-  background: url('images/Datetimepicker/tw_timepicker_num_dot_01.png') center center no-repeat;
 }
 .ui-datetime-wheel.ui-hidden,
 .ui-datetime-periods.ui-hidden {
