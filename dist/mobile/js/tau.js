@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.1';
+ns.version = '1.0.2';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -30415,7 +30415,8 @@ function pathToRegexp (path, keys, options) {
 						 */
 						options = {
 							coloredBackground: true,
-							colorRestOfScreen: true,
+							colorRestOfTheScreenBellow: true,
+							colorRestOfTheScreenAbove: true,
 							firstColorStep: 0,
 							lastColorStep: 0
 						};
@@ -30455,8 +30456,9 @@ function pathToRegexp (path, keys, options) {
 					self._colorStep = [0, 0, 0, -0.04];
 					// _lastChange
 					self._lastChange = 0;
-					// array of neighbor colored listview related to parent
-					self._siblingLists = [];
+					// arrays of neighbor colored listview related to parent
+					self._siblingListsBellow = [];
+					self._siblingListsAbove = [];
 
 					initializeGlobalsForDrag(self);
 				},
@@ -30852,7 +30854,8 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					context = self._context,
 					canvas,
-					foundSelf = false;
+					foundSelf = false,
+					siblingLists;
 
 				self.options.firstColorStep = parseInt(self.options.firstColorStep, 10);
 
@@ -30875,19 +30878,32 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				// check other sibling colored lists
-				self._siblingLists = [].slice.call(self.element.parentElement.querySelectorAll(WIDGET_SELECTOR));
+				siblingLists = [].slice.call(self.element.parentElement.querySelectorAll(WIDGET_SELECTOR));
 				// remove itself listview from list and above listview elements
-				self._siblingLists = self._siblingLists.filter(function (listviewElement) {
+				self._siblingListsBellow = siblingLists.filter(function (listviewElement) {
 					if (foundSelf) {
 						return true;
 					}
 					foundSelf = listviewElement === self.element;
 					return false;
 				});
-				if (self._siblingLists.length > 0) {
+				foundSelf = false;
+				self._siblingListsAbove = siblingLists.filter(function (listviewElement) {
+					if (foundSelf || listviewElement === self.element) {
+						foundSelf = true;
+						return false;
+					}
+					return true;
+				});
+
+				if (self._siblingListsBellow.length > 0) {
 					// disable coloring the test of space below current listview
-					self.options.colorRestOfScreen = false;
+					self.options.colorRestOfTheScreenBellow = false;
 				}
+				if (self._siblingListsAbove.length > 0) {
+					self.options.colorRestOfTheScreenAbove = false;
+				}
+
 			};
 
 			/**
@@ -31168,21 +31184,13 @@ function pathToRegexp (path, keys, options) {
 					// store dimensions of li
 					rectangle = null,
 					// top on each last element
-					previousTop = 0,
+					previousBottom = 0,
 					// top offset of widget
 					topOffset = self._topOffset,
-					changeColor;
-
-				// clear space above list;
-				if (visibleLiElement) {
-					rectangle = getElementRectangle(visibleLiElement);
-					rectangle.height = 0;
-					rectangle.height = calculateElementHeight(visibleLiElement, rectangle);
-					rectangle = adjustRectangle(rectangle, topOffset, listLeft, previousTop);
-					topOffset = 0;
-					self._context.clearRect(rectangle.left, rectangle.top, rectangle.width, rectangle.height);
-					previousTop += rectangle.height;
-				}
+					changeColor,
+					backgroundRectangles = [],
+					firstItem = null,
+					firstRectangle = null;
 
 				while (visibleLiElement) {
 					// if li element is group index, the color of next element wont change
@@ -31201,21 +31209,39 @@ function pathToRegexp (path, keys, options) {
 					// check that element is visible (can be partially visible)
 					if (ceil(rectangle.top + rectangle.height) >= scrollableContainerTop) {
 						// adjust height for first element
-						rectangle = adjustRectangle(rectangle, topOffset, listLeft, previousTop);
+						rectangle = adjustRectangle(rectangle, topOffset, listLeft, previousBottom);
 						topOffset = 0;
-						drawRectangle(context, rectangle);
-						previousTop += rectangle.height;
-						if (changeColor) {
-							// check if we want to change the bg color of next li element, stop when all done
-							if (!modifyColor(colorTmp, step)) {
-								visibleLiElement = null;
-							}
-							self.options.lastColorStep++;
-						}
+						backgroundRectangles.push({
+							rectangle: rectangle,
+							changeColor: changeColor
+						})
+						previousBottom += rectangle.height;
 					}
 					// get visibleLiElement element
 					visibleLiElement = nextVisibleLiElement;
 				}
+
+				//Remove color buffer above first element if list is not coloring rest of the screen
+				firstItem = backgroundRectangles[0]
+				if (firstItem) {
+					firstRectangle = firstItem.rectangle;
+					if (!self.options.colorRestOfTheScreenAbove) {
+						// clear area above list and shrink the rectangle to cover only ont
+						self._context.clearRect(firstRectangle.left, firstRectangle.top, firstRectangle.width, firstRectangle.height);
+						firstRectangle.top += self._topOffset;
+						firstRectangle.height -= self._topOffset;
+					}
+				}
+
+
+				backgroundRectangles.forEach(function (bgRect) {
+					drawRectangle(context, bgRect.rectangle)
+					if (bgRect.changeColor) {
+						modifyColor(colorTmp, step);
+						self.options.lastColorStep++;
+					}
+				});
+
 				return rectangle;
 			};
 
@@ -31254,11 +31280,11 @@ function pathToRegexp (path, keys, options) {
 
 				self._prepareCanvas();
 				rectangle = self._drawLiElements();
-				if (self.options.colorRestOfScreen) {
+				if (self.options.colorRestOfTheScreenBellow) {
 					self._drawEndOfList(rectangle, self._context);
 				}
 				// change first color of next listviews
-				self._siblingLists.forEach(function (listviewElement) {
+				self._siblingListsBellow.forEach(function (listviewElement) {
 					nextListview = ns.engine.getBinding(listviewElement);
 					if (nextListview) {
 						nextListview.option("firstColorStep", self.options.lastColorStep);
@@ -37727,7 +37753,7 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					ui = self._ui,
 					options = self.options,
-					scrollview = self.scrollview || self._getScrollView(options, element),
+					scrollview = ui.scrollview || self._getScrollView(options, element),
 					elementRect,
 					scrollviewRect;
 
@@ -37833,6 +37859,7 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._refreshScrollbar = function () {
 				var self = this,
+					currentIndex = self._currentIndex,
 					element = self.element,
 					options = self.options,
 					ui = self._ui,
@@ -37843,7 +37870,7 @@ function pathToRegexp (path, keys, options) {
 				if (options.orientation === VERTICAL) {
 					//Note: element.clientHeight is variable
 					bufferSizePx = parseFloat(element.clientHeight) || 0;
-					listSize = bufferSizePx / options.bufferSize * options.dataLength;
+					listSize = bufferSizePx / options.bufferSize * (options.dataLength - currentIndex);
 
 					if (options.optimizedScrolling) {
 						utilScrolling.setMaxScroll(listSize);
@@ -38496,7 +38523,7 @@ function pathToRegexp (path, keys, options) {
 					j = 0;
 
 				if (options.edgeEffect) {
-					if (!event.detail.inBounds) {
+					if (event.detail && !event.detail.inBounds) {
 						inBoundsDiff = scrollBegin < 0 ? scrollBegin : (scrollBegin + self._containerSize) - (options.dataLength * self._itemSize);
 
 						scrollBegin = scrollBegin - inBoundsDiff + options.edgeEffect(inBoundsDiff, // position diff
@@ -38549,17 +38576,20 @@ function pathToRegexp (path, keys, options) {
 									// get first free element
 									listItem = freeElements.shift();
 									map[i - fromIndex] = listItem;
-									self._updateListItem(listItem, j);
 
-									// Get the desired position for the element
-									if (i - fromIndex === numberOfItems - 1 || (j < fromIndex && (scrollBegin > self._scrollBeginPrev))) {
-										list.appendChild(listItem);
-									} else {
-										nextElement = map.filter(filterNextElement.bind(null, i - fromIndex))[0];
-										if (!nextElement) {
-											list.insertBefore(listItem, list.firstElementChild);
+									if (listItem) {
+										self._updateListItem(listItem, j);
+
+										// Get the desired position for the element
+										if (i - fromIndex === numberOfItems - 1 || (j < fromIndex && (scrollBegin > self._scrollBeginPrev))) {
+											list.appendChild(listItem);
 										} else {
-											list.insertBefore(listItem, nextElement);
+											nextElement = map.filter(filterNextElement.bind(null, i - fromIndex))[0];
+											if (!nextElement) {
+												list.insertBefore(listItem, list.firstElementChild);
+											} else {
+												list.insertBefore(listItem, nextElement);
+											}
 										}
 									}
 								}
