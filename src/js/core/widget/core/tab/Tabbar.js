@@ -212,6 +212,12 @@
 						autoChange: true,
 						autoPositionSet: true
 					};
+					self._marqueeOptions = {
+						ellipsisEffect: "none",
+						marqueeStyle: "alternate",
+						iteration: 5,
+						delay: 1000
+					};
 				},
 				CLASS_PREFIX = "ui-tabbar",
 				/**
@@ -626,15 +632,48 @@
 			prototype._setActive = function (index) {
 				var self = this,
 					options = self.options,
-					ui = self._ui;
+					ui = self._ui,
+					link,
+					text,
+					marquee,
+					prevStyleValue,
+					linkRect,
+					textRect;
 
 				if (ui.links.length === 0) {
 					return;
 				}
+				// disable previous link
+				link = ui.links[options.active]
+				link.classList.remove(classes.TAB_ACTIVE);
+				text = link.querySelector("." + classes.TABBAR_TEXT);
+				if (text) {
+					marquee = ns.engine.getBinding(text);
+					if (marquee) {
+						marquee.reset();
+						ns.engine.destroyWidget(text);
+					}
+				}
 
-				ui.links[options.active].classList.remove(classes.TAB_ACTIVE);
-				ui.links[index].classList.add(classes.TAB_ACTIVE);
+				// enable new link
+				link = ui.links[index];
+				link.classList.add(classes.TAB_ACTIVE);
 				options.active = index;
+
+				// enable Marquee widget on text content for active tab
+				// if text content is longer then link
+				text = link.querySelector("." + classes.TABBAR_TEXT);
+				if (text) {
+					prevStyleValue = text.style.overflowX;
+					text.style.overflowX = "visible";
+					textRect = text.getBoundingClientRect();
+					linkRect = link.getBoundingClientRect();
+					text.style.overflowX = prevStyleValue;
+					if (textRect.width > linkRect.width) {
+						ns.widget.Marquee(text, self._marqueeOptions);
+					}
+				}
+
 				self._setTabbarPosition();
 				TabPrototype._setActive.call(self, index);
 			};
