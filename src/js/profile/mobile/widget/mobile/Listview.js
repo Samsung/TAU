@@ -910,6 +910,8 @@
 				var self = this,
 					element = self.element,
 					elements = slice.call(element.querySelectorAll("li")),
+					firstElement = elements[0],
+					firstElementRect,
 					visibleLiElement = getNextVisible(elements),
 					nextVisibleLiElement,
 					context = self._context,
@@ -929,7 +931,15 @@
 					changeColor,
 					backgroundRectangles = [],
 					firstItem = null,
-					firstRectangle = null;
+					firstRectangle = null,
+					onceClearUpperPartOfCanvas = false;
+
+				if (firstElement) {
+					firstElementRect = firstElement.getBoundingClientRect();
+					if (firstElementRect.top + firstElementRect.height >= scrollableContainerTop) {
+						onceClearUpperPartOfCanvas = true;
+					}
+				}
 
 				while (visibleLiElement) {
 					// if li element is group index, the color of next element wont change
@@ -961,10 +971,10 @@
 				}
 
 				//Remove color buffer above first element if list is not coloring rest of the screen
-				firstItem = backgroundRectangles[0]
+				firstItem = backgroundRectangles[0];
 				if (firstItem) {
 					firstRectangle = firstItem.rectangle;
-					if (!self.options.colorRestOfTheScreenAbove) {
+					if (!self.options.colorRestOfTheScreenAbove || onceClearUpperPartOfCanvas) {
 						// clear area above list and shrink the rectangle to cover only ont
 						self._context.clearRect(firstRectangle.left, firstRectangle.top, firstRectangle.width, firstRectangle.height);
 						firstRectangle.top += self._topOffset;
