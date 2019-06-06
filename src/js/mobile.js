@@ -96,6 +96,7 @@
 			"./profile/mobile/widget/mobile/Scrollview",
 			"./profile/mobile/widget/mobile/Expandable",
 			"./profile/mobile/widget/mobile/Listview",
+			"./core/widget/core/Marquee",
 			"./core/widget/core/tab/Tabbar",
 			"./profile/mobile/widget/mobile/TextInput",
 			"./profile/mobile/widget/mobile/DropdownMenu",
