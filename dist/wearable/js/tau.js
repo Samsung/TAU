@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.2';
+ns.version = '1.0.3';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -18902,6 +18902,9 @@ function pathToRegexp (path, keys, options) {
 					returnTimeFrame = (textWidth / (textWidth + containerWidth)),
 					returnValue;
 
+				if (self.options.ellipsisEffect === "none") {
+					return null;
+				}
 				if (state > returnTimeFrame) {
 					returnValue = GRADIENTS.RIGHT;
 				} else if (state > 0) {
@@ -18920,6 +18923,9 @@ function pathToRegexp (path, keys, options) {
 				var returnValue;
 
 				if (isNaN(state)) {
+					return null;
+				}
+				if (this.options.ellipsisEffect === "none") {
 					return null;
 				}
 				if (state === 1) {
@@ -19176,6 +19182,7 @@ function pathToRegexp (path, keys, options) {
 				self._animation.destroy();
 				self._animation = null;
 				self.element.classList.remove(classes.MARQUEE_GRADIENT);
+				self.element.style.webkitMaskImage = "";
 			};
 
 			/**
@@ -19244,7 +19251,7 @@ function pathToRegexp (path, keys, options) {
 					stateDOM = self._stateDOM;
 
 				this.option("animation", "stopped");
-				stateDOM.style.webkitMaskImage = GRADIENTS.RIGHT;
+				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
 				stateDOM.children[0].style.webkitTransform = "translateX(0)";
 				self._render();
 			};

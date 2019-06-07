@@ -2884,7 +2884,7 @@ tau-toggleswitch {
   padding-bottom: 1.5px;
   overflow-x: hidden;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-left: 4px;
   margin-right: 4px;
