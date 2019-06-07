@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.2';
+ns.version = '1.0.3';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -31171,6 +31171,8 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					element = self.element,
 					elements = slice.call(element.querySelectorAll("li")),
+					firstElement = elements[0],
+					firstElementRect,
 					visibleLiElement = getNextVisible(elements),
 					nextVisibleLiElement,
 					context = self._context,
@@ -31190,7 +31192,15 @@ function pathToRegexp (path, keys, options) {
 					changeColor,
 					backgroundRectangles = [],
 					firstItem = null,
-					firstRectangle = null;
+					firstRectangle = null,
+					onceClearUpperPartOfCanvas = false;
+
+				if (firstElement) {
+					firstElementRect = firstElement.getBoundingClientRect();
+					if (firstElementRect.top + firstElementRect.height >= scrollableContainerTop) {
+						onceClearUpperPartOfCanvas = true;
+					}
+				}
 
 				while (visibleLiElement) {
 					// if li element is group index, the color of next element wont change
@@ -31222,10 +31232,10 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				//Remove color buffer above first element if list is not coloring rest of the screen
-				firstItem = backgroundRectangles[0]
+				firstItem = backgroundRectangles[0];
 				if (firstItem) {
 					firstRectangle = firstItem.rectangle;
-					if (!self.options.colorRestOfTheScreenAbove) {
+					if (!self.options.colorRestOfTheScreenAbove || onceClearUpperPartOfCanvas) {
 						// clear area above list and shrink the rectangle to cover only ont
 						self._context.clearRect(firstRectangle.left, firstRectangle.top, firstRectangle.width, firstRectangle.height);
 						firstRectangle.top += self._topOffset;
@@ -31938,6 +31948,1821 @@ function pathToRegexp (path, keys, options) {
 
 			}(window, window.document, ns));
 
+/*
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/* global window, define */
+/* eslint-disable no-console */
+/**
+ * #Core namespace
+ * Object contains main framework methods.
+ * @class ns
+ * @author Maciej Urbanski <m.urbanski@samsung.com>
+ * @author Krzysztof Antoszek <k.antoszek@samsung.com>
+ * @author Maciej Moczulski <m.moczulski@samsung.com>
+ * @author Piotr Karny <p.karny@samsung.com>
+ * @author Tomasz Lukawski <t.lukawski@samsung.com>
+ */
+(function (document, console) {
+	"use strict";
+			var idNumberCounter = 0,
+			currentDate = +new Date(),
+			slice = [].slice,
+			rootNamespace = "",
+			fileName = "",
+			infoForLog = function (args) {
+				var dateNow = new Date();
+
+				args.unshift("[" + rootNamespace + "][" + dateNow.toLocaleString() + "]");
+			},
+			ns = window.ns || window.tau || {},
+			nsConfig = window.nsConfig || window.tauConfig || {};
+
+		ns.info = ns.info || {
+			profile: "custom"
+		};
+		ns.tauPerf = ns.tauPerf || {};
+
+		window.ns = ns;
+		window.nsConfig = nsConfig;
+
+		window.tau = ns;
+		window.tauConfig = nsConfig;
+
+		rootNamespace = nsConfig.rootNamespace;
+		fileName = nsConfig.fileName;
+
+		/**
+		 * Return unique id
+		 * @method getUniqueId
+		 * @static
+		 * @return {string}
+		 * @member ns
+		 */
+		ns.getUniqueId = function () {
+			return rootNamespace + "-" + ns.getNumberUniqueId() + "-" + currentDate;
+		};
+
+		/**
+		 * Return unique id
+		 * @method getNumberUniqueId
+		 * @static
+		 * @return {number}
+		 * @member ns
+		 */
+		ns.getNumberUniqueId = function () {
+			return idNumberCounter++;
+		};
+
+		/**
+		 * logs supplied messages/arguments
+		 * @method log
+		 * @static
+		 * @member ns
+		 */
+		ns.log = function () {
+			var args = slice.call(arguments);
+
+			infoForLog(args);
+			if (console) {
+				console.log.apply(console, args);
+			}
+		};
+
+		/**
+		 * logs supplied messages/arguments ad marks it as warning
+		 * @method warn
+		 * @static
+		 * @member ns
+		 */
+		ns.warn = function () {
+			var args = slice.call(arguments);
+
+			infoForLog(args);
+			if (console) {
+				console.warn.apply(console, args);
+			}
+		};
+
+		/**
+		 * logs supplied messages/arguments and marks it as error
+		 * @method error
+		 * @static
+		 * @member ns
+		 */
+		ns.error = function () {
+			var args = slice.call(arguments);
+
+			infoForLog(args);
+			if (console) {
+				console.error.apply(console, args);
+			}
+		};
+
+		/**
+		 * get from nsConfig
+		 * @method getConfig
+		 * @param {string} key
+		 * @param {*} [defaultValue] value returned when config is not set
+		 * @return {*}
+		 * @static
+		 * @member ns
+		 */
+		ns.getConfig = function (key, defaultValue) {
+			return nsConfig[key] === undefined ? defaultValue : nsConfig[key];
+		};
+
+		/**
+		 * set in nsConfig
+		 * @method setConfig
+		 * @param {string} key
+		 * @param {*} value
+		 * @param {boolean} [asDefault=false] value should be treated as default (doesn't overwrites
+		 * the config[key] if it already exists)
+		 * @static
+		 * @member ns
+		 */
+		ns.setConfig = function (key, value, asDefault) {
+			if (!asDefault || nsConfig[key] === undefined) {
+				nsConfig[key] = value;
+			}
+		};
+
+		/**
+		 * Return path for framework script file.
+		 * @method getFrameworkPath
+		 * @return {?string}
+		 * @member ns
+		 */
+		ns.getFrameworkPath = function () {
+			var scripts = document.getElementsByTagName("script"),
+				countScripts = scripts.length,
+				i,
+				url,
+				arrayUrl,
+				count;
+
+			for (i = 0; i < countScripts; i++) {
+				url = scripts[i].src;
+				arrayUrl = url.split("/");
+				count = arrayUrl.length;
+				if (arrayUrl[count - 1] === fileName + ".js" ||
+					arrayUrl[count - 1] === fileName + ".min.js") {
+					return arrayUrl.slice(0, count - 1).join("/");
+				}
+			}
+			return null;
+		};
+
+		}(window.document, window.console));
+
+/*global window, ns, define, XMLHttpRequest, console, Blob */
+/*jslint nomen: true, browser: true, plusplus: true */
+/*
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * #Utilities
+ *
+ * The Tizen Advanced UI (TAU) framework provides utilities for easy-developing
+ * and fully replaceable with jQuery method. When user using these DOM and
+ * selector methods, it provide more light logic and it proves performance
+ * of web app. The following table displays the utilities provided by the
+ * TAU framework.
+ *
+ * @class ns.util
+ * @author Maciej Urbanski <m.urbanski@samsung.com>
+ * @author Krzysztof Antoszek <k.antoszek@samsung.com>
+ */
+(function (window, document, ns) {
+	"use strict";
+				var currentFrame = null,
+				util = ns.util || {},
+				// frames callbacks which should be run in next request animation frame
+				waitingFrames = [],
+				slice = [].slice,
+				// inform that loop was added to request animation frame callback
+				loopWork = false;
+
+			/**
+			 * Function which is use as workaround when any type of request animation frame not exists
+			 * @param {Function} callback
+			 * @method _requestAnimationFrameOnSetTimeout
+			 * @static
+			 * @member ns.util
+			 * @protected
+			 */
+			util._requestAnimationFrameOnSetTimeout = function (callback) {
+				currentFrame = window.setTimeout(callback.bind(callback, +new Date()), 1000 / 60);
+			};
+
+			/**
+			 * Function which support every request animation frame.
+			 * @method _loop
+			 * @protected
+			 * @static
+			 * @member ns.util
+			 */
+			util._loop = function () {
+				var loopWaitingFrames = slice.call(waitingFrames),
+					currentFrameFunction = loopWaitingFrames.shift(),
+					loopTime = performance.now();
+
+				waitingFrames = [];
+
+				while (currentFrameFunction) {
+					currentFrameFunction();
+					if (performance.now() - loopTime < 15) {
+						currentFrameFunction = loopWaitingFrames.shift();
+					} else {
+						currentFrameFunction = null;
+					}
+				}
+				if (loopWaitingFrames.length || waitingFrames.length) {
+					waitingFrames.unshift.apply(waitingFrames, loopWaitingFrames);
+					util.windowRequestAnimationFrame(util._loop);
+				} else {
+					loopWork = false;
+				}
+			};
+
+			/**
+			 * Find browser prefixed request animation frame function.
+			 * @method _getRequestAnimationFrame
+			 * @protected
+			 * @static
+			 * @member ns.util
+			 */
+			util._getRequestAnimationFrame = function () {
+				return (window.requestAnimationFrame ||
+					window.webkitRequestAnimationFrame ||
+					window.mozRequestAnimationFrame ||
+					window.oRequestAnimationFrame ||
+					window.msRequestAnimationFrame ||
+					util._requestAnimationFrameOnSetTimeout).bind(window);
+			};
+
+			/**
+			 * Original requestAnimationFrame from object window.
+			 * @method windowRequestAnimationFrame
+			 * @static
+			 * @member ns.util
+			 */
+			util.windowRequestAnimationFrame = util._getRequestAnimationFrame();
+
+			/**
+			 * Special requestAnimationFrame function which add functions to queue of callbacks
+			 * @method requestAnimationFrame
+			 * @static
+			 * @member ns.util
+			 */
+			util.requestAnimationFrame = function (callback) {
+				waitingFrames.push(callback);
+				if (!loopWork) {
+					util.windowRequestAnimationFrame(util._loop);
+					loopWork = true;
+				}
+			};
+
+			util._cancelAnimationFrameOnSetTimeout = function () {
+				// probably wont work if there is any more than 1
+				// active animationFrame but we are trying anyway
+				window.clearTimeout(currentFrame);
+			};
+
+			util._getCancelAnimationFrame = function () {
+				return (window.cancelAnimationFrame ||
+					window.webkitCancelAnimationFrame ||
+					window.mozCancelAnimationFrame ||
+					window.oCancelAnimationFrame ||
+					window.msCancelAnimationFrame ||
+					util._cancelAnimationFrameOnSetTimeout).bind(window);
+			};
+
+			util.cancelAnimationFrame = util._getCancelAnimationFrame();
+
+			/**
+			 * fetchSync retrieves a text document synchronously, returns null on error
+			 * @param {string} url
+			 * @param {=string} [mime=""] Mime type of the resource
+			 * @return {string|null}
+			 * @static
+			 * @member ns.util
+			 */
+			function fetchSync(url, mime) {
+				var xhr = new XMLHttpRequest(),
+					status;
+
+				xhr.open("get", url, false);
+				if (mime) {
+					xhr.overrideMimeType(mime);
+				}
+				xhr.send();
+				if (xhr.readyState === 4) {
+					status = xhr.status;
+					if (status === 200 || (status === 0 && xhr.responseText)) {
+						return xhr.responseText;
+					}
+				}
+
+				return null;
+			}
+
+			util.fetchSync = fetchSync;
+
+			/**
+			 * Removes all script tags with src attribute from document and returns them
+			 * @param {HTMLElement} container
+			 * @return {Array.<HTMLElement>}
+			 * @protected
+			 * @static
+			 * @member ns.util
+			 */
+			function removeExternalScripts(container) {
+				var scripts = slice.call(container.querySelectorAll("script[src]")),
+					i = scripts.length,
+					script;
+
+				while (--i >= 0) {
+					script = scripts[i];
+					script.parentNode.removeChild(script);
+				}
+
+				return scripts;
+			}
+
+			util._removeExternalScripts = removeExternalScripts;
+
+			/**
+			 * Evaluates code, reason for a function is for an atomic call to evaluate code
+			 * since most browsers fail to optimize functions with try-catch blocks, so this
+			 * minimizes the effect, returns the function to run
+			 * @param {string} code
+			 * @return {Function}
+			 * @static
+			 * @member ns.util
+			 */
+			function safeEvalWrap(code) {
+				return function () {
+					try {
+						window.eval(code);
+					} catch (e) {
+						if (e.stack) {
+							ns.error(e.stack);
+						} else if (e.name && e.message) {
+							ns.error(e.name, e.message);
+						} else {
+							ns.error(e);
+						}
+					}
+				};
+			}
+
+			util.safeEvalWrap = safeEvalWrap;
+
+			/**
+			 * Calls functions in supplied queue (array)
+			 * @param {Array.<Function>} functionQueue
+			 * @static
+			 * @member ns.util
+			 */
+			function batchCall(functionQueue) {
+				var i,
+					length = functionQueue.length;
+
+				for (i = 0; i < length; ++i) {
+					functionQueue[i]();
+				}
+			}
+
+			util.batchCall = batchCall;
+
+			/**
+			 * Creates new script elements for scripts gathered from a different document
+			 * instance, blocks asynchronous evaluation (by renaming src attribute) and
+			 * returns an array of functions to run to evaluate those scripts
+			 * @param {Array.<HTMLElement>} scripts
+			 * @param {HTMLElement} container
+			 * @return {Array.<Function>}
+			 * @protected
+			 * @static
+			 * @member ns.util
+			 */
+			function createScriptsSync(scripts, container) {
+				var scriptElement,
+					scriptBody,
+					i,
+					length,
+					queue = [];
+
+				// proper order of execution
+				for (i = 0, length = scripts.length; i < length; ++i) {
+					scriptBody = util.fetchSync(scripts[i].src, "text/plain");
+					if (scriptBody) {
+						scriptElement = document.adoptNode(scripts[i]);
+						scriptElement.setAttribute("data-src", scripts[i].src);
+						scriptElement.removeAttribute("src"); // block evaluation
+						queue.push(util.safeEvalWrap(scriptBody));
+						if (container) {
+							container.appendChild(scriptElement);
+						}
+					}
+				}
+
+				return queue;
+			}
+
+			util._createScriptsSync = createScriptsSync;
+
+			/**
+			 * Method make asynchronous call of function
+			 * @method async
+			 * @inheritdoc #requestAnimationFrame
+			 * @member ns.util
+			 * @static
+			 */
+			util.async = util.requestAnimationFrame;
+
+			/**
+			 * Appends element from different document instance to current document in the
+			 * container element and evaluates scripts (synchronously)
+			 * @param {HTMLElement} element
+			 * @param {HTMLElement} container
+			 * @return {HTMLElement}
+			 * @method importEvaluateAndAppendElement
+			 * @member ns.util
+			 * @static
+			 */
+			util.importEvaluateAndAppendElement = function (element, container) {
+				var externalScriptsQueue =
+						util._createScriptsSync(util._removeExternalScripts(element), element),
+					newNode = document.importNode(element, true);
+
+				container.appendChild(newNode); // append and eval inline
+				util.batchCall(externalScriptsQueue);
+
+				return newNode;
+			};
+
+			/**
+			 * Checks if specified string is a number or not
+			 * @method isNumber
+			 * @param {string} query
+			 * @return {boolean}
+			 * @member ns.util
+			 * @static
+			 */
+			util.isNumber = function (query) {
+				var parsed = parseFloat(query);
+
+				return !isNaN(parsed) && isFinite(parsed);
+			};
+
+			/**
+			 * Reappear script tags to DOM structure to correct run script
+			 * @method runScript
+			 * @param {string} baseUrl
+			 * @param {HTMLScriptElement} script
+			 * @member ns.util
+			 * @deprecated 2.3
+			 */
+			util.runScript = function (baseUrl, script) {
+				var newScript = document.createElement("script"),
+					scriptData,
+					i,
+					scriptAttributes = slice.call(script.attributes),
+					src = script.getAttribute("src"),
+					attribute,
+					status;
+
+				// 'src' may become null when none src attribute is set
+				if (src !== null) {
+					src = util.path.makeUrlAbsolute(src, baseUrl);
+				}
+
+				//Copy script tag attributes
+				i = scriptAttributes.length;
+				while (--i >= 0) {
+					attribute = scriptAttributes[i];
+					if (attribute.name !== "src") {
+						newScript.setAttribute(attribute.name, attribute.value);
+					} else {
+						newScript.setAttribute("data-src", attribute.value);
+					}
+				}
+
+				if (src) {
+					scriptData = util.fetchSync(src, "text/plain");
+									} else {
+					scriptData = script.textContent;
+				}
+
+				if (scriptData) {
+					// add the returned content to a newly created script tag
+					newScript.src = window.URL.createObjectURL(new Blob([scriptData], {type: "text/javascript"}));
+					newScript.textContent = scriptData; // for compatibility with some libs ex. template systems
+				}
+				script.parentNode.replaceChild(newScript, script);
+			};
+
+			ns.util = util;
+			}(window, window.document, ns));
+
+/*global define*/
+(function () {
+	"use strict";
+			/*eslint-disable*/
+		/**
+		 * BezierEasing - use bezier curve for transition easing function
+		 * by Gaëtan Renaudeau 2014 - 2015 – MIT License
+		 *
+		 * Credits: is based on Firefox's nsSMILKeySpline.cpp
+		 * Usage:
+		 * var spline = BezierEasing([ 0.25, 0.1, 0.25, 1.0 ])
+		 * spline.get(x) => returns the easing value | x must be in [0, 1] range
+		 *
+		 * @class utils.BezierCurve
+		 */
+
+
+			// These values are established by empiricism with tests (tradeoff: performance VS precision)
+		var NEWTON_ITERATIONS = 4;
+		var NEWTON_MIN_SLOPE = 0.001;
+		var SUBDIVISION_PRECISION = 0.0000001;
+		var SUBDIVISION_MAX_ITERATIONS = 10;
+
+		var kSplineTableSize = 11;
+		var kSampleStepSize = 1.0 / (kSplineTableSize - 1.0);
+
+		var float32ArraySupported = typeof Float32Array === "function";
+
+		/**
+		 *
+		 * @param aA1
+		 * @param aA2
+		 * @returns {number}
+		 */
+		function a (aA1, aA2) {
+			return 1.0 - 3.0 * aA2 + 3.0 * aA1;
+		}
+
+		/**
+		 *
+		 * @param aA1
+		 * @param aA2
+		 * @returns {number}
+		 */
+		function b (aA1, aA2) {
+			return 3.0 * aA2 - 6.0 * aA1;
+		}
+
+		/**
+		 *
+		 * @param aA1
+		 * @returns {number}
+		 */
+		function c (aA1) {
+			return 3.0 * aA1;
+		}
+
+		/**
+		 * Returns x(t) given t, x1, and x2, or y(t) given t, y1, and y2.
+		 * @param aT
+		 * @param aA1
+		 * @param aA2
+		 * @returns {number}
+		 */
+		function calcBezier (aT, aA1, aA2) {
+			return ((a(aA1, aA2)*aT + b(aA1, aA2))*aT + c(aA1))*aT;
+		}
+
+
+		/**
+		 * Returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
+		 * @param aT
+		 * @param aA1
+		 * @param aA2
+		 * @returns {*}
+		 */
+		function getSlope (aT, aA1, aA2) {
+			return 3.0 * a(aA1, aA2)*aT*aT + 2.0 * b(aA1, aA2) * aT + c(aA1);
+		}
+
+		/**
+		 *
+		 * @param aX
+		 * @param aA
+		 * @param aB
+		 * @param mX1
+		 * @param mX2
+		 * @returns {*}
+		 */
+		function binarySubdivide (aX, aA, aB, mX1, mX2) {
+			var currentX, currentT, i = 0;
+			do {
+				currentT = aA + (aB - aA) / 2.0;
+				currentX = calcBezier(currentT, mX1, mX2) - aX;
+				if (currentX > 0.0) {
+					aB = currentT;
+				} else {
+					aA = currentT;
+				}
+			} while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
+			return currentT;
+		}
+
+		/**
+		 *
+		 * @param aX
+		 * @param aGuessT
+		 * @param mX1
+		 * @param mX2
+		 * @returns {*}
+		 */
+		function newtonRaphsonIterate (aX, aGuessT, mX1, mX2) {
+			for (var i = 0; i < NEWTON_ITERATIONS; ++i) {
+				var currentSlope = getSlope(aGuessT, mX1, mX2);
+				if (currentSlope === 0.0) {
+					return aGuessT;
+				}
+				var currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+				aGuessT -= currentX / currentSlope;
+			}
+			return aGuessT;
+		}
+
+		function validateArguments(points) {
+			if (!points || points.length !== 4) {
+				throw new Error("BezierEasing: points must contains 4 values");
+			}
+			for (var i = 0; i < 4; ++i) {
+				if (typeof points[i] !== "number" || isNaN(points[i]) || !isFinite(points[i])) {
+					throw new Error("BezierEasing: points should be integers.");
+				}
+			}
+			if (points[0] < 0 || points[0] > 1 || points[2] < 0 || points[2] > 1) {
+				throw new Error("BezierEasing x values must be in [0, 1] range.");
+			}
+		}
+
+		/**
+		 * points is an array of [ mX1, mY1, mX2, mY2 ]
+		 * @param points
+		 * @param _b
+		 * @param _c
+		 * @param _d
+		 * @returns {BezierEasing}
+		 * @constructor
+		 */
+		function BezierEasing (points, _b, _c, _d) {
+			if (arguments.length === 4) {
+				return new BezierEasing([points, _b, _c, _d]);
+			}
+			if (!(this instanceof BezierEasing)) {
+				return new BezierEasing(points);
+			}
+
+			validateArguments(points);
+
+			this._str = "BezierEasing(" + points + ")";
+			this._css = "cubic-bezier(" + points + ")";
+			this._p = points;
+			this._mSampleValues = float32ArraySupported ? new Float32Array(kSplineTableSize) : [];
+			this._precomputed = false;
+
+			this.get = this.get.bind(this);
+			return this;
+		}
+
+		BezierEasing.prototype = {
+
+			/**
+			 *
+			 * @param x
+			 * @returns {*}
+			 */
+			get: function (x) {
+				var mX1 = this._p[0],
+					mY1 = this._p[1],
+					mX2 = this._p[2],
+					mY2 = this._p[3];
+				if (!this._precomputed) {
+					this._precompute();
+				}
+				if (mX1 === mY1 && mX2 === mY2) {
+					return x;
+				} // linear
+				// Because JavaScript number are imprecise, we should guarantee the extremes are right.
+				if (x <= 0) {
+					return 0;
+				}
+				if (x >= 1) {
+					return 1;
+				}
+				return calcBezier(this._getTForX(x), mY1, mY2);
+			},
+
+			/**
+			 *
+			 * @private
+			 */
+			_precompute: function () {
+				var mX1 = this._p[0],
+					mY1 = this._p[1],
+					mX2 = this._p[2],
+					mY2 = this._p[3];
+				this._precomputed = true;
+				if (mX1 !== mY1 || mX2 !== mY2) {
+					this._calcSampleValues();
+				}
+			},
+
+			/**
+			 *
+			 * @private
+			 */
+			_calcSampleValues: function () {
+				var mX1 = this._p[0],
+					mX2 = this._p[2];
+				for (var i = 0; i < kSplineTableSize; ++i) {
+					this._mSampleValues[i] = calcBezier(i * kSampleStepSize, mX1, mX2);
+				}
+			},
+
+			/**
+			 * getTForX chose the fastest heuristic to determine the percentage value precisely from a
+			 * given X projection.
+			 * @param aX
+			 * @returns {*}
+			 * @private
+			 */
+			_getTForX: function (aX) {
+				var mX1 = this._p[0],
+					mX2 = this._p[2],
+					mSampleValues = this._mSampleValues;
+
+				var intervalStart = 0.0;
+				var currentSample = 1;
+				var lastSample = kSplineTableSize - 1;
+
+				for (; currentSample !== lastSample && mSampleValues[currentSample] <= aX;
+				       ++currentSample) {
+					intervalStart += kSampleStepSize;
+				}
+				--currentSample;
+
+				// Interpolate to provide an initial guess for t
+				var dist = (aX - mSampleValues[currentSample]) / (mSampleValues[currentSample+1] -
+					mSampleValues[currentSample]);
+				var guessForT = intervalStart + dist * kSampleStepSize;
+
+				var initialSlope = getSlope(guessForT, mX1, mX2);
+				if (initialSlope >= NEWTON_MIN_SLOPE) {
+					return newtonRaphsonIterate(aX, guessForT, mX1, mX2);
+				} else if (initialSlope === 0.0) {
+					return guessForT;
+				} else {
+					return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize, mX1, mX2);
+				}
+			}
+		};
+
+		// CSS mapping
+		BezierEasing.css = {
+			ease:        BezierEasing.ease = new BezierEasing(0.25, 0.1, 0.25, 1.0),
+			easeIn:     BezierEasing.easeIn = new BezierEasing(0.42, 0.0, 1.00, 1.0),
+			easeOut:    BezierEasing.easeOut = new BezierEasing(0.00, 0.0, 0.58, 1.0),
+			easeInOut: BezierEasing.easeInOut = new BezierEasing(0.42, 0.0, 0.58, 1.0)
+		};
+
+		if (ns && ns.util) {
+			ns.util.bezierCurve = BezierEasing;
+		}
+
+		}());
+
+/* global requestAnimationFrame, define, ns */
+/**
+ * Main file of applications, which connect other parts
+ */
+// then we can load plugins for libraries and application
+(function (window, document, ns) {
+	"use strict";
+				var utils = ns.util,
+				requestAnimationFrame = utils.requestAnimationFrame,
+			/**
+				 * Util to change value of object property in given time
+				 * @class Animation
+				 */
+				Animate = function (object) {
+					var self = this;
+
+					self._object = object;
+					self._animate = {
+						chain: [],
+						chainIndex: 0
+					};
+					// This is used to keep track of elapsed time of paused animation
+					self._pausedTimeDiff = null;
+					self._animateConfig = null;
+				},
+				linear = function (x, a, b) {
+					a = (a === undefined) ? 1 : a;
+					b = (b === undefined) ? 0 : b;
+					return x * (a || 0) + (b || 0);
+				},
+				inverseTiming = function (x) {
+					return 1 - x;
+				},
+				prototype = {};
+
+			utils.bezierCurve = utils.bezierCurve || bezierCurve;
+
+			Animate.prototype = prototype;
+
+			Animate.timing = {
+				linear: linear,
+				ease: utils.bezierCurve.ease.get,
+				easeInOut: utils.bezierCurve.easeInOut.get
+			};
+
+			function firstDefined() {
+				var args = [].slice.call(arguments),
+					i = 0,
+					length = args.length,
+					arg;
+
+				for (; i < length; i++) {
+					arg = args[i];
+					if (arg !== undefined) {
+						return arg;
+					}
+				}
+				return null;
+			}
+
+			prototype.destroy = function () {
+				var self = this;
+
+				self._object = null;
+				self._animate = null;
+				self._animateConfig = null;
+			};
+
+			function calculateSteps(option, currentPoint) {
+				var percent,
+					step,
+					steps = option.steps,
+					from = option.from,
+					to = null,
+					percentStart = 0,
+					percentStop = 100,
+					floatPoint;
+
+				for (percent in steps) {
+					if (steps.hasOwnProperty(percent)) {
+						step = steps[percent];
+						floatPoint = percent / 100;
+						if (currentPoint >= floatPoint) {
+							from = step;
+							percentStart = floatPoint;
+						} else if (to === null) {
+							to = step;
+							percentStop = floatPoint;
+						}
+					}
+				}
+				return from + (currentPoint - percentStart) / (percentStop - percentStart) *
+					(to - from);
+			}
+
+			function eachOption(config, animateConfig, option) {
+				var propertyObject,
+					from,
+					steps = option.steps || config.steps;
+
+				option.duration = firstDefined(option.duration, config.duration);
+				option.delay = firstDefined(option.delay, config.delay, 0);
+				propertyObject = firstDefined(option.object, this._object);
+				option.simpleProperty = option.property;
+				option.property.split(".").forEach(function (property) {
+					if (typeof propertyObject[property] === "object" && propertyObject[property] !== null) {
+						propertyObject = propertyObject[property];
+						option.propertyObject = propertyObject;
+					} else {
+						option.simpleProperty = property;
+					}
+				});
+				option.propertyObject = propertyObject;
+				if (steps) {
+					option.calculate = calculateSteps.bind(null, option);
+					steps[0] = firstDefined(steps[0], option.from, propertyObject[option.simpleProperty]);
+					option.from = steps["0"];
+					option.to = firstDefined(steps["100"], option.to);
+					option.diff = 0;
+					option.current = steps[0];
+					option.direction = option.from < option.to ? 1 : -1;
+				} else {
+					option.calculate = option.calculate || linear;
+					from = firstDefined(option.from, propertyObject[option.simpleProperty]);
+					option.from = from;
+					option.diff = (option.to - from);
+					option.current = from;
+					option.direction = from < option.to ? 1 : -1;
+				}
+
+				// calculate value change in full time
+				option.startTime = Date.now() + option.delay;
+
+				if (this._pausedTimeDiff) {
+					option.startTime = Date.now() - this._pausedTimeDiff;
+					this._pausedTimeDiff = 0;
+				}
+				// save last time of recalculate options
+				option.lastCalculationTime = option.startTime;
+				// set timing function
+				option.timing = firstDefined(option.timing, config.timing, linear);
+
+				animateConfig.push(option);
+			}
+
+			prototype._initAnimate = function () {
+				var self = this,
+					animateConfig = [],
+					options = self._animate.chain[self._animate.chainIndex++];
+
+				if (options) {
+					options.forEach(eachOption.bind(self, self._config, animateConfig));
+					self._animateConfig = animateConfig;
+				} else {
+					self._animateConfig = null;
+				}
+			};
+
+			function animateLoopCallback(self, copiedArgs) {
+				if (self._animate) {
+					self._animate.chain = [].slice.call(copiedArgs);
+					self.start();
+				}
+			}
+
+			function animateRevertCallback(self, copiedArgs) {
+				var chain = [].slice.call(copiedArgs),
+					newChain = [];
+
+				chain.forEach(function (options) {
+					newChain.unshift(options);
+					options.forEach(function (option) {
+						option.timing = inverseTiming;
+					});
+				});
+				self._animate.chain = newChain;
+				self._animate.callback = null;
+				self.start();
+			}
+
+			/**
+			 * Set animate
+			 * @param {Object...} options list of animations configs
+			 * @return {Animate}
+			 */
+			prototype.set = function (options) {
+				var self = this,
+					config,
+				// converts arguments to array
+					args = [].slice.call(arguments),
+					copiedArgs;
+
+				// we get last argument
+				config = args.pop();
+
+				if (!Array.isArray(config)) {
+				// if last arguments is object then we use it as global animation config
+					self._animate.config = config;
+				} else {
+				// otherwise this is description of one animation loop and back to args array
+					args.push(config);
+					config = null;
+				}
+
+				self._config = config;
+
+				// copy array to be sure that we have new reference objects
+				copiedArgs = [].slice.call(args);
+
+				if (config) {
+					if (config.loop) {
+					// when animation is in loop then we create callback on animation and to restart animation
+						self._animate.callback = animateLoopCallback.bind(null, self, copiedArgs);
+					} else if (config.withRevert) {
+						self._animate.callback = animateRevertCallback.bind(null, self, copiedArgs);
+					} else {
+					// otherwise we use callback from options
+						self._animate.callback = options.callback || config.callback;
+					}
+				}
+
+				// cache options in object
+				self._animate.chain = args;
+
+				return self;
+			};
+
+			/**
+			 * Start animation
+			 * @param {Function} [callback] function called after finish animation
+			 */
+			prototype.start = function (callback) {
+				var self = this;
+
+			// init animate options
+				self._initAnimate();
+
+			// setting callback function
+				callback = self._animate.callback || callback;
+
+				if (self._animate.chainIndex < self._animate.chain.length) {
+				// if we have many animations in chain that we set callback
+				// to start next animation from chain after finish current
+				// animation
+					self._animationTimeout = self._calculateAnimate.bind(self, self.start.bind(self, callback));
+				} else {
+					self._animationTimeout = self._calculateAnimate.bind(self, callback);
+				}
+				self._calculateAnimate(callback);
+				return self;
+			};
+
+			/**
+			 * Stop animations
+			 */
+			prototype.stop = function () {
+				var self = this;
+
+				// reset index of animations chain
+				self._animate.chainIndex = 0;
+				// reset current animation config
+				self._animateConfig = null;
+			// clear timeout
+				self._animationTimeout = null;
+				return self;
+			};
+
+			prototype.pause = function () {
+				var self = this;
+
+				if (self._animateConfig) {
+					self._pausedTimeDiff = Date.now() - self._animateConfig[0].startTime;
+					self.stop();
+				}
+			};
+
+			function calculateOption(option, time) {
+				var timeDiff,
+					current;
+
+				if (option && option.startTime < time) {
+				// if option is not delayed
+					timeDiff = time - option.startTime;
+
+					if (timeDiff >= option.duration) {
+						// if current is bigger then end we finish loop and we take next animate from chain
+						timeDiff = option.duration;
+						if (option.callback) {
+							option.callback();
+						}
+					}
+					current = option.calculate(option.timing(timeDiff / option.duration),
+						option.diff, option.from, option.current);
+					if (current !== null) {
+						option.current = current;
+						// we set next calculation time
+						option.propertyObject[option.simpleProperty] = option.current;
+						if (timeDiff >= option.duration) {
+							// inform about remove animation config
+							return 2;
+						}
+						// inform widget about redraw
+						return 1;
+					}
+					if (timeDiff >= option.duration) {
+						// inform about remove animation config
+						return 2;
+					}
+				}
+				return 0;
+			}
+
+			/**
+			 * Method called in loop to calculate current state of animation
+			 * @param {Function} callback
+			 * @private
+			 */
+			prototype._calculateAnimate = function (callback) {
+				var self = this,
+					// current animation config
+					animateConfig = self._animateConfig,
+					// number of animations which is not finished
+					notFinishedAnimationsCount,
+					// flag inform that redraw is necessary
+					redraw = false,
+					i = 0,
+					length,
+					time = Date.now(),
+					calculatedOption;
+
+				if (animateConfig) {
+					notFinishedAnimationsCount = animateConfig.length;
+					length = animateConfig.length;
+
+					// calculating options changed in animation
+					while (i < length) {
+						calculatedOption = calculateOption(animateConfig[i], time);
+						if (calculatedOption === 2) {
+							notFinishedAnimationsCount--;
+							// remove current config and recalculate loop arguments
+							animateConfig.splice(i, 1);
+							length--;
+							i--;
+							redraw = true;
+						} else if (calculatedOption === 1) {
+							redraw = true;
+						}
+						i++;
+					}
+					// redraw is necessary
+					if (redraw && self._tickFunction) {
+						self._tickFunction(self._object);
+					}
+					if (notFinishedAnimationsCount) {
+					// setting next loop state
+						if (self._animationTimeout) {
+							requestAnimationFrame(self._animationTimeout);
+						}
+					} else {
+						// Animation state can be change to "stopped"
+						self.stop();
+						// animation is finished
+						if (callback) {
+							callback();
+						}
+					}
+				}
+			};
+
+		/**
+			 * Set function which will be called after animation change property of object
+			 * @param {Function} tickFunction
+			 * @return {Animation}
+			 */
+			prototype.tick = function (tickFunction) {
+				var oldTickFunction = this._tickFunction;
+
+				if (oldTickFunction) {
+					this._tickFunction = function (object) {
+						oldTickFunction(object);
+						tickFunction(object);
+					};
+				} else {
+					this._tickFunction = tickFunction;
+				}
+				return this;
+			};
+
+			utils.Animate = Animate;
+		}(window, window.document, ns));
+
+
+/*global window, define, console, ns */
+/*
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*jslint nomen: true, plusplus: true */
+/**
+ * # Marquee
+ * Shows a component which moves left and right.
+ *
+ * It makes <div> element with text move horizontally like legacy <marquee> tag
+ *
+ * ## Make Marquee Element
+ * If you want to use Marquee widget, you have to declare below attributes in <div> element and make
+ * Marquee widget in JS code.
+ * To use a Marquee widget in your application, use the following code:
+ *
+ *    @example
+ *    <div class="ui-content">
+ *        <ul class="ui-listview">
+ *            <li><div class="ui-marquee" id="marquee">Marquee widget code sample</div></li>
+ *        </ul>
+ *    </div>
+ *    <script>
+ *        var marqueeEl = document.getElementById("marquee"),
+ *            marqueeWidget = new tau.widget.Marquee(marqueeEl,
+ *              {marqueeStyle: "scroll", delay: "3000"});
+ *    </script>
+ *
+ * @author Heeju Joo <heeju.joo@samsung.com>
+ * @class ns.widget.core.Marquee
+ * @extends ns.widget.BaseWidget
+ */
+(function (document, ns) {
+	"use strict";
+	
+			var BaseWidget = ns.widget.BaseWidget,
+				/**
+				 * Alias for class ns.engine
+				 * @property {ns.engine} engine
+				 * @member ns.widget.core.Marquee
+				 * @private
+				 */
+				engine = ns.engine,
+				/**
+				 * Alias for class ns.util.object
+				 * @property {Object} objectUtils
+				 * @member ns.widget.core.Marquee
+				 * @private
+				 */
+				objectUtils = ns.util.object,
+
+				Animation = ns.util.Animate,
+
+				states = {
+					RUNNING: "running",
+					STOPPED: "stopped",
+					IDLE: "idle"
+				},
+
+				Marquee = function () {
+					this.options = objectUtils.copy(Marquee.defaults);
+					// event callbacks
+					this._callbacks = {};
+				},
+
+				prototype = new BaseWidget(),
+
+				CLASSES_PREFIX = "ui-marquee",
+
+				eventType = {
+					/**
+					 * Triggered when the marquee animation end.
+					 * @event marqueeend
+					 * @member ns.widget.core.Marquee
+					 */
+					MARQUEE_START: "marqueestart",
+					MARQUEE_END: "marqueeend",
+					MARQUEE_STOPPED: "marqueestopped"
+				},
+				/**
+				 * Dictionary for CSS class of marquee play state
+				 * @property {Object} classes
+				 * @member ns.widget.core.Marquee
+				 * @static
+				 */
+				classes = {
+					MARQUEE_CONTENT: CLASSES_PREFIX + "-content",
+					MARQUEE_GRADIENT: CLASSES_PREFIX + "-gradient",
+					MARQUEE_ELLIPSIS: CLASSES_PREFIX + "-ellipsis",
+					ANIMATION_RUNNING: CLASSES_PREFIX + "-anim-running",
+					ANIMATION_STOPPED: CLASSES_PREFIX + "-anim-stopped",
+					ANIMATION_IDLE: CLASSES_PREFIX + "-anim-idle"
+				},
+
+				/**
+				 * Dictionary for marquee style
+				 */
+				style = {
+					SCROLL: "scroll",
+					SLIDE: "slide",
+					ALTERNATE: "alternate",
+					ENDTOEND: "endToEnd"
+				},
+
+				ellipsisEffect = {
+					GRADIENT: "gradient",
+					ELLIPSIS: "ellipsis",
+					NONE: "none"
+				},
+
+				round100 = function (value) {
+					return Math.round(value * 100) / 100;
+				},
+
+				/**
+				 * Options for widget
+				 * @property {Object} options
+				 * @property {string|"slide"|"scroll"|"alternate"} [options.marqueeStyle="slide"] Sets the
+				 * default style for the marquee
+				 * @property {number} [options.speed=60] Sets the speed(px/sec) for the marquee
+				 * @property {number|"infinite"} [options.iteration=1] Sets the iteration count number for
+				 * marquee
+				 * @property {number} [options.delay=2000] Sets the delay(ms) for marquee
+				 * @property {"linear"|"ease"|"ease-in"|"ease-out"|"cubic-bezier(n,n,n,n)"}
+				 * [options.timingFunction="linear"] Sets the timing function for marquee
+				 * @property {"gradient"|"ellipsis"|"none"} [options.ellipsisEffect="gradient"] Sets the
+				 * end-effect(gradient) of marquee
+				 * @property {boolean} [options.autoRun=true] Sets the status of autoRun
+				 * @member ns.widget.core.Marquee
+				 * @static
+				 */
+				defaults = {
+					marqueeStyle: style.SLIDE,
+					speed: 60,
+					iteration: 1,
+					currentIteration: 1,
+					delay: 0,
+					timingFunction: "linear",
+					ellipsisEffect: ellipsisEffect.GRADIENT,
+					runOnlyOnEllipsisText: true,
+					animation: states.STOPPED,
+					autoRun: true
+				},
+				GRADIENTS = {
+					LEFT: "-webkit-linear-gradient(left, transparent 0, rgb(255, 255, 255) 15%," +
+					" rgb(255, 255, 255) 100%)",
+					BOTH: "-webkit-linear-gradient(left, transparent 0, rgb(255, 255, 255)" +
+					" 15%, rgb(255, 255, 255) 85%, transparent 100%",
+					RIGHT: "-webkit-linear-gradient(left, rgb(255, 255, 255) 0, rgb(255," +
+					" 255, 255) 85%, transparent 100%)"
+				};
+
+			Marquee.classes = classes;
+			Marquee.defaults = defaults;
+
+			prototype._calculateTranslateFunctions = {
+				scroll: function (self, state, diff, from, current) {
+					var value = from + state * diff,
+						returnValue;
+
+					returnValue = "translateX(-" + round100(value) + "px)";
+					if (current === returnValue) {
+						return null;
+					}
+					return returnValue;
+				},
+				slide: function (self, state, diff, from, current) {
+					var stateDOM = self._stateDOM,
+						containerWidth = stateDOM.offsetWidth,
+						textWidth = stateDOM.children[0].offsetWidth,
+						value,
+						returnValue;
+
+					value = state * (textWidth - containerWidth);
+					returnValue = "translateX(-" + round100(value) + "px)";
+					if (current === returnValue) {
+						return null;
+					}
+					return returnValue;
+				},
+				alternate: function (self, state, diff, from, current) {
+					var stateDOM = self._stateDOM,
+						containerWidth = stateDOM.offsetWidth,
+						textWidth = stateDOM.children[0].offsetWidth,
+						value = from + state * diff,
+						returnValue;
+
+					if (value > textWidth / 2) {
+						value = textWidth - (value - textWidth / 2) * 2;
+					} else {
+						value *= 2;
+					}
+					value = value / textWidth * (textWidth - containerWidth);
+					returnValue = "translateX(-" + round100(value) + "px)";
+					if (current === returnValue) {
+						return null;
+					}
+					return returnValue;
+				},
+				endToEnd: function (self, state, diff, from, current) {
+					var stateDOM = self._stateDOM,
+						textWidth = stateDOM.children[0].offsetWidth,
+						containerWidth = stateDOM.offsetWidth,
+						value,
+						returnValue;
+
+					value = state * (textWidth + containerWidth);
+					if (value > textWidth) {
+						value = containerWidth - value + textWidth;
+					} else {
+						value = -value;
+					}
+					returnValue = "translateX(" + round100(value) + "px)";
+					if (current === returnValue) {
+						return null;
+					}
+					return returnValue;
+				}
+			};
+
+			prototype._calculateEndToEndGradient = function (state, diff, from, current) {
+				var self = this,
+					stateDOM = self._stateDOM,
+					textWidth = stateDOM.children[0].offsetWidth,
+					containerWidth = stateDOM.offsetWidth,
+					returnTimeFrame = (textWidth / (textWidth + containerWidth)),
+					returnValue;
+
+				if (self.options.ellipsisEffect === "none") {
+					return null;
+				}
+				if (state > returnTimeFrame) {
+					returnValue = GRADIENTS.RIGHT;
+				} else if (state > 0) {
+					returnValue = GRADIENTS.BOTH;
+				} else {
+					returnValue = GRADIENTS.LEFT;
+				}
+
+				if (current === returnValue) {
+					return null;
+				}
+				return returnValue;
+			};
+
+			prototype._calculateStandardGradient = function (state, diff, from, current) {
+				var returnValue;
+
+				if (isNaN(state)) {
+					return null;
+				}
+				if (this.options.ellipsisEffect === "none") {
+					return null;
+				}
+				if (state === 1) {
+					returnValue = GRADIENTS.LEFT;
+				} else if (state > 0) {
+					returnValue = GRADIENTS.BOTH;
+				} else {
+					returnValue = GRADIENTS.RIGHT;
+				}
+
+				if (current === returnValue) {
+					return null;
+				}
+				return returnValue;
+			};
+
+			/**
+			 * Build Marquee DOM
+			 * @method _build
+			 * @param {HTMLElement} element
+			 * @return {HTMLElement}
+			 * @protected
+			 * @member ns.widget.core.Marquee
+			 */
+			prototype._build = function (element) {
+				var marqueeInnerElement = element.querySelector("." + classes.MARQUEE_CONTENT);
+
+				if (!marqueeInnerElement) {
+					marqueeInnerElement = document.createElement("div");
+
+					while (element.hasChildNodes()) {
+						marqueeInnerElement.appendChild(element.removeChild(element.firstChild));
+					}
+					marqueeInnerElement.classList.add(classes.MARQUEE_CONTENT);
+					element.appendChild(marqueeInnerElement);
+				}
+				return element;
+			};
+
+			prototype._initStateDOMstructure = function () {
+				this._stateDOM = {
+					classList: [],
+					offsetWidth: null,
+					style: {
+						webkitMaskImage: null
+					},
+					children: [
+						{
+							offsetWidth: null,
+							style: {
+								webkitTransform: null
+							}
+						}
+					]
+				};
+			};
+
+			prototype._initAnimation = function () {
+				var self = this,
+					stateDOM = self._stateDOM,
+					stateDOMfirstChild = stateDOM.children[0],
+					width = stateDOMfirstChild.offsetWidth,
+					animation = new Animation({}),
+					state = {
+						hasEllipsisText: (width > 0),
+						animation: [{
+							object: stateDOMfirstChild.style,
+							property: "webkitTransform",
+							calculate: self._calculateTranslateFunctions.scroll.bind(null, self),
+							from: 0,
+							to: width
+						}, {
+							object: stateDOM.style,
+							calculate: self._calculateStandardGradient.bind(self),
+							property: "webkitMaskImage",
+							from: 0,
+							to: 1
+						}],
+						animationConfig: {
+							duration: width / self.options.speed * 1000,
+							timing: Animation.timing.linear
+						}
+					};
+
+				self.state = state;
+
+				animation.tick(self._render.bind(self, true));
+
+				self._animation = animation;
+			};
+
+			/**
+			 * Init Marquee Style
+			 * @method _init
+			 * @param {HTMLElement} element
+			 * @return {HTMLElement}
+			 * @protected
+			 * @member ns.widget.core.Marquee
+			 */
+			prototype._init = function (element) {
+				var self = this;
+
+				self._initStateDOMstructure();
+				self._initDOMstate();
+				self._initAnimation();
+				self.option(self.options);
+
+				return element;
+			};
+
+			prototype._setEllipsisEffect = function (element, value) {
+				return this._togglePrefixedClass(this._stateDOM, CLASSES_PREFIX + "-", value);
+			};
+
+			prototype._updateDuration = function () {
+				var self = this,
+					stateDOM = self._stateDOM,
+					state = self.state,
+					firstChild = stateDOM.children[0],
+					width = firstChild.offsetWidth,
+					dWidth = width - stateDOM.offsetWidth,
+					animationConfig = state.animationConfig;
+
+				animationConfig.duration = (dWidth > 0) ?
+					width / self.options.speed * 1000 :
+					0;
+				self._animation.set(state.animation, animationConfig);
+			};
+
+			prototype._setSpeed = function (element, value) {
+				var self = this;
+
+				self.options.speed = parseInt(value, 10);
+				self._updateDuration();
+				return false;
+			};
+
+			function animationIterationCallback(self) {
+				var animation = self._animation,
+					state = self.state;
+
+				if (self.options.currentIteration++ < self.options.iteration) {
+					animation.set(state.animation, state.animationConfig);
+					animation.stop();
+					animation.start();
+				} else {
+					self.options.animation = states.STOPPED;
+					self.trigger(eventType.MARQUEE_END);
+				}
+			}
+
+			prototype._setIteration = function (element, value) {
+				var self = this,
+					state = self.state,
+					animationConfig = state.animationConfig;
+
+				if (value === "infinite") {
+					animationConfig.loop = true;
+					animationConfig.callback = function () {
+						self.options.animation = states.STOPPED;
+						self.trigger.bind(self, eventType.MARQUEE_END);
+					};
+				} else {
+					value = parseInt(value, 10);
+					self.options.currentIteration = 1;
+					animationConfig.loop = false;
+					animationConfig.callback = animationIterationCallback.bind(null, self);
+				}
+				self._animation.set(state.animation, animationConfig);
+				self.options.loop = value;
+				return false;
+			};
+
+			prototype._setDelay = function (element, value) {
+				var self = this,
+					state = self.state,
+					animationConfig = state.animationConfig;
+
+				value = parseInt(value, 10);
+				animationConfig.delay = value;
+				self._animation.set(state.animation, animationConfig);
+				self.options.delay = value;
+				return false;
+			};
+
+			prototype._setTimingFunction = function (element, value) {
+				var self = this,
+					state = self.state,
+					animationConfig = state.animationConfig;
+
+				animationConfig.timing = Animation.timing[value];
+				self._animation.set(state.animation, animationConfig);
+				self.options.timing = value;
+				return false;
+			};
+
+			prototype._setAutoRun = function (element, value) {
+				if (value) {
+					this.start();
+				}
+				return false;
+			};
+
+			prototype._setAnimation = function (element, value) {
+				var self = this,
+					animation = self._animation,
+					stateDOM = self._stateDOM,
+					options = self.options,
+					width = stateDOM.children[0].offsetWidth - stateDOM.offsetWidth,
+					runOnlyOnEllipsisText = options.runOnlyOnEllipsisText;
+
+				if (value !== options.animation) {
+					if (value === states.RUNNING) {
+						if ((runOnlyOnEllipsisText && width) || (!runOnlyOnEllipsisText)) {
+							self.options.currentIteration = 1;
+							animation.start();
+							self.trigger(eventType.MARQUEE_START);
+						}
+					} else {
+						animation.pause();
+						self.trigger(eventType.MARQUEE_STOPPED);
+					}
+					options.animation = value;
+				}
+				return false;
+			};
+
+			prototype._setMarqueeStyle = function (element, value) {
+				var self = this,
+					animation = self.state.animation;
+
+				animation[0].calculate = self._calculateTranslateFunctions[value].bind(null, self);
+				if (value === "endToEnd") {
+					animation[1].calculate = self._calculateEndToEndGradient.bind(self);
+				} else {
+					animation[1].calculate = self._calculateStandardGradient.bind(self);
+				}
+				self.options.marqueeStyle = value;
+				return false;
+			};
+
+			/**
+			 * Destroy widget
+			 * @method _destroy
+			 * @protected
+			 * @member ns.widget.core.Marquee
+			 */
+			prototype._destroy = function () {
+				var self = this;
+
+				self.state = null;
+				self._stateDOM = null;
+				self._animation.stop();
+				self._animation.destroy();
+				self._animation = null;
+				self.element.classList.remove(classes.MARQUEE_GRADIENT);
+				self.element.style.webkitMaskImage = "";
+			};
+
+			/**
+			 * Start Marquee animation
+			 *
+			 * #####Running example in pure JavaScript:
+			 *
+			 *    @example
+			 *    <div class="ui-marquee" id="marquee">
+			 *        <p>MarqueeTEST TEST message TEST for marquee</p>
+			 *    </div>
+			 *    <script>
+			 *        var marqueeWidget = tau.widget.Marquee(document.getElementById("marquee"));
+			 *        marqueeWidget.start();
+			 *    </script>
+			 *
+			 * @method start
+			 * @member ns.widget.core.Marquee
+			 */
+			prototype.start = function () {
+				this.option("animation", "running");
+			};
+
+			/**
+			 * Pause Marquee animation
+			 *
+			 * #####Running example in pure JavaScript:
+			 *    @example
+			 *    <div class="ui-marquee" id="marquee">
+			 *        <p>MarqueeTEST TEST message TEST for marquee</p>
+			 *    </div>
+			 *    <script>
+			 *        var marqueeWidget = tau.widget.Marquee(document.getElementById("marquee"));
+			 *        marqueeWidget.stop();
+			 *    </script>
+			 *
+			 * @method stop
+			 * @member ns.widget.core.Marquee
+			 */
+			prototype.stop = function () {
+				var self = this,
+					animation = self._animation;
+
+				animation.pause();
+				this.option("animation", "stopped");
+			};
+
+			/**
+			 * Reset Marquee animation
+			 *
+			 * #####Running example in pure JavaScript:
+			 *    @example
+			 *    <div class="ui-marquee" id="marquee">
+			 *        <p>MarqueeTEST TEST message TEST for marquee</p>
+			 *    </div>
+			 *    <script>
+			 *        var marqueeWidget = tau.widget.Marquee(document.getElementById("marquee"));
+			 *        marqueeWidget.reset();
+			 *    </script>
+			 *
+			 * @method reset
+			 * @member ns.widget.core.Marquee
+			 */
+			prototype.reset = function () {
+				var self = this,
+					stateDOM = self._stateDOM;
+
+				this.option("animation", "stopped");
+				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
+				stateDOM.children[0].style.webkitTransform = "translateX(0)";
+				self._render();
+			};
+
+			Marquee.prototype = prototype;
+			ns.widget.core.Marquee = Marquee;
+
+			engine.defineWidget(
+				"Marquee",
+				".ui-marquee",
+				["start", "stop", "reset"],
+				Marquee,
+				"core"
+			);
+			}(window.document, ns));
+
 /*global window, define, ns */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
@@ -32131,6 +33956,12 @@ function pathToRegexp (path, keys, options) {
 						active: 0,
 						autoChange: true,
 						autoPositionSet: true
+					};
+					self._marqueeOptions = {
+						ellipsisEffect: "none",
+						marqueeStyle: "alternate",
+						iteration: 5,
+						delay: 1000
 					};
 				},
 				CLASS_PREFIX = "ui-tabbar",
@@ -32546,15 +34377,48 @@ function pathToRegexp (path, keys, options) {
 			prototype._setActive = function (index) {
 				var self = this,
 					options = self.options,
-					ui = self._ui;
+					ui = self._ui,
+					link,
+					text,
+					marquee,
+					prevStyleValue,
+					linkRect,
+					textRect;
 
 				if (ui.links.length === 0) {
 					return;
 				}
+				// disable previous link
+				link = ui.links[options.active]
+				link.classList.remove(classes.TAB_ACTIVE);
+				text = link.querySelector("." + classes.TABBAR_TEXT);
+				if (text) {
+					marquee = ns.engine.getBinding(text);
+					if (marquee) {
+						marquee.reset();
+						ns.engine.destroyWidget(text);
+					}
+				}
 
-				ui.links[options.active].classList.remove(classes.TAB_ACTIVE);
-				ui.links[index].classList.add(classes.TAB_ACTIVE);
+				// enable new link
+				link = ui.links[index];
+				link.classList.add(classes.TAB_ACTIVE);
 				options.active = index;
+
+				// enable Marquee widget on text content for active tab
+				// if text content is longer then link
+				text = link.querySelector("." + classes.TABBAR_TEXT);
+				if (text) {
+					prevStyleValue = text.style.overflowX;
+					text.style.overflowX = "visible";
+					textRect = text.getBoundingClientRect();
+					linkRect = link.getBoundingClientRect();
+					text.style.overflowX = prevStyleValue;
+					if (textRect.width > linkRect.width) {
+						ns.widget.Marquee(text, self._marqueeOptions);
+					}
+				}
+
 				self._setTabbarPosition();
 				TabPrototype._setActive.call(self, index);
 			};
