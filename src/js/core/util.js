@@ -275,6 +275,24 @@
 
 			util._createScriptsSync = createScriptsSync;
 
+			function removeInlineScripts(element) {
+				var result = [],
+					script;
+
+				[].slice.call(element.querySelectorAll(
+					"script:not([data-src]):not([type]):not([id]):not([src])"
+					)).forEach(function (item) {
+						script = document.createElement("script");
+						script.innerText = item.textContent;
+						item.parentNode.removeChild(item);
+						result.push(script);
+					});
+
+				return result;
+			}
+
+			util._removeInlineScripts = removeInlineScripts;
+
 			/**
 			 * Method make asynchronous call of function
 			 * @method async
@@ -297,9 +315,13 @@
 			util.importEvaluateAndAppendElement = function (element, container) {
 				var externalScriptsQueue =
 						util._createScriptsSync(util._removeExternalScripts(element), element),
+					inlineScripts = util._removeInlineScripts(element),
 					newNode = document.importNode(element, true);
 
 				container.appendChild(newNode); // append and eval inline
+				inlineScripts.forEach(function (script) {
+					container.appendChild(script);
+				});
 				util.batchCall(externalScriptsQueue);
 
 				return newNode;
