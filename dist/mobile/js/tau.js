@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.3';
+ns.version = '1.0.4';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -1009,6 +1009,24 @@ ns.version = '1.0.3';
 
 			util._createScriptsSync = createScriptsSync;
 
+			function removeInlineScripts(element) {
+				var result = [],
+					script;
+
+				[].slice.call(element.querySelectorAll(
+					"script:not([data-src]):not([type]):not([id]):not([src])"
+					)).forEach(function (item) {
+						script = document.createElement("script");
+						script.innerText = item.textContent;
+						item.parentNode.removeChild(item);
+						result.push(script);
+					});
+
+				return result;
+			}
+
+			util._removeInlineScripts = removeInlineScripts;
+
 			/**
 			 * Method make asynchronous call of function
 			 * @method async
@@ -1031,9 +1049,13 @@ ns.version = '1.0.3';
 			util.importEvaluateAndAppendElement = function (element, container) {
 				var externalScriptsQueue =
 						util._createScriptsSync(util._removeExternalScripts(element), element),
+					inlineScripts = util._removeInlineScripts(element),
 					newNode = document.importNode(element, true);
 
 				container.appendChild(newNode); // append and eval inline
+				inlineScripts.forEach(function (script) {
+					container.appendChild(script);
+				});
 				util.batchCall(externalScriptsQueue);
 
 				return newNode;
@@ -32398,6 +32420,24 @@ function pathToRegexp (path, keys, options) {
 
 			util._createScriptsSync = createScriptsSync;
 
+			function removeInlineScripts(element) {
+				var result = [],
+					script;
+
+				[].slice.call(element.querySelectorAll(
+					"script:not([data-src]):not([type]):not([id]):not([src])"
+					)).forEach(function (item) {
+						script = document.createElement("script");
+						script.innerText = item.textContent;
+						item.parentNode.removeChild(item);
+						result.push(script);
+					});
+
+				return result;
+			}
+
+			util._removeInlineScripts = removeInlineScripts;
+
 			/**
 			 * Method make asynchronous call of function
 			 * @method async
@@ -32420,9 +32460,13 @@ function pathToRegexp (path, keys, options) {
 			util.importEvaluateAndAppendElement = function (element, container) {
 				var externalScriptsQueue =
 						util._createScriptsSync(util._removeExternalScripts(element), element),
+					inlineScripts = util._removeInlineScripts(element),
 					newNode = document.importNode(element, true);
 
 				container.appendChild(newNode); // append and eval inline
+				inlineScripts.forEach(function (script) {
+					container.appendChild(script);
+				});
 				util.batchCall(externalScriptsQueue);
 
 				return newNode;
