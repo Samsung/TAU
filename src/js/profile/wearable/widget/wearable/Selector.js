@@ -560,10 +560,10 @@
 
 				if (self._editModeEnabled) {
 					self._animateReorderedItems();
-				}
 
-				if (self.options.plusButton) {
-					len--;
+					if (self.options.plusButton) {
+						len--;
+					}
 				}
 
 				if (!self._editModeEnabled && len > 0) {

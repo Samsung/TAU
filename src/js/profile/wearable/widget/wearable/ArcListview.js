@@ -36,6 +36,7 @@
 			"../../../../core/widget/core/Listview",
 			"../../../../core/widget/core/Page",
 			"../../../../core/widget/core/scroller/effect/Bouncing",
+			"../../../../core/widget/core/Popup",
 			// fetch namespace
 			"../wearable"
 		],
@@ -45,6 +46,7 @@
 			var nsWidget = ns.widget,
 				Listview = nsWidget.core.Listview,
 				Page = nsWidget.core.Page,
+				Popup = nsWidget.core.Popup,
 				eventUtils = ns.event,
 				slice = [].slice,
 				// constants
@@ -169,10 +171,13 @@
 						ellipsisA: ELLIPSIS_A,
 						ellipsisB: ELLIPSIS_B,
 						bouncingTimeout: 1000,
-						visibleItems: 3
+						visibleItems: 3,
+						listItemUpdater: null,
+						dataLength: 0
 					};
 					// items table on start is empty
 					self._items = [];
+					self._lastId = -1;
 					// the end of scroll animation
 					self._scrollAnimationEnd = true;
 					// carousel of five elements
@@ -186,6 +191,8 @@
 					self._rendering = false;
 					self._lastRenderRequest = 0;
 					self._carouselIndex = 0;
+					self._disabledByPopup = false;
+					self._previousIndex = null;
 					/**
 					 * Cache for widget UI HTMLElements
 					 * @property {Object} _ui
@@ -249,7 +256,11 @@
 
 				lastTouchY = 0,
 				deltaTouchY = 0,
-				deltaSumTouchY = 0;
+				deltaSumTouchY = 0,
+
+				// virtual list parameters
+				NUMBER_ITEMS_TO_ADD = 20,
+				LOAD_THRESHOLD = 10;
 
 			/**
 			 * Create item object
@@ -269,6 +280,17 @@
 					repaint: false
 				};
 			};
+
+			function copyRect(rect) {
+				return {
+					bottom: rect.bottom,
+					height: rect.height,
+					left: rect.left,
+					right: rect.right,
+					top: rect.top,
+					width: rect.width
+				};
+			}
 
 			/**
 			 * Pre calculation of factors for Y axis
@@ -336,7 +358,6 @@
 			prototype._setAnimatedItems = function () {
 				var self = this,
 					items = self._items,
-					id = 0,
 					itemElement = items[0],
 					item = null,
 					rect = null,
@@ -344,46 +365,52 @@
 					diffY = null,
 					scroller = self._ui.scroller,
 					state = self._state,
-					parentElement = itemElement.parentElement,
+					parentElement,
+					parentClassList;
+
+				if (itemElement) {
+					parentElement = self.element;
 					parentClassList = parentElement.classList;
 
-				// set parent size
-				parentRect = parentElement.getBoundingClientRect();
-				prepareParentStyle(parentElement, parentRect);
+					// set parent size
+					parentRect = parentElement.getBoundingClientRect();
+					prepareParentStyle(parentElement, parentRect);
 
-				parentClassList.add(classes.FORCE_RELATIVE);
+					parentClassList.add(classes.FORCE_RELATIVE);
 
-				arrayUtil.forEach(items, function (itemElement, i) {
-					// add items to state
-					if (i >= 0 && !state.items[i] && itemElement !== undefined) {
-						rect = itemElement.getBoundingClientRect();
-						item = ArcListview.createItem();
-						if (itemElement.classList.contains(classes.GROUP_INDEX) || itemElement.classList.contains(classes.DIVIDER)) {
-							state.separators.push({
-								itemElement: item,
-								insertBefore: i - state.separators.length
-							});
-						} else {
-							state.items.push(item);
-							item.id = id;
-							id++;
+					arrayUtil.forEach(items, function (itemElement, i) {
+						// add items to state
+						if (i >= 0 && !state.items[i] && itemElement !== undefined) {
+							rect = copyRect(itemElement.getBoundingClientRect());
+							item = ArcListview.createItem();
+							if (itemElement.classList.contains(classes.GROUP_INDEX) || itemElement.classList.contains(classes.DIVIDER)) {
+								state.separators.push({
+									itemElement: item,
+									insertBefore: i - state.separators.length
+								});
+							} else {
+								state.items.push(item);
+								item.id = ++self._lastId;
+							}
+
+							item.element = itemElement;
+							item.y = round(rect.top + rect.height / 2 + scroller.scrollTop);
+							item.height = rect.height;
+							item.rect = rect;
+							if (diffY === null) {
+								diffY = rect.top - parentRect.top;
+							}
 						}
+					});
 
-						item.element = itemElement;
-						item.y = round(rect.top + rect.height / 2 + scroller.scrollTop);
-						item.height = rect.height;
-						item.rect = rect;
-						if (diffY === null) {
-							diffY = rect.top - parentRect.top;
+					parentClassList.remove(classes.FORCE_RELATIVE);
+
+					arrayUtil.forEach(items, function (item) {
+						if (item.parentElement === parentElement) {
+							parentElement.removeChild(item);
 						}
-					}
-				});
-
-				parentClassList.remove(classes.FORCE_RELATIVE);
-
-				arrayUtil.forEach(items, function (item) {
-					parentElement.removeChild(item);
-				});
+					});
+				}
 			};
 
 			/**
@@ -540,6 +567,7 @@
 								carouselSeparator = carouselItem.carouselSeparator;
 								if (itemElement.parentElement !== carouselElement) {
 									carouselElement.appendChild(itemElement);
+									self._wrapTextContent(itemElement);
 								}
 
 								if (upperSeparator) {
@@ -560,6 +588,7 @@
 											nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
 										}
 										nextCarouselSeparatorElement.appendChild(lowerSeparator.itemElement.element);
+										self._wrapTextContent(itemElement);
 									} else if (nextCarouselSeparatorElement.firstChild) {
 										nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
 									}
@@ -625,6 +654,11 @@
 					carouselItemUpperSeparatorElement,
 					top;
 
+				if (self._previousIndex !== currentIndex) {
+					ns.event.trigger(self.element, "currentindexchange", {"index": currentIndex});
+					self._previousIndex = currentIndex;
+				}
+
 				// change carousel item per 2 items
 				if (Math.abs(self._carouselIndex - currentIndex) >= 2) {
 					self._carouselIndex = currentIndex;
@@ -647,7 +681,7 @@
 					carouselItemElement.style.transform = "translateY(" + top + "px)";
 					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
 
-					// hide unsed carousel items
+					// hide unused carousel items
 					if (carouselItemElement.firstElementChild === null) {
 						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
 					} else {
@@ -669,7 +703,7 @@
 				self._calc();
 				self._draw();
 
-				if (!self._scrollAnimationEnd) {
+				if (!self._scrollAnimationEnd && self._items.length > 0) {
 					state.currentIndex = self._findItemIndexByY(
 						-1 * (state.scroll.current - SCREEN_HEIGHT / 2 + 1));
 					util.requestAnimationFrame(self._renderCallback);
@@ -699,15 +733,25 @@
 			prototype._findItemIndexByY = function (y) {
 				var items = this._state.items,
 					len = items.length,
-					minY = items[0].y,
-					maxY = items[len - 1].y,
+					minY,
+					maxY,
 					prev,
 					current,
 					next,
 					loop = true,
-					diffY = maxY - minY,
-					tempIndex = diffY !== 0 ? round((y - minY) / (diffY) * len) : 0;
+					diffY,
+					tempIndex;
 
+				if (len > 0) {
+					minY = items[0].y;
+					maxY = items[len - 1].y;
+				} else {
+					// widget has no items
+					return -1;
+				}
+
+				diffY = maxY - minY;
+				tempIndex = diffY !== 0 ? round((y - minY) / (diffY) * len) : 0;
 				tempIndex = min(len - 1, max(0, tempIndex));
 
 				while (loop) {
@@ -748,7 +792,7 @@
 				averageVelocity = sumDistance / sumTime;
 				self._halfItemsCount = Math.ceil((parseInt(self.options.visibleItems, 10) + 2) / 2);
 
-				if (momentum !== 0) {
+				if (items.length > 0 && momentum !== 0) {
 					momentum *= averageVelocity;
 					// momentum value has to be limited to defined max value
 					momentum = max(min(momentum, MOMENTUM_MAX_VALUE), -MOMENTUM_MAX_VALUE);
@@ -820,6 +864,10 @@
 					state = self._state,
 					scroll = state.scroll;
 
+				if (state.items.length === 0) {
+					return false;
+				}
+
 				// increase scroll duration according to length of items
 				// one item more increase duration +25%
 				// scroll duration is set to 0 when animations are disabled
@@ -837,6 +885,50 @@
 					self._requestRender();
 				}
 			};
+
+			/**
+			 * Add new item to listview
+			 * @method addItem
+			 * @param {string} content text content for new list item
+			 * @param {number} [index] item index on list, default last item
+			 * @param {HTMLElement} [liElement=null] new list item
+			 * @memberof ns.widget.wearable.ArcListview
+			 */
+			prototype.addItem = function (content, index, liElement) {
+				var li = liElement || document.createElement("li"),
+					self = this,
+					lastItem,
+					prevItem;
+
+				// append new li elements to widget element
+				if (typeof self.options.listItemUpdater === "function") {
+					self.options.listItemUpdater(li, index);
+				} else {
+					li.innerHTML = "<a href=\"\">" + content + "</a>";
+				}
+				self.element.appendChild(li);
+
+				// find new li elements attached to widget element
+				self._addItemsFromElement();
+				// move li elements to widget cache
+				self._setAnimatedItems();
+
+				// set new item position on list;
+				if (self._state.items.length > 1) {
+					lastItem = self._state.items[self._state.items.length - 1];
+					prevItem = self._state.items[self._state.items.length - 2];
+
+					lastItem.y = prevItem.y + prevItem.height;
+					lastItem.rect.bottom = prevItem.rect.bottom + prevItem.rect.height;
+					lastItem.rect.top = prevItem.rect.top + prevItem.rect.height;
+				}
+
+				self._setMaxScrollY();
+				self._bouncingEffect._maxValue = self._maxScrollY;
+
+				// refresh widget view
+				self.refresh();
+			}
 
 			/**
 			 * Change to next item
@@ -932,8 +1024,14 @@
 
 				state.toIndex = index;
 
-				if (state.toIndex > state.items.length - 1) {
-					state.toIndex = state.items.length - 1;
+				if (this.options.listItemUpdater) {  // virtual list
+					if (state.toIndex > self.options.dataLength - 1) {
+						state.toIndex = self.options.dataLength - 1;
+					}
+				} else { // normal list
+					if (state.toIndex > state.items.length - 1) {
+						state.toIndex = state.items.length - 1;
+					}
 				}
 
 				if (state.toIndex < 0) {
@@ -1000,6 +1098,10 @@
 					scroll = state.scroll,
 					current = scroll.current,
 					bouncingEffect = self._bouncingEffect;
+
+				if (self._items.length === 0) {
+					return false;
+				}
 
 				// time
 				lastTouchTime = Date.now();
@@ -1088,6 +1190,34 @@
 				arcListviewSelection.classList.add(classes.SELECTION_SHOW);
 			}
 
+			prototype._wrapTextContent = function (element) {
+				var child = element.firstChild,
+					TEXT_NODE_TYPE = document.TEXT_NODE,
+					wrapper;
+
+				if (!element.querySelector(".ui-arc-listview-text-content")) {
+					while (child) {
+						if (child.classList && child.classList.contains("ui-arc-listview-text-content") ||
+							child.textContent.trim() === "") {
+							child = child.nextSibling;
+							continue;
+						} else if (child.firstChild !== null) {
+							if (this._wrapTextContent(child)) {
+								return true;
+							}
+						} else if (child.nodeType === TEXT_NODE_TYPE) {
+							wrapper = document.createElement("div");
+							wrapper.className = "ui-arc-listview-text-content ui-marquee";
+							child.parentNode.replaceChild(wrapper, child);
+							wrapper.appendChild(child);
+							return true;
+						}
+						child = child.nextSibling;
+					}
+				}
+				return false;
+			}
+
 			/**
 			 * Handler for event select
 			 * @method _selectItem
@@ -1098,7 +1228,23 @@
 			prototype._selectItem = function (selectedIndex) {
 				var ui = this._ui,
 					state = this._state,
-					selectedElement = state.items[selectedIndex].element;
+					selectedElement = state.items[selectedIndex].element,
+					marqueeDiv,
+					widget;
+
+				marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+				if (marqueeDiv) {
+					marqueeDiv.style.width = "100%";
+					marqueeDiv.classList.add("ui-marquee");
+				}
+				widget = ns.widget.Marquee(marqueeDiv, {
+					marqueeStyle: "scroll",
+					ellipsisEffect: "gradient",
+					iteration: "infinite",
+					delay: "300"
+				});
+				widget.start();
+
 
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
@@ -1120,14 +1266,27 @@
 			prototype._onChange = function (event) {
 				var selectedIndex = event.detail.selected,
 					unselectedIndex = event.detail.unselected,
-					classList = this._ui.arcListviewSelection.classList;
+					classList = this._ui.arcListviewSelection.classList,
+					selectedElement,
+					marqueeDiv,
+					widget;
 
-				if (!event.defaultPrevented) {
+				if (!event.defaultPrevented && this._state.items.length > 0) {
 					if (selectedIndex !== undefined) {
 						this._selectItem(selectedIndex);
 					} else {
 						classList.remove(classes.SELECTION_SHOW);
-						this._state.items[unselectedIndex].element.classList.remove(classes.SELECTED);
+						selectedElement = this._state.items[unselectedIndex].element,
+						selectedElement.classList.remove(classes.SELECTED);
+						// stop marque;
+						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+						if (marqueeDiv) {
+							widget = ns.widget.Marquee(marqueeDiv);
+							if (widget) {
+								widget.reset();
+								widget.destroy();
+							}
+						}
 					}
 				}
 			};
@@ -1164,6 +1323,38 @@
 			prototype._onPageInit = function () {
 				this._init();
 			};
+
+			/**
+			 * Handler for popupbeforeshow event
+			 * @method _onPopupShow
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupShow = function (event) {
+				var self = this,
+					popup = event.target;
+
+				if (!popup.classList.contains(Popup.classes.toastSmall)) {
+					self.disableList();
+					self._disabledByPopup = true;
+				}
+			};
+
+
+			/**
+			 * Handler for popupbeforehide event
+			 * @method _onPopupHide
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupHide = function () {
+				var self = this;
+
+				if (self._disabledByPopup) {
+					self.enableList();
+				}
+			}
 
 			prototype._buildArcListviewSelection = function (page) {
 				// find or add selection for current list element
@@ -1224,6 +1415,31 @@
 				return element;
 			};
 
+			prototype._getItemsFromElement = function () {
+				var self = this;
+
+				// find list elements with including group indexes
+				self._items = slice.call(self._ui.page.querySelectorAll(selectors.ITEMS)) || [];
+			}
+
+			prototype._addItemsFromElement = function () {
+				var self = this;
+
+				// find list elements with including group indexes
+				self._items = self._items.concat(slice.call(self._ui.page.querySelectorAll(selectors.ITEMS)));
+			}
+
+			prototype._createTextInputs = function () {
+				arrayUtil.forEach(this._items, function (item) {
+					var textInputEl = selectorsUtil.getChildrenBySelector(item, selectors.TEXT_INPUT)[0];
+
+					if (textInputEl) {
+						ns.widget.TextInput(textInputEl);
+					}
+				});
+			}
+
+
 			/**
 			 * Widget init method
 			 * @method _init
@@ -1250,16 +1466,8 @@
 				if (scroller) {
 					element.classList.add(WIDGET_CLASS, classes.PREFIX + visibleItemsCount);
 
-					// find list elements with including group indexes
-					self._items = slice.call(page.querySelectorAll(selectors.ITEMS)) || [];
-
-					arrayUtil.forEach(self._items, function (item) {
-						var textInputEl = selectorsUtil.getChildrenBySelector(item, selectors.TEXT_INPUT)[0];
-
-						if (textInputEl) {
-							ns.widget.TextInput(textInputEl);
-						}
-					});
+					self._getItemsFromElement();
+					self._createTextInputs();
 
 					ui.arcListviewSelection = self._buildArcListviewSelection(page);
 					arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
@@ -1281,6 +1489,18 @@
 					self._refresh();
 					self._scroll();
 					self._initBouncingEffect();
+				}
+			};
+
+			prototype._onCurrentIndexChange = function (event) {
+				var currentIndex = event.detail.index,
+					self = this;
+
+				// support for virtual list
+				if (self.options.listItemUpdater) {
+					if (currentIndex + LOAD_THRESHOLD > self._items.length) {
+						self._loadItems(NUMBER_ITEMS_TO_ADD);
+					}
 				}
 			};
 
@@ -1317,6 +1537,16 @@
 							break;
 						case "vclick" :
 							self._onClick(event);
+							break;
+						case "popupbeforehide":
+							self._onPopupHide();
+							break;
+						case "popupbeforeshow":
+							self._onPopupShow(event);
+							break;
+						case "currentindexchange" :
+							self._onCurrentIndexChange(event);
+							break;
 					}
 				}
 			};
@@ -1336,11 +1566,14 @@
 				page.addEventListener("touchmove", self, true);
 				page.addEventListener("touchend", self, true);
 				page.addEventListener("pageinit", self, true);
+				page.addEventListener("popupbeforeshow", self, true);
+				page.addEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.addEventListener("vclick", self, true);
 				}
 				document.addEventListener("rotarydetent", self, true);
 				element.addEventListener("change", self, true);
+				element.addEventListener("currentindexchange", self, true);
 			};
 
 			/**
@@ -1396,11 +1629,49 @@
 				page.removeEventListener("touchmove", self, true);
 				page.removeEventListener("touchend", self, true);
 				page.removeEventListener("pageinit", self, true);
+				page.removeEventListener("popupbeforeshow", self, true);
+				page.removeEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.removeEventListener("vclick", self, true);
 				}
 				document.removeEventListener("rotarydetent", self, true);
 				element.removeEventListener("change", self, true);
+				element.removeEventListener("currentindexchange", self, true);
+			};
+
+			prototype._loadItems = function (count) {
+				var len = this._items.length,
+					i = 0;
+
+				for (i = 0; i < count; i++) {
+					this.addItem("", i + len);
+				}
+			}
+
+			/**
+			 * Virtual listview feature for update items from data
+			 */
+			prototype.setListItemUpdater = function (updateFunction) {
+				var self = this,
+					elementHeight = 0;
+
+				self.options.listItemUpdater = updateFunction;
+				self._loadItems(NUMBER_ITEMS_TO_ADD);
+
+				// set widget element height to show progress bar;
+				if (self._state.items.length > 0) {
+					elementHeight = self.options.dataLength * self._state.items.reduce(function (before, item) {
+						return before + item.rect.height;
+					}, 0) / self._state.items.length;
+				}
+				prepareParentStyle(self.element, {
+					height: elementHeight
+				});
+			};
+
+			prototype._updateListItem = function (element, index) {
+				element.setAttribute("data-index", index);
+				this.options.listItemUpdater(element, index);
 			};
 
 			/**
@@ -1432,10 +1703,20 @@
 				}
 			};
 
+			prototype._setMaxScrollY = function () {
+				var self = this;
+
+				if (self._state.items.length) {
+					self._maxScrollY = self._state.items[self._state.items.length - 1].rect.bottom - BOTTOM_MARGIN;
+				} else {
+					self._maxScrollY = self.element.getBoundingClientRect().bottom - BOTTOM_MARGIN;
+				}
+			}
+
 			prototype._initBouncingEffect = function () {
 				var self = this;
 
-				self._maxScrollY = self.element.getBoundingClientRect().height - BOTTOM_MARGIN;
+				self._setMaxScrollY();
 				self._bouncingEffect = new ns.widget.core.scroller.effect.Bouncing(self._ui.page, {
 					maxScrollX: 0,
 					maxScrollY: self._maxScrollY,

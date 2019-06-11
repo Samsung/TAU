@@ -225,6 +225,9 @@ body {
 .ui-page .ui-header.ui-has-more .ui-more.ui-icon-overflow:active {
   background-color: transparent;
 }
+.ui-page .ui-header.ui-header-has-only-more-button {
+  position: absolute;
+}
 .ui-page .ui-more {
   position: fixed;
   top: 50%;
@@ -1009,7 +1012,7 @@ a {
 }
 .ui-popup.ui-popup-toast.ui-popup-toast-small .ui-popup-wrapper .ui-popup-content {
   padding: 0 1.1875rem;
-  max-height: 6rem;
+  max-height: 8rem;
   color: T0911;
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1066,6 +1069,10 @@ a {
   box-sizing: content-box;
   transition-property: max-height;
   transition-duration: 1ms;
+  justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .ui-listview li.ui-listview-divider,
 .ui-listview li.ui-li-group-index {
@@ -1075,6 +1082,7 @@ a {
   background-color: transparent;
   color: T0231;
   display: flex;
+  flex-direction: row;
   padding: 0;
 }
 .ui-listview li.ui-listview-divider::before,
@@ -1365,17 +1373,22 @@ a {
 .ui-listview.ui-arc-listview-carousel-item li li.ui-li-active::before {
   background-color: transparent;
 }
+.ui-listview.ui-snap-listview li:not(.ui-li-has-multiline):not(.li-has-multiline) a {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 .ui-listview.ui-arc-listview-carousel-item-separator {
   height: auto;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider) {
   padding: 1.5625rem 1.875rem 1.625rem;
   min-height: auto;
   color: T0261;
   overflow: hidden;
   line-height: 3rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li::before {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider)::before {
   display: block;
   position: absolute;
   bottom: 0;
@@ -1387,13 +1400,13 @@ a {
   background-color: white;
   -webkit-mask-box-image: url("images/List/tw_list_divider.png") 0 128 0 128 repeat repeat;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:active,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:active a,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-active,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-active a {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider):active,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider):active a,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-active,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-active a {
   color: T0261P;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-text {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-text {
   white-space: normal;
   color: T0263;
   padding-top: 0.5625rem;
@@ -1401,47 +1414,47 @@ a {
   font-size: 1.9375rem;
   line-height: 2.3125rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-text:active {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-text:active {
   color: T0263P;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline {
   padding-top: 0.5625rem;
   padding-bottom: 0.625rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline a {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline a {
   display: flex;
   flex-direction: column;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline .ui-li-sub-text,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline a .ui-li-sub-text {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline .ui-li-sub-text,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline a .ui-li-sub-text {
   color: T0262;
   font-size: 1.5rem;
   line-height: 2rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline.ui-li-active .ui-li-sub-text,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-multiline.ui-li-active a .ui-li-sub-text {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline.ui-li-active .ui-li-sub-text,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline.ui-li-active a .ui-li-sub-text {
   color: T9262P;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left {
   padding-left: 6.25rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right {
   padding-right: 6.25rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left img,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right img {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left img,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right img {
   background-color: unset;
   position: absolute;
   top: calc(49.5%);
   transform: translateY(-50%);
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left img.ui-li-thumb-left,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right img.ui-li-thumb-left {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left img.ui-li-thumb-left,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right img.ui-li-thumb-left {
   left: 1rem;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-left img.ui-li-thumb-right,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li.ui-li-has-thumb-right img.ui-li-thumb-right {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-left img.ui-li-thumb-right,
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-thumb-right img.ui-li-thumb-right {
   right: 1rem;
 }
 input[type="checkbox"]:not(.ui-switch-input),
@@ -1758,27 +1771,22 @@ a.ui-color-blue.ui-state-disabled,
 ***************************************************************************/
 @-webkit-keyframes indeterminate {
   0% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate1_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   25% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate2_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   50% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate3_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   75% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate4_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
   100% {
-    -webkit-mask-image: url(images/Progress/tw_progressbar_indeterminate5_holo_dark.png);
     -webkit-mask-repeat: no-repeat;
     background-color: B065L6;
   }
@@ -2522,6 +2530,9 @@ a.ui-hyperlink:hover {
   top: 3.375rem;
   transform: translateY(-50%);
 }
+.ui-arc-listview-carousel-item-hidden {
+  display: none;
+}
 .ui-arc-listview-5 .ui-arc-listview-carousel-item {
   height: 4.375rem;
 }
@@ -2573,6 +2584,26 @@ a.ui-hyperlink:hover {
 .ui-arc-listview-carousel li.ui-listview-divider ~ li:not(.ui-li-group-index):not(.ui-listview-divider) {
   margin-top: 0;
 }
+.ui-arc-listview .ui-arc-listview-carousel-item li,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li {
+  /* below style is not prefixed "ui-" for backward compatibility */
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.li-has-thumb-left,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.li-has-thumb-left {
+  padding-left: 6.25rem;
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.li-has-thumb-right,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.li-has-thumb-right {
+  padding-right: 6.25rem;
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content {
+  margin-left: 0;
+}
+.ui-arc-listview .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content div,
+.ui-arc-listview-carousel .ui-arc-listview-carousel-item li.ui-li-grid .ui-arc-listview-text-content div {
+  margin-left: 0;
+}
 .ui-arc-listview.ui-arc-listview-5 li:not(.ui-li-group-index):not(.ui-listview-divider),
 .ui-arc-listview-carousel.ui-arc-listview-5 li:not(.ui-li-group-index):not(.ui-listview-divider) {
   min-height: 4.375rem;
@@ -2604,6 +2635,16 @@ a.ui-hyperlink:hover {
     margin-top: auto;
     padding: 1.625rem 3.125rem 0.3125rem 3.125rem;
   }
+}
+.ui-marquee {
+  height: 3.0625rem;
+  line-height: 3.0625rem;
+}
+.ui-arc-listview-text-content {
+  margin-left: 0;
+}
+.ui-arc-listview-5 .ui-marquee {
+  line-height: 4.375rem;
 }
 .ui-number-picker-container {
   display: flex;

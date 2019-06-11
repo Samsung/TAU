@@ -315,7 +315,7 @@
 					j = 0;
 
 				if (options.edgeEffect) {
-					if (!event.detail.inBounds) {
+					if (event.detail && !event.detail.inBounds) {
 						inBoundsDiff = scrollBegin < 0 ? scrollBegin : (scrollBegin + self._containerSize) - (options.dataLength * self._itemSize);
 
 						scrollBegin = scrollBegin - inBoundsDiff + options.edgeEffect(inBoundsDiff, // position diff
@@ -368,17 +368,20 @@
 									// get first free element
 									listItem = freeElements.shift();
 									map[i - fromIndex] = listItem;
-									self._updateListItem(listItem, j);
 
-									// Get the desired position for the element
-									if (i - fromIndex === numberOfItems - 1 || (j < fromIndex && (scrollBegin > self._scrollBeginPrev))) {
-										list.appendChild(listItem);
-									} else {
-										nextElement = map.filter(filterNextElement.bind(null, i - fromIndex))[0];
-										if (!nextElement) {
-											list.insertBefore(listItem, list.firstElementChild);
+									if (listItem) {
+										self._updateListItem(listItem, j);
+
+										// Get the desired position for the element
+										if (i - fromIndex === numberOfItems - 1 || (j < fromIndex && (scrollBegin > self._scrollBeginPrev))) {
+											list.appendChild(listItem);
 										} else {
-											list.insertBefore(listItem, nextElement);
+											nextElement = map.filter(filterNextElement.bind(null, i - fromIndex))[0];
+											if (!nextElement) {
+												list.insertBefore(listItem, list.firstElementChild);
+											} else {
+												list.insertBefore(listItem, nextElement);
+											}
 										}
 									}
 								}

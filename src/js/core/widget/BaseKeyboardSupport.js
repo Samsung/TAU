@@ -319,9 +319,9 @@
 
 				result = ((a1 > b1) && (a1 < b2)) || // at the left
 					((a2 > b1) && (a2 < b2)) || // at the right
-					// above conditions are apllicable also
+					// above conditions are applicable also
 					// if the context contains the reference element
-					((a1 <= b1) && (a2 >= b2)); // contect is inside reference element
+					((a1 <= b1) && (a2 >= b2)); // content is inside reference element
 
 				return result;
 			}
@@ -515,7 +515,7 @@
 				 *     |                   left  |
 				 *     |               |-------->|
 				 *     |
-				 *     |<--leftRest----[reference elemenet]
+				 *     |<--leftRest----[reference element]
 				 *
 				 *    Focus on left should takes account also element
 				 *    which "leftRest" value is positive
@@ -653,7 +653,7 @@
 						});
 					}
 
-					// remove from list an elemetns behind move direction
+					// remove from list an elements behind move direction
 					focusableElements = focusableElements.filter(function (focusableElement) {
 						return focusableElement.distanceByDirection.distanceRest > 0;
 					});

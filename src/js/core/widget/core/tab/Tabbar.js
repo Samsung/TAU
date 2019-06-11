@@ -216,6 +216,12 @@
 						autoChange: true,
 						autoPositionSet: true
 					};
+					self._marqueeOptions = {
+						ellipsisEffect: "none",
+						marqueeStyle: "alternate",
+						iteration: 5,
+						delay: 1000
+					};
 				},
 				CLASS_PREFIX = "ui-tabbar",
 				/**
@@ -630,20 +636,53 @@
 			prototype._setActive = function (index) {
 				var self = this,
 					options = self.options,
-					ui = self._ui;
+					ui = self._ui,
+					link,
+					text,
+					marquee,
+					prevStyleValue,
+					linkRect,
+					textRect;
 
 				if (ui.links.length === 0) {
 					return;
 				}
+				// disable previous link
+				link = ui.links[options.active]
+				link.classList.remove(classes.TAB_ACTIVE);
+				text = link.querySelector("." + classes.TABBAR_TEXT);
+				if (text) {
+					marquee = ns.engine.getBinding(text);
+					if (marquee) {
+						marquee.reset();
+						ns.engine.destroyWidget(text);
+					}
+				}
 
-				ui.links[options.active].classList.remove(classes.TAB_ACTIVE);
-				ui.links[index].classList.add(classes.TAB_ACTIVE);
 				// if keyboard support
 				if (self.isKeyboardSupport === true) {
 					ui.links[index].focus();
 				}
 
+				// enable new link
+				link = ui.links[index];
+				link.classList.add(classes.TAB_ACTIVE);
 				options.active = index;
+
+				// enable Marquee widget on text content for active tab
+				// if text content is longer then link
+				text = link.querySelector("." + classes.TABBAR_TEXT);
+				if (text) {
+					prevStyleValue = text.style.overflowX;
+					text.style.overflowX = "visible";
+					textRect = text.getBoundingClientRect();
+					linkRect = link.getBoundingClientRect();
+					text.style.overflowX = prevStyleValue;
+					if (textRect.width > linkRect.width) {
+						ns.widget.Marquee(text, self._marqueeOptions);
+					}
+				}
+
 				self._setTabbarPosition();
 				TabPrototype._setActive.call(self, index);
 			};
@@ -656,19 +695,30 @@
 			 */
 			prototype._setTabbarPosition = function () {
 				var self = this,
-					offsetWidth = self.element.offsetWidth,
 					activeIndex = self.options.active,
-					relativeWidth = -self._lastX + offsetWidth,
 					tabs = self._ui.tabs,
-					activeTabOffsetWidth = tabs[0].offsetWidth * ((activeIndex - 0) + 1);
+					tabBarRect = self.element.getBoundingClientRect(),
+					parentElementWidth = self.element.parentElement.offsetWidth,
+					previousElementLeftPos,
+					transformX;
 
-				if (activeTabOffsetWidth > relativeWidth) {
-					self._translate(offsetWidth - activeTabOffsetWidth, DEFAULT_NUMBER.DURATION);
-				} else if (activeTabOffsetWidth < relativeWidth) {
-					if (activeTabOffsetWidth < offsetWidth) {
+				if (tabBarRect.width >= parentElementWidth) {
+					if (activeIndex <= 1) {
 						self._translate(0, DEFAULT_NUMBER.DURATION);
-					} else if (activeTabOffsetWidth <= relativeWidth + self._lastX) {
-						self._translate(offsetWidth - activeTabOffsetWidth, DEFAULT_NUMBER.DURATION);
+					} else if (activeIndex >= (tabs.length - 2)) {
+						// Show last element on the right edge.
+						self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+					} else {
+						previousElementLeftPos = tabs[activeIndex - 1].getBoundingClientRect().left;
+						transformX = previousElementLeftPos - tabBarRect.left;
+
+						if (tabBarRect.width - transformX >= parentElementWidth) {
+							self._translate(-transformX, DEFAULT_NUMBER.DURATION);
+						} else {
+							// Rest of the elements too narrow to cover whole tabbar.
+							// Set scroll to show last element on the right edge.
+							self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+						}
 					}
 				}
 			};

@@ -17,7 +17,8 @@
         "selectable",
         "hoverable",
         "focusable",
-        "checkboxes"
+        "checkboxes",
+        "flipster"
     ],
     "ignoreWords": [
         //common words and short forms
@@ -78,6 +79,10 @@
         "scrollbar's",
         "shortcutscroll",
         "texttype",
+        "xlabel",
+        "ylabel",
+        "xinit",
+        "yinit",
 
         //jslint specific words
         "nomen",
