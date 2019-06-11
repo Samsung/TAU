@@ -263,7 +263,7 @@
 				self._canvasHeight = 0;
 
 				self._dragMode = false;
-				self.orginalListPosition = 0;
+				self.originalListPosition = 0;
 				self.indexDragingElement = 0;
 
 				self._ui = {

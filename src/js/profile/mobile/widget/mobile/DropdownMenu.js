@@ -428,7 +428,7 @@
 			}
 
 			/**
-			 * Add opitions element to DropdownMenu (if element has data-item)
+			 * Add options element to DropdownMenu (if element has data-item)
 			 * @method addSelectDataItems
 			 * @private
 			 * @static

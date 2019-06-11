@@ -27,7 +27,7 @@
 * @since 5.5
 * @class ns.widget.core.Interactive3D
 * @extends ns.widget.BaseWidget
-* @authore Hunseop Jeong <hs85.jeong@samsung.com>
+* @author Hunseop Jeong <hs85.jeong@samsung.com>
 */
 (function (window, document, ns) {
 	"use strict";

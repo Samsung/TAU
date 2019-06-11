@@ -142,7 +142,7 @@
 			Graph.defaults = defaults;
 			Graph.MODE = {
 				INTERMITTENT: MODE_INTERMITTENT,
-				CONTINOUS: MODE_CONTINUOUS
+				CONTINUOS: MODE_CONTINUOUS
 			};
 			Graph.TIME_AXIS = {
 				X: TIME_AXIS_X,

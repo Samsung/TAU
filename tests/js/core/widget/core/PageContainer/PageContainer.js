@@ -1,4 +1,4 @@
-/* global test, asyncTest, start, define, strictEqual, equal, expect */
+/* global test, asyncTest, start, define, strictEqual, equal, expect, ok */
 (function () {
 	var ns = window.ns || window.tau;
 
@@ -273,7 +273,7 @@
 				pageElement = document.getElementById("page-not-in-container"),
 				newPageWidget = {
 					element: pageElement,
-					destroy: function() {
+					destroy: function () {
 						ok(1, "called Page widget destroy");
 					}
 				},
