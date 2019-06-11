@@ -45,6 +45,12 @@ TAU has automated tests. To run tests execute command:
 
 `npx grunt test`
 
+## Debuggging
+
+In order to set additional logging in TAU you need to build TAU with --tau-debug option
+
+`npx grunt build --tau-debug`
+
 ## Demo application:
 
 UIComponents sample web application demonstrating how to implement UI Components for wearable based on TAU.
