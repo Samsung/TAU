@@ -246,6 +246,7 @@
 		[
 			"../../engine",
 			"../../util/selectors",
+			"../../util/array",
 			"../../util/DOM/attributes",
 			"../../util/DOM/css",
 			"../BaseWidget",
@@ -288,6 +289,7 @@
 				 */
 				engine = ns.engine,
 				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				arrayUtil = ns.util.array,
 
 				Page = function (element, options) {
 					var self = this;
@@ -381,6 +383,8 @@
 					uiPageActive: "ui-page-active",
 					uiSection: "ui-section",
 					uiHeader: "ui-header",
+					uiMore: "ui-more",
+					uiHeaderOnlyMoreButton: "ui-header-has-only-more-button",
 					uiFooter: "ui-footer",
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
@@ -393,6 +397,7 @@
 				//same level as content, other wise page content is build on
 				//indexscrollbar element
 				CONTENT_SELECTOR = "[data-role='content'],." + classes.uiContent,
+				ONLY_CHILD_MORE_BUTTON_SELECTOR = "." + classes.uiMore + ":first-child:last-child",
 				prototype = new BaseWidget();
 
 			Page.classes = classes;
@@ -459,7 +464,7 @@
 					}
 
 					if (footer) {
-						bottom = utilsDOM.getElementHeight(footer);
+						bottom = footer.getBoundingClientRect().height;
 						contentStyle.marginBottom = bottom + "px";
 						contentStyle.paddingBottom = (-bottom) + "px";
 					}
@@ -585,6 +590,15 @@
 						// if is string fill content by string value
 						if (typeof value === "string") {
 							ui.header.textContent = value;
+						}
+
+						if (ns.support && ns.support.shape && ns.support.shape.circle) {
+							// patch for backward compability - if header has only more button
+							// (it was common for rectangle devices) header should be marked
+							// and take no place at all.
+							if (header.querySelector(ONLY_CHILD_MORE_BUTTON_SELECTOR) && header.textContent.trim() === "") {
+								header.classList.add(classes.uiHeaderOnlyMoreButton);
+							}
 						}
 					}
 					// and remember options
@@ -736,22 +750,26 @@
 					dataPageTitle = utilsDOM.getNSData(element, "title"),
 					header = self._ui.header,
 					pageTitle = dataPageTitle,
-					titleElement;
+					titleElements,
+					mainTitleElement;
 
 				if (header) {
-					titleElement = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6")[0];
-					if (titleElement) {
-						titleElement.classList.add(classes.uiTitle);
-					}
+					titleElements = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6");
 
-					if (!pageTitle && titleElement) {
-						pageTitle = titleElement.innerText;
-						self._ui.title = titleElement;
+					mainTitleElement = titleElements[0];
+
+					if (!pageTitle && mainTitleElement) {
+						pageTitle = mainTitleElement.innerText;
+						self._ui.title = mainTitleElement;
 					}
 
 					if (!dataPageTitle && pageTitle) {
 						utilsDOM.setNSData(element, "title", pageTitle);
 					}
+
+					arrayUtil.forEach(titleElements, function (titleElement) {
+						titleElement.classList.add(classes.uiTitle)
+					});
 				}
 			};
 

@@ -691,24 +691,31 @@
 			 */
 			prototype._buildFilter = function (element, elementId) {
 				var ui = this._ui,
-					screenFilterElement = document.createElement("div"),
-					optionWrapperElement = document.createElement("div"),
-					optionContainerElement = document.createElement("ul"),
+					screenFilterElement = ui.screenFilter,
+					optionWrapperElement = ui.elOptionWrapper,
+					optionContainerElement = ui.elOptionContainer,
 					fragment = document.createDocumentFragment();
 
-				screenFilterElement.classList.add(classes.filter, classes.filterHidden);
-				screenFilterElement.id = elementId + "-overlay";
+				if (!screenFilterElement) {
+					screenFilterElement = document.createElement("div");
+					screenFilterElement.classList.add(classes.filter, classes.filterHidden);
+					screenFilterElement.id = elementId + "-overlay";
+					fragment.appendChild(screenFilterElement);
+				}
 
-				optionWrapperElement.className = classes.optionsWrapper;
-				optionWrapperElement.id = elementId + "-options-wrapper";
+				if (!optionWrapperElement) {
+					optionWrapperElement = document.createElement("div");
+					optionWrapperElement.className = classes.optionsWrapper;
+					optionWrapperElement.id = elementId + "-options-wrapper";
+					fragment.appendChild(optionWrapperElement);
+				}
 
-				optionContainerElement.className = classes.optionList;
-				optionContainerElement.id = elementId + "-options";
-
-				optionWrapperElement.appendChild(optionContainerElement);
-
-				fragment.appendChild(screenFilterElement);
-				fragment.appendChild(optionWrapperElement);
+				if (!optionContainerElement) {
+					optionContainerElement = document.createElement("ul"),
+					optionContainerElement.className = classes.optionList;
+					optionContainerElement.id = elementId + "-options";
+					optionWrapperElement.appendChild(optionContainerElement);
+				}
 				ui.page.appendChild(fragment);
 
 				ui.elOptionContainer = optionContainerElement;

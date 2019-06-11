@@ -1079,6 +1079,14 @@ textarea.ui-text-input ~ .ui-text-input-clear-hidden {
   width: 58px;
   height: 32.5px;
 }
+.ui-textinput-box-with-right-button input.ui-text-input ~ .ui-text-input-clear {
+  right: 5px;
+  left: 5px;
+}
+.ui-textinput-box-with-right-button input.ui-text-input:focus.ui-text-input-clear-active {
+  padding-right: 20px;
+  margin-right: -15px;
+}
 .ui-listview li.ui-textinput-box-with-right-button {
   padding-right: 0;
 }
@@ -2759,6 +2767,7 @@ tau-toggleswitch {
   height: 23px;
   padding-bottom: 1.5px;
   margin-top: 1.5px;
+  line-height: 23px;
 }
 .ui-tabbar.ui-tabbar-with-icon a::after {
   content: "";
@@ -2875,7 +2884,7 @@ tau-toggleswitch {
   padding-bottom: 1.5px;
   overflow-x: hidden;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-left: 4px;
   margin-right: 4px;
@@ -7437,108 +7446,6 @@ span.ui-tokentextarea-invisible {
 .ui-overflow-bottom.ui-overflow-bottom-hide {
   height: 0 !important;
 }
-.ui-overflow-indicator-bar-1 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_01.png');
-}
-.ui-overflow-indicator-bar-2 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_02.png');
-}
-.ui-overflow-indicator-bar-3 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_03.png');
-}
-.ui-overflow-indicator-bar-4 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_04.png');
-}
-.ui-overflow-indicator-bar-5 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_05.png');
-}
-.ui-overflow-indicator-bar-6 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_06.png');
-}
-.ui-overflow-indicator-bar-7 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_07.png');
-}
-.ui-overflow-indicator-bar-8 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_08.png');
-}
-.ui-overflow-indicator-bar-9 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_09.png');
-}
-.ui-overflow-indicator-bar-10 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_10.png');
-}
-.ui-overflow-indicator-bar-11 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_11.png');
-}
-.ui-overflow-indicator-bar-12 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_12.png');
-}
-.ui-overflow-indicator-bar-13 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_13.png');
-}
-.ui-overflow-indicator-bar-14 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_14.png');
-}
-.ui-overflow-indicator-bar-15 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_15.png');
-}
-.ui-overflow-indicator-bar-16 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_16.png');
-}
-.ui-overflow-indicator-bar-17 {
-  background-image: url('images/bouncing_effect/top/bouncing_top_17.png');
-}
-.ui-overflow-indicator-b-bar-1 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_01.png');
-}
-.ui-overflow-indicator-b-bar-2 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_02.png');
-}
-.ui-overflow-indicator-b-bar-3 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_03.png');
-}
-.ui-overflow-indicator-b-bar-4 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_04.png');
-}
-.ui-overflow-indicator-b-bar-5 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_05.png');
-}
-.ui-overflow-indicator-b-bar-6 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_06.png');
-}
-.ui-overflow-indicator-b-bar-7 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_07.png');
-}
-.ui-overflow-indicator-b-bar-8 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_08.png');
-}
-.ui-overflow-indicator-b-bar-9 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_09.png');
-}
-.ui-overflow-indicator-b-bar-10 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_10.png');
-}
-.ui-overflow-indicator-b-bar-11 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_11.png');
-}
-.ui-overflow-indicator-b-bar-12 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_12.png');
-}
-.ui-overflow-indicator-b-bar-13 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_13.png');
-}
-.ui-overflow-indicator-b-bar-14 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_14.png');
-}
-.ui-overflow-indicator-b-bar-15 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_15.png');
-}
-.ui-overflow-indicator-b-bar-16 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_16.png');
-}
-.ui-overflow-indicator-b-bar-17 {
-  background-image: url('images/bouncing_effect/bottom/bouncing_bottom_17.png');
-}
 .ui-scroll-jump-top-bg {
   top: 0;
   position: fixed;
@@ -10503,7 +10410,8 @@ tau-progress {
   bottom: 3.5px;
 }
 .ui-listview .ui-group-index + .ui-li-static {
-  padding: 16.5px 8.5px 16.5px 16px;
+  padding-top: 16.5px;
+  padding-bottom: 16.5px;
 }
 .ui-listview .ui-group-index ~ .ui-li-static > input[type=checkbox] {
   position: absolute;
@@ -10727,6 +10635,9 @@ tau-textenveloper {
 }
 .ui-text-enveloper .ui-text-enveloper-input-new-line.ui-text-enveloper-input-blur {
   display: none;
+}
+.ui-text-enveloper input.ui-text-input ~ .ui-text-input-clear {
+  top: auto;
 }
 .ui-listview .ui-li-static .ui-text-enveloper,
 .ui-listview .ui-li-flex .ui-text-enveloper {

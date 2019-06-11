@@ -1,8 +1,8 @@
 /*global tau */
 (function () {
 
-	var page = document.getElementById("swipelist"),
-		listElement = page.getElementsByClassName("ui-swipelist-list")[0],
+	var page = document.getElementById("page-swipelist"),
+		listElement = page.getElementsByClassName("ui-listview")[0],
 		swipeList;
 
 	/**

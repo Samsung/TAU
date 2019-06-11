@@ -153,7 +153,7 @@
 					lastState = history.activeState,
 					options = {},
 					reverse,
-					resultOfTigger = true,
+					resultOfTrigger = true,
 					skipTriggerStateChange = false;
 
 				//>>excludeStart("tauDebug", pragmas.tauDebug);
@@ -173,15 +173,15 @@
 					});
 
 					if (lastState) {
-						resultOfTigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
+						resultOfTrigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
 							{url: pathUtils.getLocation(), stateUrl: lastState.stateUrl}), true, true);
 
 						//>>excludeStart("tauDebug", pragmas.tauDebug);
-						ns.log("after trigger EVENT_HASHCHANGE:", resultOfTigger);
+						ns.log("after trigger EVENT_HASHCHANGE:", resultOfTrigger);
 						//>>excludeEnd("tauDebug");
 
 						// if EVENT HASHCHANGE has been triggered successfully then skip trigger HistoryStateChange
-						skipTriggerStateChange = resultOfTigger;
+						skipTriggerStateChange = resultOfTrigger;
 					}
 
 					state.url = pathUtils.getLocation();

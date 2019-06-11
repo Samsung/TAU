@@ -310,7 +310,6 @@ li.static::before {
 	background-repeat: no-repeat;
 	background-size: 50px 50px;
 	background-position: right center;
-	background-image: url(../extra/images/Controller_icon/tw_btn_next_depth_holo_dark.png);
 }
 .ui-listview li.li-has-next-depth.disabled a:after {
 	position: absolute;
@@ -323,7 +322,6 @@ li.static::before {
 	background-repeat: no-repeat;
 	background-size: 50px 50px;
 	background-position: right center;
-	background-image: url(../extra/images/Controller_icon/tw_btn_next_depth_disabled_holo_dark.png);
 }
 .ui-listview li.li-has-next-depth a:active:after,
 .ui-listview li.li-has-next-depth a:focus:after {
@@ -337,7 +335,6 @@ li.static::before {
 	background-repeat: no-repeat;
 	background-size: 50px 50px;
 	background-position: right center;
-	background-image: url(../extra/images/Controller_icon/tw_btn_next_depth_focused_holo_dark.png);
 }
 .ui-listview li.li-has-next-depth.disabled,
 .ui-listview li.li-has-next-depth.disabled a,

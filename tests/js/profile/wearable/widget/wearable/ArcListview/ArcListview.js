@@ -39,7 +39,9 @@
 				visibleItems: 3,
 				ellipsisA: 333,
 				ellipsisB: 180,
-				selectedIndex: 0
+				selectedIndex: 0,
+				dataLength: 0,
+				listItemUpdater: null
 			}, "options was correct initialized");
 		});
 
@@ -231,12 +233,16 @@
 				removeChild = function () {
 					assert.ok("remove child was called");
 				},
+				querySelector = function () {
+					assert.ok("find text content");
+				},
 				item = {
 					element: {
 						style: {},
 						parentNode: {
 							removeChild: removeChild
-						}
+						},
+						querySelector: querySelector
 					},
 					current: {
 						scale: 1
@@ -244,7 +250,7 @@
 					repaint: true
 				};
 
-			expect(4);
+			expect(5);
 			listWidget.element = element;
 			listWidget._state.currentIndex = 2;
 			listWidget._carousel = {
@@ -274,7 +280,8 @@
 						},
 						"parentNode": {
 							"removeChild": removeChild
-						}
+						},
+						"querySelector": querySelector
 					},
 					"repaint": false
 				}, "_state.items are correctly updated");
@@ -295,7 +302,8 @@
 						"style": {
 							"opacity": 1.15,
 							"transform": "translateY(-50%) scale3d(1,1,1)"
-						}
+						},
+						"querySelector": querySelector
 					},
 					"repaint": false
 				}, "_state.items are correctly updated");
@@ -543,6 +551,7 @@
 		QUnit.test("_carouselUpdate", function (assert) {
 			var arclistWidget = new ArcListview();
 
+			arclistWidget.element = document.createElement("ul");
 			arclistWidget._state = {
 				items: [
 					{y: 2, height: 10},
@@ -670,6 +679,8 @@
 				}
 			};
 			arclistWidget._scrollAnimationEnd = false;
+			arclistWidget._items = [{id: 0}];
+
 			arclistWidget._calc = function () {
 				assert.ok(true, "_calc was called");
 			};

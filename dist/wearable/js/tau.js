@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '4.0.46';
+ns.version = '1.0.3';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -362,6 +362,113 @@ ns.version = '4.0.46';
 			// same as above, but for wearable version
 			ns.setConfig("pageContainer", document.body, true);
 			ns.setConfig("findProfileFile", false, true);
+
+			}());
+
+/*global define, ns */
+/*
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * #Defaults settings object
+ *
+ * This module is deprecated, please use tau.setConfig and tau.getConfig functions or tauConfig
+ * object.
+ *
+ * @author Hyunkook Cho <hk0713.cho@samsung.com>
+ * @author Tomasz Lukawski <t.lukawski@samsung.com>
+ * @author junhyeonLee <juneh.lee@samsung.com>
+ * @author heeju Joo <heeju.joo@samsung.com>
+ * @author Maciej Urbanski <m.urbanski@samsung.com>
+ * @author Piotr Karny <p.karny@samsung.com>
+ * @author hagun.kim <hagun.kim@samsung.com>
+ * @class ns.defaults
+ * @since 2.0
+ * @deprecated 3.0
+ */
+(function () {
+	"use strict";
+				var defaults = {};
+
+			/**
+			 * Helper function to define property on object defaults
+			 * @param {string} name Property name to define
+			 */
+			function defineProperty(name) {
+				Object.defineProperty(ns.defaults, name, {
+					get: function () {
+						ns.warn("tau.defaults are deprecated from Tizen 3.0, please use tau.getConfig.");
+						return ns.getConfig(name);
+					},
+					set: function (value) {
+						ns.warn("tau.defaults are deprecated from Tizen 3.0, please use tau.setConfig.");
+						return ns.setConfig(name, value);
+					}
+				});
+			}
+
+			ns.defaults = defaults;
+
+			/**
+			 * @property {boolean} autoInitializePage=true
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("autoInitializePage");
+			/**
+			 * @property {boolean} dynamicBaseEnabled=true
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("dynamicBaseEnabled");
+			/**
+			 * @property {string} pageTransition="none"
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("pageTransition");
+			/**
+			 * @property {string} popupTransition="none"
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("popupTransition");
+			/**
+			 * @property {boolean} popupFullSize=false
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("popupFullSize");
+			/**
+			 * @property {boolean} enablePageScroll=false
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("enablePageScroll");
+			/**
+			 * @property {string} scrollEndEffectArea="content
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("scrollEndEffectArea");
+			/**
+			 * @property {boolean} enablePopupScroll=false
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("enablePopupScroll");
 
 			}());
 
@@ -2393,10 +2500,11 @@ ns.version = '4.0.46';
 			 * @member ns.engine
 			 * @static
 			 */
-			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement) {
+			function defineWidget(name, selector, methods, widgetClass, namespace, redefine, widgetNameToLowercase, BaseElement, buildOptions) {
 				var definition;
 				// Widget name is absolutely required
 
+				buildOptions = buildOptions || {};
 				if (name) {
 					if (!widgetDefinitions[name] || redefine) {
 												methods = methods || [];
@@ -2409,7 +2517,8 @@ ns.version = '4.0.46';
 							widgetClass: widgetClass || null,
 							namespace: namespace || "",
 							widgetNameToLowercase: widgetNameToLowercase === undefined ? true : !!widgetNameToLowercase,
-							BaseElement: BaseElement
+							BaseElement: BaseElement,
+							buildOptions: buildOptions
 						};
 
 						widgetDefinitions[name] = definition;
@@ -3307,6 +3416,10 @@ ns.version = '4.0.46';
 					// If didn't found binding build new widget
 					if (!binding && widgetDefinitions[name]) {
 						definition = widgetDefinitions[name];
+						if (definition.buildOptions.requireMatchSelector &&
+							!ns.util.selectors.matchesSelector(element, definition.selector)) {
+							return null;
+						}
 						element = processHollowWidget(element, definition, options);
 						binding = getBinding(element, name);
 					} else if (binding) {
@@ -5978,7 +6091,7 @@ function pathToRegexp (path, keys, options) {
 					lastState = history.activeState,
 					options = {},
 					reverse,
-					resultOfTigger = true,
+					resultOfTrigger = true,
 					skipTriggerStateChange = false;
 
 								if (manager.locked) {
@@ -5995,12 +6108,12 @@ function pathToRegexp (path, keys, options) {
 					});
 
 					if (lastState) {
-						resultOfTigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
+						resultOfTrigger = eventUtils.trigger(document, EVENT_HASHCHANGE, objectUtils.merge(options,
 							{url: pathUtils.getLocation(), stateUrl: lastState.stateUrl}), true, true);
 
 						
 						// if EVENT HASHCHANGE has been triggered successfully then skip trigger HistoryStateChange
-						skipTriggerStateChange = resultOfTigger;
+						skipTriggerStateChange = resultOfTrigger;
 					}
 
 					state.url = pathUtils.getLocation();
@@ -8375,6 +8488,7 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				engine = ns.engine,
+				arrayUtil = ns.util.array,
 
 				Page = function () {
 					var self = this;
@@ -8467,6 +8581,8 @@ function pathToRegexp (path, keys, options) {
 					uiPageActive: "ui-page-active",
 					uiSection: "ui-section",
 					uiHeader: "ui-header",
+					uiMore: "ui-more",
+					uiHeaderOnlyMoreButton: "ui-header-has-only-more-button",
 					uiFooter: "ui-footer",
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
@@ -8479,6 +8595,7 @@ function pathToRegexp (path, keys, options) {
 				//same level as content, other wise page content is build on
 				//indexscrollbar element
 				CONTENT_SELECTOR = "[data-role='content'],." + classes.uiContent,
+				ONLY_CHILD_MORE_BUTTON_SELECTOR = "." + classes.uiMore + ":first-child:last-child",
 				prototype = new BaseWidget();
 
 			Page.classes = classes;
@@ -8542,7 +8659,7 @@ function pathToRegexp (path, keys, options) {
 					}
 
 					if (footer) {
-						bottom = utilsDOM.getElementHeight(footer);
+						bottom = footer.getBoundingClientRect().height;
 						contentStyle.marginBottom = bottom + "px";
 						contentStyle.paddingBottom = (-bottom) + "px";
 					}
@@ -8651,6 +8768,15 @@ function pathToRegexp (path, keys, options) {
 						// if is string fill content by string value
 						if (typeof value === "string") {
 							ui.header.textContent = value;
+						}
+
+						if (ns.support && ns.support.shape && ns.support.shape.circle) {
+							// patch for backward compability - if header has only more button
+							// (it was common for rectangle devices) header should be marked
+							// and take no place at all.
+							if (header.querySelector(ONLY_CHILD_MORE_BUTTON_SELECTOR) && header.textContent.trim() === "") {
+								header.classList.add(classes.uiHeaderOnlyMoreButton);
+							}
 						}
 					}
 					// and remember options
@@ -8802,22 +8928,26 @@ function pathToRegexp (path, keys, options) {
 					dataPageTitle = utilsDOM.getNSData(element, "title"),
 					header = self._ui.header,
 					pageTitle = dataPageTitle,
-					titleElement;
+					titleElements,
+					mainTitleElement;
 
 				if (header) {
-					titleElement = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6")[0];
-					if (titleElement) {
-						titleElement.classList.add(classes.uiTitle);
-					}
+					titleElements = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6");
 
-					if (!pageTitle && titleElement) {
-						pageTitle = titleElement.innerText;
-						self._ui.title = titleElement;
+					mainTitleElement = titleElements[0];
+
+					if (!pageTitle && mainTitleElement) {
+						pageTitle = mainTitleElement.innerText;
+						self._ui.title = mainTitleElement;
 					}
 
 					if (!dataPageTitle && pageTitle) {
 						utilsDOM.setNSData(element, "title", pageTitle);
 					}
+
+					arrayUtil.forEach(titleElements, function (titleElement) {
+						titleElement.classList.add(classes.uiTitle)
+					});
 				}
 			};
 
@@ -9231,9 +9361,6 @@ function pathToRegexp (path, keys, options) {
 			function deferredFunction(fromPageWidget, toPageWidget, self, options) {
 				if (fromPageWidget) {
 					fromPageWidget.onHide();
-					if (options.reverse) {
-						fromPageWidget.destroy();
-					}
 					self._removeExternalPage(fromPageWidget, options);
 				}
 				toPageWidget.onShow();
@@ -9498,6 +9625,7 @@ function pathToRegexp (path, keys, options) {
 
 				if (options && options.reverse && DOM.hasNSData(fromPageElement, "external") &&
 					fromPageElement.parentNode) {
+					fromPageWidget.destroy();
 					fromPageElement.parentNode.removeChild(fromPageElement);
 					this.trigger(EventType.PAGE_REMOVE);
 				}
@@ -15458,13 +15586,15 @@ function pathToRegexp (path, keys, options) {
 	"use strict";
 				var eventUtil = ns.event,
 				polarUtil = ns.util.polar,
+				selectorUtil = ns.util.selectors,
 				classes = {
 					circular: "scrolling-circular",
 					direction: "scrolling-direction",
 					scrollbar: "scrolling-scrollbar",
 					path: "scrolling-path",
 					thumb: "scrolling-scrollthumb",
-					fadeIn: "fade-in"
+					fadeIn: "fade-in",
+					container: "scrolling-container"
 				},
 				bounceBack = false,
 				EVENTS = {
@@ -15882,8 +16012,8 @@ function pathToRegexp (path, keys, options) {
 							"translate(" + lastRenderedPosition + "px, 0)" :
 							"translate(0, " + lastRenderedPosition + "px)";
 					}
-
 					renderScrollbar();
+
 					requestAnimationFrame(render);
 				}
 			}
@@ -15909,7 +16039,9 @@ function pathToRegexp (path, keys, options) {
 			 */
 			function enable(element, setDirection, setVirtualMode) {
 				var parentRectangle,
-					contentRectangle;
+					contentRectangle,
+					children,
+					existingContainerElement;
 
 				virtualMode = setVirtualMode;
 				bounceBack = false;
@@ -15921,14 +16053,26 @@ function pathToRegexp (path, keys, options) {
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
 
-					// we are creating a container to position transform
-					childElement = document.createElement("div");
-					// ... and appending all children to it
-					while (element.firstElementChild) {
-						childElement.appendChild(element.firstElementChild);
-					}
-					element.appendChild(childElement);
+					existingContainerElement = element.querySelector("div." + classes.container);
+					if (existingContainerElement) {
+						childElement = existingContainerElement;
+						childElement.style.transform = "";
+					} else {
+						// we are creating a container to position transform
+						childElement = document.createElement("div");
+						// ... and appending all children to it
 
+						children = Array.prototype.slice.call(element.childNodes)
+
+						children.forEach(function (node) {
+							if (!ns.support.shape.circle || selectorUtil.matchesSelector(node, ".ui-header:not(.ui-fixed), :not(.ui-footer)")) {
+								childElement.appendChild(node);
+							}
+						});
+
+						element.insertBefore(childElement, element.firstElementChild);
+						childElement.classList.add(classes.container);
+					}
 					// setting scrolling element
 					scrollingElement = element;
 					// calculate maxScroll
@@ -15944,6 +16088,7 @@ function pathToRegexp (path, keys, options) {
 
 					// cache style element
 					elementStyle = childElement.style;
+
 					initPosition();
 					// cache current overflow value to restore in disable
 					previousOverflow = window.getComputedStyle(element).getPropertyValue("overflow");
@@ -18757,6 +18902,9 @@ function pathToRegexp (path, keys, options) {
 					returnTimeFrame = (textWidth / (textWidth + containerWidth)),
 					returnValue;
 
+				if (self.options.ellipsisEffect === "none") {
+					return null;
+				}
 				if (state > returnTimeFrame) {
 					returnValue = GRADIENTS.RIGHT;
 				} else if (state > 0) {
@@ -18774,6 +18922,12 @@ function pathToRegexp (path, keys, options) {
 			prototype._calculateStandardGradient = function (state, diff, from, current) {
 				var returnValue;
 
+				if (isNaN(state)) {
+					return null;
+				}
+				if (this.options.ellipsisEffect === "none") {
+					return null;
+				}
 				if (state === 1) {
 					returnValue = GRADIENTS.LEFT;
 				} else if (state > 0) {
@@ -19024,8 +19178,11 @@ function pathToRegexp (path, keys, options) {
 
 				self.state = null;
 				self._stateDOM = null;
+				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
+				self.element.classList.remove(classes.MARQUEE_GRADIENT);
+				self.element.style.webkitMaskImage = "";
 			};
 
 			/**
@@ -19094,7 +19251,7 @@ function pathToRegexp (path, keys, options) {
 					stateDOM = self._stateDOM;
 
 				this.option("animation", "stopped");
-				stateDOM.style.webkitMaskImage = GRADIENTS.RIGHT;
+				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
 				stateDOM.children[0].style.webkitTransform = "translateX(0)";
 				self._render();
 			};
@@ -24990,7 +25147,7 @@ function pathToRegexp (path, keys, options) {
 					j = 0;
 
 				if (options.edgeEffect) {
-					if (!event.detail.inBounds) {
+					if (event.detail && !event.detail.inBounds) {
 						inBoundsDiff = scrollBegin < 0 ? scrollBegin : (scrollBegin + self._containerSize) - (options.dataLength * self._itemSize);
 
 						scrollBegin = scrollBegin - inBoundsDiff + options.edgeEffect(inBoundsDiff, // position diff
@@ -25043,17 +25200,20 @@ function pathToRegexp (path, keys, options) {
 									// get first free element
 									listItem = freeElements.shift();
 									map[i - fromIndex] = listItem;
-									self._updateListItem(listItem, j);
 
-									// Get the desired position for the element
-									if (i - fromIndex === numberOfItems - 1 || (j < fromIndex && (scrollBegin > self._scrollBeginPrev))) {
-										list.appendChild(listItem);
-									} else {
-										nextElement = map.filter(filterNextElement.bind(null, i - fromIndex))[0];
-										if (!nextElement) {
-											list.insertBefore(listItem, list.firstElementChild);
+									if (listItem) {
+										self._updateListItem(listItem, j);
+
+										// Get the desired position for the element
+										if (i - fromIndex === numberOfItems - 1 || (j < fromIndex && (scrollBegin > self._scrollBeginPrev))) {
+											list.appendChild(listItem);
 										} else {
-											list.insertBefore(listItem, nextElement);
+											nextElement = map.filter(filterNextElement.bind(null, i - fromIndex))[0];
+											if (!nextElement) {
+												list.insertBefore(listItem, list.firstElementChild);
+											} else {
+												list.insertBefore(listItem, nextElement);
+											}
 										}
 									}
 								}
@@ -30443,6 +30603,7 @@ function pathToRegexp (path, keys, options) {
 			var nsWidget = ns.widget,
 				Listview = nsWidget.core.Listview,
 				Page = nsWidget.core.Page,
+				Popup = nsWidget.core.Popup,
 				eventUtils = ns.event,
 				slice = [].slice,
 				// constants
@@ -30567,10 +30728,13 @@ function pathToRegexp (path, keys, options) {
 						ellipsisA: ELLIPSIS_A,
 						ellipsisB: ELLIPSIS_B,
 						bouncingTimeout: 1000,
-						visibleItems: 3
+						visibleItems: 3,
+						listItemUpdater: null,
+						dataLength: 0
 					};
 					// items table on start is empty
 					self._items = [];
+					self._lastId = -1;
 					// the end of scroll animation
 					self._scrollAnimationEnd = true;
 					// carousel of five elements
@@ -30584,6 +30748,8 @@ function pathToRegexp (path, keys, options) {
 					self._rendering = false;
 					self._lastRenderRequest = 0;
 					self._carouselIndex = 0;
+					self._disabledByPopup = false;
+					self._previousIndex = null;
 					/**
 					 * Cache for widget UI HTMLElements
 					 * @property {Object} _ui
@@ -30613,7 +30779,8 @@ function pathToRegexp (path, keys, options) {
 					DIVIDER: "ui-listview-divider",
 					FORCE_RELATIVE: "ui-force-relative-li-children",
 					LISTVIEW: "ui-listview",
-					SELECTED: "ui-arc-listview-selected"
+					SELECTED: "ui-arc-listview-selected",
+					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden"
 				},
 				events = {
 					CHANGE: "change"
@@ -30646,7 +30813,11 @@ function pathToRegexp (path, keys, options) {
 
 				lastTouchY = 0,
 				deltaTouchY = 0,
-				deltaSumTouchY = 0;
+				deltaSumTouchY = 0,
+
+				// virtual list parameters
+				NUMBER_ITEMS_TO_ADD = 20,
+				LOAD_THRESHOLD = 10;
 
 			/**
 			 * Create item object
@@ -30666,6 +30837,17 @@ function pathToRegexp (path, keys, options) {
 					repaint: false
 				};
 			};
+
+			function copyRect(rect) {
+				return {
+					bottom: rect.bottom,
+					height: rect.height,
+					left: rect.left,
+					right: rect.right,
+					top: rect.top,
+					width: rect.width
+				};
+			}
 
 			/**
 			 * Pre calculation of factors for Y axis
@@ -30733,7 +30915,6 @@ function pathToRegexp (path, keys, options) {
 			prototype._setAnimatedItems = function () {
 				var self = this,
 					items = self._items,
-					id = 0,
 					itemElement = items[0],
 					item = null,
 					rect = null,
@@ -30741,46 +30922,52 @@ function pathToRegexp (path, keys, options) {
 					diffY = null,
 					scroller = self._ui.scroller,
 					state = self._state,
-					parentElement = itemElement.parentElement,
+					parentElement,
+					parentClassList;
+
+				if (itemElement) {
+					parentElement = self.element;
 					parentClassList = parentElement.classList;
 
-				// set parent size
-				parentRect = parentElement.getBoundingClientRect();
-				prepareParentStyle(parentElement, parentRect);
+					// set parent size
+					parentRect = parentElement.getBoundingClientRect();
+					prepareParentStyle(parentElement, parentRect);
 
-				parentClassList.add(classes.FORCE_RELATIVE);
+					parentClassList.add(classes.FORCE_RELATIVE);
 
-				arrayUtil.forEach(items, function (itemElement, i) {
-					// add items to state
-					if (i >= 0 && !state.items[i] && itemElement !== undefined) {
-						rect = itemElement.getBoundingClientRect();
-						item = ArcListview.createItem();
-						if (itemElement.classList.contains(classes.GROUP_INDEX) || itemElement.classList.contains(classes.DIVIDER)) {
-							state.separators.push({
-								itemElement: item,
-								insertBefore: i - state.separators.length
-							});
-						} else {
-							state.items.push(item);
-							item.id = id;
-							id++;
+					arrayUtil.forEach(items, function (itemElement, i) {
+						// add items to state
+						if (i >= 0 && !state.items[i] && itemElement !== undefined) {
+							rect = copyRect(itemElement.getBoundingClientRect());
+							item = ArcListview.createItem();
+							if (itemElement.classList.contains(classes.GROUP_INDEX) || itemElement.classList.contains(classes.DIVIDER)) {
+								state.separators.push({
+									itemElement: item,
+									insertBefore: i - state.separators.length
+								});
+							} else {
+								state.items.push(item);
+								item.id = ++self._lastId;
+							}
+
+							item.element = itemElement;
+							item.y = round(rect.top + rect.height / 2 + scroller.scrollTop);
+							item.height = rect.height;
+							item.rect = rect;
+							if (diffY === null) {
+								diffY = rect.top - parentRect.top;
+							}
 						}
+					});
 
-						item.element = itemElement;
-						item.y = round(rect.top + rect.height / 2 + scroller.scrollTop);
-						item.height = rect.height;
-						item.rect = rect;
-						if (diffY === null) {
-							diffY = rect.top - parentRect.top;
+					parentClassList.remove(classes.FORCE_RELATIVE);
+
+					arrayUtil.forEach(items, function (item) {
+						if (item.parentElement === parentElement) {
+							parentElement.removeChild(item);
 						}
-					}
-				});
-
-				parentClassList.remove(classes.FORCE_RELATIVE);
-
-				arrayUtil.forEach(items, function (item) {
-					parentElement.removeChild(item);
-				});
+					});
+				}
 			};
 
 			/**
@@ -30913,8 +31100,6 @@ function pathToRegexp (path, keys, options) {
 					carouselItem,
 					carouselElement,
 					itemElement,
-					carouselItem,
-					carouselElement,
 					carouselSeparator,
 					upperSeparator,
 					lowerSeparator,
@@ -30939,6 +31124,7 @@ function pathToRegexp (path, keys, options) {
 								carouselSeparator = carouselItem.carouselSeparator;
 								if (itemElement.parentElement !== carouselElement) {
 									carouselElement.appendChild(itemElement);
+									self._wrapTextContent(itemElement);
 								}
 
 								if (upperSeparator) {
@@ -30959,6 +31145,7 @@ function pathToRegexp (path, keys, options) {
 											nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
 										}
 										nextCarouselSeparatorElement.appendChild(lowerSeparator.itemElement.element);
+										self._wrapTextContent(itemElement);
 									} else if (nextCarouselSeparatorElement.firstChild) {
 										nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
 									}
@@ -31024,6 +31211,11 @@ function pathToRegexp (path, keys, options) {
 					carouselItemUpperSeparatorElement,
 					top;
 
+				if (self._previousIndex !== currentIndex) {
+					ns.event.trigger(self.element, "currentindexchange", {"index": currentIndex});
+					self._previousIndex = currentIndex;
+				}
+
 				// change carousel item per 2 items
 				if (Math.abs(self._carouselIndex - currentIndex) >= 2) {
 					self._carouselIndex = currentIndex;
@@ -31045,6 +31237,13 @@ function pathToRegexp (path, keys, options) {
 
 					carouselItemElement.style.transform = "translateY(" + top + "px)";
 					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
+
+					// hide unused carousel items
+					if (carouselItemElement.firstElementChild === null) {
+						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
+					} else {
+						carouselItemElement.classList.remove(classes.HIDDEN_CAROUSEL_ITEM);
+					}
 				}
 			};
 
@@ -31061,7 +31260,7 @@ function pathToRegexp (path, keys, options) {
 				self._calc();
 				self._draw();
 
-				if (!self._scrollAnimationEnd) {
+				if (!self._scrollAnimationEnd && self._items.length > 0) {
 					state.currentIndex = self._findItemIndexByY(
 						-1 * (state.scroll.current - SCREEN_HEIGHT / 2 + 1));
 					util.requestAnimationFrame(self._renderCallback);
@@ -31091,15 +31290,25 @@ function pathToRegexp (path, keys, options) {
 			prototype._findItemIndexByY = function (y) {
 				var items = this._state.items,
 					len = items.length,
-					minY = items[0].y,
-					maxY = items[len - 1].y,
+					minY,
+					maxY,
 					prev,
 					current,
 					next,
 					loop = true,
-					diffY = maxY - minY,
-					tempIndex = diffY !== 0 ? round((y - minY) / (diffY) * len) : 0;
+					diffY,
+					tempIndex;
 
+				if (len > 0) {
+					minY = items[0].y;
+					maxY = items[len - 1].y;
+				} else {
+					// widget has no items
+					return -1;
+				}
+
+				diffY = maxY - minY;
+				tempIndex = diffY !== 0 ? round((y - minY) / (diffY) * len) : 0;
 				tempIndex = min(len - 1, max(0, tempIndex));
 
 				while (loop) {
@@ -31140,7 +31349,7 @@ function pathToRegexp (path, keys, options) {
 				averageVelocity = sumDistance / sumTime;
 				self._halfItemsCount = Math.ceil((parseInt(self.options.visibleItems, 10) + 2) / 2);
 
-				if (momentum !== 0) {
+				if (items.length > 0 && momentum !== 0) {
 					momentum *= averageVelocity;
 					// momentum value has to be limited to defined max value
 					momentum = max(min(momentum, MOMENTUM_MAX_VALUE), -MOMENTUM_MAX_VALUE);
@@ -31212,6 +31421,10 @@ function pathToRegexp (path, keys, options) {
 					state = self._state,
 					scroll = state.scroll;
 
+				if (state.items.length === 0) {
+					return false;
+				}
+
 				// increase scroll duration according to length of items
 				// one item more increase duration +25%
 				// scroll duration is set to 0 when animations are disabled
@@ -31229,6 +31442,50 @@ function pathToRegexp (path, keys, options) {
 					self._requestRender();
 				}
 			};
+
+			/**
+			 * Add new item to listview
+			 * @method addItem
+			 * @param {string} content text content for new list item
+			 * @param {number} [index] item index on list, default last item
+			 * @param {HTMLElement} [liElement=null] new list item
+			 * @memberof ns.widget.wearable.ArcListview
+			 */
+			prototype.addItem = function (content, index, liElement) {
+				var li = liElement || document.createElement("li"),
+					self = this,
+					lastItem,
+					prevItem;
+
+				// append new li elements to widget element
+				if (typeof self.options.listItemUpdater === "function") {
+					self.options.listItemUpdater(li, index);
+				} else {
+					li.innerHTML = "<a href=\"\">" + content + "</a>";
+				}
+				self.element.appendChild(li);
+
+				// find new li elements attached to widget element
+				self._addItemsFromElement();
+				// move li elements to widget cache
+				self._setAnimatedItems();
+
+				// set new item position on list;
+				if (self._state.items.length > 1) {
+					lastItem = self._state.items[self._state.items.length - 1];
+					prevItem = self._state.items[self._state.items.length - 2];
+
+					lastItem.y = prevItem.y + prevItem.height;
+					lastItem.rect.bottom = prevItem.rect.bottom + prevItem.rect.height;
+					lastItem.rect.top = prevItem.rect.top + prevItem.rect.height;
+				}
+
+				self._setMaxScrollY();
+				self._bouncingEffect._maxValue = self._maxScrollY;
+
+				// refresh widget view
+				self.refresh();
+			}
 
 			/**
 			 * Change to next item
@@ -31324,8 +31581,14 @@ function pathToRegexp (path, keys, options) {
 
 				state.toIndex = index;
 
-				if (state.toIndex > state.items.length - 1) {
-					state.toIndex = state.items.length - 1;
+				if (this.options.listItemUpdater) {  // virtual list
+					if (state.toIndex > self.options.dataLength - 1) {
+						state.toIndex = self.options.dataLength - 1;
+					}
+				} else { // normal list
+					if (state.toIndex > state.items.length - 1) {
+						state.toIndex = state.items.length - 1;
+					}
 				}
 
 				if (state.toIndex < 0) {
@@ -31392,6 +31655,10 @@ function pathToRegexp (path, keys, options) {
 					scroll = state.scroll,
 					current = scroll.current,
 					bouncingEffect = self._bouncingEffect;
+
+				if (self._items.length === 0) {
+					return false;
+				}
 
 				// time
 				lastTouchTime = Date.now();
@@ -31480,6 +31747,34 @@ function pathToRegexp (path, keys, options) {
 				arcListviewSelection.classList.add(classes.SELECTION_SHOW);
 			}
 
+			prototype._wrapTextContent = function (element) {
+				var child = element.firstChild,
+					TEXT_NODE_TYPE = document.TEXT_NODE,
+					wrapper;
+
+				if (!element.querySelector(".ui-arc-listview-text-content")) {
+					while (child) {
+						if (child.classList && child.classList.contains("ui-arc-listview-text-content") ||
+							child.textContent.trim() === "") {
+							child = child.nextSibling;
+							continue;
+						} else if (child.firstChild !== null) {
+							if (this._wrapTextContent(child)) {
+								return true;
+							}
+						} else if (child.nodeType === TEXT_NODE_TYPE) {
+							wrapper = document.createElement("div");
+							wrapper.className = "ui-arc-listview-text-content ui-marquee";
+							child.parentNode.replaceChild(wrapper, child);
+							wrapper.appendChild(child);
+							return true;
+						}
+						child = child.nextSibling;
+					}
+				}
+				return false;
+			}
+
 			/**
 			 * Handler for event select
 			 * @method _selectItem
@@ -31490,7 +31785,23 @@ function pathToRegexp (path, keys, options) {
 			prototype._selectItem = function (selectedIndex) {
 				var ui = this._ui,
 					state = this._state,
-					selectedElement = state.items[selectedIndex].element;
+					selectedElement = state.items[selectedIndex].element,
+					marqueeDiv,
+					widget;
+
+				marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+				if (marqueeDiv) {
+					marqueeDiv.style.width = "100%";
+					marqueeDiv.classList.add("ui-marquee");
+				}
+				widget = ns.widget.Marquee(marqueeDiv, {
+					marqueeStyle: "scroll",
+					ellipsisEffect: "gradient",
+					iteration: "infinite",
+					delay: "300"
+				});
+				widget.start();
+
 
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
@@ -31512,14 +31823,27 @@ function pathToRegexp (path, keys, options) {
 			prototype._onChange = function (event) {
 				var selectedIndex = event.detail.selected,
 					unselectedIndex = event.detail.unselected,
-					classList = this._ui.arcListviewSelection.classList;
+					classList = this._ui.arcListviewSelection.classList,
+					selectedElement,
+					marqueeDiv,
+					widget;
 
-				if (!event.defaultPrevented) {
+				if (!event.defaultPrevented && this._state.items.length > 0) {
 					if (selectedIndex !== undefined) {
 						this._selectItem(selectedIndex);
 					} else {
 						classList.remove(classes.SELECTION_SHOW);
-						this._state.items[unselectedIndex].element.classList.remove(classes.SELECTED);
+						selectedElement = this._state.items[unselectedIndex].element,
+						selectedElement.classList.remove(classes.SELECTED);
+						// stop marque;
+						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+						if (marqueeDiv) {
+							widget = ns.widget.Marquee(marqueeDiv);
+							if (widget) {
+								widget.reset();
+								widget.destroy();
+							}
+						}
 					}
 				}
 			};
@@ -31540,12 +31864,12 @@ function pathToRegexp (path, keys, options) {
 						return item.element;
 					}).indexOf(li);
 
-				if (toIndex && toIndex !== state.currentIndex) {
+				if (toIndex > -1 && toIndex !== state.currentIndex) {
 					self.trigger(events.CHANGE, {
 						"unselected": state.currentIndex
 					});
 
-					if (toIndex >= 0 && toIndex < state.items.length) {
+					if (toIndex < state.items.length) {
 						state.toIndex = toIndex;
 					}
 
@@ -31556,6 +31880,39 @@ function pathToRegexp (path, keys, options) {
 			prototype._onPageInit = function () {
 				this._init();
 			};
+
+			/**
+			 * Handler for popupbeforeshow event
+			 * @method _onPopupShow
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupShow = function (event) {
+				var self = this,
+					popup = event.target;
+
+				if (!popup.classList.contains(Popup.classes.toastSmall)) {
+					self.disableList();
+					self._disabledByPopup = true;
+				}
+			};
+
+
+			/**
+			 * Handler for popupbeforehide event
+			 * @method _onPopupHide
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupHide = function (event) {
+				var self = this;
+
+				if (self._disabledByPopup) {
+					self.enableList();
+				}
+			}
 
 			prototype._buildArcListviewSelection = function (page) {
 				// find or add selection for current list element
@@ -31616,6 +31973,31 @@ function pathToRegexp (path, keys, options) {
 				return element;
 			};
 
+			prototype._getItemsFromElement = function () {
+				var self = this;
+
+				// find list elements with including group indexes
+				self._items = slice.call(self._ui.page.querySelectorAll(selectors.ITEMS)) || [];
+			}
+
+			prototype._addItemsFromElement = function () {
+				var self = this;
+
+				// find list elements with including group indexes
+				self._items = self._items.concat(slice.call(self._ui.page.querySelectorAll(selectors.ITEMS)));
+			}
+
+			prototype._createTextInputs = function () {
+				arrayUtil.forEach(this._items, function (item) {
+					var textInputEl = selectorsUtil.getChildrenBySelector(item, selectors.TEXT_INPUT)[0];
+
+					if (textInputEl) {
+						ns.widget.TextInput(textInputEl);
+					}
+				});
+			}
+
+
 			/**
 			 * Widget init method
 			 * @method _init
@@ -31642,16 +32024,8 @@ function pathToRegexp (path, keys, options) {
 				if (scroller) {
 					element.classList.add(WIDGET_CLASS, classes.PREFIX + visibleItemsCount);
 
-					// find list elements with including group indexes
-					self._items = slice.call(page.querySelectorAll(selectors.ITEMS)) || [];
-
-					arrayUtil.forEach(self._items, function (item) {
-						var textInputEl = selectorsUtil.getChildrenBySelector(item, selectors.TEXT_INPUT)[0];
-
-						if (textInputEl) {
-							ns.widget.TextInput(textInputEl);
-						}
-					});
+					self._getItemsFromElement();
+					self._createTextInputs();
 
 					ui.arcListviewSelection = self._buildArcListviewSelection(page);
 					arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
@@ -31673,6 +32047,18 @@ function pathToRegexp (path, keys, options) {
 					self._refresh();
 					self._scroll();
 					self._initBouncingEffect();
+				}
+			};
+
+			prototype._onCurrentIndexChange = function (event) {
+				var currentIndex = event.detail.index,
+					self = this;
+
+				// support for virtual list
+				if (self.options.listItemUpdater) {
+					if (currentIndex + LOAD_THRESHOLD > self._items.length) {
+						self._loadItems(NUMBER_ITEMS_TO_ADD);
+					}
 				}
 			};
 
@@ -31709,6 +32095,16 @@ function pathToRegexp (path, keys, options) {
 							break;
 						case "vclick" :
 							self._onClick(event);
+							break;
+						case "popupbeforehide":
+							self._onPopupHide(event);
+							break;
+						case "popupbeforeshow":
+							self._onPopupShow(event);
+							break;
+						case "currentindexchange" :
+							self._onCurrentIndexChange(event);
+							break;
 					}
 				}
 			};
@@ -31728,11 +32124,14 @@ function pathToRegexp (path, keys, options) {
 				page.addEventListener("touchmove", self, true);
 				page.addEventListener("touchend", self, true);
 				page.addEventListener("pageinit", self, true);
+				page.addEventListener("popupbeforeshow", self, true);
+				page.addEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.addEventListener("vclick", self, true);
 				}
 				document.addEventListener("rotarydetent", self, true);
 				element.addEventListener("change", self, true);
+				element.addEventListener("currentindexchange", self, true);
 			};
 
 			/**
@@ -31788,11 +32187,49 @@ function pathToRegexp (path, keys, options) {
 				page.removeEventListener("touchmove", self, true);
 				page.removeEventListener("touchend", self, true);
 				page.removeEventListener("pageinit", self, true);
+				page.removeEventListener("popupbeforeshow", self, true);
+				page.removeEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.removeEventListener("vclick", self, true);
 				}
 				document.removeEventListener("rotarydetent", self, true);
 				element.removeEventListener("change", self, true);
+				element.removeEventListener("currentindexchange", self, true);
+			};
+
+			prototype._loadItems = function (count) {
+				var len = this._items.length,
+					i = 0;
+
+				for (i = 0; i < count; i++) {
+					this.addItem("", i + len);
+				}
+			}
+
+			/**
+			 * Virtual listview feature for update items from data
+			 */
+			prototype.setListItemUpdater = function (updateFunction) {
+				var self = this,
+					elementHeight = 0;
+
+				self.options.listItemUpdater = updateFunction;
+				self._loadItems(NUMBER_ITEMS_TO_ADD);
+
+				// set widget element height to show progress bar;
+				if (self._state.items.length > 0) {
+					elementHeight = self.options.dataLength * self._state.items.reduce(function (before, item) {
+						return before + item.rect.height;
+					}, 0) / self._state.items.length;
+				}
+				prepareParentStyle(self.element, {
+					height: elementHeight
+				});
+			};
+
+			prototype._updateListItem = function (element, index) {
+				element.setAttribute("data-index", index);
+				this.options.listItemUpdater(element, index);
 			};
 
 			/**
@@ -31824,10 +32261,20 @@ function pathToRegexp (path, keys, options) {
 				}
 			};
 
+			prototype._setMaxScrollY = function () {
+				var self = this;
+
+				if (self._state.items.length) {
+					self._maxScrollY = self._state.items[self._state.items.length - 1].rect.bottom - BOTTOM_MARGIN;
+				} else {
+					self._maxScrollY = self.element.getBoundingClientRect().bottom - BOTTOM_MARGIN;
+				}
+			}
+
 			prototype._initBouncingEffect = function () {
 				var self = this;
 
-				self._maxScrollY = self.element.getBoundingClientRect().height - BOTTOM_MARGIN;
+				self._setMaxScrollY();
 				self._bouncingEffect = new ns.widget.core.scroller.effect.Bouncing(self._ui.page, {
 					maxScrollX: 0,
 					maxScrollY: self._maxScrollY,
@@ -31947,11 +32394,16 @@ function pathToRegexp (path, keys, options) {
 
 			engine.defineWidget(
 				"Listview",
-				".ui-listview",
+				".ui-listview:not(.ui-arc-listview-carousel-item)",
 				[],
 				Listview,
 				"wearable",
-				true
+				true,
+				false,
+				null,
+				{
+					requireMatchSelector: true
+				}
 			);
 			}(window.document, ns));
 
@@ -34741,6 +35193,8 @@ function pathToRegexp (path, keys, options) {
 
 				utilScrolling = ns.util.scrolling,
 
+				filter = [].filter,
+
 				/**
 				 * Local constructor function
 				 * @method VirtualListview
@@ -35042,7 +35496,8 @@ function pathToRegexp (path, keys, options) {
 					i,
 					offset,
 					index,
-					isLastBuffer = false;
+					isLastBuffer = false,
+					children = filter.call(element.children, isListItem);
 
 				//Get size of scroll clip depended on scroll direction
 				scrollClipSize = options.orientation === VERTICAL ? scrollInfo.clipHeight :
@@ -35089,7 +35544,7 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				for (i = 0; i < indexCorrection; i += 1) {
-					offset += _computeElementSize(element.children[i], options.orientation);
+					offset += _computeElementSize(children[i], options.orientation);
 				}
 
 				if (options.orientation === VERTICAL) {
@@ -35105,6 +35560,18 @@ function pathToRegexp (path, keys, options) {
 				}
 				blockEvent = false;
 				self._currentIndex = index;
+			}
+
+			function getFirstElementChild(element) {
+				var firstLiElement = element.firstElementChild;
+
+				while (firstLiElement) {
+					if (firstLiElement.tagName === "LI") {
+						return firstLiElement;
+					}
+					firstLiElement = firstLiElement.nextElementSibling;
+				}
+				return null;
 			}
 
 			/**
@@ -35133,12 +35600,13 @@ function pathToRegexp (path, keys, options) {
 			function _loadListElementRange(self, element, domBuffer, sizeGetter, loadIndex,
 				indexDirection, elementsToLoad) {
 				var temporaryElement,
+					children = filter.call(element.children, isListItem),
 					jump = 0,
 					i;
 
 				if (indexDirection > 0) {
 					for (i = elementsToLoad; i > 0; i--) {
-						temporaryElement = element.firstElementChild;
+						temporaryElement = children.shift();
 
 						// move to offscreen buffer
 						domBuffer.appendChild(temporaryElement);
@@ -35154,7 +35622,7 @@ function pathToRegexp (path, keys, options) {
 					self._currentIndex += elementsToLoad;
 				} else {
 					for (i = elementsToLoad; i > 0; i--) {
-						temporaryElement = element.lastElementChild;
+						temporaryElement = children.shift();
 
 						// move to offscreen buffer
 						domBuffer.appendChild(temporaryElement);
@@ -35162,7 +35630,7 @@ function pathToRegexp (path, keys, options) {
 						//Updates list item using template
 						self._updateListItem(temporaryElement, loadIndex);
 
-						element.insertBefore(temporaryElement, element.firstElementChild);
+						element.insertBefore(temporaryElement, getFirstElementChild(element));
 						jump -= sizeGetter(temporaryElement, loadIndex--);
 					}
 					self._currentIndex -= elementsToLoad;
@@ -35250,6 +35718,10 @@ function pathToRegexp (path, keys, options) {
 				return result;
 			}
 
+			function isListItem(element) {
+				return element.tagName === "LI";
+			}
+
 			/**
 			 *
 			 * @param {Array} sizeMap
@@ -35298,7 +35770,7 @@ function pathToRegexp (path, keys, options) {
 					domBuffer = self._domBuffer,
 					avgListItemSize = self._avgListItemSize,
 					resultsetSize = sumProperty(
-						element.children,
+						filter.call(element.children, isListItem),
 						options.orientation === VERTICAL ? "clientHeight" : "clientWidth"
 					),
 					sizeMap = self._sizeMap,
@@ -35501,7 +35973,7 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					ui = self._ui,
 					options = self.options,
-					scrollview = self.scrollview || self._getScrollView(options, element),
+					scrollview = ui.scrollview || self._getScrollView(options, element),
 					elementRect,
 					scrollviewRect;
 
@@ -35587,15 +36059,15 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._loadData = function (index) {
 				var self = this,
-					children = self.element.firstElementChild;
+					child = self.element.firstElementChild;
 
 				if (self._currentIndex !== index) {
 					self._currentIndex = index;
 					do {
-						self._updateListItem(children, index);
+						self._updateListItem(child, index);
 						++index;
-						children = children.nextElementSibling;
-					} while (children);
+						child = child.nextElementSibling;
+					} while (child);
 				}
 			};
 
@@ -35607,6 +36079,7 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._refreshScrollbar = function () {
 				var self = this,
+					currentIndex = self._currentIndex,
 					element = self.element,
 					options = self.options,
 					ui = self._ui,
@@ -35617,7 +36090,7 @@ function pathToRegexp (path, keys, options) {
 				if (options.orientation === VERTICAL) {
 					//Note: element.clientHeight is variable
 					bufferSizePx = parseFloat(element.clientHeight) || 0;
-					listSize = bufferSizePx / options.bufferSize * options.dataLength;
+					listSize = bufferSizePx / options.bufferSize * (options.dataLength - currentIndex);
 
 					if (options.optimizedScrolling) {
 						utilScrolling.setMaxScroll(listSize);
@@ -36632,7 +37105,7 @@ function pathToRegexp (path, keys, options) {
 					ui = self._ui,
 					scroller,
 					visibleOffset,
-					elementHeight = listview.firstElementChild.getBoundingClientRect().height,
+					elementHeight,
 					scrollMargin;
 
 				// finding page  and scroller
@@ -36644,12 +37117,15 @@ function pathToRegexp (path, keys, options) {
 						scrolling.enable(scroller, "y");
 					}
 
+					elementHeight = (listview.firstElementChild) ? listview.firstElementChild.getBoundingClientRect().height : 0;
+
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
 
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
 					scrolling.setSnapSize(elementHeight);
+
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
 
@@ -36827,9 +37303,15 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.wearable.SnapListview
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					scroller;
 
 				self._unbindEvents();
+
+				scroller = getScrollableParent(self.element);
+				if (scroller) {
+					scroller.scrollTop = 0;
+				}
 
 				self._ui = null;
 				self._callbacks = null;
@@ -38393,10 +38875,10 @@ function pathToRegexp (path, keys, options) {
 
 				if (self._editModeEnabled) {
 					self._animateReorderedItems();
-				}
 
-				if (self.options.plusButton) {
-					len--;
+					if (self.options.plusButton) {
+						len--;
+					}
 				}
 
 				if (!self._editModeEnabled && len > 0) {
@@ -44524,6 +45006,8 @@ function pathToRegexp (path, keys, options) {
 				self._isInputPaneVisible = true;
 
 				inputElement.focus();
+
+				inputElement.selectionStart = inputElement.value.length;
 
 				utilEvent.on(inputElement, "blur", self._hideInputPaneBound, true);
 				utilEvent.on(window, "resize", self._windowResizeBound, true);

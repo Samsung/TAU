@@ -6,3 +6,8 @@ git:
 os: linux
 dist: xenial
 sudo: enabled
+
+script:
+        - npm run lint-check
+        - npm test
+        - nvm install 10.15 && nvm exec 10.15 npm run spellcheck

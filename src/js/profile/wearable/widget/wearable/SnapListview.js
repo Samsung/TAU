@@ -412,7 +412,7 @@
 					ui = self._ui,
 					scroller,
 					visibleOffset,
-					elementHeight = listview.firstElementChild.getBoundingClientRect().height,
+					elementHeight,
 					scrollMargin;
 
 				// finding page  and scroller
@@ -424,12 +424,15 @@
 						scrolling.enable(scroller, "y");
 					}
 
+					elementHeight = (listview.firstElementChild) ? listview.firstElementChild.getBoundingClientRect().height : 0;
+
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
 
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
 					scrolling.setSnapSize(elementHeight);
+
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
 
@@ -607,9 +610,15 @@
 			 * @member ns.widget.wearable.SnapListview
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					scroller;
 
 				self._unbindEvents();
+
+				scroller = getScrollableParent(self.element);
+				if (scroller) {
+					scroller.scrollTop = 0;
+				}
 
 				self._ui = null;
 				self._callbacks = null;
