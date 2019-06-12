@@ -92,11 +92,11 @@
 					/**
 					 * Options for widget
 					 * @property {Object} options
-					 * @property {"circle"|"slider"} [options.style="circle"] ToggleSwitch display style
+					 * @property {"circle"|"slider"} [options.appearance="circle"] ToggleSwitch display appearance
 					 * @member ns.widget.mobile.ToggleSwitch
 					 */
 					self.options = {
-						style: "circle"
+						appearance: "circle"
 					},
 					self._ui = {};
 				},
@@ -321,7 +321,7 @@
 					options = this.options;
 
 				if (controlType === "input") {
-					if (options.style === "slider") {
+					if (options.appearance === "slider") {
 						buildToggleSliderBasedOnInputTag(element, toggleContainer);
 					} else {
 						buildToggleBasedOnInputTag(element, divHandler, toggleContainer);
