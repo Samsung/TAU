@@ -378,6 +378,7 @@
 
 				if (inline === undefined) {
 					inline = element.getAttribute("data-inline");
+					inline = (inline === "false") ? false : !!inline;
 				}
 
 				element.classList.toggle(classes.INLINE, inline);
