@@ -95,6 +95,11 @@
 					left: "left",
 					right: "right"
 				},
+				EVENTS = {
+					taushortkeypress: "taushortkeypress",
+					taulongkeypress: "taulongkeypress"
+				},
+				CAPTURE_KEYBOARD_ATTR = "data-capture-keyboard",
 				selectorSuffix = ":not(." + classes.focusDisabled + ")" +
 								":not(." + ns.widget.BaseWidget.classes.disable + ")",
 				// define standard focus selectors
@@ -131,6 +136,8 @@
 				ANIMATION_MIN_TIME = 50;
 
 			BaseKeyboardSupport.KEY_CODES = KEY_CODES;
+			BaseKeyboardSupport.EVENTS = EVENTS;
+			BaseKeyboardSupport.CAPTURE_KEYBOARD_ATTR = CAPTURE_KEYBOARD_ATTR;
 			BaseKeyboardSupport.classes = classes;
 			/**
 			 * Get focused element.
@@ -1168,10 +1175,19 @@
 						duration: ((delay - 30) >= ANIMATION_MIN_TIME ? delay - 30 : ANIMATION_MIN_TIME),
 						_last: true, // option for function focusOnNeighborhood
 						_filterNeighbors: filterNeighbors // option for function getNeighborhoodLinks
-					};
+					},
+					isActiveElementCapturingKeys = activeElement &&
+													activeElement.hasAttribute(CAPTURE_KEYBOARD_ATTR) &&
+													activeElement.getAttribute(CAPTURE_KEYBOARD_ATTR) === "true";
 
-				// set focus on next element
-				focusOnNeighborhood(self, self.keyboardElement || self.element, options);
+				if (isActiveElementCapturingKeys && event.keyCode !== KEY_CODES.escape) {
+					// if active element is capturing keys than all
+					// keyEvents except of escape key will be delegated to it
+					eventUtils.trigger(activeElement, EVENTS.taulongkeypress, {keyCode: event.keyCode});
+				} else {
+					// set focus on next element
+					focusOnNeighborhood(self, self.keyboardElement || self.element, options);
+				}
 			};
 
 			/**
@@ -1183,18 +1199,27 @@
 			 * @member ns.widget.tv.BaseKeyboardSupport
 			 */
 			prototype._onShortPress = function (event) {
-				var self = this;
+				var self = this,
+					isActiveElementCapturingKeys = activeElement &&
+													activeElement.hasAttribute(CAPTURE_KEYBOARD_ATTR) &&
+													activeElement.getAttribute(CAPTURE_KEYBOARD_ATTR) === "true";
 
 				if (!ns.getConfig("keyboardSupport", false)) {
 					return false;
 				}
 
-				// set focus on next element
-				focusOnNeighborhood(self, self.keyboardElement || self.element, {
-					current: activeElement || getFocusedLink(),
-					event: event,
-					key: event.keyCode
-				});
+				if (isActiveElementCapturingKeys && event.keyCode !== KEY_CODES.escape) {
+					// if active element is capturing keys than all
+					// keyEvents except of escape key will be delegated to it
+					eventUtils.trigger(activeElement, EVENTS.taushortkeypress, {keyCode: event.keyCode});
+				} else {
+					// set focus on next element
+					focusOnNeighborhood(self, self.keyboardElement || self.element, {
+						current: activeElement || getFocusedLink(),
+						event: event,
+						key: event.keyCode
+					});
+				}
 			};
 
 			/**
