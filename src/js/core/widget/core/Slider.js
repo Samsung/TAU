@@ -128,8 +128,9 @@
 					SLIDER_DISABLED: "ui-disabled",
 					SLIDER_HANDLER_VALUE: "ui-slider-handler-value",
 					SLIDER_HANDLER_SMALL: "ui-slider-handler-small",
-					SLIDER_FOCUS: "ui-slider-focus"
+					SLIDER_FOCUS: "ui-focus"
 				},
+				KEYBOARD_SUPPORT_EVENTS = BaseKeyboardSupport.EVENTS,
 				prototype = new BaseWidget();
 
 			Slider.prototype = prototype;
@@ -161,9 +162,12 @@
 				events.on(self.element, "input change touchstart touchend", self, false);
 				events.on(self.element, "focus", self, false);
 				events.on(self.element, "blur", self, false);
-				events.on(self.element, "keyup", self, false);
 				if (toggle) {
 					events.on(toggle, "change", self);
+				}
+
+				if (self.isKeyboardSupport) {
+					events.on(self.element, KEYBOARD_SUPPORT_EVENTS.taushortkeypress, self, false);
 				}
 			}
 
@@ -186,6 +190,10 @@
 				events.off(self.element, "input change touchstart touchend", self, false);
 				if (toggle) {
 					events.off(toggle, "change", self);
+				}
+
+				if (self.isKeyboardSupport) {
+					events.off(self.element, KEYBOARD_SUPPORT_EVENTS.taushortkeypress, self, false);
 				}
 			}
 
@@ -220,9 +228,11 @@
 				barElement.appendChild(element);
 
 				if (self.isKeyboardSupport) {
-					self.preventFocusOnElement(element);
-					barElement.setAttribute("data-focus-lock", "true");
-					barElement.setAttribute("tabindex", "0");
+					self.preventFocusOnElement(valueElement)
+					self.preventFocusOnElement(handlerElement)
+					self.preventFocusOnElement(barElement)
+					element.setAttribute("tabindex", "0");
+					element.setAttribute(BaseKeyboardSupport.CAPTURE_KEYBOARD_ATTR, false);
 				}
 
 				return element;
@@ -619,14 +629,8 @@
 						case "touchend":
 							self._onTouchEnd(event);
 							break;
-						// case "focus":
-						// 	self._onFocus(event);
-						// 	break;
-						// case "blur":
-						// 	self._onBlur(event);
-						// 	break;
-						case "keyup":
-							self._onKeyUp(event);
+						case KEYBOARD_SUPPORT_EVENTS.taushortkeypress:
+							self._onTauShortKeyPress(event);
 							break;
 					}
 				}
@@ -723,87 +727,185 @@
 				self._previousValue = self.element.value;
 			};
 
+			/**
+			 * touchstart event handler
+			 * @method _onTouchStart
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
 			prototype._onTouchStart = function () {
 				this._ui.handlerElement.classList.add(classes.SLIDER_HANDLER_ACTIVE);
 			};
 
+			/**
+			 * touchend event handler
+			 * @method _onTouchEnd
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
 			prototype._onTouchEnd = function () {
 				this._ui.handlerElement.classList.remove(classes.SLIDER_HANDLER_ACTIVE);
 			};
 
-			// prototype._onFocus = function () {
-			// 	var container = this._ui.barElement.parentElement;
-
-			// 	container && container.classList.add("ui-listview-item-focus");
-			// };
-
-			// prototype._onBlur = function () {
-			// 	var container = this._ui.barElement.parentElement;
-
-			// 	container && container.classList.remove("ui-listview-item-focus");
-			// };
-
+			/**
+			 * Decrease slider current value by one step
+			 * @method _decreaseValue
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
 			prototype._decreaseValue = function () {
 				var self = this;
 
 				self._setValue(self._value - (parseFloat(self.element.step) || 1));
 			};
 
+			/**
+			 * Increase slider current value by one step
+			 * @method _increaseValue
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
 			prototype._increaseValue = function () {
 				var self = this;
 
 				self._setValue(self._value + (parseFloat(self.element.step) || 1));
 			};
 
-			// prototype._lockKeyboard = function () {
-			// 	var self = this,
-			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
-			// 		listviewWidget = engine.getBinding(listview, "Listview");
+			/**
+			 * Decrease slider current value by one step.
+			 * Used when decreasing value with keyboard.
+			 * Triggers "input" and "change" events
+			 * @method _decreaseValueKeyboard
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._decreaseValueKeyboard = function () {
+				var self = this,
+					element = self.element;
 
-			// 	self._locked = true;
-			// 	listviewWidget.saveKeyboardSupport();
-			// 	listviewWidget.disableKeyboardSupport();
-			// 	self.enableKeyboardSupport();
-			// 	self._ui.barElement.classList.add(classes.SLIDER_FOCUS);
-			// };
+				self._decreaseValue();
+				event.trigger(element, "input");
+				event.trigger(element, "change");
+			};
 
-			// prototype._unlockKeyboard = function () {
-			// 	var self = this,
-			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
-			// 		listviewWidget = engine.getBinding(listview, "Listview");
+			/**
+			 * Increase slider current value by one step.
+			 * Used when increasing value with keyboard.
+			 * Triggers "input" and "change" events
+			 * @method _increaseValueKeyboard
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._increaseValueKeyboard = function () {
+				var self = this,
+					element = self.element;
 
-			// 	self._locked = false;
-			// 	listviewWidget.restoreKeyboardSupport();
-			// 	listviewWidget.enableKeyboardSupport();
-			// 	self.disableKeyboardSupport();
-			// 	self._ui.barElement.classList.remove(classes.SLIDER_FOCUS);
-			// };
+				self._increaseValue();
+				event.trigger(element, "input");
+				event.trigger(element, "change");
+			};
 
-			prototype._onKeyUp = function (event) {
+			/**
+			 * taushortkeypress event handler
+			 * @method _onTauShortKeyPress
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._onTauShortKeyPress = function (event) {
 				var self = this,
 					KEY_CODES = BaseKeyboardSupport.KEY_CODES;
 
-				if (self._locked) {
-					switch (event.keyCode) {
-						// case KEY_CODES.escape :
-						// case KEY_CODES.enter :
-						// 	self._unlockKeyboard();
-						// 	break;
-						case KEY_CODES.left :
-							self._decreaseValue();
-							break;
-						case KEY_CODES.right :
-							self._increaseValue();
-							break;
-					}
-				} else {
-					// switch (event.keyCode) {
-					// 	case KEY_CODES.enter :
-					// 		self._lockKeyboard();
-					// 		break;
-					// }
+				switch (event.detail.keyCode) {
+					case KEY_CODES.left :
+					case KEY_CODES.down :
+						self._decreaseValueKeyboard();
+						break;
+					case KEY_CODES.right :
+					case KEY_CODES.up :
+						self._increaseValueKeyboard();
+						break;
+					case KEY_CODES.enter :
+						self._releaseWidgetFocus();
+						break;
 				}
 			};
+
+			/**
+			 * Sets focused slider styling
+ 			 * @method _actionEnter
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._actionEnter = function () {
+				this._setWidgetFocus();
+			}
+
+			/**
+			 * Handles the ESC key event
+ 			 * @method _actionEscape
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._actionEscape = function () {
+				this._releaseWidgetFocus();
+			}
+
+
+			/**
+			 * Sets focus and active slider styling
+ 			 * @method _setWidgetFocus
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._setWidgetFocus = function () {
+				var self = this,
+					element = self.element,
+					ui = self._ui;
+
+				element.setAttribute(BaseKeyboardSupport.CAPTURE_KEYBOARD_ATTR, true);
+				ui.handlerElement.classList.add(classes.SLIDER_HANDLER_ACTIVE);
+			}
+
+			/**
+			 * Remove focus and active slider styling
+			 * @method _releaseWidgetFocus
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._releaseWidgetFocus = function () {
+				var self = this,
+					element = self.element,
+					ui = self._ui;
+
+				element.setAttribute(BaseKeyboardSupport.CAPTURE_KEYBOARD_ATTR, false);
+				ui.handlerElement.classList.remove(classes.SLIDER_HANDLER_ACTIVE);
+			}
+
+
+			/**
+			 * Sets focused slider styling
+ 			 * @method _focus
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._focus = function () {
+				var self = this;
+
+				self._ui.barElement.classList.add(classes.SLIDER_FOCUS);
+			}
+
+			/**
+			 * Removes focused slider styling
+ 			 * @method _blur
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._blur = function () {
+				var self = this;
+
+				self._ui.barElement.classList.remove(classes.SLIDER_FOCUS);
+				self._releaseWidgetFocus();
+			}
 
 			/**
 			 * Refresh to Slider component
