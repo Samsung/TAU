@@ -848,6 +848,7 @@
 				var self = this;
 
 				self._ui.barElement.classList.add(classes.SLIDER_FOCUS);
+				self.element.focus();
 			}
 
 			/**
@@ -860,6 +861,7 @@
 				var self = this;
 
 				self._ui.barElement.classList.remove(classes.SLIDER_FOCUS);
+				self.element.blur();
 			}
 
 			/**
