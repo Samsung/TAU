@@ -78,6 +78,7 @@
 			left: 0;
 			border-radius: 100%;
 		}
+
 	}
 
 	&.ui-slider-center {
@@ -180,6 +181,10 @@
 				background: -webkit-linear-gradient(bottom, @color_slider_active_bg 100%, @color_slider_warning_active_bg 100%);
 				background: linear-gradient(to top, @color_slider_active_bg 100%, @color_slider_warning_active_bg 100%);
 			}
+		}
+
+		input[data-tau-built="Slider"] {
+			appearance: slider-vertical;
 		}
 	}
 }
