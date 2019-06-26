@@ -266,11 +266,18 @@
 				var self = this,
 					input = self.element,
 					barElement = self._ui.barElement,
+					options = self.options,
 					rectBar = barElement.getBoundingClientRect();
 
-				input.style.width = (rectBar.width + 16) + "px";
-				input.style.top = "-12px"; // @todo change this hardcoded size;
-				input.style.left = "-8px";
+				if (options.orientation === DEFAULT.HORIZONTAL) {
+					input.style.width = (rectBar.width + 16) + "px";
+					input.style.top = "-12px"; // @todo change this hardcoded size;
+					input.style.left = "-8px";
+				} else {
+					input.style.width = (rectBar.width + 16) + "px";
+					input.style.height = rectBar.height + "px";
+					input.style.left = "-10px";
+				}
 			};
 
 			/**
