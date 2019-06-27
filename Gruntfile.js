@@ -1184,6 +1184,7 @@ module.exports = function (grunt) {
 			clean: {
 				js: [buildDir.mobile.js, buildDir.wearable.js, "dist/animation/*"],
 				theme: [buildDir.mobile.theme, buildDir.wearable.theme, buildDir.tv.theme],
+				templates: ["dist/**/*.template"],
 				docs: {
 					expand: true,
 					src: ["docs/sdk", "docs/js"]
@@ -1553,7 +1554,8 @@ module.exports = function (grunt) {
 		"cssmin",
 		"image-changeable",
 		"symlink",
-		"postcss"
+		"postcss",
+		"clean:templates"
 	]);
 
 	grunt.registerTask("css-mobile", "Prepare CSS for mobile profile", [
