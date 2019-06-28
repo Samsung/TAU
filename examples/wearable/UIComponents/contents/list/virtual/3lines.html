@@ -1,41 +1,39 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.css">
-	<link rel="stylesheet" 
-		href="../../../lib/tau/wearable/theme/default/tau.circle.min.css">
-	<link rel="stylesheet" href="../../../css/style.css">
-	<link rel="stylesheet" 
-		href="../../../css/style.circle.css">
-</head>
-<body>
-<div class="ui-page" id="virtual-3lines-page">
-	<header>
-		<h1>3 lines</h1>
-	</header>
-	<div class="ui-content">
-		<ul class="ui-listview" id="virtual-3lines"></ul>
-	</div>
+    <head>
+        <link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.css" />
+        <link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.circle.min.css" />
+        <link rel="stylesheet" href="../../../css/style.css" />
+        <link rel="stylesheet" href="../../../css/style.circle.css" />
+    </head>
+    <body>
+        <div class="ui-page" id="virtual-3lines-page">
+            <header>
+                <h1>3 lines</h1>
+            </header>
+            <div class="ui-content">
+                <ul class="ui-listview" id="virtual-3lines"></ul>
+            </div>
 
-	<!-- sample list for virtual list -->
-	<script id="template-3lines" type="text">
-		<a>${NAME}</a>
-		<span class="ui-li-sub-text li-text-sub">${ACTIVE}</span>
-		<span class="ui-li-sub-text li-text-sub">${FROM}</span>
-	</script>
+            <!-- sample list for virtual list -->
+            <script id="template-3lines" type="text">
+                <a>${NAME}</a>
+                <span class="ui-li-sub-text li-text-sub">${ACTIVE}</span>
+                <span class="ui-li-sub-text li-text-sub">${FROM}</span>
+            </script>
 
-	<script>
-			window.pageId = "virtual-3lines-page";
-			window.listId = "virtual-3lines";
-			window.templateId = "template-3lines";
-			window.itemClass = ["li-has-multiline", "li-has-2line-sub"];
-	</script>
-	<script src="virtuallist-db-demo.js"></script>
-	<script src="virtuallist.js"></script>
-</div>
-<script src="../../../js/circle-helper.js"></script>
-<script src="../../../js/app.js"></script>
-<script src="../../../js/lowBatteryCheck.js"></script>
-<script src="../../../lib/tau/wearable/js/tau.js"></script>
-</body>
+            <script>
+                window.pageId = "virtual-3lines-page";
+                window.listId = "virtual-3lines";
+                window.templateId = "template-3lines";
+                window.itemClass = ["li-has-multiline", "li-has-2line-sub"];
+            </script>
+            <script src="virtuallist-db-demo.js"></script>
+            <script src="virtuallist.js"></script>
+        </div>
+        <script src="../../../js/circle-helper.js"></script>
+        <script src="../../../js/app.js"></script>
+        <script src="../../../js/lowBatteryCheck.js"></script>
+        <script src="../../../lib/tau/wearable/js/tau.js"></script>
+    </body>
 </html>
