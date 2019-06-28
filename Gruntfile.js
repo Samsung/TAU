@@ -162,12 +162,31 @@ module.exports = function (grunt) {
 						len,
 						theme,
 						src,
+						profileSpecificFiles = {
+							"tv": {
+								"changeable": ["tau.tv"]
+							},
+							"wearable": {
+								"changeable": ["tau.circle"]
+							}
+						},
 						pushChangableFiles = function (ext) {
 							src = path.join(buildDir[device].theme, version, name) + ext;
 							licenseFiles.push({
 								src: [path.join("license", "Flora") + ".txt", src],
 								dest: src
 							});
+
+							if (profileSpecificFiles.hasOwnProperty(device) &&
+								profileSpecificFiles[device].hasOwnProperty(version)) {
+								profileSpecificFiles[device][version].forEach((name) => {
+									src = path.join(buildDir[device].theme, version, name) + ext;
+									licenseFiles.push({
+										src: [path.join("license", "Flora") + ".txt", src],
+										dest: src
+									});
+								})
+							}
 						},
 						pushNonChangableFiles = function (ext) {
 							src = path.join(buildDir[device].theme, theme.name, name) + ext;
