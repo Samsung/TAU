@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-        <title>Progress Overlay</title>
-        <link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.css" />
-        <link rel="stylesheet" href="../../../css/style.css" />
+        <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+        <title>
+            Progress Overlay
+        </title>
+        <link href="../../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+        <link
+            href="../../../lib/tau/wearable/theme/default/tau.circle.css"
+            media="all and (-tizen-geometric-shape: circle)"
+            rel="stylesheet"
+        />
+        <link href="../../../css/style.css" rel="stylesheet" />
+        <link
+            href="../../../css/style.circle.css"
+            media="all and (-tizen-geometric-shape: circle)"
+            rel="stylesheet"
+        />
+        <script src="../../../js/circle-helper.js"></script>
+        <script src="../../../lib/tau/wearable/js/tau.js"></script>
     </head>
     <body>
         <div class="ui-page" id="smallProcessingPage">
@@ -45,5 +59,4 @@
             </script>
         </div>
     </body>
-    <script src="../../../lib/tau/wearable/js/tau.js"></script>
 </html>

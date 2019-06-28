@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width,user-scalable=no" />
-        <link rel="stylesheet" href="../../lib/tau/wearable/theme/default/tau.css" />
+        <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+        <link href="../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
         <link
-            rel="stylesheet"
-            media="all and (-tizen-geometric-shape: circle)"
             href="../../lib/tau/wearable/theme/default/tau.circle.css"
-        />
-        <link rel="stylesheet" href="../../css/style.css" />
-        <link
-            rel="stylesheet"
             media="all and (-tizen-geometric-shape: circle)"
-            href="../../css/style.circle.css"
+            rel="stylesheet"
         />
+        <link href="../../css/style.css" rel="stylesheet" />
+        <link
+            href="../../css/style.circle.css"
+            media="all and (-tizen-geometric-shape: circle)"
+            rel="stylesheet"
+        />
+        <script src="../../js/circle-helper.js"></script>
+        <script src="../../lib/tau/wearable/js/tau.js"></script>
     </head>
     <body>
         <div class="ui-page grid-page" data-enable-page-scroll="false">
@@ -21,100 +23,154 @@
                 <ul
                     class="ui-grid"
                     data-lines="2"
-                    data-shape="rectangle"
                     data-orientation="vertical"
+                    data-shape="rectangle"
                 >
                     <li>
-                        <a><img src="images/default/gallery_default_image_01.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_01.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_02.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_02.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_03.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_03.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_04.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_04.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_05.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_05.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_06.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_06.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_07.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_07.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_08.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_08.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_09.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_09.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_10.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_10.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_11.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_11.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_12.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_12.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_13.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_13.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_14.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_14.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_01.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_01.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_02.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_02.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_03.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_03.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_04.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_04.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_05.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_05.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_06.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_06.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_07.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_07.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_08.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_08.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_09.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_09.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_10.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_10.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_11.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_11.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_12.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_12.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_13.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_13.jpg" />
+                        </a>
                     </li>
                     <li>
-                        <a><img src="images/default/gallery_default_image_14.jpg"/></a>
+                        <a>
+                            <img src="images/default/gallery_default_image_14.jpg" />
+                        </a>
                     </li>
                 </ul>
             </div>
             <script src="grid.js"></script>
         </div>
-        <script src="../../js/circle-helper.js"></script>
         <script src="../../js/app.js"></script>
         <script src="../../js/lowBatteryCheck.js"></script>
-        <script src="../../lib/tau/wearable/js/tau.js"></script>
     </body>
 </html>

@@ -1,31 +1,47 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-        <title>Wearable UI</title>
-        <link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.css" />
+        <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+        <title>
+            Wearable UI
+        </title>
+        <link href="../../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
         <link
-            rel="stylesheet"
+            href="../../../lib/tau/wearable/theme/default/tau.circle.css"
             media="all and (-tizen-geometric-shape: circle)"
-            href="../../../lib/tau/wearable/theme/default/tau.circle.min.css"
+            rel="stylesheet"
         />
-        <link rel="stylesheet" href="../../../css/style.css" />
-        <link rel="stylesheet" media="all" href="../../../css/style.circle.css" />
+        <link href="../../../css/style.css" rel="stylesheet" />
+        <link
+            href="../../../css/style.circle.css"
+            media="all and (-tizen-geometric-shape: circle)"
+            rel="stylesheet"
+        />
+        <script src="../../../js/circle-helper.js"></script>
+        <script src="../../../lib/tau/wearable/js/tau.js"></script>
     </head>
     <body>
         <div class="ui-page">
             <header>
-                <h2 class="ui-title">Selector</h2>
+                <h2 class="ui-title">
+                    Selector
+                </h2>
             </header>
             <div class="ui-content">
                 <ul class="ui-listview">
-                    <li><a href="selector.html">Basic Selector</a></li>
-                    <li><a href="selector-edit.html">Edit Mode</a></li>
+                    <li>
+                        <a href="selector.html">
+                            Basic Selector
+                        </a>
+                    </li>
+                    <li>
+                        <a href="selector-edit.html">
+                            Edit Mode
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
-        <script src="../../../lib/tau/wearable/js/tau.js"></script>
-        <script src="../../../js/circle-helper.js"></script>
         <script src="../../../js/app.js"></script>
         <script src="../../../js/lowBatteryCheck.js"></script>
     </body>

@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-        <title>Wearable UI</title>
-        <link rel="stylesheet" href="../../lib/tau/wearable/theme/default/tau.css" />
-        <link rel="stylesheet" href="../../css/style.css" />
+        <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+        <title>
+            Wearable UI
+        </title>
+        <link href="../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+        <link
+            href="../../lib/tau/wearable/theme/default/tau.circle.css"
+            media="all and (-tizen-geometric-shape: circle)"
+            rel="stylesheet"
+        />
+        <link href="../../css/style.css" rel="stylesheet" />
+        <link
+            href="../../css/style.circle.css"
+            media="all and (-tizen-geometric-shape: circle)"
+            rel="stylesheet"
+        />
+        <script src="../../js/circle-helper.js"></script>
+        <script src="../../lib/tau/wearable/js/tau.js"></script>
     </head>
     <body>
         <div class="ui-page">
             <header class="ui-header">
-                <h2 class="ui-title">Bluetooth</h2>
+                <h2 class="ui-title">
+                    Bluetooth
+                </h2>
             </header>
             <div class="ui-content">
                 <ul class="ui-listview">
@@ -17,7 +33,7 @@
                         <label>
                             Bluetooth
                             <div class="ui-toggleswitch">
-                                <input type="checkbox" class="ui-switch-input" />
+                                <input class="ui-switch-input" type="checkbox" />
                                 <div class="ui-switch-button"></div>
                             </div>
                         </label>
@@ -26,7 +42,7 @@
                         <label>
                             BT headset
                             <div class="ui-toggleswitch">
-                                <input type="checkbox" class="ui-switch-input" />
+                                <input class="ui-switch-input" type="checkbox" />
                                 <div class="ui-switch-button"></div>
                             </div>
                         </label>
@@ -35,7 +51,7 @@
                         <label>
                             Bluetooth
                             <div class="ui-toggleswitch">
-                                <input type="checkbox" class="ui-switch-input" />
+                                <input class="ui-switch-input" type="checkbox" />
                                 <div class="ui-switch-button"></div>
                             </div>
                         </label>
@@ -44,7 +60,7 @@
                         <label>
                             BT headset
                             <div class="ui-toggleswitch">
-                                <input type="checkbox" class="ui-switch-input" />
+                                <input class="ui-switch-input" type="checkbox" />
                                 <div class="ui-switch-button"></div>
                             </div>
                         </label>
@@ -53,7 +69,7 @@
                         <label>
                             BT headset
                             <div class="ui-toggleswitch ui-toggle-slider">
-                                <input type="checkbox" class="ui-switch-input" />
+                                <input class="ui-switch-input" type="checkbox" />
                                 <div class="ui-switch-button"></div>
                             </div>
                         </label>
@@ -62,5 +78,4 @@
             </div>
         </div>
     </body>
-    <script src="../../lib/tau/wearable/js/tau.js"></script>
 </html>
