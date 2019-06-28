@@ -1483,7 +1483,7 @@ module.exports = function (grunt) {
 			if (stats.hasErrors() || stats.hasWarnings()) {
 				return callback(new Error(stats.toString()));
 			}
-			callback(true);
+			callback(null, true);
 		});
 	}
 
@@ -1491,7 +1491,7 @@ module.exports = function (grunt) {
 		const done = this.async(),
 			profiles = profile ? [profile] : ["tv", "mobile", "wearable"];
 
-		async.series(profiles.map((p) => createBundleProfile.bind(null, p)), done);
+		async.parallel(profiles.map((p) => createBundleProfile.bind(null, p)), done);
 	}
 
 	grunt.initConfig(initConfig);
