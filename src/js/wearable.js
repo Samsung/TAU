@@ -53,7 +53,6 @@
 			"./core/util/date",
 			// widget list
 			// core widgets
-			"./core/widget/customElements",
 			"./core/widget/core/PageContainer",
 			"./core/widget/core/Button",
 			"./core/widget/core/Checkbox",
