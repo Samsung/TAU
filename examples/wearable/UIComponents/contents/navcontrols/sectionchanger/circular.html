@@ -1,38 +1,56 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-	<title>Wearable Extra UI - Section changer</title>
-	<link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.css">
-	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="../../../lib/tau/wearable/theme/default/tau.circle.min.css">
-	<link rel="stylesheet" href="../../../css/style.css">
+	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+	<title>
+		Wearable Extra UI - Section changer
+	</title>
+	<link href="../../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../../lib/tau/wearable/theme/default/tau.circle.min.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<link href="../../../css/style.css" rel="stylesheet" />
 </head>
+
 <body>
-	<div id="circularSectionchangerPage" class="ui-page" data-enable-page-scroll="false">
-		<div id="pageIndicator" class="ui-page-indicator"></div>
-		<link rel="stylesheet"  href="css/sectionchanger.css">
-		<div id="circularSectionchanger" class="ui-content">
+	<div class="ui-page" data-enable-page-scroll="false" id="circularSectionchangerPage">
+		<div class="ui-page-indicator" id="pageIndicator">
+		</div>
+		<link href="css/sectionchanger.css" rel="stylesheet" />
+		<div class="ui-content" id="circularSectionchanger">
 			<!-- section changer has only one child. -->
 			<div>
-				<section style="text-align:center" >
-					<h3> LEFT2 PAGE </h3>
+				<section style="text-align:center">
+					<h3>
+						LEFT2 PAGE
+					</h3>
 				</section>
 				<section style="text-align:center">
-					<h3> LEFT1 PAGE </h3>
+					<h3>
+						LEFT1 PAGE
+					</h3>
 				</section>
 				<section class="ui-section-active" style="text-align:center">
-					<h3> MAIN PAGE </h3>
+					<h3>
+						MAIN PAGE
+					</h3>
 				</section>
 				<section style="text-align:center">
-					<h3> RIGHT1 PAGE </h3>
+					<h3>
+						RIGHT1 PAGE
+					</h3>
 				</section>
 				<section style="text-align:center">
-					<h3> RIGHT2 PAGE </h3>
+					<h3>
+						RIGHT2 PAGE
+					</h3>
 				</section>
 			</div>
 		</div>
-		<script src="circular.js"></script>
+		<script src="circular.js">
+		</script>
 	</div>
-<script src="../../../lib/tau/wearable/js/tau.js"></script>
+	<script src="../../../lib/tau/wearable/js/tau.js">
+	</script>
 </body>
+
 </html>
