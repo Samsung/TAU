@@ -1,50 +1,73 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta name="viewport"
-				content="width=device-width, initial-scale=1, user-scalable=no"/>
-	<title>WearableUI</title>
-	<link rel="stylesheet"
-				href="../../lib/tau/wearable/theme/default/tau.css">
-	<link rel="stylesheet" href="../../css/style.css">
+	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+	<title>
+		WearableUI
+	</title>
+	<link href="../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
 </head>
+
 <body>
-<div class="ui-page" id="page_webkitui">
-	<header class="ui-header">
-		<h2 class="ui-title">Webkit UI demos</h2>
-	</header>
-	<div class="ui-content">
-		<ul class="ui-listview">
-			<li class="ui-listview-divider">Date/Time picker</li>
-			<li>Date</li>
-			<li><input type="date"/>
-			</li>
-			<li>Time</li>
-			<li><input type="time"/></li>
-			<li>
-				Hidden time
-			</li>
-			<li>
-				<button class="ui-btn" id="button_webkitui_hiddendateopener"
-								style="display:block">Open timepicker
-				</button>
-			</li>
-			<li>
-				<div>
-				<span id="webkitui_hiddentime_value"></span>
-				<input type="time" id="input_webkitui_hiddentime"
-							 style="visibility:hidden; width:50px"/>
-				</div>
-			</li>
-			<li class="ui-listview-divider">Range</li>
-			<li><input type="range" min="0" max="100"/></li>
-			<li class="ui-listview-divider">Color</li>
-			<li><input type="color"/></li>
-		</ul>
+	<div class="ui-page" id="page_webkitui">
+		<header class="ui-header">
+			<h2 class="ui-title">
+				Webkit UI demos
+			</h2>
+		</header>
+		<div class="ui-content">
+			<ul class="ui-listview">
+				<li class="ui-listview-divider">
+					Date/Time picker
+				</li>
+				<li>
+					Date
+				</li>
+				<li>
+					<input type="date" />
+				</li>
+				<li>
+					Time
+				</li>
+				<li>
+					<input type="time" />
+				</li>
+				<li>
+					Hidden time
+				</li>
+				<li>
+					<button class="ui-btn" id="button_webkitui_hiddendateopener" style="display:block">
+						Open timepicker
+					</button>
+				</li>
+				<li>
+					<div>
+						<span id="webkitui_hiddentime_value">
+						</span>
+						<input id="input_webkitui_hiddentime" style="visibility:hidden; width:50px" type="time" />
+					</div>
+				</li>
+				<li class="ui-listview-divider">
+					Range
+				</li>
+				<li>
+					<input max="100" min="0" type="range" />
+				</li>
+				<li class="ui-listview-divider">
+					Color
+				</li>
+				<li>
+					<input type="color" />
+				</li>
+			</ul>
+		</div>
+		<script src="webkit.js">
+		</script>
 	</div>
-	<script src="webkit.js"></script>
-</div>
-<script type="text/javascript"
-				src="../../lib/tau/wearable/js/tau.js"></script>
+	<script src="../../lib/tau/wearable/js/tau.js" type="text/javascript">
+	</script>
 </body>
+
 </html>
