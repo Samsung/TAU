@@ -1081,7 +1081,7 @@
 						eventUtils.on(popupContainer, Popup.events.transition_start, self._backgroundRenderCallback);
 					}
 
-					utilsEvents.on(self.element, "animationend", self, true);
+					utilsEvents.on(self.element, "animationend webkitAnimationEnd", self, true);
 				}
 			};
 
@@ -1097,7 +1097,7 @@
 
 				//phantom hack
 				if (element) {
-					utilsEvents.off(element, "animationend", self, true);
+					utilsEvents.off(element, "animationend webkitAnimationEnd", self, true);
 				}
 
 				if (self._context) {
@@ -1534,6 +1534,7 @@
 							self._end(event);
 							break;
 						case "animationend":
+						case "webkitAnimationEnd":
 							self._animationEnd(event);
 							break;
 					}
