@@ -1,7 +1,0 @@
-{
-    "id": "tizen-standard-realm",
-    "loader": "file:///$${CLI_HOME}/realm/realm.jar",
-    "template-query-url": "file:///$${CLI_HOME}/realm/template/$${id}.jar",
-    "search-query-type": "directory",
-    "search-query-url": "file:///$${CLI_HOME}/realm/template"
-}
