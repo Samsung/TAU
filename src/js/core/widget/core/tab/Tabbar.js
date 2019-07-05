@@ -214,9 +214,11 @@
 					};
 					self._marqueeOptions = {
 						ellipsisEffect: "none",
-						marqueeStyle: "alternate",
-						iteration: 5,
-						delay: 1000
+						marqueeStyle: "scroll",
+						iteration: "infinite",
+						delay: 1000,
+						autoRun: false,
+						stoppedEffect: "ellipsis"
 					};
 				},
 				CLASS_PREFIX = "ui-tabbar",
@@ -240,7 +242,8 @@
 					TABBAR_LANDSCAPE: CLASS_PREFIX + "-landscape",
 					TABBAR_TEXT: CLASS_PREFIX + "-text",
 					TABBAR_STATIC: CLASS_PREFIX + "-static",
-					ANCHOR: CLASS_PREFIX + "-anchor"
+					ANCHOR: CLASS_PREFIX + "-anchor",
+					TOO_LONG_INACTIVE_TEXT: CLASS_PREFIX + "-too-long-text-inactive"
 				},
 				events = ns.event,
 				DEFAULT_NUMBER = {
@@ -337,7 +340,11 @@
 					i,
 					linksLength,
 					link,
-					text;
+					text,
+					prevStyleValue,
+					linkRect,
+					innerTextRect;
+
 
 				if (links.length === 0) {
 					links = element.querySelectorAll("li div");
@@ -354,6 +361,18 @@
 						innerText.classList.add(classes.TABBAR_TEXT);
 						innerText.appendChild(link.firstChild);
 						link.appendChild(innerText);
+
+						// check width here and set set inactive class if text is too wide
+
+						prevStyleValue = innerText.style.overflowX;
+						innerText.style.overflowX = "visible";
+						innerTextRect = innerText.getBoundingClientRect();
+						innerText.style.overflowX = prevStyleValue;
+						linkRect = innerText.getBoundingClientRect();
+
+						if (innerTextRect.width > linkRect.width) {
+							ns.widget.Marquee(innerText, self._marqueeOptions);
+						}
 					} else {
 						link.classList.add(classes.TAB_NO_TEXT);
 					}
@@ -651,7 +670,7 @@
 					marquee = ns.engine.getBinding(text);
 					if (marquee) {
 						marquee.reset();
-						ns.engine.destroyWidget(text);
+						marquee.stop();
 					}
 				}
 
@@ -667,10 +686,12 @@
 					prevStyleValue = text.style.overflowX;
 					text.style.overflowX = "visible";
 					textRect = text.getBoundingClientRect();
-					linkRect = link.getBoundingClientRect();
 					text.style.overflowX = prevStyleValue;
+					linkRect = text.getBoundingClientRect();
+
 					if (textRect.width > linkRect.width) {
-						ns.widget.Marquee(text, self._marqueeOptions);
+						marquee = ns.engine.getBinding(text);
+						marquee.start();
 					}
 				}
 

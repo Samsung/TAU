@@ -72,7 +72,7 @@
 				 * @private
 				 */
 				objectUtils = ns.util.object,
-
+				eventUtils = ns.event,
 				Animation = ns.util.Animate,
 
 				states = {
@@ -113,7 +113,8 @@
 					MARQUEE_ELLIPSIS: CLASSES_PREFIX + "-ellipsis",
 					ANIMATION_RUNNING: CLASSES_PREFIX + "-anim-running",
 					ANIMATION_STOPPED: CLASSES_PREFIX + "-anim-stopped",
-					ANIMATION_IDLE: CLASSES_PREFIX + "-anim-idle"
+					ANIMATION_IDLE: CLASSES_PREFIX + "-anim-idle",
+					ANIMATION_STOPPED_ELLIPSIS: CLASSES_PREFIX + "-anim-stopped-ellipsis"
 				},
 
 				/**
@@ -150,6 +151,8 @@
 				 * @property {"gradient"|"ellipsis"|"none"} [options.ellipsisEffect="gradient"] Sets the
 				 * end-effect(gradient) of marquee
 				 * @property {boolean} [options.autoRun=true] Sets the status of autoRun
+				 * @property {ellipsis"|"none"} [options.stoppedEffect="none"] Sets the effect for text
+				 * content when animation is stopped
 				 * @member ns.widget.core.Marquee
 				 * @static
 				 */
@@ -163,7 +166,8 @@
 					ellipsisEffect: ellipsisEffect.GRADIENT,
 					runOnlyOnEllipsisText: true,
 					animation: states.STOPPED,
-					autoRun: true
+					autoRun: true,
+					stoppedEffect: "none"
 				},
 				GRADIENTS = {
 					LEFT: "-webkit-linear-gradient(left, transparent 0, rgb(255, 255, 255) 15%," +
@@ -241,6 +245,59 @@
 					return returnValue;
 				}
 			};
+
+			prototype.bindEvents = function () {
+				var self = this,
+					element = self.element;
+
+				eventUtils.on(element, eventType.MARQUEE_START, self, false);
+				eventUtils.on(element, eventType.MARQUEE_STOPPED, self, false);
+			}
+
+			prototype.unbindEvents = function () {
+				var self = this,
+					element = self.element;
+
+				eventUtils.off(element, eventType.MARQUEE_START, self, false);
+				eventUtils.off(element, eventType.MARQUEE_STOPPED, self, false);
+			}
+
+			prototype.handleEvent = function (event) {
+				var self = this,
+					eventName = event.type;
+
+				switch (eventName) {
+					case eventType.MARQUEE_START:
+						self._onMarqueeStart();
+						break;
+					case eventType.MARQUEE_STOPPED:
+						self._onMarqueeStopped();
+						break;
+				}
+			}
+
+			prototype._onMarqueeStart = function () {
+				var self = this,
+					stateDOM = self._stateDOM;
+
+				stateDOM.classList.delete(classes.ANIMATION_STOPPED_ELLIPSIS);
+
+				self._render();
+			}
+
+			prototype._onMarqueeStopped = function () {
+				var self = this,
+					options = self.options,
+					stateDOM = self._stateDOM,
+					containerWidth = stateDOM.offsetWidth,
+					textWidth = stateDOM.children[0].offsetWidth;
+
+				if (options.stoppedEffect == "ellipsis" && textWidth > containerWidth) {
+					stateDOM.classList.add(classes.ANIMATION_STOPPED_ELLIPSIS);
+				}
+
+				self._render();
+			}
 
 			prototype._calculateEndToEndGradient = function (state, diff, from, current) {
 				var self = this,
