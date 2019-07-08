@@ -162,12 +162,31 @@ module.exports = function (grunt) {
 						len,
 						theme,
 						src,
+						profileSpecificFiles = {
+							"tv": {
+								"changeable": ["tau.tv"]
+							},
+							"wearable": {
+								"changeable": ["tau.circle"]
+							}
+						},
 						pushChangableFiles = function (ext) {
 							src = path.join(buildDir[device].theme, version, name) + ext;
 							licenseFiles.push({
 								src: [path.join("license", "Flora") + ".txt", src],
 								dest: src
 							});
+
+							if (profileSpecificFiles.hasOwnProperty(device) &&
+								profileSpecificFiles[device].hasOwnProperty(version)) {
+								profileSpecificFiles[device][version].forEach((name) => {
+									src = path.join(buildDir[device].theme, version, name) + ext;
+									licenseFiles.push({
+										src: [path.join("license", "Flora") + ".txt", src],
+										dest: src
+									});
+								})
+							}
 						},
 						pushNonChangableFiles = function (ext) {
 							src = path.join(buildDir[device].theme, theme.name, name) + ext;
@@ -1184,6 +1203,7 @@ module.exports = function (grunt) {
 			clean: {
 				js: [buildDir.mobile.js, buildDir.wearable.js, "dist/animation/*"],
 				theme: [buildDir.mobile.theme, buildDir.wearable.theme, buildDir.tv.theme],
+				templates: ["dist/**/*.template"],
 				docs: {
 					expand: true,
 					src: ["docs/sdk", "docs/js"]
@@ -1553,7 +1573,8 @@ module.exports = function (grunt) {
 		"cssmin",
 		"image-changeable",
 		"symlink",
-		"postcss"
+		"postcss",
+		"clean:templates"
 	]);
 
 	grunt.registerTask("css-mobile", "Prepare CSS for mobile profile", [
