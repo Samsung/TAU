@@ -46,8 +46,7 @@
 
 			marqueeWidget.destroy();
 			// after destroy, check resetDOM.
-			equal(marqueeElement.innerHTML, "<div class=\"ui-marquee-content\"><p>" +
-				"Marquee Test sample with Only text</p></div>",
+			equal(marqueeElement.innerHTML, "<p>Marquee Test sample with Only text</p>",
 				"original marquee element has proper innerHTML");
 		});
 
