@@ -214,8 +214,8 @@
 					};
 					self._marqueeOptions = {
 						ellipsisEffect: "none",
-						marqueeStyle: "alternate",
-						iteration: 5,
+						marqueeStyle: "scroll",
+						iteration: "infinite",
 						delay: 1000
 					};
 				},
@@ -240,7 +240,8 @@
 					TABBAR_LANDSCAPE: CLASS_PREFIX + "-landscape",
 					TABBAR_TEXT: CLASS_PREFIX + "-text",
 					TABBAR_STATIC: CLASS_PREFIX + "-static",
-					ANCHOR: CLASS_PREFIX + "-anchor"
+					ANCHOR: CLASS_PREFIX + "-anchor",
+					INACTIVE_TOO_LONG_TEXT: CLASS_PREFIX + "-inactive-text-overflow"
 				},
 				events = ns.event,
 				DEFAULT_NUMBER = {
@@ -337,7 +338,10 @@
 					i,
 					linksLength,
 					link,
-					text;
+					text,
+					textRealWidth,
+					visibleTextWidth,
+					prevTextOverflowVal;
 
 				if (links.length === 0) {
 					links = element.querySelectorAll("li div");
@@ -354,6 +358,17 @@
 						innerText.classList.add(classes.TABBAR_TEXT);
 						innerText.appendChild(link.firstChild);
 						link.appendChild(innerText);
+
+						prevTextOverflowVal = innerText.style.overflowX;
+						visibleTextWidth = innerText.getBoundingClientRect().width;
+						innerText.style.overflowX = "visible";
+						textRealWidth = innerText.getBoundingClientRect().width;
+						innerText.style.overflowX = prevTextOverflowVal;
+
+						if (textRealWidth > visibleTextWidth) {
+							link.classList.add(classes.INACTIVE_TOO_LONG_TEXT);
+						}
+
 					} else {
 						link.classList.add(classes.TAB_NO_TEXT);
 					}
@@ -637,8 +652,8 @@
 					text,
 					marquee,
 					prevStyleValue,
-					linkRect,
-					textRect;
+					textWidth,
+					allTextWidth;
 
 				if (ui.links.length === 0) {
 					return;
@@ -652,6 +667,7 @@
 					if (marquee) {
 						marquee.reset();
 						ns.engine.destroyWidget(text);
+						link.classList.add(classes.INACTIVE_TOO_LONG_TEXT);
 					}
 				}
 
@@ -665,11 +681,13 @@
 				text = link.querySelector("." + classes.TABBAR_TEXT);
 				if (text) {
 					prevStyleValue = text.style.overflowX;
+					textWidth = text.getBoundingClientRect().width;
 					text.style.overflowX = "visible";
-					textRect = text.getBoundingClientRect();
-					linkRect = link.getBoundingClientRect();
+					allTextWidth = text.getBoundingClientRect().width;
 					text.style.overflowX = prevStyleValue;
-					if (textRect.width > linkRect.width) {
+
+					if (allTextWidth > textWidth) {
+						link.classList.remove(classes.INACTIVE_TOO_LONG_TEXT);
 						ns.widget.Marquee(text, self._marqueeOptions);
 					}
 				}
