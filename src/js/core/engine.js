@@ -170,7 +170,8 @@
 					WIDGET_BUILT: "widgetbuilt",
 					DESTROY: "taudestroy",
 					BOUND: "bound",
-					WIDGET_INIT: "init"
+					WIDGET_INIT: "init",
+					STOP_ROUTING: "tauroutingstop"
 				},
 				engine;
 
@@ -1021,6 +1022,7 @@
 			 * @member ns.engine
 			 */
 			function stop() {
+				eventUtils.trigger(document, eventType.STOP_ROUTING);
 			}
 
 			/**
@@ -1032,7 +1034,7 @@
 			function destroy() {
 				stop();
 				eventUtils.fastOff(document, "create", createEventHandler);
-				destroyAllWidgets(document.body, true);
+				destroyAllWidgets(document, true);
 				eventUtils.trigger(document, eventType.DESTROY);
 			}
 
@@ -1143,6 +1145,7 @@
 						window.tauPerf.get("framework", "run()");
 					}
 					//>>excludeEnd("tauPerformance");
+					// stop the TAU process if exists before
 					stop();
 
 					eventUtils.fastOn(document, "create", createEventHandler);
@@ -1152,9 +1155,11 @@
 					switch (document.readyState) {
 						case "interactive":
 						case "complete":
+							// build widgets and initiate router
 							build();
 							break;
 						default:
+							// build widgets and initiate router
 							eventUtils.one(document, "DOMContentLoaded", build.bind(engine));
 							break;
 					}

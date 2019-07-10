@@ -349,11 +349,11 @@
 			};
 
 			prototype._unbindEvents = function () {
-				ns.event.disableGesture(this.element);
-
 				utilsEvents.off(this.element, "drag dragstart dragend dragcancel swipe", this);
 				utilsEvents.off(document, "scroll touchcancel", this);
 				utilsEvents.off(this.swipeElement, "touchstart touchmove touchend", blockEvent, false);
+
+				ns.event.disableGesture(this.element);
 			};
 
 			prototype.handleEvent = function (event) {
