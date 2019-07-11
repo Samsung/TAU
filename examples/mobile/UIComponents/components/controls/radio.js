@@ -4,7 +4,7 @@
 	 * radios - NodeList object for radios
 	 * radioresult - Indicator for active radio
 	 */
-	var page = document.getElementById("radio-demo"),
+	var page = document.querySelector(".ui-page"),
 		radios = document.querySelectorAll("input[name='radio-choice']"),
 		radioresult = document.querySelector((".radio-result")),
 		idx;
