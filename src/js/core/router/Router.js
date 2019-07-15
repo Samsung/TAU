@@ -658,6 +658,7 @@
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
 				}
+				ns.setConfig("pageContainer", null);
 			};
 
 			/**
@@ -1292,6 +1293,9 @@
 					Router.getInstance().init();
 				}, false);
 				document.addEventListener(engine.eventType.DESTROY, function () {
+					Router.getInstance().destroy();
+				}, false);
+				document.addEventListener(engine.eventType.STOP_ROUTING, function () {
 					Router.getInstance().destroy();
 				}, false);
 			}
