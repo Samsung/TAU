@@ -90,6 +90,14 @@
 				 */
 				Router = ns.router && ns.router.Router,
 
+				/**
+				 * Alias for class ns.widget.core.Page
+				 * @property {ns.router.Router} Router
+				 * @member ns.widget.core.Popup
+				 * @private
+				 */
+				Page = ns.widget.core.Page,
+
 				POPUP_SELECTOR = "[data-role='popup'], .ui-popup",
 
 				Popup = function () {
@@ -181,7 +189,8 @@
 					wrapper: CLASSES_PREFIX + "-wrapper",
 					toast: CLASSES_PREFIX + "-toast",
 					toastSmall: CLASSES_PREFIX + "-toast-small",
-					build: "ui-build"
+					build: "ui-build",
+					overlayShown: CLASSES_PREFIX + "-overlay-shown"
 				},
 				/**
 				 * Dictionary for popup related selectors
@@ -510,8 +519,9 @@
 				ui.wrapper = ui.wrapper || element.querySelector("." + classes.wrapper);
 				ui.container = ui.wrapper || element;
 
-				// @todo - use selector from page's definition in engine
-				ui.page = utilSelector.getClosestByClass(element, "ui-page") || window;
+				ui.page = utilSelector.getClosestByClass(element, Page.classes.uiPage) || window;
+				ui.pageContent = (typeof ui.page.querySelector === "function") ?
+					ui.page.querySelector("." + Page.classes.uiContent) : null;
 
 				if (elementClassList.contains(classes.toast)) {
 					options.closeAfter = options.closeAfter || 2000;
@@ -574,7 +584,7 @@
 
 				eventUtils.on(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.on(window, "resize", self, false);
-				eventUtils.on(document, "click touchstart", self, false);
+				eventUtils.on(document, "vclick", self, false);
 			};
 
 
@@ -589,7 +599,7 @@
 
 				eventUtils.off(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.off(window, "resize", self, false);
-				eventUtils.off(document, "click touchstart", self, false);
+				eventUtils.off(document, "vclick", self, false);
 			};
 
 			/**
@@ -711,7 +721,8 @@
 			prototype._show = function (options) {
 				var self = this,
 					transitionOptions = objectUtils.merge({}, options),
-					overlay = self._ui.overlay;
+					overlay = self._ui.overlay,
+					pageContent = self._ui.pageContent;
 
 				// set layout
 				self._layout(self.element);
@@ -724,8 +735,14 @@
 				self.trigger(events.before_show);
 				// show overlay
 				if (overlay) {
-					overlay.style.display = "block";
+					overlay.classList.toggle(classes.overlayShown, true);
 				}
+
+				// disable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, true);
+				}
+
 				// start opening animation
 				self._transition(transitionOptions, self._onShow.bind(self));
 
@@ -756,12 +773,18 @@
 			prototype._hide = function (options) {
 				var self = this,
 					isOpened = self._isOpened(),
-					callbacks = self._callbacks;
+					callbacks = self._callbacks,
+					pageContent = self._ui.pageContent;
 
 				// change state of popup
 				self.state = states.DURING_CLOSING;
 
 				self.trigger(events.before_hide);
+
+				// enable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, false);
+				}
 
 				if (isOpened) {
 					// popup is opened, so we start closing animation
@@ -794,7 +817,7 @@
 				self._setActive(false);
 
 				if (overlay) {
-					overlay.style.display = "";
+					overlay.classList.toggle(classes.overlayShown, false);
 				}
 				self._restoreOpenOptions();
 				self.trigger(events.hide);
@@ -818,14 +841,9 @@
 					case "resize":
 						self._onResize(event);
 						break;
-					case "click":
+					case "vclick":
 						if (event.target === self._ui.overlay) {
 							self._onClickOverlay(event);
-						}
-						break;
-					case "touchstart":
-						if (self.element.classList.contains(classes.toast) && self._isActive()) {
-							router.close(null, {rel: "popup"});
 						}
 						break;
 				}
