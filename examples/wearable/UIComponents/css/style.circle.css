@@ -563,14 +563,15 @@ li.static::before {
 	transition: none;
 }
 
-#select-all {
-	padding-top: 45px;
-	padding-bottom: 19px;
+#select-all.show {
+	padding: 0;
 }
 
-#deselect-all {
-	padding-top: 19px;
-	padding-bottom: 44px;
+#deselect-all.show {
+	padding: 0;
+}
+li.hide-popup-li {
+	display: none;
 }
 
 /* -------------------------Animation List------------------------ */
