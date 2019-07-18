@@ -140,7 +140,7 @@
 					})
 				);
 
-				utilsEvents.on(element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup", self);
+				utilsEvents.on(element, "drag dragstart dragend dragcancel", self);
 			};
 
 			/**
@@ -151,7 +151,7 @@
 			*/
 			prototype._unbindEvents = function () {
 				utilsEvents.disableGesture(this.element);
-				utilsEvents.off(this.element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup", this);
+				utilsEvents.off(this.element, "drag dragstart dragend dragcancel", this);
 			};
 
 			/**
