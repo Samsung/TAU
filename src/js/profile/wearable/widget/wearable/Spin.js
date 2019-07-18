@@ -114,7 +114,8 @@
 					NEXT: WIDGET_CLASS + "-item-next",
 					PREV: WIDGET_CLASS + "-item-prev",
 					ENABLED: "enabled",
-					ENABLING: WIDGET_CLASS + "-enabling"
+					ENABLING: WIDGET_CLASS + "-enabling",
+					PLACEHOLDER: WIDGET_CLASS + "-placeholder"
 				},
 
 				prototype = new BaseWidget();
@@ -388,7 +389,13 @@
 			};
 
 			prototype._build = function (element) {
+				var placeholder = document.createElement("div");
+
 				element.classList.add(classes.SPIN);
+				placeholder.classList.add(classes.PLACEHOLDER);
+				element.appendChild(placeholder);
+
+				this._ui.placeholder = placeholder;
 				return element;
 			};
 
@@ -397,6 +404,8 @@
 					animation;
 
 				value = window.parseInt(value, 10);
+				self._ui.placeholder.textContent = value;
+
 				if (isNaN(value)) {
 					ns.warn("Spin: value is not a number");
 				} else if (value !== self.options.value) {
@@ -578,12 +587,14 @@
 			 */
 			prototype._destroy = function () {
 				var self = this,
-					element = self.element;
+					element = self.element,
+					ui = self._ui;
 
 				self._unbindEvents();
-				self._ui.items.forEach(function (item) {
+				ui.items.forEach(function (item) {
 					item.parentNode.removeChild(item);
 				});
+				element.removeChild(ui.placeholder);
 				element.classList.remove(classes.SPIN);
 			};
 
