@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta name="viewport" content="width=device-width, user-scalable=no"/>
-	<title>Hyperlink</title>
-	<link rel="stylesheet" href="../../lib/tau/wearable/theme/default/tau.css">
-	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
-		  href="../../lib/tau/wearable/theme/default/tau.circle.css">
-	<link rel="stylesheet" href="../../css/style.css">
-	<link media="all and (-tizen-geometric-shape: circle)" rel="stylesheet"
-		  href="css/style.circle.css">
+	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+	<title>
+		Hyperlink
+	</title>
+	<link href="../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../lib/tau/wearable/theme/default/tau.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<link href="../../css/style.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<script src="../../js/circle-helper.js">
+	</script>
+	<script src="../../lib/tau/wearable/js/tau.js">
+	</script>
 </head>
 
 <body>
-<div class="ui-page" id="hyperLinkPage" data-enable-page-scroll="false">
-	<div class="ui-content">
-		<a href="http://www.samsung.com" class="ui-hyperlink">www.samsung.com</a>
+	<div class="ui-page" data-enable-page-scroll="false" id="hyperLinkPage">
+		<div class="ui-content">
+			<a class="ui-hyperlink" href="http://www.samsung.com">
+				www.samsung.com
+			</a>
+		</div>
 	</div>
-</div>
-<script src="../../lib/tau/wearable/js/tau.js"></script>
 </body>
+
 </html>

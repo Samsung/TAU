@@ -33,11 +33,11 @@
 			0, /* button, left */
 			null /* related target */
 		);
-		ev.touches = [{clientX: move.clientX, clientY: move.clientY}];
+		ev.touches = [{clientX: move.clientX, clientY: move.clientY, pageX: move.clientX, pageY: move.clientY}];
 		if (event === "touchend") {
 			ev.touches = [];
 		}
-		ev.changedTouches = [{clientX: move.clientX, clientY: move.clientY}];
+		ev.changedTouches = [{clientX: move.clientX, clientY: move.clientY, pageX: move.clientX, pageY: move.clientY}];
 		el.dispatchEvent(ev);
 	}
 
@@ -64,11 +64,11 @@
 
 		// Simulate swiping
 		triggerTouchEvent(this.li, "touchstart", this.clientXY);
-		triggerTouchEvent(this.li, "touchmove", {clientX: this.left + 10, clientY: this.top});
+		triggerTouchEvent(this.li, "touchmove", {clientX: this.left + 10, clientY: this.top, pageX: this.left + 10, pageY: this.top});
 		ok(this.swipeList.style.display === "block", "Swipe list is displayed");
 
 		setTimeout(function setTimeout() {
-			triggerTouchEvent(this.li, "touchend", {clientX: this.left + 10, clientY: this.top});
+			triggerTouchEvent(this.li, "touchend", {clientX: this.left + 10, clientY: this.top, pageX: this.left + 10, pageY: this.top});
 		}.bind(this), tapholdThreshold);
 
 	});

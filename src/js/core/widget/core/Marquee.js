@@ -522,15 +522,25 @@
 			 * @member ns.widget.core.Marquee
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					marqueeInnerElement;
 
 				self.state = null;
-				self._stateDOM = null;
 				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
 				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 				self.element.style.webkitMaskImage = "";
+
+				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
+				if (marqueeInnerElement) {
+					while (marqueeInnerElement.hasChildNodes()) {
+						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
+					}
+					self._stateDOM.children = [];
+					self.element.removeChild(marqueeInnerElement);
+				}
+				self._stateDOM = null;
 			};
 
 			/**

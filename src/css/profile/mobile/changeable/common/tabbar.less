@@ -172,6 +172,17 @@
 				transition: transform 100ms;
 			}
 		}
+
+		&.ui-tabbar-inactive-text-overflow {
+			span {
+				display: inline-block;
+				overflow-x: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				margin-top: 12 * @unit_base;
+			}
+		}
+
 		&::before {
 			content: "";
 			width: 100%;
