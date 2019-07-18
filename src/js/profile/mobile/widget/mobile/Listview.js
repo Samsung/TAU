@@ -264,7 +264,7 @@
 
 				self._dragMode = false;
 				self.originalListPosition = 0;
-				self.indexDragingElement = 0;
+				self.indexDraggingElement = 0;
 
 				self._ui = {
 					helper: {},
@@ -1114,7 +1114,7 @@
 						eventUtils.on(popupContainer, Popup.events.transition_start, self._backgroundRenderCallback);
 					}
 
-					utilsEvents.on(self.element, "animationend", self, true);
+					utilsEvents.on(self.element, "animationend webkitAnimationEnd", self, true);
 					utilsEvents.on(self.element, "taufocus", self._focusItem, true);
 					utilsEvents.on(self.element, "taublur", self._blurItem, true);
 				}
@@ -1132,7 +1132,7 @@
 
 				//phantom hack
 				if (element) {
-					utilsEvents.off(element, "animationend", self, true);
+					utilsEvents.off(element, "animationend webkitAnimationEnd", self, true);
 					utilsEvents.off(element, "focus", self._focus, true);
 					utilsEvents.off(element, "blur", self._blur, true);
 				}
@@ -1571,6 +1571,7 @@
 							self._end(event);
 							break;
 						case "animationend":
+						case "webkitAnimationEnd":
 							self._animationEnd(event);
 							break;
 					}

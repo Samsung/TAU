@@ -1088,7 +1088,9 @@
 			 * @return {boolean} False, if any callback invoked preventDefault on event object
 			 */
 			prototype.trigger = function (eventName, data, bubbles, cancelable) {
-				return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				if (this.element) {
+					return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				}
 			};
 
 			/**

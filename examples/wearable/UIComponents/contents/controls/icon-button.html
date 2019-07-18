@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-	<title>Wearable UI</title>
-	<link rel="stylesheet" href="../../lib/tau/wearable/theme/default/tau.css">
-	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
-	      href="../../lib/tau/wearable/theme/default/tau.circle.min.css">
-	<link rel="stylesheet" href="../../css/style.css">
-	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
-	      href="../../css/style.circle.css">
+	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+	<title>
+		Wearable UI
+	</title>
+	<link href="../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../lib/tau/wearable/theme/default/tau.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<link href="../../css/style.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<script src="../../js/circle-helper.js">
+	</script>
+	<script src="../../lib/tau/wearable/js/tau.js">
+	</script>
 </head>
+
 <body>
-<div class="ui-page" id="icon-button-page">
-	<header class="ui-header">
-		<h2 class="ui-title">Icon Button</h2>
-	</header>
-	<div class="ui-content">
-		<button></button>
-		<script src="icon-button.js"></script>
+	<div class="ui-page" id="icon-button-page">
+		<header class="ui-header">
+			<h2 class="ui-title">
+				Icon Button
+			</h2>
+		</header>
+		<div class="ui-content">
+			<button>
+			</button>
+			<script src="icon-button.js">
+			</script>
+		</div>
+		<footer class="ui-footer ui-bottom-button ui-fixed">
+			<button class="ui-btn">
+				OK
+			</button>
+		</footer>
 	</div>
-	<footer class="ui-footer ui-bottom-button ui-fixed">
-		<button class="ui-btn">OK</button>
-	</footer>
-</div>
 </body>
-<script src="../../lib/tau/wearable/js/tau.js"></script>
+
 </html>

@@ -1,50 +1,76 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-	<title>Wearable Extra UI - Section changer</title>
-    <link rel="stylesheet" href="../lib/tau/wearable/theme/default/tau.css">
-    <link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="../lib/tau/wearable/theme/default/tau.circle.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+	<title>
+		Wearable Extra UI - Section changer
+	</title>
+	<link href="../../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../../lib/tau/wearable/theme/default/tau.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<link href="../../../css/style.css" rel="stylesheet" />
+	<link href="../../../css/style.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<script src="../../../js/circle-helper.js">
+	</script>
+	<script src="../../../lib/tau/wearable/js/tau.js">
+	</script>
 </head>
+
 <body>
-	<div id="nestedsectionchangerPage" class="ui-page" data-enable-page-scroll="false">
-	<link rel="stylesheet"  href="css/sectionchanger.css">
+	<div class="ui-page" data-enable-page-scroll="false" id="nestedsectionchangerPage">
+		<link href="css/sectionchanger.css" rel="stylesheet" />
 		<header class="ui-header">
-			<h2 class="ui-title">Horizontal</h2>
+			<h2 class="ui-title">
+				Horizontal
+			</h2>
 		</header>
-		<div id="hsectionchanger" class="ui-content">
+		<div class="ui-content" id="hsectionchanger">
 			<!-- section changer has only one child. -->
 			<div>
-				<section class="h" style="text-align:center" >
-					<h3> LEFT2 PAGE </h3>
+				<section class="h" style="text-align:center">
+					<h3>
+						LEFT2 PAGE
+					</h3>
 				</section>
 				<section class="h" style="text-align:center">
-					<h3> LEFT1 PAGE </h3>
+					<h3>
+						LEFT1 PAGE
+					</h3>
 				</section>
-				<section id="vsectionchanger" class="h ui-section-active" style="text-align:center; position:relative;">
+				<section class="h ui-section-active" id="vsectionchanger" style="text-align:center; position:relative;">
 					<div>
-						<section style="text-align:center" >
-							<h3> Nested UP PAGE </h3>
+						<section style="text-align:center">
+							<h3>
+								Nested UP PAGE
+							</h3>
 						</section>
-						<section class="ui-section-active" style="text-align:center" >
-							<h3> Nested MAIN PAGE </h3>
+						<section class="ui-section-active" style="text-align:center">
+							<h3>
+								Nested MAIN PAGE
+							</h3>
 						</section>
-						<section style="text-align:center" >
-							<h3> Nested DOWN PAGE </h3>
+						<section style="text-align:center">
+							<h3>
+								Nested DOWN PAGE
+							</h3>
 						</section>
 					</div>
 				</section>
 				<section class="h" style="text-align:center">
-					<h3> RIGHT1 PAGE </h3>
+					<h3>
+						RIGHT1 PAGE
+					</h3>
 				</section>
 				<section class="h" style="text-align:center">
-					<h3> RIGHT2 PAGE </h3>
+					<h3>
+						RIGHT2 PAGE
+					</h3>
 				</section>
 			</div>
 		</div>
-		<script src="nested.js"></script>
+		<script src="nested.js">
+		</script>
 	</div>
-<script src="../lib/tau/wearable/js/tau.js"></script>
 </body>
+
 </html>

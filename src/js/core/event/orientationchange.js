@@ -146,7 +146,7 @@
 			*/
 			orientationchange.unbind = function () {
 				window.removeEventListener("orientationchange", checkReportedOrientation, false);
-				body.removeEventListener("throttledresize", detectOrientationByDimensions, false);
+				document.removeEventListener("throttledresize", detectOrientationByDimensions, true);
 				document.removeEventListener(eventType.DESTROY, orientationchange.unbind, false);
 			};
 
@@ -170,7 +170,7 @@
 						}
 						portraitMatchMediaQueryList.addListener(matchMediaHandler);
 					} else {
-						body.addEventListener("throttledresize", detectOrientationByDimensions, false);
+						document.addEventListener("throttledresize", detectOrientationByDimensions, true);
 						detectOrientationByDimensions();
 					}
 				}
