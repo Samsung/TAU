@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /***************************************************************************
                   Body
 ***************************************************************************/
@@ -4038,4 +4054,55 @@ input[type=email]:active {
         -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
   }
+}
+.ui-toggleswitch.ui-toggle-slider:not(.ui-switch-button) {
+  position: relative;
+  display: inline-block;
+  width: 4.75rem;
+  height: 2.9375rem;
+}
+.ui-toggleswitch.ui-toggle-slider:not(.ui-switch-button) input {
+  background-color: #CCCCCC;
+  transition: 0.5s;
+  border-radius: 2.9375rem;
+  width: 4.75rem;
+  height: 2.9375rem;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  outline: 0;
+  margin: 0;
+  -webkit-mask-image: none;
+          mask-image: none;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+.ui-toggleswitch.ui-toggle-slider:not(.ui-switch-button) input:checked {
+  background-color: #3695DD;
+}
+.ui-toggleswitch.ui-toggle-slider:not(.ui-switch-button) .ui-switch-button:before {
+  position: absolute;
+  content: '';
+  -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+          transform: scale(1);
+  height: 2.75rem;
+  width: 2.75rem;
+  left: 0.125rem;
+  top: 0.0625rem;
+  background-color: #FFFFFF;
+  transition: 0.5s;
+  border-radius: 50%;
+  -webkit-mask-image: none;
+          mask-image: none;
+  pointer-events: none;
+}
+.ui-toggleswitch.ui-toggle-slider:not(.ui-switch-button) .ui-switch-button:after {
+  content: none;
+}
+.ui-toggleswitch.ui-toggle-slider:not(.ui-switch-button) input:checked + .ui-switch-button:before {
+  -webkit-transform: translateX(1.8125rem);
+      -ms-transform: translateX(1.8125rem);
+          transform: translateX(1.8125rem);
+  background-color: #FFFFFF;
 }

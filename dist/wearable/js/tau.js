@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.4';
+ns.version = '1.1.0';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -362,6 +362,7 @@ ns.version = '1.0.4';
 			// same as above, but for wearable version
 			ns.setConfig("pageContainer", document.body, true);
 			ns.setConfig("findProfileFile", false, true);
+			ns.setConfig("keyboardSupport", false);
 
 			}());
 
@@ -1715,6 +1716,9 @@ ns.version = '1.0.4';
 
 						parent.appendChild(el);
 						themeName = window.getComputedStyle(el, ":after").content;
+						if (themeName) {
+							themeName = themeName.replace(/\"/g, "");
+						}
 						parent.removeChild(el);
 
 						if (themeName && themeName.length > 0) {
@@ -2489,7 +2493,8 @@ ns.version = '1.0.4';
 					WIDGET_BUILT: "widgetbuilt",
 					DESTROY: "taudestroy",
 					BOUND: "bound",
-					WIDGET_INIT: "init"
+					WIDGET_INIT: "init",
+					STOP_ROUTING: "tauroutingstop"
 				},
 				engine;
 
@@ -2917,7 +2922,7 @@ ns.version = '1.0.4';
 					buildAttribute;
 
 				
-				widgetInstance.configure(definition, element, options);
+				element = widgetInstance.configure(definition, element, options);
 
 				// Run .create method from widget options when a [widgetName]create event is triggered
 				if (typeof createFunction === TYPE_FUNCTION) {
@@ -2978,7 +2983,7 @@ ns.version = '1.0.4';
 					existingBinding;
 
 				element = ensureElement(element, Widget);
-				widgetInstance = Widget ? new Widget(element) : false;
+				widgetInstance = Widget ? new Widget(element, options) : false;
 
 				// if any parent has attribute data-enhance=false then stop building widgets
 				parentEnhance = selectors.getParentsBySelectorNS(element, "enhance=false");
@@ -3277,6 +3282,7 @@ ns.version = '1.0.4';
 			 * @member ns.engine
 			 */
 			function stop() {
+				eventUtils.trigger(document, eventType.STOP_ROUTING);
 			}
 
 			/**
@@ -3288,7 +3294,7 @@ ns.version = '1.0.4';
 			function destroy() {
 				stop();
 				eventUtils.fastOff(document, "create", createEventHandler);
-				destroyAllWidgets(document.body, true);
+				destroyAllWidgets(document, true);
 				eventUtils.trigger(document, eventType.DESTROY);
 			}
 
@@ -3393,7 +3399,8 @@ ns.version = '1.0.4';
 				 * @member ns.engine
 				 */
 				run: function () {
-										stop();
+										// stop the TAU process if exists before
+					stop();
 
 					eventUtils.fastOn(document, "create", createEventHandler);
 
@@ -3402,9 +3409,11 @@ ns.version = '1.0.4';
 					switch (document.readyState) {
 						case "interactive":
 						case "complete":
+							// build widgets and initiate router
 							build();
 							break;
 						default:
+							// build widgets and initiate router
 							eventUtils.one(document, "DOMContentLoaded", build.bind(engine));
 							break;
 					}
@@ -6403,11 +6412,41 @@ function pathToRegexp (path, keys, options) {
 				return arrayUtil.map(arrayProperty, mapToNumber);
 			}
 
+			/* eslint-disable jsdoc/check-param-names */
+			/**
+			 * Returns a string of tags that exist in the first param but do not exist
+			 * in rest of the params
+			 * @param {string} baseWithTags
+			 * @param {...string} compare
+			 * @return {string}
+			 */
+			function removeExactTags(baseWithTags) {
+				var tags = [];
+
+				[].slice
+					.call(arguments)
+					.slice(1)
+					.forEach(function (arg) {
+						arg.split(" ")
+							.forEach(function (tag) {
+								tags.push(tag.trim());
+							});
+					});
+
+				return baseWithTags
+					.split(" ")
+					.filter(function (tag) {
+						return tags.indexOf(tag) === -1;
+					}).join(" ");
+			}
+			/* eslint-enable jsdoc/check-param-names */
+
 			ns.util.string = {
 				dashesToCamelCase: dashesToCamelCase,
 				camelCaseToDashes: camelCaseToDashes,
 				firstToUpperCase: firstToUpperCase,
-				parseProperty: parseProperty
+				parseProperty: parseProperty,
+				removeExactTags: removeExactTags
 			};
 			}());
 
@@ -7219,6 +7258,7 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				objectUtils = util.object,
+				selectorUtils = util.selectors,
 				Set = util.Set,
 				BaseWidget = function () {
 					this.flowState = "created";
@@ -7326,6 +7366,7 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype.configure = function (definition, element, options) {
 				var self = this;
+
 				/**
 				 * Object with options for widget
 				 * @property {Object} [options={}]
@@ -7345,7 +7386,7 @@ function pathToRegexp (path, keys, options) {
 				self._configureDefinition(definition);
 
 				if (typeof self._configure === TYPE_FUNCTION) {
-					self._configure(element);
+					element = self._configure(element) || element;
 				}
 
 				self.isCustomElement = !!element.createdCallback;
@@ -7354,7 +7395,15 @@ function pathToRegexp (path, keys, options) {
 
 				objectUtils.fastMerge(self.options, options);
 
+				// move style attribute to another attribute for recovery in init method
+				// this feature is required in widgets with container
+				if (element.style.cssText) {
+					element.dataset.originalStyle = element.style.cssText;
+				}
+
 				self.flowState = "configured";
+
+				return element;
 			};
 
 			/**
@@ -7379,8 +7428,11 @@ function pathToRegexp (path, keys, options) {
 						if (prefixedValue !== null) {
 							options[option] = prefixedValue;
 						} else {
-							if (typeof options[option] === "boolean") {
-								self._readBooleanOptionFromElement(element, option);
+							if (typeof options[option] === "boolean" &&
+								!self._readBooleanOptionFromElement(element, option)) {
+								if (typeof self._getDefaultOption === TYPE_FUNCTION) {
+									options[option] = self._getDefaultOption(option);
+								}
 							}
 						}
 
@@ -7393,6 +7445,7 @@ function pathToRegexp (path, keys, options) {
 						}
 					});
 				}
+
 				return options;
 			};
 
@@ -7474,11 +7527,39 @@ function pathToRegexp (path, keys, options) {
 			 * @ignore
 			 */
 			prototype.init = function (element) {
-				var self = this;
+				var self = this,
+					container,
+					originalStyleText;
 
 				self.id = element.id;
 
 				self.flowState = "initiating";
+
+				// Move style properties that was defined before building to container element
+				if (element.dataset.originalStyle) {
+					container = self.getContainer();
+					if (container != element) {
+						originalStyleText = element.dataset.originalStyle;
+
+						originalStyleText.split(";").forEach(function (keyValue) {
+							var key,
+								value,
+								keyValuePair;
+
+							keyValuePair = keyValue.split(":");
+							if (keyValuePair.length === 2) {
+								key = keyValuePair[0].trim();
+								value = keyValuePair[1].trim();
+
+								container.style[key] = element.style[key];
+
+								if (element.style[key] === value) {
+									element.style[key] = "";
+								}
+							}
+						});
+					}
+				}
 
 				if (typeof self._init === TYPE_FUNCTION) {
 					self._init(element);
@@ -7489,6 +7570,7 @@ function pathToRegexp (path, keys, options) {
 				} else {
 					self.enable();
 				}
+
 				self.flowState = "initiated";
 				return self;
 			};
@@ -7570,6 +7652,8 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					element = self.element,
 					blurElement,
+					scrollview,
+					scrollviewElement,
 					blurWidget;
 
 				options = options || {};
@@ -7589,10 +7673,21 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				options = objectUtils.merge({}, options, {element: element});
+				scrollviewElement = selectorUtils.getClosestBySelector(element, "[data-tau-name='Scrollview']");
+				if (scrollviewElement) {
+					scrollview = engine.getBinding(scrollviewElement);
+				}
 
 				// set focus on element
 				eventUtils.trigger(document, "taufocus", options);
-				element.focus();
+				if (typeof self._focus === TYPE_FUNCTION) {
+					if (options.event) {
+						scrollview && scrollview.ensureElementIsVisible(element);
+					}
+					self._focus(element);
+				} else {
+					element.focus();
+				}
 
 				return true;
 			};
@@ -7621,7 +7716,11 @@ function pathToRegexp (path, keys, options) {
 
 				// blur element
 				eventUtils.trigger(document, "taublur", options);
-				element.blur();
+				if (typeof self._blur === TYPE_FUNCTION) {
+					self._blur(element);
+				} else {
+					element.blur();
+				}
 				return true;
 			};
 
@@ -7657,6 +7756,10 @@ function pathToRegexp (path, keys, options) {
 				}
 				if (self.element) {
 					self.trigger(self.widgetEventPrefix + "destroy");
+					if (self.element.dataset.originalStyle) {
+						self.element.style.cssText = self.element.dataset.originalStyle;
+						delete self.element.dataset.originalStyle;
+					}
 				}
 				if (element) {
 					engine.removeBinding(element, self.name);
@@ -7764,7 +7867,8 @@ function pathToRegexp (path, keys, options) {
 			/**
 			 * Reads class based on name conversion option value, for all options which have boolean value
 			 * we can read option value by check that exists classname connected with option name. To
-			 * correct use this method is required define in widget property _classesPrefix.
+			 * correct use this method is required define in widget property _classesPrefix. If this
+			 * condition is not met method returns false, otherwise returns true.
 			 *
 			 * For example for option middle in Button widget we will check existing of class
 			 * ui-btn-middle.
@@ -7772,7 +7876,7 @@ function pathToRegexp (path, keys, options) {
 			 * @method _readBooleanOptionFromElement
 			 * @param {HTMLElement} element Main element of widget
 			 * @param {string} name Name of option which should be used
-			 * @return {boolean}
+			 * @return {boolean} If option value was successfully read
 			 * @member ns.widget.BaseWidget
 			 * @protected
 			 */
@@ -7783,7 +7887,11 @@ function pathToRegexp (path, keys, options) {
 				if (classesPrefix) {
 					className = classesPrefix + utilString.camelCaseToDashes(name);
 					this.options[name] = element.classList.contains(className);
+
+					return true;
 				}
+
+				return false;
 			};
 
 			/**
@@ -7913,18 +8021,27 @@ function pathToRegexp (path, keys, options) {
 
 				if (value === undefined) {
 					methodName = "_get" + (field[0].toUpperCase() + field.slice(1));
+
 					if (typeof self[methodName] === TYPE_FUNCTION) {
 						return self[methodName]();
 					}
+
 					return self.options[field];
 				}
+
 				methodName = "_set" + (field[0].toUpperCase() + field.slice(1));
 				if (typeof self[methodName] === TYPE_FUNCTION) {
 					refresh = self[methodName](self.element, value);
+					if (self.element) {
+						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
+							return "-" + c.toLowerCase();
+						})), value);
+					}
 				} else if (typeof value === "boolean") {
 					refresh = self._setBooleanOption(self.element, field, value);
 				} else {
 					self.options[field] = value;
+
 					if (self.element) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
@@ -7932,6 +8049,13 @@ function pathToRegexp (path, keys, options) {
 						refresh = true;
 					}
 				}
+
+				if (value === "" && self.element) {
+					self.element.removeAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
+						return "-" + c.toLowerCase();
+					})));
+				}
+
 				return refresh;
 			};
 
@@ -8027,7 +8151,9 @@ function pathToRegexp (path, keys, options) {
 			 * @return {boolean} False, if any callback invoked preventDefault on event object
 			 */
 			prototype.trigger = function (eventName, data, bubbles, cancelable) {
-				return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				if (this.element) {
+					return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				}
 			};
 
 			/**
@@ -8232,6 +8358,1498 @@ function pathToRegexp (path, keys, options) {
 (function (document, ns) {
 	"use strict";
 				ns.widget.core = ns.widget.core || {};
+			}(window.document, ns));
+
+/*global window, define, ns, HTMLElement, Node */
+/*
+ * Copyright (c) 2010 - 2014 Samsung Electronics Co., Ltd.
+ * License : MIT License V2
+ */
+
+(function (document, ns) {
+	"use strict";
+				var engine = ns.engine,
+				DOM = ns.util.DOM,
+				object = ns.util.object,
+				utilArray = ns.util.array,
+				eventUtils = ns.event,
+				selectorUtils = ns.util.selectors,
+				atan2 = Math.atan2,
+				abs = Math.abs,
+				PI = Math.PI,
+				sqrt = Math.sqrt,
+				slice = [].slice,
+				// focus configuration
+				SIDE_DISTANCE_LIMIT = 200,
+				prototype = {
+					_supportKeyboard: false
+				},
+				BaseKeyboardSupport = function () {
+					var self = this,
+						options = self.options || {};
+
+					object.merge(self, prototype);
+					// new options requires by keyboard support
+
+					object.merge(options, {
+						// "top"|"right"|"bottom"|"left"
+						focusDirection: null,
+						focusContext: null,
+						focusContainerContext: false,
+						focusUp: null,
+						focusDown: null,
+						focusLeft: null,
+						focusRight: null,
+						focusLock: false
+					});
+
+					// widget has keyboard support
+					self.isKeyboardSupport = true;
+
+					// prepare selector
+					if (selectorsString === "") {
+						prepareSelector();
+					}
+					self._onKeyupHandler = null;
+					self._onClickHandler = null;
+					self._onHWKeyHandler = null;
+					// time of keydown event
+					self.keydownEventTimeStart = null; // [ms]
+					// flag for keydown event
+					self.keydownEventRepeated = false;
+				},
+				classes = {
+					focusDisabled: "ui-focus-disabled",
+					focusEnabled: "ui-focus-enabled",
+					focusDisabledByWidget: "ui-focus-disabled-by-widget",
+					focus: "ui-focus"
+				},
+				KEY_CODES = {
+					left: 37,
+					up: 38,
+					right: 39,
+					down: 40,
+					enter: 13,
+					tab: 9,
+					escape: 27
+				},
+				activeElement = null,
+				EVENT_POSITION = {
+					up: "up",
+					down: "down",
+					left: "left",
+					right: "right"
+				},
+				selectorSuffix = ":not(." + classes.focusDisabled + ")" +
+								":not(." + ns.widget.BaseWidget.classes.disable + ")",
+				// define standard focus selectors
+				// includeDisabled: false - disabled element will be not focusable
+				// includeDisabled: true - disabled element will be focusable
+				// count - number of defined selectors
+				selectors = [{
+					value: "a",
+					includeDisabled: false,
+					count: 1
+				}, {
+					value: "." + classes.focusEnabled,
+					includeDisabled: false,
+					count: 1
+				}, {
+					value: "[tabindex]",
+					includeDisabled: false,
+					count: 1
+				}, {
+					value: "[data-focus-lock=true]",
+					includeDisabled: false,
+					count: 1
+				}
+				],
+				selectorsString = "",
+				/**
+				* @property {Array} Array containing number of registrations of each selector
+				* @member ns.widget.tv.BaseKeyboardSupport
+				* @private
+				*/
+				currentKeyboardWidget,
+				lastMoveDirection,
+				previousKeyboardWidgets = [],
+				ANIMATION_MIN_TIME = 50;
+
+			BaseKeyboardSupport.KEY_CODES = KEY_CODES;
+			BaseKeyboardSupport.classes = classes;
+			/**
+			 * Get focused element.
+			 * @method getFocusedLink
+			 * @return {HTMLElement}
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getFocusedLink() {
+				return document.querySelector(":focus") || document.activeElement;
+			}
+
+			/**
+			 * Test if the key code is a cursor key code
+			 * @method isCursorKey
+			 * @param {number} key
+			 * @return {boolean}
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function isCursorKey(key) {
+				return key === KEY_CODES.left ||
+					key === KEY_CODES.right ||
+					key === KEY_CODES.up ||
+					key === KEY_CODES.down ||
+					key === KEY_CODES.enter ||
+					key === KEY_CODES.escape;
+			}
+
+			/**
+			 * Finds all visible links.
+			 * @method getFocusableElements
+			 * @param {HTMLElement} widgetElement
+			 * @param {boolean} visibleOnly select only visible elements
+			 * @return {Array}
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getFocusableElements(widgetElement, visibleOnly) {
+				var focusableElements = [];
+
+				if (!widgetElement) {
+					return [];
+				}
+
+				focusableElements = slice.call(widgetElement.querySelectorAll(selectorsString));
+
+				if (!visibleOnly) {
+					return focusableElements;
+				}
+				return focusableElements.filter(function (element) {
+					return element.offsetWidth && window.getComputedStyle(element).visibility !== "hidden";
+				});
+			}
+
+			prototype.preventFocusOnElement = function (element) {
+				element.classList.add(classes.focusDisabled);
+			}
+
+			/**
+			 * Method makes focusable element as disabled for focus selection
+			 * @method disableFocusableElements
+			 * @param {HTMLElement} element parent element for disabled elements
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype.disableFocusableElements = function (element) {
+				this.getFocusableElements(element).forEach(function (focusableElement) {
+					focusableElement.classList.add(classes.focusDisabled);
+					// this class describe that focus on element was disabled by widget, not developer
+					focusableElement.classList.add(classes.focusDisabledByWidget);
+				});
+			}
+
+			/**
+			 * Method enables previously disabled the focusable element
+			 * @method enableDisabledFocusableElements
+			 * @param {HTMLElement} element parent element for disabled elements
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype.enableDisabledFocusableElements = function (element) {
+				var disabledFocusableElements;
+
+				if (element) {
+					disabledFocusableElements = element.querySelectorAll("." + classes.focusDisabledByWidget);
+
+					slice.call(disabledFocusableElements).forEach(function (focusableElement) {
+						focusableElement.classList.remove(classes.focusDisabled);
+						// this class describe that focus on element was disabled by widget, not developer
+						focusableElement.classList.remove(classes.focusDisabledByWidget);
+					});
+				}
+			}
+
+			/**
+			 * Extracts element from offsetObject.
+			 * @method mapToElement
+			 * @param {Object} linkOffset
+			 * @param {HTMLElement} linkOffset.element
+			 * @return {HTMLElement}
+			 * @private
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function mapToElement(linkOffset) {
+				return linkOffset.element;
+			}
+
+			/**
+			 * Set string with selector
+			 * @method prepareSelector
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function prepareSelector() {
+				var length = selectors.length;
+
+				selectorsString = "";
+				utilArray.forEach(selectors, function (object, index) {
+					selectorsString += object.value;
+					if (!object.includeDisabled) {
+						selectorsString += selectorSuffix;
+					}
+					if (index < length - 1) {
+						selectorsString += ",";
+					}
+				});
+			}
+
+			prototype.getActiveSelector = function () {
+				return selectorsString;
+			};
+
+			BaseKeyboardSupport.copyFocusAttributes = function (widgetInstance, wrapper) {
+				var options = widgetInstance.options;
+
+				DOM.setNSDataAttributes(wrapper, {
+					focusDirection: options.focusDirection,
+					focusContext: options.focusContext,
+					focusContainerContext: options.focusContainerContext,
+					focusUp: options.focusUp,
+					focusDown: options.focusDown,
+					focusLeft: options.focusLeft,
+					focusRight: options.focusRight
+				}, true);
+			};
+
+			function getDistanceByCenter(contextRect, referenceElement) {
+				var referenceRect = (referenceElement instanceof HTMLElement) ?
+						referenceElement.getBoundingClientRect() :
+						referenceElement,
+					contextCenter = {
+						x: contextRect.width / 2 + contextRect.left,
+						y: contextRect.height / 2 + contextRect.top
+					},
+					referenceCenter = {
+						x: referenceRect.width / 2 + referenceRect.left,
+						y: referenceRect.height / 2 + referenceRect.top
+					},
+					dy = contextCenter.y - referenceCenter.y,
+					dx = contextCenter.x - referenceCenter.x;
+
+				return Math.sqrt(dy * dy + dx * dx);
+			}
+
+			function isInLine(contextRect, referenceElement, direction) {
+				var a1,
+					a2,
+					b1,
+					b2,
+					result = false,
+					referenceRect = (referenceElement instanceof HTMLElement) ?
+						referenceElement.getBoundingClientRect() :
+						referenceElement;
+
+				if (direction === "down" || direction === "up") {
+					a1 = referenceRect.left;
+					a2 = referenceRect.left + referenceRect.width;
+					b1 = contextRect.left;
+					b2 = contextRect.left + contextRect.width;
+				} else if (direction === "left" || direction === "right") {
+					a1 = referenceRect.top;
+					a2 = referenceRect.top + referenceRect.height;
+					b1 = contextRect.top;
+					b2 = contextRect.top + contextRect.height;
+				}
+
+				result = ((a1 > b1) && (a1 < b2)) || // at the left
+					((a2 > b1) && (a2 < b2)) || // at the right
+					// above conditions are applicable also
+					// if the context contains the reference element
+					((a1 <= b1) && (a2 >= b2)); // content is inside reference element
+
+				return result;
+			}
+
+			/**
+			 * return angle between two elements
+			 * @method getRelativeAngle
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 * @param {Object} contextRect
+			 * @param {HTMLElement} referenceElement
+			 * @return {number}
+			 */
+			function getRelativeAngle(contextRect, referenceElement) {
+				var referenceRect = (referenceElement instanceof HTMLElement) ?
+						referenceElement.getBoundingClientRect() :
+						referenceElement,
+					contextCenter = {
+						x: contextRect.width / 2 + contextRect.left,
+						y: contextRect.height / 2 + contextRect.top
+					},
+					referenceCenter = {
+						x: referenceRect.width / 2 + referenceRect.left,
+						y: referenceRect.height / 2 + referenceRect.top
+					},
+					dy = contextCenter.y - referenceCenter.y,
+					dx = contextCenter.x - referenceCenter.x,
+					angle = atan2(-dy, dx) * 180 / PI;
+
+				// determining the angle between the centers of two rectangles
+				return angle;
+			}
+
+			/**
+			 * return direction from angle
+			 * @method getDirectionFromAngle
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 * @param {number} angle
+			 * @param tolerance [0.0 .. 45.0]
+			 * @return {string}
+			 */
+			function getDirectionFromAngle(angle, tolerance) {
+				tolerance = tolerance || 0.0;
+
+				if ((abs(angle - 180) < tolerance) || (abs(angle + 180) < tolerance)) {
+					return EVENT_POSITION.left;
+				} else if (abs(angle - 90) < tolerance) {
+					return EVENT_POSITION.up;
+				} else if (abs(angle) < tolerance) {
+					return EVENT_POSITION.right;
+				} else if (abs(angle + 90) < tolerance) {
+					return EVENT_POSITION.down;
+				}
+				return "";
+			}
+
+			/**
+			 * Compares two numbers and return order for sorting functions
+			 * @method getOrder
+			 * @param {number} number1
+			 * @param {number} number2
+			 * @return {number}
+			 * @private
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getOrder(number1, number2) {
+				if (number1 === number2) {
+					return 0;
+				}
+				if (number1 < number2) {
+					return -1;
+				}
+				return 1;
+			}
+
+			/**
+			 * return direction from origin rect to element rect in movement direction
+			 * @param {DOMRect} originRect
+			 * @param {DOMRect} elementRect
+			 * @param {"top"|"right"|"bottom"|"left"} movementDirection
+			 * @return {"top"|"right"|"bottom"|"left"}
+			 * @static
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getDirection(originRect, elementRect, movementDirection) {
+				if (movementDirection === EVENT_POSITION.right &&
+					parseInt(originRect.right) <= parseInt(elementRect.left)) {
+					return movementDirection;
+				}
+
+				if (movementDirection === EVENT_POSITION.left &&
+					parseInt(elementRect.right) <= parseInt(originRect.left)) {
+					return movementDirection;
+				}
+
+				if (movementDirection === EVENT_POSITION.down &&
+					parseInt(originRect.bottom) <= parseInt(elementRect.top)) {
+					return movementDirection;
+				}
+
+				if (movementDirection === EVENT_POSITION.up &&
+					parseInt(originRect.top) >= parseInt(elementRect.bottom)) {
+					return movementDirection;
+				}
+
+				if (elementRect) {
+					// tolerance 5 degrees
+					return getDirectionFromAngle(getRelativeAngle(elementRect, originRect), 5.0);
+				}
+
+				return "";
+			}
+
+			/**
+			 * Gets distance between two ClientRects
+			 * @param {DOMRect} aElementRect
+			 * @param {DOMRect} bElementRect
+			 * @return {number}
+			 * @static
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getDistanceLeftTopCorner(aElementRect, bElementRect) {
+				var x = aElementRect.left - bElementRect.left,
+					y = aElementRect.top - bElementRect.top;
+
+				return sqrt(x * x + y * y) | 0;
+			}
+
+			/**
+			 * Gets distance between two ClientRects by sides
+			 * @param {DOMRect} elementRect
+			 * @param {DOMRect} referenceElementRect
+			 * @return {Object}
+			 * @static
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getDistanceBySides(elementRect, referenceElementRect) {
+				/*
+				 * This values represents distance from reference element to element
+				 * at indicated direction:
+				 *
+				 * example:
+				 * =======
+				 *
+				 *     _ _ _ _
+				 *     ^      [element]
+				 *     |           ^
+				 *     | bottom    | top
+				 *     |           |
+				 *     |_ [reference element]
+				 *
+				 *
+				 *         _ _ _ _ _ _ _ _ _ _ _ _ [element]
+				 *           ^                     |       |
+				 *           | top                 |
+				 *           |              right  |       |
+				 *     [reference element] ------->|
+				 *     |                                   |
+				 *     |          left
+				 *     |---------------------------------->|
+				 *
+				 * example:
+				 * =======
+				 *
+				 *            _ _ _ _ _ _ _ _ _[reference element]
+ 				 *             |               |
+				 *             | bottom        |
+				 *             |               |
+				 *             /         left  |
+				 *         [element]<----------|
+				 *
+				 */
+				var result = {
+					top: referenceElementRect.top - (elementRect.top + elementRect.height) + 0,
+					bottom: elementRect.top - referenceElementRect.top - referenceElementRect.height,
+					right: elementRect.left - referenceElementRect.left - referenceElementRect.width,
+					left: referenceElementRect.left - (elementRect.left + elementRect.width)
+				};
+
+				/*
+				 * example:
+				 * =======
+				 *
+				 *     [++++++++ element ++++++++]
+				 *     |                         |
+				 *     |                   left  |
+				 *     |               |-------->|
+				 *     |
+				 *     |<--leftRest----[reference element]
+				 *
+				 *    Focus on left should takes account also element
+				 *    which "leftRest" value is positive
+				 *
+				 */
+				result.leftRest = result.left + elementRect.width;
+				result.rightRest = result.right + elementRect.width;
+				result.topRest = result.top + elementRect.height;
+				result.bottomRest = result.bottom + elementRect.height;
+				return result;
+			}
+
+			/**
+			 * Sorting callback, sorts by distance
+			 * @param {Object} a
+			 * @param {Object} b
+			 * @return {number}
+			 * @static
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function sortByDistanceByCenter(a, b) {
+				return (a.distanceByCenter === b.distanceByCenter) ? 0 :
+					(a.distanceByCenter < b.distanceByCenter) ? -1 : 1;
+			}
+
+			function sortByDistance(a, b) {
+				return (a.distanceByDirection.distance === b.distanceByDirection.distance) ?
+					sortByDistanceByCenter(a, b) :
+						(a.distanceByDirection.distance < b.distanceByDirection.distance) ? -1 : 1;
+			}
+
+			function sortByInSideDistanceLimit(a, b) {
+				// sort by inSideDistanceLimit
+				return (a.inSideDistanceLimit && b.inSideDistanceLimit) ? sortByDistance(a, b) :
+						(!a.inSideDistanceLimit && !b.inSideDistanceLimit) ? sortByDistanceByCenter(a, b) :
+							(a.inSideDistanceLimit && !b.inSideDistanceLimit) ? -1 : 1;
+			}
+
+			/**
+			 * Sorting callback, sorts by distance
+			 * @param {Object} a
+			 * @param {Object} b
+			 * @return {number}
+			 * @static
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function sortFocusableElements(a, b) {
+				/**
+				 * Sort order
+				 * - inLine
+				 * - inSideDistanceLimit
+				 * ---  distanceByDirection.distance
+				 * ---  distanceByCenter
+				 */
+				// sort by inline
+				return (a.inLine && b.inLine || !a.inLine && !b.inLine) ? sortByInSideDistanceLimit(a, b) :
+					(a.inLine && !b.inLine) ? -1 : 1;
+			}
+
+			function getDistanceByDirection(distances, direction) {
+				switch (direction) {
+					case "left": return {
+						distance: distances.left,
+						distanceRest: distances.leftRest
+					};
+					case "right": return {
+						distance: distances.right,
+						distanceRest: distances.rightRest
+					};
+					case "up": return {
+						distance: distances.top,
+						distanceRest: distances.topRest
+					};
+					case "down": return {
+						distance: distances.bottom,
+						distanceRest: distances.bottomRest
+					};
+				}
+			}
+
+			/**
+			 * Calculates neighborhood links.
+			 * @method getNeighborhoodLinks
+			 * @param {HTMLElement} element Base element fo find links
+			 * @param {HTMLElement} [currentElement] current focused element
+			 * @param {Object} [options] Options for function
+			 * @param {Function} [options._filterNeighbors] Function used to filtering focusable elements
+			 * @param {"top"|"right"|"bottom"|"left"} [options.direction] direction
+			 * @return {Object}
+			 * @private
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getNeighborhoodLinks(element, currentElement, options) {
+				var links,
+					direction = options.direction,
+					currentLink = currentElement || getFocusedLink(),
+					customFocus,
+					linksOffset = [],
+					elementRect = currentLink.getBoundingClientRect(),
+					focusableElements = [],
+					focusableElement = null,
+					focusableElementRect = null,
+					distances = {},
+					distanceByDirection,
+					i = 0,
+					l = 0;
+
+				customFocus = (currentLink && fetchCustomFocusElement(currentLink, direction, element));
+				if (customFocus) {
+					return [customFocus];
+				}
+
+				links = getFocusableElements(element, true);
+
+				if (currentLink && currentLink !== document.body) {
+
+					for (i = 0, l = links.length; i < l; ++i) {
+						focusableElement = links[i];
+						focusableElementRect = focusableElement.getBoundingClientRect();
+						distances = getDistanceBySides(focusableElementRect, elementRect);
+						distanceByDirection = getDistanceByDirection(distances, direction);
+						focusableElements.push({
+							element: focusableElement,
+							angle: getRelativeAngle(focusableElementRect, elementRect),
+							direction: getDirection(elementRect, focusableElementRect, direction, focusableElement),
+							distance: getDistanceLeftTopCorner(elementRect, focusableElementRect),
+							distanceByDirection: distanceByDirection,
+							distanceByCenter: getDistanceByCenter(focusableElementRect, elementRect),
+							inLine: isInLine(focusableElementRect, elementRect, direction),
+							inSideDistanceLimit: distanceByDirection.distance >= 0 &&
+								distanceByDirection.distance < SIDE_DISTANCE_LIMIT
+						});
+					}
+
+					// remove from list an elements behind move direction
+					focusableElements = focusableElements.filter(function (focusableElement) {
+						return focusableElement.distanceByDirection.distanceRest > 0;
+					});
+
+					focusableElements = focusableElements.filter(function (focusableElement) {
+						// corner cases, when element positions overlap
+						if (focusableElement.distance === 0) {
+							if (direction === EVENT_POSITION.down) {
+								return currentLink.compareDocumentPosition(typeof focusableElement === element ? focusableElement : focusableElement.element) &
+										Node.DOCUMENT_POSITION_CONTAINED_BY;
+							} else if (direction === EVENT_POSITION.up) {
+								return currentLink.compareDocumentPosition(typeof focusableElement === element ? focusableElement : focusableElement.element) &
+										Node.DOCUMENT_POSITION_PRECEDING;
+							}
+							return false;
+						}
+						return focusableElement.direction === direction;
+					});
+
+					// This sort method is major action to make order in the moving of focus
+					focusableElements = focusableElements.sort(sortFocusableElements).map(mapToElement);
+
+					// return result;
+					return focusableElements;
+				}
+				linksOffset = utilArray.map(links, function (link) {
+					var linkOffset = link.getBoundingClientRect();
+
+					return {
+						offset: linkOffset,
+						element: link,
+						width: link.offsetWidth,
+						height: link.offsetHeight
+					};
+				});
+				return utilArray.map(linksOffset.sort(function (linkOffset1, linkOffset2) {
+					// every sort function *must* return 0 on equal elements to prevent
+					// changing of input order
+					if (linkOffset1.offset.top === linkOffset2.offset.top) {
+						return getOrder(linkOffset1.offset.left, linkOffset2.offset.left);
+					}
+					return getOrder(linkOffset1.offset.top, linkOffset2.offset.top);
+				}), mapToElement);
+			}
+
+			/**
+			 * This method triggers 'blur' event on widget or html element
+			 * @method blurOnActiveElement
+			 * @param {Object} options
+			 * @static
+			 * @memberof ns.widget.tv.BaseKeyboardSupport
+			 */
+			function blurOnActiveElement(options) {
+				var currentElement,
+					preventDefault,
+					currentWidget
+
+				options = options || {};
+				currentElement = options.current || activeElement || getFocusedLink();
+
+				// and blur the previous one
+				if (currentElement) {
+					currentWidget = engine.getBinding(currentElement);
+					if (currentWidget) {
+						currentWidget.blur(options);
+					} else {
+						options.element = currentElement;
+						preventDefault = !eventUtils.trigger(currentElement, "taublur", options);
+						if (!preventDefault) {
+							currentElement.classList.remove(classes.focus);
+							currentElement.blur();
+						}
+					}
+					// set active element to null;
+					activeElement = null;
+				}
+			}
+
+			/**
+			 * Method trying to focus on widget or on HTMLElement and blur on active element or widget.
+			 * @method focusOnElement
+			 * @param {?ns.widget.BaseWidget} self
+			 * @param {HTMLElement} element
+			 * @param {Object} [options]
+			 * @return  {boolean} Return true if focus finished success
+			 * @static
+			 * @private
+			 * @memberof ns.widget.tv.BaseKeyboardSupport
+			 */
+			function focusOnElement(self, element, options) {
+				var setFocus,
+					currentElement = options.current || activeElement || getFocusedLink(),
+					nextElementWidget,
+					lockedElement = element && selectorUtils.getClosestBySelectorNS(element.parentNode, "focus-lock=true"),
+					lockedWidget = (lockedElement && engine.getBinding(lockedElement)) || null,
+					preventDefault;
+
+				if (lockedWidget && lockedWidget !== currentKeyboardWidget) {
+					return false;
+				}
+
+				options = options || {};
+				nextElementWidget = engine.getBinding(element);
+
+				if (nextElementWidget) {
+					// we call function focus if the element is connected with widget
+					options.previousElement = currentElement;
+					setFocus = nextElementWidget.focus(options);
+					blurOnActiveElement(options);
+				} else {
+					if (element !== currentElement) {
+						options.previousElement = currentElement;
+						// or only set focus on element
+						// for mouse is possible to focus on null element
+						if (element) {
+							options.element = element;
+							preventDefault = !eventUtils.trigger(element, "taufocus", options);
+							if (!preventDefault) {
+								element.classList.add(classes.focus);
+								element.focus();
+							}
+						}
+						// and blur the previous one
+						blurOnActiveElement(options);
+						setFocus = true;
+					}
+				}
+
+				// The currently focused element becomes active
+				// We need this for proper focus locking
+				activeElement = element;
+
+				if (self) {
+					if (self._openActiveElement) {
+						self._openActiveElement(element);
+					}
+				}
+
+				return setFocus;
+			}
+
+			/**
+			 * @method blurOnActiveElement
+			 */
+			prototype.blurOnActiveElement = blurOnActiveElement;
+
+			/**
+			 * Tries to fetch custom focus attributes and move to the specified element
+			 * @param {HTMLElement} element
+			 * @param {string} direction
+			 * @param {HTMLElement} [queryContext=undefined]
+			 * @method fetchCustomFocusElement
+			 * @private
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function fetchCustomFocusElement(element, direction, queryContext) {
+				var selector = element.getAttribute("data-focus-" + direction),
+					eventData = {
+						selector: selector,
+						direction: direction,
+						currentElement: element,
+						nextElement: null
+					},
+					useQueryContext = element.getAttribute("data-focus-container-context") === "true",
+					customQueryContextSelector = element.getAttribute("data-focus-context");
+
+				if (selector) {
+					// notify observers about custom query for focus element
+					// observers can catch the event and choose their own elements
+					// this supports customSelectors like ::virtualgrid-* which
+					// is implemented in virtualgrid, if the event was not consumed
+					// assume normal selector
+					if (eventUtils.trigger(element, "focusquery", eventData, true, true)) {
+						if (useQueryContext) {
+							if (customQueryContextSelector) {
+								queryContext = document.querySelector(customQueryContextSelector);
+							}
+							if (queryContext) {
+								return queryContext.parentNode.querySelector(selector);
+							}
+						}
+						return element.parentNode.querySelector(selector);
+					}
+					// if some code managed to fill nextElement use it
+					if (eventData.nextElement) {
+						return eventData.nextElement;
+					}
+				}
+
+				return null;
+			}
+
+			/**
+			 * Locks focus on element if possible
+			 * @param {ns.widget.tv.BaseKeyboardSupport} self
+			 * @param {HTMLElement} element
+			 * @return {boolean}
+			 * @private
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function lockFocus(self, element) {
+				var widget = null;
+
+				if (DOM.getNSData(element, "focus-lock") === true) {
+					widget = engine.getBinding(element);
+					if (widget && widget !== currentKeyboardWidget) {
+						widget.saveKeyboardSupport();
+						widget.enableKeyboardSupport();
+						widget.blur();
+						focusOnNeighborhood(self, element, {direction: lastMoveDirection, key: KEY_CODES.down});
+						return true;
+					}
+				}
+				return false;
+			}
+
+			/**
+			 * Unlocks focus from element if possible
+			 * @param {ns.widget.tv.BaseKeyboardSupport} self
+			 * @param {HTMLElement} element
+			 * @return {boolean}
+			 * @private
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function unlockFocus(self, element) {
+				var widget;
+				// enable escape from children (usability)
+
+				if (DOM.getNSData(element, "focus-lock") !== true) {
+					element = selectorUtils.getClosestBySelectorNS(element.parentNode, "focus-lock=true");
+					if (!element) {
+						return false;
+					}
+				}
+				widget = engine.getBinding(element);
+				if (widget && widget === currentKeyboardWidget) {
+					widget.disableKeyboardSupport();
+					widget.restoreKeyboardSupport();
+					focusOnElement(self, element, {direction: lastMoveDirection, key: KEY_CODES.down});
+					return true;
+				}
+
+				return false;
+			}
+
+			function focusOnNeighborhood(self, element, options) {
+				var positionFrom = "",
+					nextElements = [],
+					nextElement,
+					nextNumber = 0,
+					current = options.current,
+					event = options.event,
+					widget,
+					setFocus = false;
+
+				switch (options.key) {
+					case KEY_CODES.left:
+						positionFrom = EVENT_POSITION.left;
+						break;
+					case KEY_CODES.up:
+						positionFrom = EVENT_POSITION.up;
+						break;
+					case KEY_CODES.right:
+						positionFrom = EVENT_POSITION.right;
+						break;
+					case KEY_CODES.down:
+						positionFrom = EVENT_POSITION.down;
+						break;
+					case KEY_CODES.enter:
+						// @TODO context enter
+						if (current) {
+							if (lockFocus(self, current)) {
+								if (event) {
+									event.preventDefault();
+									event.stopImmediatePropagation();
+								}
+							} else {
+								widget = ns.engine.getBinding(current);
+								if (widget && typeof widget._actionEnter === "function") {
+									widget._actionEnter(current);
+								}
+							}
+							return;
+						}
+						break;
+					case KEY_CODES.escape:
+						// this also is done by hwkey
+						if (current) {
+							if (unlockFocus(self, current)) {
+								if (event) {
+									event.preventDefault();
+									event.stopImmediatePropagation();
+								}
+							} else {
+								widget = ns.engine.getBinding(current);
+								if (widget && typeof widget._actionEscape === "function") {
+									widget._actionEscape(current);
+								}
+							}
+							return;
+						}
+						break;
+					default:
+						return;
+				}
+
+				options.direction = options.direction || positionFrom;
+				if (positionFrom) {
+					lastMoveDirection = positionFrom;
+				}
+
+				nextElement = fetchCustomFocusElement(element, positionFrom);
+
+				if (!nextElement) {
+					nextElements = getNeighborhoodLinks(element, current, options);
+					nextElement = nextElements[nextNumber];
+				}
+
+				if (options._last) {
+					// we are looking for element to focus from the farthest to the nearest
+					nextNumber = nextElements.length - 1;
+					nextElement = nextElements[nextNumber];
+					while (nextElement && !setFocus) {
+						// if element to focus is found
+						setFocus = focusOnElement(self, nextElement, options);
+						nextElement = nextElements[--nextNumber];
+					}
+				} else {
+					// we are looking for element to focus from the nearest
+					nextNumber = 0;
+					nextElement = nextElements[nextNumber];
+					if (nextElement) {
+						while (nextElement && !setFocus) {
+							// if element to focus is found
+							setFocus = focusOnElement(self, nextElement, options);
+							nextElement = nextElements[++nextNumber];
+						}
+					} else {
+						eventUtils.trigger(
+							// if current element is not parent of current element
+							// then we cannot trigger event on current element
+							// eg. current page doesn't have any focusable element
+							//     and current focusable element is on previous page
+							//     in this case event has to be trigger on current page
+							//     not on previous page
+							DOM.isChildElementOf(current, element) ? current : element,
+							"taufocusborder",
+							options
+						);
+					}
+				}
+			}
+
+			/**
+			 * Supports keyboard event.
+			 * @method _onKeyup
+			 * @param {Event} event
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._onKeyup = function (event) {
+				var self = this,
+					keyboardSupportState = ns.getConfig("keyboardSupport", false);
+
+				if (keyboardSupportState && self._supportKeyboard) {
+					if (!self.keydownEventRepeated) {
+						// short press was detected
+						self._onShortPress(event);
+					}
+					self.keydownEventTimeStart = null;
+					self.keydownEventRepeated = false;
+				}
+			};
+
+			/**
+			 * Mouse move listener
+			 * @method _onMouseMove
+			 * @param {Event} event
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._onMouseMove = function (event) {
+				var self = this,
+					// we finding element on current position
+					target = document.elementFromPoint(event.pageX, event.pageY),
+					keyboardSupportState = ns.getConfig("keyboardSupport", false),
+					element = null,
+					currentElement = activeElement,
+					fromPosition = EVENT_POSITION.down;
+
+				if (keyboardSupportState && self._supportKeyboard) {
+					// check matching or find matching parent
+					element = selectorUtils.getClosestBySelector(target, selectorsString);
+
+					if (element !== currentElement) {
+						if (currentElement) {
+							fromPosition = getDirectionFromAngle(
+								getRelativeAngle({
+									left: event.pageX,
+									top: event.pageY
+								}, currentElement)
+							);
+						} else {
+							// if we not have currently focused element we calculate move direction
+							// in compare with previous mouse position
+							fromPosition = getDirectionFromAngle(
+								getRelativeAngle({
+									left: event.pageX,
+									top: event.pageY
+								}, {
+									left: event.pageX - event.movementX,
+									top: event.pageY - event.movementY
+								})
+							);
+						}
+
+						focusOnElement(self, element, {
+							direction: fromPosition
+						});
+					}
+				}
+			};
+
+			/**
+			 * This function is used as a filtering function in function getNeighborhoodLinks.
+			 * @method _onKeyup
+			 * @param {string} direction
+			 * @param {Object} filteredElement Information about element, which is being already filtered.
+			 * @param {HTMLElement} element Current element
+			 * @param {Object} [elementOffset] Offset of current element
+			 * @private
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function filterNeighbors(direction, filteredElement, element, elementOffset) {
+				var filteredElementOffset = filteredElement.offset,
+					filteredElementHeight = filteredElement.height,
+					filteredElementWidth = filteredElement.width,
+					elementHeight = element.offsetHeight,
+					elementWidth = element.offsetWidth;
+
+				elementOffset = elementOffset || element.getBoundingClientRect();
+				switch (direction) {
+					case "top":
+						// we are looking for elements, which are above the current element, but
+						// only in the same column
+						if (elementOffset.left >= filteredElementOffset.left + filteredElementWidth ||
+							elementOffset.left + elementWidth <= filteredElementOffset.left) {
+							// if element is on the right or on the left of the current element,
+							// we remove it from the set
+							return false;
+						}
+						return filteredElementOffset.top < elementOffset.top;
+					case "bottom":
+						// we are looking for elements, which are under the current element, but
+						// only in the same column
+						if (elementOffset.left >= filteredElementOffset.left + filteredElementWidth ||
+							elementOffset.left + elementWidth <= filteredElementOffset.left) {
+							return false;
+						}
+						return filteredElementOffset.top >= elementOffset.bottom;
+					case "left":
+						// we are looking for elements, which are on the left of the current element, but
+						// only in the same row
+						if (elementOffset.top >= filteredElementOffset.top + filteredElementHeight ||
+							elementOffset.top + elementHeight <= filteredElementOffset.top) {
+							return false;
+						}
+						return filteredElementOffset.left < elementOffset.left;
+					case "right":
+						// we are looking for elements, which are ont the right of the current element, but
+						// only in the same row
+						if (elementOffset.top >= filteredElementOffset.top + filteredElementHeight ||
+							elementOffset.top + elementHeight <= filteredElementOffset.top) {
+							return false;
+						}
+						return filteredElementOffset.left >= elementOffset.right;
+				}
+			}
+
+			prototype._onHWKey = function (event) {
+				var self = this,
+					current = activeElement || getFocusedLink();
+
+				if (event.keyName === "back" && current && unlockFocus(self, current)) {
+					event.preventDefault();
+					event.stopImmediatePropagation();
+					return true;
+				}
+
+				return false;
+			};
+
+			/**
+			 * Supports keyboard long press event.
+			 * It is called on keydown event, when the long press was not detected.
+			 * @method _onLongPress
+			 * @param {Event} event
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._onLongPress = function (event) {
+				var self = this,
+					delay = ns.getConfig("keyboardLongpressInterval", 100),
+					options = {
+						current: activeElement || getFocusedLink(),
+						key: event.keyCode,
+						// it is repeated event, so we make animation shorter
+						duration: ((delay - 30) >= ANIMATION_MIN_TIME ? delay - 30 : ANIMATION_MIN_TIME),
+						_last: true, // option for function focusOnNeighborhood
+						_filterNeighbors: filterNeighbors // option for function getNeighborhoodLinks
+					};
+
+				// set focus on next element
+				focusOnNeighborhood(self, self.keyboardElement || self.element, options);
+			};
+
+			/**
+			 * Supports keyboard short press event.
+			 * It is called on keyup event, when the long press was not detected.
+			 * @method _onShortPress
+			 * @param {Event} event
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._onShortPress = function (event) {
+				var self = this;
+
+				if (!ns.getConfig("keyboardSupport", false)) {
+					return false;
+				}
+
+				// set focus on next element
+				focusOnNeighborhood(self, self.keyboardElement || self.element, {
+					current: activeElement || getFocusedLink(),
+					event: event,
+					key: event.keyCode
+				});
+			};
+
+			/**
+			 * Supports keyboard event.
+			 * @method _onKeydown
+			 * @param {Event} event
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._onKeydown = function (event) {
+				var self = this,
+					delay = ns.getConfig("keyboardLongpressInterval", 1000),
+					keyboardSupportState = ns.getConfig("keyboardSupport", false),
+					currentTime;
+
+				// if widget supports keyboard's events
+				if (keyboardSupportState && self._supportKeyboard && isCursorKey(event.keyCode)) {
+					// stop scrolling
+					event.preventDefault();
+					event.stopPropagation();
+
+					currentTime = Date.now();
+					// we check if it is a single event or repeated one
+					// @note: On TV property .repeat for event is not available, so we have to count time
+					//        between events
+					if (!self.keydownEventTimeStart || (currentTime - self.keydownEventTimeStart > delay)) {
+						// stop scrolling
+						//event.preventDefault();
+						//event.stopPropagation();
+
+						// if it is repeated event, we make animation shorter
+						if (self.keydownEventTimeStart) {
+							// long press was detected
+							self._onLongPress(event);
+							self.keydownEventRepeated = true;
+						}
+						self.keydownEventTimeStart = currentTime;
+					}
+				}
+			};
+
+			/**
+			 * Add Supports keyboard event.
+			 *
+			 * This method should be called in _bindEvent method in widget.
+			 * @method _bindEventKey
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._bindEventKey = function () {
+				var self = this;
+
+				if (!self._onKeyupHandler) {
+					self._onKeyupHandler = self._onKeyup.bind(self);
+					self._onKeydownHandler = self._onKeydown.bind(self);
+					self._onHWKeyHandler = self._onHWKey.bind(self);
+					document.addEventListener("keyup", self._onKeyupHandler, false);
+					document.addEventListener("keydown", self._onKeydownHandler, false);
+					document.addEventListener("tizenhwkey", self._onHWKeyHandler, false);
+				}
+			};
+
+			/**
+			 * Adds support for mouse events
+			 * @method _bindEventMouse
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._bindEventMouse = function () {
+				var self = this;
+
+				if (!self._onMouseMoveHandler) {
+					self._onMouseMoveHandler = self._onMouseMove.bind(self);
+					//we resign from virtual events because of problems with enter event
+					document.addEventListener("mousemove", self._onMouseMoveHandler, false);
+				}
+			};
+
+			/**
+			 * Supports keyboard event.
+			 *
+			 * This method should be called in _destroy method in widget.
+			 * @method _destroyEventKey
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._destroyEventKey = function () {
+				if (this._onKeyupHandler) {
+					document.removeEventListener("keyup", this._onKeyupHandler, false);
+					document.removeEventListener("keydown", this._onKeydownHandler, false);
+					document.removeEventListener("tizenhwkey", this._onHWKeyHandler, false);
+					this._onKeyupHandler = null;
+				}
+			};
+
+			/**
+			 * Removes support for mouse events
+			 * @method _destroyEventMouse
+			 * @protected
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype._destroyEventMouse = function () {
+				if (this._onClickHandler) {
+					//we resign from virtual events because of problems with enter event
+					document.removeEventListener("mousemove", this._onMouseMoveHandler, false);
+				}
+			};
+
+			/**
+			 * Blurs from focused element.
+			 * @method blur
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			BaseKeyboardSupport.blurAll = function () {
+				var focusedElement = activeElement || getFocusedLink(),
+					focusedElementWidget = focusedElement && engine.getBinding(focusedElement);
+
+				if (focusedElementWidget) {
+					// call blur on widget
+					focusedElementWidget.blur();
+				} else if (focusedElement) {
+					// or call blur on element
+					focusedElement.blur();
+				}
+			};
+
+			/**
+			 * Focuses on element.
+			 * @method focusElement
+			 * @param {HTMLElement} [element] widget's element
+			 * @param {?HTMLElement|number|boolean|string} [elementToFocus] element to focus
+			 * @param {Object} [options]
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			BaseKeyboardSupport.focusElement = function (element, elementToFocus, options) {
+				var links,
+					linksLength,
+					i;
+
+				options = options || {};
+				if (options.current === undefined) {
+					options.current = getFocusedLink();
+				}
+
+				if (elementToFocus instanceof HTMLElement) {
+					if (element) {
+						links = getFocusableElements(element, true);
+						linksLength = links.length;
+						for (i = 0; i < linksLength; i++) {
+							if (links[i] === elementToFocus) {
+								elementToFocus.focus();
+							}
+						}
+					} else {
+						elementToFocus.focus();
+					}
+				} else if (typeof elementToFocus === "number") {
+					links = getFocusableElements(element, true);
+					if (links[elementToFocus]) {
+						focusOnElement(null, links[elementToFocus], options);
+					}
+				} else if (typeof elementToFocus === "string" && KEY_CODES[elementToFocus]) {
+					options.direction = KEY_CODES[elementToFocus];
+					focusOnNeighborhood(null, element, options);
+				} else {
+					links = getFocusableElements(element, true);
+					if (links[0]) {
+						focusOnElement(null, links[0], options);
+					}
+				}
+			};
+
+			/**
+			 * Enables keyboard support on widget.
+			 * @method enableKeyboardSupport
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype.enableKeyboardSupport = function () {
+				this._supportKeyboard = true;
+				currentKeyboardWidget = this;
+			};
+
+			/**
+			 * Enables keyboard support on widget.
+			 * @method restoreKeyboardSupport
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype.restoreKeyboardSupport = function () {
+				var previousKeyboardWidget = previousKeyboardWidgets.pop();
+
+				if (previousKeyboardWidget) {
+					previousKeyboardWidget.enableKeyboardSupport();
+				}
+			};
+
+			/**
+			 * Disables keyboard support on widget.
+			 * @method disableKeyboardSupport
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype.disableKeyboardSupport = function () {
+				currentKeyboardWidget = null;
+				this._supportKeyboard = false;
+			};
+
+			/**
+			 * Save history of keyboard support on widget.
+			 * @method saveKeyboardSupport
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			prototype.saveKeyboardSupport = function () {
+				if (currentKeyboardWidget) {
+					previousKeyboardWidgets.push(currentKeyboardWidget);
+					currentKeyboardWidget.disableKeyboardSupport();
+				}
+			};
+
+			/**
+			 * Convert selector object to string
+			 * @method getValueOfSelector
+			 * @param {Object} selectorObject
+			 * @static
+			 * @private
+			 * @return {string}
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function getValueOfSelector(selectorObject) {
+				return selectorObject.value;
+			}
+
+			/**
+			 * Find index in selectors array for given selector
+			 * @method findSelectorIndex
+			 * @param {string} selector
+			 * @static
+			 * @private
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			function findSelectorIndex(selector) {
+				return utilArray.map(selectors, getValueOfSelector).indexOf(selector);
+			}
+
+			/**
+ 			 * @method getFocusableElements
+			 */
+			prototype.getFocusableElements = getFocusableElements;
+
+			/**
+			 * Registers an active selector.
+			 * @param {string} selector
+			 * @param {boolean} includeDisabled
+			 * @method registerActiveSelector
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			BaseKeyboardSupport.registerActiveSelector = function (selector, includeDisabled) {
+				var selectorArray = selector.split(","),
+					index;
+
+				utilArray.forEach(selectorArray, function (currentSelector) {
+					currentSelector = currentSelector.trim();
+					index = findSelectorIndex(currentSelector);
+
+					// check if not registered yet
+					if (index === -1) {
+						selectors.push({
+							value: currentSelector,
+							includeDisabled: includeDisabled,
+							count: 1
+						});
+					} else {
+						selectors[index].count++;
+					}
+				});
+
+				prepareSelector();
+			};
+
+			/**
+			 * Unregister an active selector.
+			 * @param {string} selector
+			 * @method unregisterActiveSelector
+			 * @static
+			 * @member ns.widget.tv.BaseKeyboardSupport
+			 */
+			BaseKeyboardSupport.unregisterActiveSelector = function (selector) {
+				var selectorArray = selector.split(","),
+					index;
+
+				utilArray.forEach(selectorArray, function (currentSelector) {
+					currentSelector = currentSelector.trim();
+					index = findSelectorIndex(currentSelector);
+
+					if (index !== -1) {
+						--selectors[index].count;
+						// check reference counter
+						if (selectors[index].count === 0) {
+							// remove selector
+							selectors.splice(index, 1);
+						}
+					}
+				});
+
+				prepareSelector();
+			};
+
+			ns.widget.core.BaseKeyboardSupport = BaseKeyboardSupport;
+
 			}(window.document, ns));
 
 /*global window, ns, define */
@@ -8510,26 +10128,28 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				engine = ns.engine,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				arrayUtil = ns.util.array,
 
-				Page = function () {
+				Page = function (element, options) {
 					var self = this;
+
+					BaseKeyboardSupport.call(self);
+
 					/**
 					 * Callback on resize
 					 * @property {?Function} _contentFillAfterResizeCallback
 					 * @private
 					 * @member ns.widget.core.Page
 					 */
-
 					self._contentFillAfterResizeCallback = null;
 					self._initialContentStyle = {};
 					/**
 					 * Options for widget.
-					 * It is empty object, because widget Page does not have any options.
 					 * @property {Object} options
 					 * @member ns.widget.core.Page
 					 */
-					self.options = {};
+					self.options = options || {};
 
 					self._contentStyleAttributes = ["height", "width", "minHeight", "marginTop", "marginBottom"];
 
@@ -8690,7 +10310,24 @@ function pathToRegexp (path, keys, options) {
 						contentStyle.height = (screenHeight - top - bottom) + "px";
 					}
 				}
+
+				if (self.options.model) {
+					self._fillContentsFromModel();
+				}
 			};
+
+			prototype._fillContentsFromModel = function () {
+				var self = this,
+					model = self.options.model || {},
+					data = model;
+
+				Object.keys(data).forEach(function (key) {
+					[].slice.call(self.element.querySelectorAll("[data-bind='" + key + "']"))
+						.forEach(function (elem) {
+							elem.textContent = data[key];
+						});
+				});
+			}
 
 			prototype._storeContentStyle = function () {
 				var self = this,
@@ -9101,7 +10738,14 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeShow = function () {
-				this.trigger(EventType.BEFORE_SHOW);
+				var self = this;
+
+				if (typeof self.enableKeyboardSupport === "function") {
+					self.enableKeyboardSupport();
+					// add keyboard events
+					self._bindEventKey();
+				}
+				self.trigger(EventType.BEFORE_SHOW);
 			};
 
 			/**
@@ -9121,7 +10765,14 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeHide = function () {
-				this.trigger(EventType.BEFORE_HIDE);
+				var self = this;
+
+				if (typeof self.disableKeyboardSupport === "function") {
+					self.disableKeyboardSupport();
+					// remove keyboard events
+					self._destroyEventKey();
+				}
+				self.trigger(EventType.BEFORE_HIDE);
 			};
 
 			/**
@@ -9451,13 +11102,13 @@ function pathToRegexp (path, keys, options) {
 
 					toPageElement.classList.add(classes.uiBuild);
 
-					toPageWidget = engine.instanceWidget(toPageElement, calculatedOptions.widget);
+					toPageWidget = engine.instanceWidget(toPageElement, calculatedOptions.widget, options);
 
 					// set sizes of page for correct display
 					toPageWidget.layout();
 
-					if (toPageWidget.option("autoBuildWidgets")) {
-						engine.createWidgets(toPageElement);
+					if (toPageWidget.option("autoBuildWidgets") || toPageElement.querySelector('.ui-i3d')) {
+						engine.createWidgets(toPageElement, options);
 					}
 
 					if (fromPageWidget) {
@@ -10527,6 +12178,7 @@ function pathToRegexp (path, keys, options) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
 				}
+				ns.setConfig("pageContainer", null);
 			};
 
 			/**
@@ -11160,6 +12812,9 @@ function pathToRegexp (path, keys, options) {
 				document.addEventListener(engine.eventType.DESTROY, function () {
 					Router.getInstance().destroy();
 				}, false);
+				document.addEventListener(engine.eventType.STOP_ROUTING, function () {
+					Router.getInstance().destroy();
+				}, false);
 			}
 
 			//engine.initRouter(Router);
@@ -11258,6 +12913,22 @@ function pathToRegexp (path, keys, options) {
 			 * @static
 			 */
 			routePage.firstPage = null;
+
+			/**
+			 * Property contains href of original Base element if exists
+			 * @property {string} _originalBaseHref
+			 * @member ns.router.route.page
+			 * @static
+			 */
+			routePage._originalBaseHref = "";
+
+			/**
+			 * Property contains start URI
+			 * @property {string} _originalLocation
+			 * @member ns.router.route.page
+			 * @static
+			 */
+			routePage._originalLocationHref = "";
 
 			/**
 			 * Returns default route options used inside Router.
@@ -11475,7 +13146,10 @@ function pathToRegexp (path, keys, options) {
 				// Find base element
 				if (!baseElement) {
 					baseElement = document.querySelector("base");
-					if (!baseElement) {
+					if (baseElement) {
+						this._originalBaseHref = baseElement.href;
+						this._originalLocationHref = path.documentUrl.hrefNoHash;
+					} else {
 						baseElement = document.createElement("base");
 						baseElement.href = path.documentBase.hrefNoHash;
 						head.appendChild(baseElement);
@@ -11493,9 +13167,18 @@ function pathToRegexp (path, keys, options) {
 			 */
 			routePage._setBase = function (url) {
 				var base = this._getBaseElement(),
-					baseHref = base.href;
+					baseHref = base.href,
+					rel = "";
 
-				if (path.isPath(url)) {
+				if (this._originalBaseHref) { // update url refering to exists base
+					if (this._originalLocationHref !== path.parseUrl(url).hrefNoSearch) {
+						rel = path.parseUrl(url).hrefNoSearch.replace(this._originalLocationHref, "");
+						path.documentBase = path.parseUrl(path.makeUrlAbsolute(rel, path.documentBase.href));
+					} else {
+						url = this._originalBaseHref;
+					}
+				}
+				if (path.isPath(url)) { // set base
 					url = path.makeUrlAbsolute(url, path.documentBase);
 					if (path.parseUrl(baseHref).hrefNoSearch !== path.parseUrl(url).hrefNoSearch) {
 						base.href = url;
@@ -12135,11 +13818,15 @@ function pathToRegexp (path, keys, options) {
 				 */
 				Router = ns.router && ns.router.Router,
 
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+
 				POPUP_SELECTOR = "[data-role='popup'], .ui-popup",
 
 				Popup = function () {
 					var self = this,
 						ui = {};
+
+					BaseKeyboardSupport.call(self);
 
 					self.selectors = selectors;
 					self.options = objectUtils.merge({}, Popup.defaults);
@@ -12788,6 +14475,11 @@ function pathToRegexp (path, keys, options) {
 				var self = this;
 
 				self._setActive(true);
+				if (self.isKeyboardSupport) {
+					self.disableFocusableElements(this._ui.page);
+					self.enableDisabledFocusableElements(this.element);
+					ns.widget.core.BaseKeyboardSupport.focusElement(this.element);
+				}
 				self.trigger(events.show);
 			};
 
@@ -12837,6 +14529,10 @@ function pathToRegexp (path, keys, options) {
 					overlay = self._ui.overlay;
 
 				self._setActive(false);
+
+				if (self.isKeyboardSupport) {
+					self.enableDisabledFocusableElements(this._ui.page);
+				}
 
 				if (overlay) {
 					overlay.style.display = "";
@@ -16511,128 +18207,341 @@ function pathToRegexp (path, keys, options) {
 			ns.util.date = date;
 			}(ns));
 
-/*global window, define, ns, HTMLElement, HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement, HTMLButtonElement */
+/*global window, ns, define, XMLHttpRequest, ns */
 /*
- * Copyright (c) 2010 - 2014 Samsung Electronics Co., Ltd.
- * License : MIT License V2
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-/*
- * #Namespace For Widgets
- * @author Krzysztof Antoszek <k.antoszek@samsung.com>
- * @class ns.widget
+/**
+ * #Load Utility
+ * Object contains function to load external resources.
+ * @class ns.util.load
  */
-(function (document) {
+(function (document, ns) {
 	"use strict";
-				var engine = ns.engine,
-				registeredTags = {},
-				registerQueue = {};
+	
+			/**
+			 * Local alias for document HEAD element
+			 * @property {HTMLHeadElement} head
+			 * @static
+			 * @private
+			 * @member ns.util.load
+			 */
+			var head = document.head,
+				/**
+				 * Local alias for document styleSheets element
+				 * @property {HTMLStyleElement} styleSheets
+				 * @static
+				 * @private
+				 * @member ns.util.load
+				 */
+				styleSheets = document.styleSheets,
+				/**
+				 * Local alias for ns.util.DOM
+				 * @property {Object} utilsDOM Alias for {@link ns.util.DOM}
+				 * @member ns.util.load
+				 * @static
+				 * @private
+				 */
+				utilDOM = ns.util.DOM,
+				getNSData = utilDOM.getNSData,
+				setNSData = utilDOM.setNSData,
+				load = ns.util.load || {},
+				/**
+				 * Regular expression for extracting path to the image
+				 * @property {RegExp} IMAGE_PATH_REGEXP
+				 * @static
+				 * @private
+				 * @member ns.util.load
+				 */
+				IMAGE_PATH_REGEXP = /url\((\.\/)?images/gm,
+				/**
+				 * Regular expression for extracting path to the css
+				 * @property {RegExp} CSS_FILE_REGEXP
+				 * @static
+				 * @private
+				 * @member ns.util.load
+				 */
+				CSS_FILE_REGEXP = /[^/]+\.css$/;
 
-			function defineCustomElement(event) {
-				var name = event.detail.name,
-					BaseElement = event.detail.BaseElement || HTMLElement,
-					CustomWidgetProto = Object.create(BaseElement.prototype),
-					//define types on elements defined by is selector
-					controlTypes = ["search", "text", "slider", "checkbox", "radio", "button"],
-					//define if to use elements with is attribute
-					lowerName = name.toLowerCase(),
-					tagName = "tau-" + lowerName,
-					extendTo = "";
+			/**
+			 * Load file
+			 * (synchronous loading)
+			 * @method loadFileSync
+			 * @param {string} scriptPath
+			 * @param {?Function} successCB
+			 * @param {?Function} errorCB
+			 * @static
+			 * @private
+			 * @member ns.util.load
+			 */
+			function loadFileSync(scriptPath, successCB, errorCB) {
+				var xhrObj = new XMLHttpRequest();
 
-				switch (BaseElement) {
-					case HTMLInputElement :
-						extendTo = "input";
-						break;
-					case HTMLSelectElement :
-						extendTo = "select";
-						break;
-					case HTMLTextAreaElement :
-						extendTo = "textarea";
-						break;
-					case HTMLButtonElement :
-						extendTo = "button";
-						break;
-				}
-
-				CustomWidgetProto._tauName = name;
-
-				CustomWidgetProto.createdCallback = function () {
-					var self = this,
-						//needs to be extended for elements which will be extended by "is" attribute
-						//it should contain the type in the name like "search" in 'tau-inputsearch'
-						itemText = self.getAttribute("is");
-
-					if (itemText) {
-						[].some.call(controlTypes, function (item) {
-							// if element is a control then set the proper type
-							if (itemText && itemText.indexOf(item) !== -1) {
-								switch (item) {
-									case "slider":
-										//force proper type as cannot extract this from name
-										self.type = "range";
-										break;
-									default:
-										// omit textarea elements since it has a readonly prop "type"
-										if (self.tagName.toLowerCase() !== "textarea") {
-											self.type = item;
-										}
-										break;
-								}
-								return true;
-							}
-						});
+				// open and send a synchronous request
+				xhrObj.open("GET", scriptPath, false);
+				xhrObj.send();
+				// add the returned content to a newly created script tag
+				if (xhrObj.status === 200 || xhrObj.status === 0) {
+					if (typeof successCB === "function") {
+						successCB(xhrObj, xhrObj.status);
 					}
+				} else {
+					if (typeof errorCB === "function") {
+						errorCB(xhrObj, xhrObj.status, new Error(xhrObj.statusText));
+					}
+				}
+			}
 
-					
-					self._tauWidget = engine.instanceWidget(self, self._tauName);
+			/**
+			 * Load JSON file
+			 * (asynchronous loading)
+			 * @method loadJSON
+			 * @param {string} scriptPath
+			 * @param {?Function} successCB
+			 * @param {?Function} errorCB
+			 * @static
+			 * @member ns.util.load
+			 */
+			function loadJSON(scriptPath, successCB, errorCB) {
+				var xhrObj = new XMLHttpRequest(),
+					responseJSON,
+					onsuccess = function () {
+						if (xhrObj.status === 200) {
+							if (typeof successCB === "function") {
+								try {
+									responseJSON = JSON.parse(xhrObj.responseText);
+									successCB(responseJSON, xhrObj.status);
+								} catch (err) {
+									errorCB(xhrObj, xhrObj.status, new Error(err));
+								}
+							}
+						} else {
+							if (typeof errorCB === "function") {
+								errorCB(xhrObj, xhrObj.status, new Error(xhrObj.statusText));
+							}
+						}
+					},
+					onreadystatechange = function () {
+						if (xhrObj.status === 4) {
+							onsuccess();
+						}
+					};
+
+				// open and send a synchronous request
+				xhrObj.open("GET", scriptPath, true);
+				xhrObj.onreadystatechange = onreadystatechange;
+				xhrObj.onload = onsuccess;
+				xhrObj.onerror = function (err) {
+					errorCB(xhrObj, xhrObj.status, new Error(err));
 				};
+				xhrObj.send();
+			}
 
-				CustomWidgetProto.attributeChangedCallback = function (attrName, oldVal, newVal) {
-					var tauWidget = this._tauWidget;
+			/**
+			 * Callback function on javascript load success
+			 * @method scriptSyncSuccess
+			 * @private
+			 * @static
+			 * @param {?Function} successCB
+			 * @param {?Function} xhrObj
+			 * @param {?string} status
+			 * @member ns.util.load
+			 */
+			function scriptSyncSuccess(successCB, xhrObj, status) {
+				var script = document.createElement("script");
 
-					if (tauWidget) {
-						if (attrName === "value") {
-							tauWidget.value(newVal);
-						} else if (tauWidget.options && tauWidget.options[attrName] !== undefined) {
-							if (newVal === "false") {
-								newVal = false;
-							}
-							if (newVal === "true") {
-								newVal = true;
-							}
+				script.type = "text/javascript";
+				script.text = xhrObj.responseText;
+				document.body.appendChild(script);
+				if (typeof successCB === "function") {
+					successCB(xhrObj, status);
+				}
+			}
 
-							tauWidget.option(attrName, newVal);
-							tauWidget.refresh();
+
+			/**
+			 * Add script to document
+			 * (synchronous loading)
+			 * @method scriptSync
+			 * @param {string} scriptPath
+			 * @param {?Function} successCB
+			 * @param {?Function} errorCB
+			 * @static
+			 * @member ns.util.load
+			 */
+			function scriptSync(scriptPath, successCB, errorCB) {
+				loadFileSync(scriptPath, scriptSyncSuccess.bind(null, successCB), errorCB);
+			}
+
+			/**
+			 * Callback function on css load success
+			 * @method cssSyncSuccess
+			 * @param {string} cssPath
+			 * @param {?Function} successCB
+			 * @param {?Function} xhrObj
+			 * @member ns.util.load
+			 * @static
+			 * @private
+			 */
+			function cssSyncSuccess(cssPath, successCB, xhrObj) {
+				var css = document.createElement("style");
+
+				css.type = "text/css";
+				css.textContent = xhrObj.responseText.replace(
+					IMAGE_PATH_REGEXP,
+					"url(" + cssPath.replace(CSS_FILE_REGEXP, "images")
+				);
+				if (typeof successCB === "function") {
+					successCB(css);
+				}
+			}
+
+			/**
+			 * Add css to document
+			 * (synchronous loading)
+			 * @method cssSync
+			 * @param {string} cssPath
+			 * @param {?Function} successCB
+			 * @param {?Function} errorCB
+			 * @static
+			 * @private
+			 * @member ns.util.load
+			 */
+			function cssSync(cssPath, successCB, errorCB) {
+				loadFileSync(cssPath, cssSyncSuccess.bind(null, cssPath, successCB), errorCB);
+			}
+
+			/**
+			 * Add element to head tag
+			 * @method addElementToHead
+			 * @param {HTMLElement} element
+			 * @param {boolean} [asFirstChildElement=false]
+			 * @member ns.util.load
+			 * @static
+			 */
+			function addElementToHead(element, asFirstChildElement) {
+				var firstElement;
+
+				if (head) {
+					if (asFirstChildElement) {
+						firstElement = head.firstElementChild;
+						if (firstElement) {
+							head.insertBefore(element, firstElement);
+							return;
 						}
 					}
-				};
-
-				CustomWidgetProto.attachedCallback = function () {
-					if (typeof this._tauWidget.onAttach === "function") {
-						this._tauWidget.onAttach();
-					}
-				};
-
-				registerQueue[tagName] = (extendTo !== "") ?
-					{extends: extendTo, prototype: CustomWidgetProto} :
-					{prototype: CustomWidgetProto};
-
+					head.appendChild(element);
+				}
 			}
 
-			document.addEventListener("tauinit", function () {
-				Object.keys(registerQueue).forEach(function (tagName) {
-					if (registeredTags[tagName]) {
-						ns.warn(tagName + " already registered");
-					} else {
-						registeredTags[tagName] = document.registerElement(tagName, registerQueue[tagName]);
-					}
-				});
-			});
+			/**
+			 * Create HTML link element with href
+			 * @method makeLink
+			 * @param {string} href
+			 * @return {HTMLLinkElement}
+			 * @member ns.util.load
+			 * @static
+			 */
+			function makeLink(href) {
+				var cssLink = document.createElement("link");
 
-			if (typeof document.registerElement === "function" && ns.getConfig("registerCustomElements", true)) {
-				document.addEventListener("widgetdefined", defineCustomElement);
+				cssLink.setAttribute("rel", "stylesheet");
+				cssLink.setAttribute("href", href);
+				cssLink.setAttribute("name", "tizen-theme");
+				return cssLink;
 			}
 
-			}(window.document));
+			/**
+			 * Adds the given node to document head or replaces given 'replaceElement'.
+			 * Additionally adds 'name' and 'theme-name' attribute
+			 * @param {HTMLElement} node Element to be placed as theme link
+			 * @param {string} themeName Theme name passed to the element
+			 * @param {HTMLElement} [replaceElement=null] If replaceElement is given it gets replaced by node
+			 */
+			function addNodeAsTheme(node, themeName, replaceElement) {
+				setNSData(node, "name", "tizen-theme");
+				setNSData(node, "theme-name", themeName);
+
+				if (replaceElement) {
+					replaceElement.parentNode.replaceChild(node, replaceElement);
+				} else {
+					addElementToHead(node, true);
+				}
+			}
+
+			/**
+			 * Add css link element to head if not exists
+			 * @method themeCSS
+			 * @param {string} path
+			 * @param {string} themeName
+			 * @param {boolean} [embed=false] Embeds the CSS content to the document
+			 * @member ns.util.load
+			 * @static
+			 */
+			function themeCSS(path, themeName, embed) {
+				var i,
+					styleSheetsLength = styleSheets.length,
+					ownerNode,
+					previousElement = null,
+					linkElement;
+				// Find css link or style elements
+
+				for (i = 0; i < styleSheetsLength; i++) {
+					ownerNode = styleSheets[i].ownerNode;
+
+					// We try to find a style / link node that matches current style or is linked to
+					// the proper theme. We cannot use ownerNode.href because this returns the absolute path
+					if (getNSData(ownerNode, "name") === "tizen-theme" || ownerNode.getAttribute("href") === path) {
+						if (getNSData(ownerNode, "theme-name") === themeName) {
+							// Nothing to change
+							return;
+						}
+						previousElement = ownerNode;
+						break;
+					}
+				}
+
+				if (embed) {
+					// Load and replace old styles or append new styles
+					cssSync(path, function onSuccess(styleElement) {
+						addNodeAsTheme(styleElement, themeName, previousElement);
+					}, function onFailure(xhrObj, xhrStatus) {
+						ns.warn("There was a problem when loading '" + themeName + "', status: " + xhrStatus);
+					});
+				} else {
+					linkElement = makeLink(path);
+					addNodeAsTheme(linkElement, themeName, previousElement);
+				}
+			}
+
+			/**
+			 * In debug mode add time to url to disable cache
+			 * @property {string} cacheBust
+			 * @member ns.util.load
+			 * @static
+			 */
+			load.cacheBust = (document.location.href.match(/debug=true/)) ? "?cacheBust=" + (new Date()).getTime() : "";
+			// the binding a local methods with the namespace
+			load.scriptSync = scriptSync;
+			load.addElementToHead = addElementToHead;
+			load.makeLink = makeLink;
+			load.themeCSS = themeCSS;
+			load.JSON = loadJSON;
+
+			ns.util.load = load;
+			}(window.document, ns));
 
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
@@ -16794,7 +18703,7 @@ function pathToRegexp (path, keys, options) {
  *      <div class="ui-grid-col-3" style="height:76px">
  *          <button type="button" class="ui-btn">Button Circle</button>
  *          <a href="#" class="ui-btn ui-color-red" >A Button Circle</a>
- *          <input type="button" class="ui-btn ui-color-orange" value="Input Button Circle" />
+ *          <input type="button" class="ui-btn ui-color-orange" value="Value" />
  *      </div>
  *
  * #### For rows:
@@ -16803,7 +18712,7 @@ function pathToRegexp (path, keys, options) {
  *      <div class="ui-grid-row">
  *          <button type="button" class="ui-btn">Button Circle</button>
  *          <a href="#" class="ui-btn ui-color-red" >A Button Circle</a>
- *          <input type="button" class="ui-btn ui-color-orange" value="Input Button Circle" />
+ *          <input type="button" class="ui-btn ui-color-orange" value="Value" />
  *      </div>
  *
  * @since 2.0
@@ -16815,6 +18724,7 @@ function pathToRegexp (path, keys, options) {
 (function (document, ns) {
 	"use strict";
 				var BaseWidget = ns.widget.BaseWidget,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				/**
 				 * Create instance of widget
@@ -16841,8 +18751,10 @@ function pathToRegexp (path, keys, options) {
 					BTN_CIRCLE: "ui-btn-circle",
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
+					BTN_TEXT: "ui-btn-text",
 					BTN_TEXT_LIGHT: "ui-btn-text-light",
 					BTN_TEXT_DARK: "ui-btn-text-dark",
+					FOCUS: "ui-btn-focus",
 					/**
 					 * Change background color of button to red
 					 * @style ui-color-red
@@ -16877,11 +18789,25 @@ function pathToRegexp (path, keys, options) {
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
+				defaultOptions = {
+					// common options
+					inline: true,
+					icon: null,
+					disabled: false,
+					// mobile options
+					style: null,
+					iconpos: "left",
+					size: null,
+					middle: false,
+					value: null
+				},
 				Button = function () {
 					var self = this;
 
+					BaseKeyboardSupport.call(self);
 					self.options = {};
 					self._classesPrefix = classes.BTN + "-";
+
 				},
 				buttonStyle = {
 					CIRCLE: "circle",
@@ -16920,17 +18846,7 @@ function pathToRegexp (path, keys, options) {
 				 * @member ns.widget.core.Button
 				 * @static
 				 */
-				this.options = {
-					// common options
-					inline: false, //url
-					icon: null,
-					disabled: false,
-					// mobile options
-					style: null,
-					iconpos: "left",
-					size: null,
-					middle: false
-				};
+				this.options = ns.util.object.copy(defaultOptions);
 			};
 
 			/**
@@ -16948,14 +18864,17 @@ function pathToRegexp (path, keys, options) {
 
 				style = style || options.style;
 
+				buttonClassList.remove(classes.BTN_CIRCLE);
+				buttonClassList.remove(classes.BTN_NOBG);
+				buttonClassList.remove(classes.BTN_TEXT_LIGHT);
+				buttonClassList.remove(classes.BTN_TEXT_DARK);
+
 				switch (style) {
 					case buttonStyle.CIRCLE:
-						buttonClassList.remove(classes.BTN_NOBG);
 						buttonClassList.add(classes.BTN_CIRCLE);
 						change = true;
 						break;
 					case buttonStyle.NOBG:
-						buttonClassList.remove(classes.BTN_CIRCLE);
 						buttonClassList.add(classes.BTN_NOBG);
 						change = true;
 						break;
@@ -16972,6 +18891,8 @@ function pathToRegexp (path, keys, options) {
 
 				if (change) {
 					options.style = style;
+
+					this._saveOption("style", style);
 				}
 			};
 
@@ -16986,12 +18907,15 @@ function pathToRegexp (path, keys, options) {
 			prototype._setInline = function (element, inline) {
 				var options = this.options;
 
-				inline = inline || options.inline;
-
-				if (inline) {
-					element.classList.add(classes.INLINE);
-					options.inline = inline;
+				if (inline === undefined) {
+					inline = element.getAttribute("data-inline");
+					inline = (inline === "false") ? false : !!inline;
 				}
+
+				element.classList.toggle(classes.INLINE, inline);
+				options.inline = inline;
+
+				this._saveOption("inline", inline);
 			};
 
 			/**
@@ -17010,8 +18934,13 @@ function pathToRegexp (path, keys, options) {
 					urlIcon,
 					iconCSSRule = self._iconCSSRule;
 
+				element.className = element.className
+					.replace(RegExp("(\\" + classes.ICON_PREFIX + "([a-z-]*))", "g"), "");
+
 				icon = icon || options.icon;
 				options.icon = icon;
+
+				self._saveOption("icon", icon);
 
 				if (icon) {
 					classList.add(classes.BTN_ICON);
@@ -17029,6 +18958,7 @@ function pathToRegexp (path, keys, options) {
 						self._iconCSSRule = utilDOM.setStylesForPseudoClass("#" + element.id, "after", styles);
 					}
 				} else {
+					classList.remove(classes.BTN_ICON);
 					if (iconCSSRule) {
 						utilDOM.removeCSSRule(iconCSSRule);
 					}
@@ -17046,7 +18976,10 @@ function pathToRegexp (path, keys, options) {
 			prototype._setIconpos = function (element, iconpos) {
 				var options = this.options,
 					style = options.style,
-					innerTextLength = element.textContent.length || (element.value ? element.value.length : 0);
+					innerTextLength = element.textContent.length;
+
+				element.classList.remove(classes.BTN_ICON_POSITION_PREFIX + options.iconpos);
+				element.classList.remove(classes.BTN_ICON_ONLY);
 
 				iconpos = iconpos || options.iconpos;
 
@@ -17057,6 +18990,8 @@ function pathToRegexp (path, keys, options) {
 						element.classList.add(classes.BTN_ICON_ONLY);
 					}
 					options.iconpos = iconpos;
+
+					this._saveOption("iconpos", iconpos);
 				}
 			};
 
@@ -17075,6 +19010,28 @@ function pathToRegexp (path, keys, options) {
 				if (options.iconpos === "notext" && !element.getAttribute("title")) {
 					element.setAttribute("title", buttonText);
 					ns.warn("iconpos='notext' is deprecated.");
+				}
+			};
+
+			prototype._focus = function () {
+				var elementClassList;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					elementClassList = this.element.classList;
+
+					elementClassList.add(classes.FOCUS);
+					this.element.focus();
+				}
+			};
+
+			prototype._blur = function () {
+				var elementClassList;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					elementClassList = this.element.classList;
+
+					elementClassList.remove(classes.FOCUS);
+					this.element.blur();
 				}
 			};
 
@@ -17098,6 +19055,8 @@ function pathToRegexp (path, keys, options) {
 				} else {
 					options.disabled = false;
 				}
+
+				self._saveOption("disabled", options.disabled);
 			};
 			/**
 			 * Build Button
@@ -17121,6 +19080,11 @@ function pathToRegexp (path, keys, options) {
 				self._setIcon(element);
 				self._setSize(element);
 				self._setDisabled(element);
+				self._setTextButton(element);
+
+				if (!element.hasAttribute("tabindex")) {
+					element.setAttribute("tabindex", 0);
+				}
 
 				return element;
 			};
@@ -17135,12 +19099,8 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					element = this.element;
 
-				self._setStyle(element);
-				self._setInline(element);
-				self._setIconpos(element);
-				self._setIcon(element);
-				self._setSize(element);
-				self._setDisabled(element);
+				self.options = self._getCreateOptions(element);
+				self._build(element);
 
 				return null;
 			};
@@ -17179,6 +19139,21 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			/**
+			 * Set text of the button
+			 * @method _setTextButton
+			 * @param {HTMLElement} element
+			 * @protected
+			 * @member ns.widget.core.Button
+			 */
+			prototype._setTextButton = function (element) {
+				if (element.textContent) {
+					element.classList.add(classes.BTN_TEXT);
+				} else {
+					element.classList.remove(classes.BTN_TEXT);
+				}
+			};
+
+			/**
 			 * Set value of button
 			 * @method _setValue
 			 * @param {string} value
@@ -17209,7 +19184,26 @@ function pathToRegexp (path, keys, options) {
 					}
 					element.classList.remove(classes.DISABLED);
 					options.disabled = false;
+
+					self._saveOption("disabled", false);
 				}
+			};
+
+			prototype._bindEvents = function (element) {
+				var self = this;
+
+				self._focusCallback = self._focus.bind(self);
+				self._blurCallback = self._blur.bind(self);
+
+				element.addEventListener("focus", self._focusCallback);
+				element.addEventListener("blur", self._blurCallback);
+			};
+
+			prototype._unbindEvents = function (element) {
+				var self = this;
+
+				element.removeEventListener("focus", self._focusCallback);
+				element.removeEventListener("blur", self._blurCallback);
 			};
 
 			/**
@@ -17231,10 +19225,48 @@ function pathToRegexp (path, keys, options) {
 					}
 					element.classList.add(classes.DISABLED);
 					options.disabled = true;
+
+					this._saveOption("disabled", true);
 				}
 			};
 
+			/**
+			 * Store widget option value in element as data attribute
+			 * @method _saveOption
+			 * @param {string} name
+			 * @param {*} value
+			 * @protected
+			 * @member ns.widget.core.Button
+			 */
+			prototype._saveOption = function (name, value) {
+				var self = this,
+					element = self.element,
+					defaultValue = defaultOptions[name];
+
+				if (element) {
+					if (defaultValue !== value) {
+						element.dataset[name] = value;
+					} else {
+						delete element.dataset[name];
+					}
+				}
+			}
+
+			/**
+			 * Returns default option value for given name
+			 * @method _getDefaultOption
+			 * @param {string} optionName
+			 * @return {*} default widget option value
+			 * @protected
+			 * @member ns.widget.core.Button
+			 */
+			prototype._getDefaultOption = function (optionName) {
+				return defaultOptions[optionName];
+			}
+
 			ns.widget.core.Button = Button;
+
+			Button.defaultOptions = defaultOptions;
 
 			engine.defineWidget(
 				"Button",
@@ -17265,6 +19297,9 @@ function pathToRegexp (path, keys, options) {
 				false,
 				HTMLButtonElement
 			);
+
+			BaseKeyboardSupport.registerActiveSelector("[data-role='button'], button, [type='button'], [type='submit'], [type='reset'], .ui-button, .ui-btn");
+
 			}(window.document, ns));
 
 /*global window, define, ns */
@@ -17314,12 +19349,18 @@ function pathToRegexp (path, keys, options) {
 (function (document, ns) {
 	"use strict";
 				var BaseWidget = ns.widget.BaseWidget,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				keyCodes = BaseKeyboardSupport.KEY_CODES,
 				engine = ns.engine,
+				eventUtils = ns.event,
 				Checkbox = function () {
 					this.element = null;
+
+					BaseKeyboardSupport.call(this);
 				},
 				classes = {
-					checkbox: "ui-checkbox"
+					checkbox: "ui-checkbox",
+					focus: "ui-checkbox-focus"
 				},
 				prototype = new BaseWidget();
 
@@ -17363,8 +19404,119 @@ function pathToRegexp (path, keys, options) {
 				this.element.value = value;
 			};
 
+			/**
+			 * Set focus on widget
+			 * @method _focus
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._focus = function () {
+				var self = this,
+					element = self.element;
+
+				element.focus();
+			};
+
+			/**
+			 * Blurs focus from widget
+			 * @method _blur
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._blur = function () {
+				var self = this,
+					element = self.element;
+
+				element.blur();
+			};
+
+			/**
+			 * Checkbox element focus callback
+			 * @method _onFocus
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onFocus = function () {
+				var self = this,
+					element = self.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.classList.add(classes.focus);
+				}
+			};
+
+			/**
+			 * Checkbox element blur callback
+			 * @method _onBlur
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onBlur = function () {
+				var self = this,
+					element = self.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.classList.remove(classes.focus);
+				}
+			};
+
+			/**
+			 * Checkbox element keyup callback
+			 * @method _onKeyUp
+			 * @param {Event} event
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onKeyUp = function (event) {
+				var self = this,
+					element = self.element;
+
+				if (event.keyCode === keyCodes.enter) {
+					eventUtils.trigger(element, "input");
+					element.checked = !element.checked;
+					eventUtils.trigger(element, "change");
+				}
+			}
+
+			/**
+			 * Bind events to widgets
+			 * @method _bindEvents
+			 * @param {HTMLElement} element
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._bindEvents = function (element) {
+				var self = this;
+
+				self._focusCallbackBound = self._onFocus.bind(self);
+				self._blurCallbackBound = self._onBlur.bind(self);
+				self._keyupCallbackBound = self._onKeyUp.bind(self);
+
+				element.addEventListener("focus", self._focusCallbackBound, false);
+				element.addEventListener("blur", self._blurCallbackBound, false);
+				element.addEventListener("keyup", self._keyupCallbackBound, false);
+			}
+
+			/**
+			 * Unbinds events from widget
+			 * @method _unbindEvents
+			 * @param {HTMLElement} element
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._unbindEvents = function (element) {
+				var self = this;
+
+				element.removeEventListener("focus", self._focusCallbackBound, false);
+				element.removeEventListener("blur", self._blurCallbackBound, false);
+				element.reEventListener("keyup", self._keyupCallbackBound, false);
+			}
+
 			// definition
 			ns.widget.core.Checkbox = Checkbox;
+
+			BaseKeyboardSupport.registerActiveSelector("input[type='checkbox'], input.ui-checkbox");
+
 			engine.defineWidget(
 				"Checkbox",
 				"input[type='checkbox']:not(.ui-slider-switch-input):not([data-role='toggleswitch'])" +
@@ -17412,12 +19564,17 @@ function pathToRegexp (path, keys, options) {
 	"use strict";
 				var BaseWidget = ns.widget.BaseWidget,
 				engine = ns.engine,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				KEY_CODES = BaseKeyboardSupport.KEY_CODES,
 				Radio = function () {
+					BaseKeyboardSupport.call(self);
 					this.element = null;
 				},
 				classes = {
-					radio: "ui-radio"
+					radio: "ui-radio",
+					focus: "ui-radio-focus"
 				},
+				events = ns.event,
 				prototype = new BaseWidget();
 
 			Radio.prototype = prototype;
@@ -17436,6 +19593,92 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				return element;
+			};
+
+			/**
+			 * Focus callback
+			 * @protected
+			 * @member ns.widget.Radio
+			 */
+			prototype._onFocus = function () {
+				var element = this.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.focus();
+					element.classList.add(classes.focus)
+				}
+			}
+
+			/**
+			 * Blur callback
+			 * @protected
+			 * @member ns.widget.Radio
+			 */
+			prototype._onBlur = function () {
+				var element = this.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					element.blur();
+					element.classList.remove(classes.focus)
+				}
+			}
+
+			/**
+			 * KeyUp callback
+			 * @protected
+			 * @param {Event} event
+			 * @member ns.widget.Radio
+			 */
+			prototype._onKeyUp = function (event) {
+				var element = this.element;
+
+				if (ns.getConfig("keyboardSupport", false)) {
+					if (event.keyCode === KEY_CODES.enter) {
+						element.checked = true;
+						events.trigger(element, "change");
+					}
+				}
+			}
+
+			/**
+			 * Handle events
+			 * @protected
+			 * @member ns.widget.Radio
+			 */
+			prototype.handleEvent = function (event) {
+				var self = this;
+
+				switch (event.type) {
+					case "focus":
+						self._onFocus(event);
+						break;
+					case "blur":
+						self._onBlur(event);
+						break;
+					case "keyup":
+						self._onKeyUp(event);
+						break;
+				}
+			}
+
+			/**
+			 * Binds events to a Radio widget
+			 * @method _bindEvents
+			 * @member ns.widget.core.Radio
+			 * @protected
+			 */
+			prototype._bindEvents = function (element) {
+				events.on(element, "focus blur keyup", this, false);
+			}
+
+			/**
+			 * Unbinds events from a Radio widget
+			 * @method _bindEvents
+			 * @member ns.widget.core.Radio
+			 * @protected
+			 */
+			prototype._unbindEvents = function (element) {
+				events.off(element, "focus blur keyup", this, false);
 			};
 
 			/**
@@ -17473,6 +19716,9 @@ function pathToRegexp (path, keys, options) {
 				false,
 				HTMLInputElement
 			);
+
+			BaseKeyboardSupport.registerActiveSelector("input[type='radio'], input.ui-radio");
+
 			}(window.document, ns));
 
 /*
@@ -19218,15 +21464,25 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Marquee
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					marqueeInnerElement;
 
 				self.state = null;
-				self._stateDOM = null;
 				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
 				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 				self.element.style.webkitMaskImage = "";
+
+				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
+				if (marqueeInnerElement) {
+					while (marqueeInnerElement.hasChildNodes()) {
+						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
+					}
+					self._stateDOM.children = [];
+					self.element.removeChild(marqueeInnerElement);
+				}
+				self._stateDOM = null;
 			};
 
 			/**
@@ -22791,7 +25047,7 @@ function pathToRegexp (path, keys, options) {
 			*/
 			orientationchange.unbind = function () {
 				window.removeEventListener("orientationchange", checkReportedOrientation, false);
-				body.removeEventListener("throttledresize", detectOrientationByDimensions, false);
+				document.removeEventListener("throttledresize", detectOrientationByDimensions, true);
 				document.removeEventListener(eventType.DESTROY, orientationchange.unbind, false);
 			};
 
@@ -22815,7 +25071,7 @@ function pathToRegexp (path, keys, options) {
 						}
 						portraitMatchMediaQueryList.addListener(matchMediaHandler);
 					} else {
-						body.addEventListener("throttledresize", detectOrientationByDimensions, false);
+						document.addEventListener("throttledresize", detectOrientationByDimensions, true);
 						detectOrientationByDimensions();
 					}
 				}
@@ -24268,7 +26524,11 @@ function pathToRegexp (path, keys, options) {
 				engine = ns.engine,
 				utilsObject = ns.util.object,
 				utilsEvents = ns.event,
-				eventType = ns.util.object.merge({
+				objectMerge = ns.util.object.merge,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				Page = ns.widget.core.Page,
+				selectors = ns.util.selectors,
+				eventType = objectMerge({
 					/**
 					 * Triggered when the section is changed.
 					 * @event sectionchange
@@ -24278,10 +26538,38 @@ function pathToRegexp (path, keys, options) {
 				}, Scroller.EventType),
 				classes = {
 					uiSectionChanger: "ui-section-changer"
+				},
+				/**
+				 * Options for widget
+				 * @property {Object} defaultOptions
+				 * @property {"horizontal"|"vertical"} [defaultOptions.orientation="horizontal"] Sets the section changer orientation:
+				 * @property {boolean} [defaultOptions.circular=false] Presents the sections in a circular scroll fashion.
+				 * @property {boolean} [defaultOptions.useBouncingEffect=false] Shows a scroll end effect on the scroll edge.
+				 * @property {string} [defaultOptions.items="section"] Defines the section element selector.
+				 * @property {string} [defaultOptions.activeClass="ui-section-active"] Specifies the CSS classes which define the active section element. Add the specified class (ui-section-active) to a *section* element to indicate which section must be shown first. By default, the first section is shown first.
+				 * @property {boolean} [defaultOptions.fillContent=true] declare to section tag width to fill content or not.
+				 * @member ns.widget.core.SectionChanger
+				 */
+				defaultOptions = {
+					items: "section",
+					activeClass: "ui-section-active",
+					circular: false,
+					animate: true,
+					animateDuration: 100,
+					orientation: "horizontal",
+					changeThreshold: -1,
+					useTab: false,
+					fillContent: true,
+					model: null,
+					directives: null
 				};
 
 			function SectionChanger() {
-				this.options = {};
+				this.options = objectMerge({}, defaultOptions);
+				BaseKeyboardSupport.call(this);
+				this._ui = {
+					page: null
+				};
 			}
 
 			function calculateCustomLayout(direction, elements, lastIndex) {
@@ -24349,28 +26637,100 @@ function pathToRegexp (path, keys, options) {
 
 				_configure: function () {
 					this._super();
-					/**
-					 * Options for widget
-					 * @property {Object} options
-					 * @property {"horizontal"|"vertical"} [options.orientation="horizontal"] Sets the section changer orientation:
-					 * @property {boolean} [options.circular=false] Presents the sections in a circular scroll fashion.
-					 * @property {boolean} [options.useBouncingEffect=false] Shows a scroll end effect on the scroll edge.
-					 * @property {string} [options.items="section"] Defines the section element selector.
-					 * @property {string} [options.activeClass="ui-section-active"] Specifies the CSS classes which define the active section element. Add the specified class (ui-section-active) to a *section* element to indicate which section must be shown first. By default, the first section is shown first.
-					 * @property {boolean} [options.fillContent=true] declare to section tag width to fill content or not.
-					 * @member ns.widget.core.SectionChanger
-					 */
-					this.options = utilsObject.merge(this.options, {
-						items: "section",
-						activeClass: "ui-section-active",
-						circular: false,
-						animate: true,
-						animateDuration: 100,
-						orientation: "horizontal",
-						changeThreshold: -1,
-						useTab: false,
-						fillContent: true
-					});
+					this.options = utilsObject.merge(this.options, defaultOptions);
+				},
+
+				/**
+				 * Generic method for data-bind for HTML element
+				 * @method _fillElementFromModel
+				 * @param {HTMLElement} element
+				 * @param {Object} dataItem
+				 * @param {Function[]} directive
+				 * @member ns.widget.core.SectionChanger
+				 * @protected
+				 */
+				_fillElementFromModel: function (element, dataItem, directive) {
+					var itemName,
+						dataBoundElement;
+
+					for (itemName in dataItem) {
+						if (dataItem.hasOwnProperty(itemName)) {
+							dataBoundElement = element.querySelector("[data-bind='" + itemName + "']");
+							if (dataBoundElement) {
+								if (typeof directive[itemName] === "function") {
+									directive[itemName].call(dataBoundElement, dataItem[itemName]);
+								} else {
+									dataBoundElement.innerText = dataItem[itemName];
+								}
+							}
+						}
+					}
+				},
+
+				/**
+				 * Specific method for widget filling from model
+				 * @method _fillElementFromModel
+				 * @param {string} key
+				 * @param {Array} data
+				 * @param {Function} directive
+				 * @member ns.widget.core.SectionChanger
+				 * @protected
+				 */
+				_fillWidgetFromModel: function (key, data, directive) {
+					var self = this,
+						element = self.element,
+						dataBoundElements,
+						dataBoundElement,
+						content,
+						parentElement;
+
+					// clone section for all items
+					dataBoundElements = element.querySelectorAll("[data-bind='" + key + "'] > section");
+
+					if (dataBoundElements.length === 1) { // clone element for each item
+						dataBoundElement = dataBoundElements[0];
+						content = dataBoundElement.innerHTML;
+						parentElement = dataBoundElement.parentElement;
+
+						parentElement.removeChild(dataBoundElement);
+						data.forEach(function (dataItem) {
+							var newElement = dataBoundElement.cloneNode();
+
+							newElement.innerHTML = content;
+							self._fillElementFromModel(newElement, dataItem, directive);
+
+							parentElement.appendChild(newElement);
+						});
+					} else {
+						// @todo
+						// fill existent elements by data
+					}
+				},
+
+				_findDataBinding: function () {
+					var model = this.options.model,
+						modelItem,
+						directives = this.options.directives,
+						directive,
+						key;
+
+					// create items for data
+					if (model) {
+						for (key in model) {
+							if (model.hasOwnProperty(key)) {
+								modelItem = model[key];
+								if (typeof modelItem === "string") {
+									// @todo
+									// innerText for item
+								} else if (Array.isArray(modelItem)) {
+									if (directives) {
+										directive = directives[key];
+									}
+									this._fillWidgetFromModel(key, modelItem, directive);
+								}
+							}
+						}
+					}
 				},
 
 				_init: function (element) {
@@ -24379,42 +26739,57 @@ function pathToRegexp (path, keys, options) {
 						scroller = self.scroller,
 						sectionLength,
 						i,
-						className;
+						className,
+						ui = self._ui;
 
 					if (options.scrollbar === "tab") {
 						options.scrollbar = false;
 						options.useTab = true;
 					}
 
-					self.sections = typeof options.items === "string" ?
-						scroller.querySelectorAll(options.items) :
-						options.items;
-					sectionLength = self.sections.length;
+					if (options.model) {
+						self._findDataBinding();
+					}
 
-					if (options.circular && sectionLength < 3) {
-						ns.error("[SectionChanger] if you use circular option, you must have at least three sections.");
-					} else {
-						for (i = 0; i < sectionLength; i++) {
-							className = self.sections[i].className;
-							if (className && className.indexOf(options.activeClass) > -1) {
-								self.activeIndex = i;
+					// find parent page
+					ui.page = selectors.getClosestBySelector(self.element, "." + Page.classes.uiPage);
+
+					if (scroller) {
+						self.sections = typeof options.items === "string" ?
+							scroller.querySelectorAll(options.items) :
+							options.items;
+
+						sectionLength = self.sections.length;
+
+						if (options.circular && sectionLength < 3) {
+							ns.error("[SectionChanger] if you use circular option, you must have at least three sections.");
+						} else {
+							for (i = 0; i < sectionLength; i++) {
+								className = self.sections[i].className;
+								if (className && className.indexOf(options.activeClass) > -1) {
+									self.activeIndex = i;
+								} else {
+									if (self.isKeyboardSupport === true) {
+										self.disableFocusableElements(self.sections[i]);
+									}
+								}
+
+								self.sectionPositions[i] = i;
 							}
 
-							self.sectionPositions[i] = i;
-						}
+							self._prepareLayout();
+							self._initLayout();
+							self._super(element);
+							self._repositionSections(true);
+							self.setActiveSection(self.activeIndex);
 
-						self._prepareLayout();
-						self._initLayout();
-						self._super(element);
-						self._repositionSections(true);
-						self.setActiveSection(self.activeIndex);
-
-						// set correct options values.
-						if (!options.animate) {
-							options.animateDuration = 0;
-						}
-						if (options.changeThreshold < 0) {
-							options.changeThreshold = self._sectionChangerHalfWidth;
+							// set correct options values.
+							if (!options.animate) {
+								options.animateDuration = 0;
+							}
+							if (options.changeThreshold < 0) {
+								options.changeThreshold = self._sectionChangerHalfWidth;
+							}
 						}
 					}
 
@@ -24575,18 +26950,23 @@ function pathToRegexp (path, keys, options) {
 
 					self._super();
 
-					ns.event.enableGesture(
-						self.scroller,
+					if (self.scroller) {
+						ns.event.enableGesture(
+							self.scroller,
 
-						new ns.event.gesture.Swipe({
-							orientation: self.orientation === Orientation.HORIZONTAL ?
-								gesture.Orientation.HORIZONTAL :
-								gesture.Orientation.VERTICAL
-						})
-					);
+							new ns.event.gesture.Swipe({
+								orientation: self.orientation === Orientation.HORIZONTAL ?
+									gesture.Orientation.HORIZONTAL :
+									gesture.Orientation.VERTICAL
+							})
+						);
 
-					utilsEvents.on(self.scroller,
-						"swipe transitionEnd webkitTransitionEnd mozTransitionEnd msTransitionEnd oTransitionEnd", self);
+						utilsEvents.on(self.scroller,
+							"swipe transitionEnd webkitTransitionEnd mozTransitionEnd msTransitionEnd oTransitionEnd", self);
+						if (self._ui.page) {
+							utilsEvents.on(self._ui.page, "taufocusborder", self);
+						}
+					}
 
 					document.addEventListener("rotarydetent", self, true);
 				},
@@ -24600,6 +26980,9 @@ function pathToRegexp (path, keys, options) {
 						ns.event.disableGesture(self.scroller);
 						utilsEvents.off(self.scroller,
 							"swipe transitionEnd webkitTransitionEnd mozTransitionEnd msTransitionEnd oTransitionEnd", self);
+						if (self._ui.page) {
+							utilsEvents.off(self._ui.page, "taufocusborder", self);
+						}
 					}
 
 					document.removeEventListener("rotarydetent", self, true);
@@ -24617,6 +27000,7 @@ function pathToRegexp (path, keys, options) {
 					switch (event.type) {
 						case "swipe":
 						case "rotarydetent" :
+						case "taufocusborder":
 							this._change(event);
 							break;
 						case "webkitTransitionEnd":
@@ -24675,6 +27059,11 @@ function pathToRegexp (path, keys, options) {
 
 					if (this.beforeIndex - index > 1 || this.beforeIndex - index < -1) {
 						scrollbarDuration = 0;
+					}
+
+					// disable keyboard on latest section
+					if (this.activeIndex !== index && this.isKeyboardSupport === true) {
+						this.disableFocusableElements(this.sections[this.activeIndex]);
 					}
 
 					this.activeIndex = index;
@@ -24760,8 +27149,16 @@ function pathToRegexp (path, keys, options) {
 				_change: function (event) {
 					var self = this,
 						direction = event.detail.direction,
-						offset = direction === gesture.Direction.UP || direction === gesture.Direction.LEFT || direction === "CW" ? 1 : -1,
-						newIndex = self._calculateIndex(self.beforeIndex + offset);
+						offset = direction === gesture.Direction.UP ||
+							direction === gesture.Direction.LEFT ||
+							direction === "CW" ? 1 : -1,
+						newIndex;
+
+					if (event.type === "taufocusborder") {
+						offset *= -1; // invert direction;
+					}
+
+					newIndex = self._calculateIndex(self.beforeIndex + offset);
 
 					if (self.enabled && !self.scrollCanceled) {
 						// bouncing effect
@@ -24770,22 +27167,35 @@ function pathToRegexp (path, keys, options) {
 						}
 
 						if (self.activeIndex !== newIndex) {
+							// disable keyboard on latest section
+							if (self.isKeyboardSupport === true && self.sections) {
+								self.disableFocusableElements(self.sections[self.activeIndex]);
+								self.blurOnActiveElement();
+							}
 							self.activeIndex = newIndex;
 							self._notifyChangedSection(newIndex);
 						}
 
 						self.setActiveSection(newIndex, self.options.animateDuration, false);
+
 						self.dragging = false;
 					}
 				},
 
 				_endScroll: function () {
-					if (!this.enabled || !this.scrolled || this.scrollCanceled) {
+					var self = this;
+
+					// enable keyboard focus on section at current index
+					if (this.isKeyboardSupport === true) {
+						self.enableDisabledFocusableElements(self.sections[self.activeIndex]);
+					}
+
+					if (!self.enabled || !self.scrolled || self.scrollCanceled) {
 						return;
 					}
 
-					this._repositionSections();
-					this._super();
+					self._repositionSections();
+					self._super();
 				},
 
 				_repositionSections: function (init) {
@@ -25324,6 +27734,943 @@ function pathToRegexp (path, keys, options) {
 			ns.widget.core.VirtualListviewSimple = SimpleVirtualList;
 			}(window.document, ns));
 
+/*global window, define, ns */
+/*
+* Copyright (c) 2019 Samsung Electronics Co., Ltd
+*
+* Licensed under the Flora License, Version 1.1 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://floralicense.org/license/
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+/* #Interactive 3D
+* Interactive 3D widget is using the r-type library to show 3D model.
+* It is included at the libs folder. If you want to use the Interactive 3D,
+* you have to add the r-type library in your project.
+*
+* <script src="tau/libs/r-type.min.js></script>"
+*
+* @example
+* <div class="ui-i3d"></div>
+*
+* @since 5.5
+* @class ns.widget.core.Interactive3D
+* @extends ns.widget.BaseWidget
+* @author Hunseop Jeong <hs85.jeong@samsung.com>
+*/
+(function (window, document, ns) {
+	"use strict";
+				var BaseWidget = ns.widget.BaseWidget,
+				engine = ns.engine,
+				Interactive3D = function () {
+					this._ui = {};
+				},
+				allowAttributes = [
+					"width", "height", "position", "scale", "rotation", "controls",
+					"autoplay", "light", "src", "show", "hide", "mtl"
+				],
+				prototype = new BaseWidget();
+
+			Interactive3D.prototype = prototype;
+
+			/**
+			* Init widget
+			* @method _init
+			* @param {HTMLElement} element
+			* @return {HTMLElement} Returns built element
+			* @member ns.widget.core.Interactive3D
+			* @protected
+			*/
+			prototype._init = function (element) {
+				var self = this;
+
+				self.observer = new MutationObserver(self._attributeChange.bind(this));
+				self.observer.observe(element, {attributes: true});
+
+				return element;
+			}
+
+			/**
+			* Observe whether the attribute changes
+			* @method _attributeChange
+			* @param {Object[]} mutationList
+			* @member ns.widget.core.Interactive3D
+			* @protected
+			*/
+			prototype._attributeChange = function (mutationList) {
+				var self = this;
+
+				mutationList.forEach(function (mutation) {
+					var attributeName = mutation.attributeName,
+						target;
+
+					if (allowAttributes.indexOf(attributeName) !== -1) {
+						target = mutation.target;
+
+						if (target.hasAttribute(attributeName)) {
+							self._ui.rType.setAttribute(attributeName, target.attributes[attributeName].value);
+						} else {
+							self._ui.rType.removeAttribute(attributeName);
+						}
+					}
+				});
+			};
+
+			/**
+			* Build widget structure
+			* @method _build
+			* @param {HTMLElement} element
+			* @return {HTMLElement} Returns built element
+			* @member ns.widget.core.Interactive3D
+			* @protected
+			*/
+			prototype._build = function (element) {
+				var rType = document.createElement("r-type"),
+					attributes = element.attributes,
+					i;
+
+				for (i = 0; i < attributes.length; i++) {
+					if (allowAttributes.indexOf(attributes[i].name) !== -1) {
+						rType.setAttribute(attributes[i].name, attributes[i].value);
+					}
+				}
+
+				this._ui.rType = rType;
+				element.appendChild(rType);
+
+				return element;
+			};
+
+			/**
+			* Destroys Interactive 3D widget
+			* @method _destroy
+			* @member ns.widget.core.Interactive3D
+			* @protected
+			*/
+			prototype._destroy = function () {
+				var self = this,
+					ui = self._ui,
+					rType = ui.rType;
+
+				if (rType && rType.parentNode) {
+					rType.parentNode.removeChild(rType);
+				}
+
+				this.observer.disconnect();
+			};
+
+			ns.widget.core.Interactive3D = Interactive3D;
+
+			engine.defineWidget(
+				"Interactive3D",
+				".ui-i3d",
+				[],
+				Interactive3D,
+				"core"
+			);
+			}(window, window.document, ns));
+
+/*global window, define, ns */
+/*
+ * Copyright (c) 2019 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * #CoverFlow
+ * Cover flow widget is using the jQuery.Flipster library for cover flow
+ * effect.
+ * It is included at the libs folder. If you want to use the CoverFlow,
+ * you have to add the jQuery.Flipster library in your project after jQuery.
+ *
+ * <script src="tau/mobile/js/jquery.min.js"></script>
+ * <script src="tau/libs/jquery.flipster.min.js></script>"
+ *
+ * @example
+ * <div class="ui-coverflow"></div>
+ *
+ * @since 5.5
+ * @class ns.widget.core.CoverFlow
+ * @extends ns.widget.BaseWidget
+ * @author Dohyung Lim <delight.lim@samsung.com>
+ */
+(function (window, document, ns) {
+	"use strict";
+				var utilsObject = ns.util.object,
+
+				CoverFlow = function () {
+					this.options = utilsObject.merge({}, CoverFlow.defaults);
+					this.observer = null;
+				},
+
+				defaults = { value: "coverflow" },
+
+				BaseWidget = ns.widget.BaseWidget,
+				prototype = new BaseWidget();
+
+			CoverFlow.prototype = prototype;
+			CoverFlow.defaults = defaults;
+
+			prototype._init = function (element) {
+				var self = this;
+
+				if (!element.getAttribute("value")) {
+					element.setAttribute("value", self.options.value);
+				}
+
+				self.observer = new MutationObserver(self._checkEffectChange.bind(this));
+				self.observer.observe(element, {attributes: true});
+
+				return element;
+			};
+
+			prototype._checkEffectChange = function (mutationsList) {
+				mutationsList.forEach(function (mutation) {
+					if (mutation.attributeName === "data-effect" && this.element.getAttribute("data-effect")) {
+						this.options.value = this.element.getAttribute("data-effect");
+						this._refresh();
+					}
+				}.bind(this));
+			};
+
+			prototype._refresh = function () {
+				var self = this;
+				self._setValue(self.options.value);
+			}
+
+			prototype._setValue = function (value) {
+				this.ui = {};
+				this.ui.$element = window.jQuery(this.element).flipster({
+					style: value,
+					spacing: -0.5
+				});
+			}
+
+			prototype._build = function (element) {
+				if (element.getAttribute("data-effect")) {
+					this.options.value = element.getAttribute("data-effect");
+				}
+
+				this.ui = {};
+				if (window.jQuery && typeof window.jQuery.fn.flipster === "function") {
+					this.ui.$element = window.jQuery(element).flipster({
+						style: this.options.value,
+						spacing: -0.5
+					});
+				} else {
+					ns.warn("JQuery or flipster.js not exists");
+				}
+				return element;
+			};
+
+			prototype._destroy = function () {
+				this.observer.disconnect();
+			}
+
+			ns.engine.defineWidget(
+				"CoverFlow",
+				".ui-coverflow",
+				[],
+				CoverFlow,
+				"core"
+			);
+			}(window, window.document, ns));
+
+/*
+ * Copyright (c) 2015 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*global window, define, ns */
+/**
+ * #Dimmer
+ *
+ * @example
+ *    <div class="ui-dimmer"></dimmer>
+ *
+ * @since 5.0
+ * @class ns.widget.core.Dimmer
+ * @extends ns.widget.core.BaseWidget
+ */
+(function (window, document, ns) {
+	"use strict";
+				var utilsObject = ns.util.object,
+
+				Dimmer = function () {
+					this.options = utilsObject.merge({}, Dimmer.defaults);
+					this.bulbMode = false;
+					this._observer = null;
+					this._observerCallback = this._checkStyleChange.bind(this);
+					this._refreshCallback = this.refresh.bind(this);
+				},
+
+				DOMUtils = ns.util.DOM,
+
+				defaults = {
+					value: 50,
+					min: 0,
+					max: 100,
+					bulb: false,
+					options: "30:blue; 60:yellow; 100:red"
+				},
+
+				classes = {
+					UI_DIMMER: "ui-dimmer",
+					UI_DIMMER_BULB: "ui-dimmer-lightbulb",
+					UI_DIMMER_BULB_LIGHT: "ui-dimmer-lightbulb-light",
+					UI_DIMMER_TEXT: "ui-dimmer-text",
+					UI_DIMMER_HIDDEN: "ui-dimmer-hidden"
+				},
+
+				BaseWidget = ns.widget.BaseWidget,
+				prototype = new BaseWidget();
+
+			Dimmer.prototype = prototype;
+			Dimmer.defaults = defaults;
+			Dimmer.classes = classes;
+
+			prototype._init = function (element) {
+				var self = this,
+					observer = new MutationObserver(this._observerCallback);
+
+				if (!element.getAttribute("value")) {
+					element.setAttribute("value", self.options.value);
+				}
+
+				observer.observe(element, {attributes: true});
+				self._observer = observer;
+
+				return element;
+			};
+
+			function rebuild(element, bulbMode) {
+				var child = document.createElement("div"),
+					text = element.querySelector("." + classes.UI_DIMMER_TEXT),
+					light = element.querySelector("." + classes.UI_DIMMER_BULB_LIGHT),
+					elementCls = element.classList;
+
+				if (child) {
+					if (bulbMode) {
+						text.classList.add(classes.UI_DIMMER_HIDDEN);
+						light.classList.remove(classes.UI_DIMMER_HIDDEN);
+					} else {
+						text.classList.remove(classes.UI_DIMMER_HIDDEN);
+						light.classList.add(classes.UI_DIMMER_HIDDEN);
+					}
+				}
+
+				if (bulbMode) {
+					elementCls.add(classes.UI_DIMMER_BULB);
+				} else {
+					elementCls.remove(classes.UI_DIMMER_BULB);
+				}
+			}
+
+			function processBulbMode(element) {
+				return DOMUtils.getCSSProperty(element, "background-image", "none", "string") !==
+						"none";
+			}
+
+			prototype._checkStyleChange = function (mutationsList) {
+				var self = this,
+					options = self.options,
+					refresh = self._refreshCallback;
+
+				mutationsList.forEach(function (mutation) {
+					if (mutation.attributeName === "style") {
+						options.bulb = processBulbMode(mutation.target);
+						refresh();
+					}
+				});
+			};
+
+
+			prototype._refresh = function () {
+				var self = this;
+
+				rebuild(self.element, self.options.bulb);
+				self.value(self.options.value);
+			};
+
+			prototype._build = function (element) {
+				var bulb = processBulbMode(element),
+					options = this.options,
+					textElement = element.querySelector("." + classes.UI_DIMMER_TEXT),
+					light = document.createElement("div");
+
+				if (!textElement) {
+					textElement = document.createElement("span");
+					textElement.classList.add(classes.UI_DIMMER_TEXT);
+					element.appendChild(textElement);
+				}
+				light.classList.add(classes.UI_DIMMER_BULB_LIGHT);
+				element.appendChild(light);
+
+				if (!bulb) {
+					bulb = element.classList.contains(classes.UI_DIMMER_BULB);
+
+					if (!options.bulb) {
+						options.bulb = bulb;
+					}
+				}
+
+				rebuild(element, options.bulb);
+
+				this._refreshValue(element);
+
+				return element;
+			};
+
+			prototype._destroy = function () {
+				this._observer.disconnect();
+				this.element.innerHTML = "";
+			};
+
+			prototype._refreshValue = function (element) {
+				var self = this,
+					options = self.options,
+					value = options.value,
+					min = options.min,
+					max = options.max,
+					textElement,
+					colors = [],
+					ranges = [],
+					opacity,
+					items,
+					itemArray,
+					lightElement,
+					i;
+
+				element = element || self.element;
+				textElement = element.querySelector(".ui-dimmer-text");
+
+				if (!options.bulb) {
+					value = parseInt(value, 10);
+					opacity = value / max;
+					element.style.border = "60px solid rgba(0, 151, 216, " + opacity + ")";
+					textElement.innerHTML = value + "%";
+					return true;
+				} else if (options.bulb && options.options) {
+					items = options.options.replace(/\s+/g, "").split(";").filter(function (item) {
+						return item && item.length > 0;
+					});
+
+					items.forEach(function (item) {
+						itemArray = item.split(":");
+						ranges.push(itemArray[0]);
+						colors.push(itemArray[1]);
+					});
+
+					lightElement = element.querySelector("." + classes.UI_DIMMER_BULB_LIGHT);
+					ranges.unshift(min);
+
+					for (i = 0; i < ranges.length; i++) {
+						if (i > 0 && value < ranges[i] && value > ranges[i - 1]) {
+							lightElement.style.backgroundColor = colors[i - 1];
+							return true;
+						}
+					}
+				}
+			}
+
+			prototype._setValue = function (element, value) {
+				var self = this,
+					options = self.options;
+
+				// Patch for BaseWidget.value
+				if (!(element instanceof HTMLElement)) {
+					value = element;
+					element = self.element;
+				}
+
+				if (value < options.min) {
+					value = options.min;
+				} else if (value > options.max) {
+					value = options.max;
+				}
+
+				options.value = value;
+				element.setAttribute("value", value);
+
+				self._refreshValue();
+
+				return false;
+			};
+
+			prototype._setBulb = function (element, value) {
+				this.options.bulb = value;
+
+				return true;
+			};
+
+			prototype._getValue = function () {
+				return parseInt(this.element.getAttribute("value"), 10);
+			};
+
+			ns.widget.core.Dimmer = Dimmer;
+			ns.engine.defineWidget(
+				"Dimmer",
+				"." + classes.UI_DIMMER,
+				[],
+				Dimmer,
+				"core"
+			);
+			}(window, window.document, ns));
+
+/*
+ * Copyright (c) 2018 Samsung Electronics Co., Ltd
+ *
+ * Licensed under the Flora License, Version 1.1 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://floralicense.org/license/
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*global window, define, ns */
+/*
+ * #Graph
+ *
+ * Graph widget are using external libraries:
+ * http://cdn.jsdelivr.net/d3js/3.5.17/d3.min.js
+ * http://cdn.jsdelivr.net/npm/taucharts@1/build/production/tauCharts.min.js
+ * These libraries are not part of TAU source code.
+ * These libraries are attached to project but references should be added in a application
+ *
+ * <script src="tau/libs/d3.min.js" charset="utf-8"></script>
+ * <script src="tau/libs/tauCharts.min.js" type="text/javascript"></script>
+ * <link rel="stylesheet" type="text/css" href="tau/libs/tauCharts.min.css">
+ *
+ * @example
+ * 	<div class="ui-graph"></div>
+ *
+ * <div class="ui-graph"
+ *      data-graph="scatterplot"
+ *      data-color="#FF0000"
+ *      data-xlabel="x label"
+ *      data-ylabel="y label"
+ * ></div>
+ *
+ * @since 5.0
+ * @class ns.widget.core.Graph
+ * @extends ns.widget.core.BaseWidget
+ */
+(function (window, document, ns) {
+	"use strict";
+				var utilsObject = ns.util.object,
+
+				Graph = function () {
+					var self = this;
+
+					self.options = utilsObject.merge({}, Graph.defaults);
+
+					self.data = [];
+					self.size = "";
+					self._initialData = true;
+					self.split = "formula";
+					self.guide = {
+						color: {
+							brewer: [defaults.color]
+						},
+						showGridLines: "xy",
+						x: {
+							nice: false,
+							label: {
+								text: defaults.xlabel
+							}
+						},
+						y: {
+							nice: false,
+							label: {
+								text: defaults.ylabel
+							}
+						}
+					};
+					self.dimensions = {
+						x: {
+							type: "order",
+							scale: "time"
+						},
+						y: {
+							type: "order",
+							scale: "linear"
+						}
+					};
+					self.chart = null;
+				},
+
+				addLibText = "Please, include tauCharts library (https://www.taucharts.com/).",
+
+				MODE_INTERMITTENT = "intermittent",
+				MODE_CONTINUOUS = "continuous",
+
+				xAxis = "x",
+				yAxis = "y",
+
+				TIME_AXIS_X = xAxis,
+				TIME_AXIS_Y = yAxis,
+				TIME_AXIS_NONE = "none",
+
+				graphTypes = {
+					stackedBar: "stacked-bar",
+					line: "line",
+					stackedArea: "stacked-area",
+					scatterplot: "scatterplot",
+					bar: "bar"
+				},
+
+				defaults = {
+					graph: graphTypes.line,
+					color: "#0097D8",
+					xlabel: "",
+					ylabel: "",
+					xinit: 0,
+					yinit: 0,
+					axisXType: "time",
+					axisYType: "linear",
+					mode: MODE_INTERMITTENT,
+					value: [],
+					timeAxis: TIME_AXIS_X, // only when one value supplied
+					groupKey: "label",
+					legend: false
+				},
+
+				classes = {
+					graphContainer: "ui-graph"
+				},
+
+
+				BaseWidget = ns.widget.BaseWidget,
+				prototype = new BaseWidget();
+
+			Graph.prototype = prototype;
+			Graph.defaults = defaults;
+			Graph.MODE = {
+				INTERMITTENT: MODE_INTERMITTENT,
+				CONTINUOS: MODE_CONTINUOUS
+			};
+			Graph.TIME_AXIS = {
+				X: TIME_AXIS_X,
+				Y: TIME_AXIS_Y,
+				NONE: TIME_AXIS_NONE
+			};
+
+			prototype._newChart = function (element) {
+				var self = this,
+					data = null;
+
+				self.element.innerHTML = "";
+				self._rebuildCache();
+				data = self._prepareChartData();
+				self.chart = new window.tauCharts.Chart({
+					data: [],
+					type: self.options.graph,
+					x: xAxis,
+					y: yAxis,
+					color: "label",
+					size: self.size,
+					split: self.split,
+					guide: self.guide,
+					dimensions: self.dimensions,
+					plugins: (self.options.legend) ? [window.tauCharts.api.plugins.get("legend")] : []
+				});
+
+				self.chart.renderTo(element);
+
+				self._updateChart(data);
+			};
+
+			prototype._setChartAxis = function (identifier) {
+				var self = this,
+				    axisDimensions = self.dimensions[identifier],
+				    axisType = self.options["axis" + identifier.toUpperCase() + "Type"];
+
+				axisDimensions.type = "order";
+				switch (axisType) {
+					case "time":
+					case "index":
+						axisDimensions.scale = "time";
+						self.guide[identifier].tickFormat = "day";
+					break;
+					case "order":
+						axisDimensions.scale = "ordinal";
+					break;
+					case "linear":
+						axisDimensions.scale = "linear";
+					break;
+				}
+			}
+
+			prototype._init = function (element) {
+				var self = this,
+					oldData = [],
+					guide = self.guide;
+
+				self.options.color = self.options.color.split(",")
+				guide.color.brewer = self.options.color;
+				guide.x.label.text = self.options.xlabel;
+				guide.y.label.text = self.options.ylabel;
+
+				self._setChartAxis("x");
+				self._setChartAxis("y");
+
+				self.data.length = 0;
+				// get chart data from data-value attribute
+				if (self.options.value) {
+					try {
+						oldData = JSON.parse(self.options.value);
+					} catch (e) { }
+
+					if (oldData.length > 0) {
+						//self.data = self.data.concat(oldData);
+						oldData.forEach(function (data) {
+							self._addData(data);
+						});
+						self._initialData = true;
+					}
+				} else {
+					self._addData(0);
+					self._initialData = true;
+				}
+
+				// create chart widget
+				self._newChart(element);
+
+				return element;
+			};
+
+			prototype._build = function (element) {
+				var self = this;
+
+				if (window.tauCharts) {
+					self._createDivElement(
+						element, classes.graphContainer);
+					return element;
+				} else {
+					console.warn(addLibText);
+				}
+			};
+
+			prototype._addData = function (value) {
+				var now = Date.now(),
+					valueObject = {
+						time: now,
+						value: value,
+						cache: null
+					},
+					self = this;
+
+				if (self._initialData) { // remove initial data
+					self.data = [];
+					self._initialData = false;
+				}
+
+				valueObject.cache = self._map(valueObject, self.data.length);
+				self.data.push(valueObject);
+			};
+
+			prototype._map = function (valueObject, index) {
+				var dataset = [],
+					value = valueObject.value,
+					time = valueObject.time,
+					timeAxis = this.options.timeAxis,
+					axisXType = this.options.axisXType,
+					groupKey = this.options.groupKey,
+					label,
+					x = 0,
+					y = 0;
+
+				// Convert data to array [x, y]
+				if (typeof value === "object") {
+					// if data object has "x" and "y" property
+					if (value.x !== undefined) {
+						dataset.push(value.x);
+						if (value.y !== undefined) {
+							dataset.push(value.y);
+						}
+						if (value[groupKey] !== undefined) {
+							dataset.push(value[groupKey]);
+						}
+					} else {
+						// data object has other keys
+						Object.keys(value).forEach(function (key) {
+							dataset.push(value[key]);
+						});
+					}
+				} else {
+					// value is single value;
+					dataset = [value];
+				}
+
+				// convert array [x, y] to object {x: x, y: y}
+				if (dataset.length === 1) {
+					switch (axisXType) {
+						case "time":
+							if (timeAxis === TIME_AXIS_X) {
+								y = parseFloat(dataset[0]) || 0;
+								x = time;
+							} else {
+								x = parseFloat(dataset[0]) || 0;
+								if (timeAxis === TIME_AXIS_Y) {
+									y = time;
+								}
+							}
+							break;
+						case "index":
+							x = index;
+							y = parseFloat(dataset[0]) || 0;
+							break;
+					}
+					label = "Series 1";
+				} else {
+					switch (axisXType) {
+						case "index":
+							x = index;
+							y = parseFloat(dataset[0]) || 0;
+							break;
+						default:
+							x = parseFloat(dataset[0]) || 0;
+							y = parseFloat(dataset[1]) || 0;
+							break;
+					}
+					label = dataset[dataset.length - 1];
+				}
+
+				return {
+					x: x,
+					y: y,
+					label: label
+				}
+			}
+
+			prototype._rebuildCache = function () {
+				var self = this;
+
+				self.data.forEach(function (value, index) {
+					value.cache = self._map(value, index);
+				});
+			};
+
+			prototype._prepareChartData = function () {
+				return this.data.map(function (value) {
+					return value.cache;
+				})
+			};
+
+			prototype._updateChart = function (data) {
+				var self = this;
+
+				if (self.options.mode === MODE_INTERMITTENT) {
+					data.length = 0;
+				}
+
+				self.chart.setData(data);
+
+				self.element.setAttribute(
+					"data-value",
+					JSON.stringify(data)
+				);
+			};
+
+			prototype._setOneValue = function (value) {
+				var self = this;
+
+				self._addData(value),
+				self._updateChart(self._prepareChartData());
+
+				return false;
+			}
+
+			prototype._setValue = function (value) {
+				var dataset = Array.isArray(value) ? value : [value],
+					result = true,
+					self = this;
+
+				dataset.forEach(function (val) {
+					if (!self._setOneValue(val) && result) {
+						result = false;
+					}
+				});
+
+				return result;
+			};
+
+			prototype._getValue = function () {
+				return this.data;
+			};
+
+			prototype._createDivElement = function (
+					parentElement, className) {
+				var newElement = document.createElement("div");
+
+				newElement.classList.add(className);
+
+				parentElement.appendChild(newElement);
+			};
+
+			prototype._refresh = function () {
+				var self = this;
+
+				self.guide = {
+					color: {
+						brewer: self.options.color
+					},
+					x: {
+						label: {
+							text: self.options.xlabel
+						}
+					},
+					y: {
+						label: {
+							text: self.options.ylabel
+						}
+					}
+				};
+				self._newChart(self.element);
+
+			}
+
+			ns.widget.core.Graph = Graph;
+
+			ns.engine.defineWidget(
+				"Graph",
+				".ui-graph", [],
+				Graph,
+				"core"
+			);
+			}(window, window.document, ns));
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -25588,15 +28935,17 @@ function pathToRegexp (path, keys, options) {
 			 * @static
 			 */
 			DOM.replaceWithNodes = function (context, elements) {
-				var returnElements;
+				var returnElements = null;
 
-				if (elements instanceof Array || elements instanceof NodeList ||
-					elements instanceof HTMLCollection) {
-					returnElements = this.insertNodesBefore(context, elements);
-					context.parentNode.removeChild(context);
-				} else {
-					context.parentNode.replaceChild(elements, context);
-					returnElements = elements;
+				if (context.parentNode) {
+					if (elements instanceof Array || elements instanceof NodeList ||
+						elements instanceof HTMLCollection) {
+						returnElements = this.insertNodesBefore(context, elements);
+						context.parentNode.removeChild(context);
+					} else {
+						context.parentNode.replaceChild(elements, context);
+						returnElements = elements;
+					}
 				}
 				return returnElements;
 			};
@@ -25753,6 +29102,28 @@ function pathToRegexp (path, keys, options) {
 
 				return resultElements;
 			};
+
+			/**
+			 * Check if element is child of element
+			 * @method isChildElementOf
+			 * @param {HTMLElement|null} child
+			 * @param {HTMLElement|null} parent
+			 * @return {boolean}
+			 * @member ns.util.DOM
+			 * @static
+			 */
+			DOM.isChildElementOf = function (child, parent) {
+				if (parent) {
+					while (child && child.parentElement) {
+						if (parent === child.parentElement) {
+							return true;
+						}
+						child = child.parentElement
+					}
+				}
+				return false;
+			};
+
 			}(window, window.document, ns));
 
 /*global window, define, ns */
@@ -26782,13 +30153,9 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._placementCoordsWindow = function (element) {
 				var elementStyle = element.style,
-					elementWidth = element.offsetWidth,
-					elementHeight = element.offsetHeight,
-					elementMarginTop = domUtils.getCSSProperty(element, "margin-top", 0, "float"),
-					elementMarginBottom = domUtils.getCSSProperty(element, "margin-bottom", 0, "float"),
-					elementTop = window.innerHeight - elementHeight - elementMarginTop - elementMarginBottom;
+					elementWidth = element.offsetWidth;
 
-				elementStyle.top = elementTop + "px";
+				elementStyle.bottom = "0px";
 				elementStyle.left = "50%";
 				elementStyle.marginLeft = -(elementWidth / 2) + "px";
 			};
@@ -28722,11 +32089,13 @@ function pathToRegexp (path, keys, options) {
 			 * @static
 			 */
 			var BaseWidget = ns.widget.BaseWidget,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				selectors = ns.util.selectors,
 				utilDOM = ns.util.DOM,
 				events = ns.event,
 				Gesture = ns.event.gesture,
+				utilSelector = ns.util.selectors,
 				COLORS = {
 					BACKGROUND: "rgba(145, 145, 145, 0.7)",
 					ACTIVE: "rgba(61, 185, 204, 1)",
@@ -28751,8 +32120,11 @@ function pathToRegexp (path, keys, options) {
 						expand: false,
 						warning: false,
 						warningLevel: 0,
-						disabled: false
+						disabled: false,
+						toggle: ""
 					};
+
+					BaseKeyboardSupport.call(self);
 
 					self._ui = {};
 				},
@@ -28768,7 +32140,8 @@ function pathToRegexp (path, keys, options) {
 					SLIDER_WARNING: "ui-slider-warning",
 					SLIDER_DISABLED: "ui-disabled",
 					SLIDER_HANDLER_VALUE: "ui-slider-handler-value",
-					SLIDER_HANDLER_SMALL: "ui-slider-handler-small"
+					SLIDER_HANDLER_SMALL: "ui-slider-handler-small",
+					SLIDER_FOCUS: "ui-slider-focus"
 				},
 				prototype = new BaseWidget();
 
@@ -28784,7 +32157,9 @@ function pathToRegexp (path, keys, options) {
 			 * @static
 			 */
 			function bindEvents(self) {
-				var element = self._ui.barElement;
+				var ui = self._ui,
+					element = ui.barElement,
+					toggle = ui.toggle;
 
 				events.enableGesture(
 					element,
@@ -28794,7 +32169,15 @@ function pathToRegexp (path, keys, options) {
 						threshold: 0
 					})
 				);
-				events.on(element, "dragstart drag dragend dragcancel", self, false);
+				// @todo remove drag handlers
+				//events.on(element, "dragstart drag dragend dragcancel", self, false);
+				events.on(self.element, "input change touchstart touchend", self, false);
+				events.on(self.element, "focus", self, false);
+				events.on(self.element, "blur", self, false);
+				events.on(self.element, "keyup", self, false);
+				if (toggle) {
+					events.on(toggle, "change", self);
+				}
 			}
 
 			/**
@@ -28806,10 +32189,17 @@ function pathToRegexp (path, keys, options) {
 			 * @static
 			 */
 			function unbindEvents(self) {
-				var element = self._ui.barElement;
+				var ui = self._ui,
+					element = ui.barElement,
+					toggle = ui.toggle;
 
 				events.disableGesture(element);
-				events.off(element, "dragstart drag dragend dragcancel", self, false);
+				// @todo remove drag handlers
+				//events.off(element, "dragstart drag dragend dragcancel", self, false);
+				events.off(self.element, "input change touchstart touchend", self, false);
+				if (toggle) {
+					events.off(toggle, "change", self);
+				}
 			}
 
 			/**
@@ -28827,7 +32217,6 @@ function pathToRegexp (path, keys, options) {
 					valueElement = document.createElement("div"),
 					handlerElement = document.createElement("div");
 
-				element.style.display = "none";
 				barElement.classList.add(classes.SLIDER);
 
 				valueElement.classList.add(classes.SLIDER_VALUE);
@@ -28839,6 +32228,15 @@ function pathToRegexp (path, keys, options) {
 				ui.valueElement = valueElement;
 				ui.handlerElement = handlerElement;
 				ui.barElement = barElement;
+
+				element.parentNode.replaceChild(barElement, element);
+				barElement.appendChild(element);
+
+				if (self.isKeyboardSupport) {
+					self.preventFocusOnElement(element);
+					barElement.setAttribute("data-focus-lock", "true");
+					barElement.setAttribute("tabindex", "0");
+				}
 
 				return element;
 			};
@@ -28855,7 +32253,9 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					attrMin = parseFloat(element.getAttribute("min")),
 					attrMax = parseFloat(element.getAttribute("max")),
-					attrValue = parseFloat(element.getAttribute("value"));
+					attrValue = parseFloat(element.getAttribute("value")),
+					ui = self._ui,
+					options = self.options;
 
 				self._min = attrMin ? attrMin : 0;
 				self._max = attrMax ? attrMax : 100;
@@ -28864,11 +32264,27 @@ function pathToRegexp (path, keys, options) {
 				self._value = attrValue ? attrValue : parseFloat(self.element.value);
 				self._interval = self._max - self._min;
 				self._previousValue = self._value;
-				self._warningLevel = parseInt(self.options.warningLevel, 10);
+				self._warningLevel = parseInt(options.warningLevel, 10);
 				self._setDisabled(element);
+				self._locked = false;
+
+				if (!ui.toggle && options.toggle) {
+					ui.toggle = document.querySelector(options.toggle);
+				}
 
 				self._initLayout();
 				return element;
+			};
+
+			prototype._setInputRangeSize = function () {
+				var self = this,
+					input = self.element,
+					barElement = self._ui.barElement,
+					rectBar = barElement.getBoundingClientRect();
+
+				input.style.width = (rectBar.width + 16) + "px";
+				input.style.top = "-12px"; // @todo change this hardcoded size;
+				input.style.left = "-8px";
 			};
 
 			/**
@@ -28903,6 +32319,8 @@ function pathToRegexp (path, keys, options) {
 				}
 				self._setValue(self._value);
 				self._setSliderColors(self._value);
+
+				self._setInputRangeSize();
 			};
 
 			/**
@@ -28985,10 +32403,11 @@ function pathToRegexp (path, keys, options) {
 					ui = self._ui,
 					options = self.options,
 					element = self.element,
+					toggle = ui.toggle,
 					floatValue,
 					expendedClasses;
 
-				self._previousValue = self.element.value;
+				self._previousValue = self._value;
 
 				if (value < self._min) {
 					value = self._min;
@@ -29015,13 +32434,32 @@ function pathToRegexp (path, keys, options) {
 					ui.handlerElement.innerHTML = "<span class=" + expendedClasses + ">" + floatValue + "</span>";
 				}
 
-				if (element.value - 0 !== floatValue) {
+				if (self._previousValue !== floatValue) {
 					element.setAttribute("value", floatValue);
 					element.value = floatValue;
 					self._value = floatValue;
-					events.trigger(element, "input");
+
+					if (toggle) {
+						if (floatValue === 0 && !toggle.checked) {
+							toggle.checked = true;
+						}
+
+						if (floatValue !== 0 && toggle.checked) {
+							toggle.checked = false;
+						}
+					}
+
+					//events.trigger(element, "input");
 				}
 			};
+
+			prototype._getValue = function () {
+				return this._value;
+			};
+
+			prototype._getContainer = function () {
+				return this._ui.barElement;
+			}
 
 			/**
 			 * Set background as a gradient
@@ -29159,10 +32597,14 @@ function pathToRegexp (path, keys, options) {
 			 * @protected
 			 */
 			prototype.handleEvent = function (event) {
-				var self = this;
+				var self = this,
+					toggle = self._ui.toggle,
+					eventType = event.type;
 
-				if (!this.options.disabled) {
-					switch (event.type) {
+				if (eventType === "change" && toggle && toggle === event.target) {
+					self._handleToggle(event);
+				} else if (!this.options.disabled) {
+					switch (eventType) {
 						case "dragstart":
 							self._onDragstart(event);
 							break;
@@ -29173,7 +32615,47 @@ function pathToRegexp (path, keys, options) {
 						case "drag":
 							self._onDrag(event);
 							break;
+						case "input" :
+						case "change" :
+							self._setValue(self.element.value);
+							break;
+						case "touchstart":
+							self._onTouchStart(event);
+							break;
+						case "touchend":
+							self._onTouchEnd(event);
+							break;
+						// case "focus":
+						// 	self._onFocus(event);
+						// 	break;
+						// case "blur":
+						// 	self._onBlur(event);
+						// 	break;
+						case "keyup":
+							self._onKeyUp(event);
+							break;
 					}
+				}
+			};
+
+			prototype._handleToggle = function (event) {
+				var self = this,
+					options = self.options,
+					element = self.element,
+					target = event.target,
+					mute = target.checked,
+					value;
+
+				if (mute && self.value() > 0) {
+					utilDOM.setNSData(target, "slider-value", self.value());
+					self.value(self._minValue);
+					options.disabled = true;
+					self._setDisabled(element);
+				} else if (self.value() === 0) {
+					value = parseFloat(utilDOM.getNSData(target, "slider-value")) || 0
+					options.disabled = false;
+					self._setDisabled(element);
+					self.value(value);
 				}
 			};
 
@@ -29247,6 +32729,88 @@ function pathToRegexp (path, keys, options) {
 				self._previousValue = self.element.value;
 			};
 
+			prototype._onTouchStart = function () {
+				this._ui.handlerElement.classList.add(classes.SLIDER_HANDLER_ACTIVE);
+			};
+
+			prototype._onTouchEnd = function () {
+				this._ui.handlerElement.classList.remove(classes.SLIDER_HANDLER_ACTIVE);
+			};
+
+			// prototype._onFocus = function () {
+			// 	var container = this._ui.barElement.parentElement;
+
+			// 	container && container.classList.add("ui-listview-item-focus");
+			// };
+
+			// prototype._onBlur = function () {
+			// 	var container = this._ui.barElement.parentElement;
+
+			// 	container && container.classList.remove("ui-listview-item-focus");
+			// };
+
+			prototype._decreaseValue = function () {
+				var self = this;
+
+				self._setValue(self._value - (parseFloat(self.element.step) || 1));
+			};
+
+			prototype._increaseValue = function () {
+				var self = this;
+
+				self._setValue(self._value + (parseFloat(self.element.step) || 1));
+			};
+
+			// prototype._lockKeyboard = function () {
+			// 	var self = this,
+			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
+			// 		listviewWidget = engine.getBinding(listview, "Listview");
+
+			// 	self._locked = true;
+			// 	listviewWidget.saveKeyboardSupport();
+			// 	listviewWidget.disableKeyboardSupport();
+			// 	self.enableKeyboardSupport();
+			// 	self._ui.barElement.classList.add(classes.SLIDER_FOCUS);
+			// };
+
+			// prototype._unlockKeyboard = function () {
+			// 	var self = this,
+			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
+			// 		listviewWidget = engine.getBinding(listview, "Listview");
+
+			// 	self._locked = false;
+			// 	listviewWidget.restoreKeyboardSupport();
+			// 	listviewWidget.enableKeyboardSupport();
+			// 	self.disableKeyboardSupport();
+			// 	self._ui.barElement.classList.remove(classes.SLIDER_FOCUS);
+			// };
+
+			prototype._onKeyUp = function (event) {
+				var self = this,
+					KEY_CODES = BaseKeyboardSupport.KEY_CODES;
+
+				if (self._locked) {
+					switch (event.keyCode) {
+						// case KEY_CODES.escape :
+						// case KEY_CODES.enter :
+						// 	self._unlockKeyboard();
+						// 	break;
+						case KEY_CODES.left :
+							self._decreaseValue();
+							break;
+						case KEY_CODES.right :
+							self._increaseValue();
+							break;
+					}
+				} else {
+					// switch (event.keyCode) {
+					// 	case KEY_CODES.enter :
+					// 		self._lockKeyboard();
+					// 		break;
+					// }
+				}
+			};
+
 			/**
 			 * Refresh to Slider component
 			 * @method refresh
@@ -29269,10 +32833,13 @@ function pathToRegexp (path, keys, options) {
 					barElement = self._ui.barElement;
 
 				unbindEvents(self);
-				barElement.parentNode.removeChild(barElement);
+				if (barElement.parentNode) {
+					barElement.parentNode.removeChild(barElement);
+				}
 				self._ui = null;
 				self._options = null;
 			};
+
 			ns.widget.core.Slider = Slider;
 			engine.defineWidget(
 				"Slider",
@@ -29283,6 +32850,9 @@ function pathToRegexp (path, keys, options) {
 				Slider,
 				"core"
 			);
+
+			BaseKeyboardSupport.registerActiveSelector("input[data-role='slider'], input[type='range'], input[data-type='range'], .ui-slider-handler");
+
 			}(window.document, ns));
 
 /*global window, ns, define */
@@ -29619,6 +33189,7 @@ function pathToRegexp (path, keys, options) {
 
 				progressbarContainer.appendChild(canvas);
 				progressbarContainer.appendChild(endPoint);
+				progressbarContainer.appendChild(progressElement);
 
 				return element;
 			};
@@ -29742,8 +33313,7 @@ function pathToRegexp (path, keys, options) {
 			prototype._destroy = function () {
 				var self = this;
 
-				// remove utilDOM
-				self.element.parentNode.removeChild(self._ui.progressContainer);
+				utilDOM.replaceWithNodes(self._ui.progressContainer, self.element);
 
 				// clear variables
 				self.element = null;
@@ -29753,6 +33323,18 @@ function pathToRegexp (path, keys, options) {
 				self._value = null;
 
 				return null;
+			};
+
+			/**
+			 * Get CircleProgressBar container
+			 * @method _getContainer
+			 * @member ns.widget.wearable.CircleProgressBar
+			 * @protected
+			 */
+			prototype._getContainer = function () {
+				var self = this;
+
+				return self._ui && self._ui.progressContainer;
 			};
 
 			CircleProgressBar.prototype = prototype;
@@ -30287,6 +33869,23 @@ function pathToRegexp (path, keys, options) {
 
 				} else {
 					CoreSliderPrototype._destroy.call(self);
+				}
+			};
+
+			/**
+			 * Get slider container
+			 * @method _getContainer
+			 * @member ns.widget.wearable.Slider
+			 * @protected
+			 */
+			prototype._getContainer = function () {
+				var self = this,
+					options = self.options;
+
+				if (options.type === "circle") {
+					return CircleProgressBarPrototype._getContainer.call(self);
+				} else {
+					return CoreSliderPrototype._getContainer.call(self);
 				}
 			};
 
@@ -31946,11 +35545,10 @@ function pathToRegexp (path, keys, options) {
 			/**
 			 * Handler for popupbeforehide event
 			 * @method _onPopupHide
-			 * @param {Event} event
 			 * @memberof ns.widget.wearable.ArcListview
 			 * @protected
 			 */
-			prototype._onPopupHide = function (event) {
+			prototype._onPopupHide = function () {
 				var self = this;
 
 				if (self._disabledByPopup) {
@@ -32141,7 +35739,7 @@ function pathToRegexp (path, keys, options) {
 							self._onClick(event);
 							break;
 						case "popupbeforehide":
-							self._onPopupHide(event);
+							self._onPopupHide();
 							break;
 						case "popupbeforeshow":
 							self._onPopupShow(event);
@@ -32505,12 +36103,15 @@ function pathToRegexp (path, keys, options) {
 (function (document, ns) {
 	"use strict";
 				var utilsObject = ns.util.object,
-				utilsDOM = ns.util.DOM;
+				utilsDOM = ns.util.DOM,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport;
 
 			function IndexBar(element, options) {
 				this.element = element;
 				this.options = utilsObject.merge(options, this._options, false);
 				this.container = this.options.container;
+
+				BaseKeyboardSupport.call(self);
 
 				this.indices = {
 					original: this.options.index,
@@ -32667,6 +36268,7 @@ function pathToRegexp (path, keys, options) {
 						text,
 						frag,
 						li,
+						a,
 						i,
 						m;
 
@@ -32674,8 +36276,12 @@ function pathToRegexp (path, keys, options) {
 					for (i = 0; i < indexLen; i++) {
 						m = indices[i];
 						text = m.length === 1 ? origIndices[m.start] : moreChar;
+						a = document.createElement("a");
 						li = document.createElement("li");
-						li.innerText = text.toUpperCase();
+
+						a.innerText = text.toUpperCase();
+						a.setAttribute("href", "#" + text.toUpperCase());
+						li.appendChild(a);
 
 						li.style.height = ((i === indexLen - 1) ? lastElementHeight : indexHeight) + "px";
 						li.style.lineHeight = text === moreChar ? indexHeight + addMoreCharLineHeight + "px" : indexHeight + "px";
@@ -37993,11 +41599,11 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			prototype._unbindEvents = function () {
-				ns.event.disableGesture(this.element);
-
 				utilsEvents.off(this.element, "drag dragstart dragend dragcancel swipe", this);
 				utilsEvents.off(document, "scroll touchcancel", this);
 				utilsEvents.off(this.swipeElement, "touchstart touchmove touchend", blockEvent, false);
+
+				ns.event.disableGesture(this.element);
 			};
 
 			prototype.handleEvent = function (event) {
@@ -41764,7 +45370,8 @@ function pathToRegexp (path, keys, options) {
 					NEXT: WIDGET_CLASS + "-item-next",
 					PREV: WIDGET_CLASS + "-item-prev",
 					ENABLED: "enabled",
-					ENABLING: WIDGET_CLASS + "-enabling"
+					ENABLING: WIDGET_CLASS + "-enabling",
+					PLACEHOLDER: WIDGET_CLASS + "-placeholder"
 				},
 
 				prototype = new BaseWidget();
@@ -42038,7 +45645,13 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			prototype._build = function (element) {
+				var placeholder = document.createElement("div");
+
 				element.classList.add(classes.SPIN);
+				placeholder.classList.add(classes.PLACEHOLDER);
+				element.appendChild(placeholder);
+
+				this._ui.placeholder = placeholder;
 				return element;
 			};
 
@@ -42047,6 +45660,8 @@ function pathToRegexp (path, keys, options) {
 					animation;
 
 				value = window.parseInt(value, 10);
+				self._ui.placeholder.textContent = value;
+
 				if (isNaN(value)) {
 					ns.warn("Spin: value is not a number");
 				} else if (value !== self.options.value) {
@@ -42228,12 +45843,14 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._destroy = function () {
 				var self = this,
-					element = self.element;
+					element = self.element,
+					ui = self._ui;
 
 				self._unbindEvents();
-				self._ui.items.forEach(function (item) {
+				ui.items.forEach(function (item) {
 					item.parentNode.removeChild(item);
 				});
+				element.removeChild(ui.placeholder);
 				element.classList.remove(classes.SPIN);
 			};
 
