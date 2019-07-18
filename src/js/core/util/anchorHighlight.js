@@ -408,7 +408,7 @@
 			}
 
 			/**
-			 * Function invoked during touch move
+			 * Function invoked during touch move (and mouse)
 			 * @method touchmoveHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -432,7 +432,7 @@
 			}
 
 			/**
-			 * Function invoked after touch start
+			 * Function invoked after touch start (and mouse)
 			 * @method touchstartHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -441,13 +441,13 @@
 			 */
 			function touchstartHandler(event) {
 				var touches = event.touches,
-					touch;
+					pointer = (!touches) ? event : // mouse event
+						(touches.length === 1) ? touches[0] : null; // touch event
 
-				if (touches.length === 1) {
-					touch = touches[0];
+				if (pointer) {
 					anchorHighlight._didScroll = false;
-					startX = touch.clientX;
-					startY = touch.clientY;
+					startX = pointer.clientX;
+					startY = pointer.clientY;
 					anchorHighlight._target = event.target;
 					anchorHighlight._startTime = Date.now();
 					anchorHighlight._startRemoveTime = 0;
@@ -458,7 +458,7 @@
 
 
 			/**
-			 * Function invoked after touch
+			 * Function invoked after touch (and mouse)
 			 * @method touchendHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -468,7 +468,7 @@
 			function touchendHandler(event) {
 				anchorHighlight._startRemoveTime = event.timeStamp;
 
-				if (event.touches.length === 0) {
+				if (!event.touches || event.touches && event.touches.length === 0) {
 					if (!anchorHighlight._didScroll) {
 						anchorHighlight._startTime = 0;
 						anchorHighlight._requestAnimationFrame(removeActiveClassLoop);
@@ -526,6 +526,9 @@
 				document.addEventListener("touchstart", anchorHighlight._touchstartHandler, false);
 				document.addEventListener("touchend", anchorHighlight._touchendHandler, false);
 				document.addEventListener("touchmove", anchorHighlight._touchmoveHandler, false);
+				// for TAU in browser
+				document.addEventListener("mousedown", anchorHighlight._touchstartHandler, false);
+				document.addEventListener("mouseup", anchorHighlight._touchendHandler, false);
 
 				document.addEventListener("visibilitychange", anchorHighlight._checkPageVisibility, false);
 				document.addEventListener("pagehide", anchorHighlight._hideClear, false);
@@ -546,6 +549,9 @@
 				document.removeEventListener("touchstart", anchorHighlight._touchstartHandler, false);
 				document.removeEventListener("touchend", anchorHighlight._touchendHandler, false);
 				document.removeEventListener("touchmove", anchorHighlight._touchmoveHandler, false);
+				// for TAU in browser
+				document.removeEventListener("mousedown", anchorHighlight._touchstartHandler, false);
+				document.removeEventListener("mouseup", anchorHighlight._touchendHandler, false);
 
 				document.removeEventListener("visibilitychange", anchorHighlight._checkPageVisibility,
 					false);
