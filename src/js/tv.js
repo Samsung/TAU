@@ -80,7 +80,6 @@
 			"./core/event/gesture/Swipe",
 			"./core/event/gesture/Pinch",
 			"./core/event/gesture/LongPress",
-			"./core/widget/customElements",
 			"./core/widget/core/scroller/Scroller",
 			"./core/widget/core/scroller/scrollbar/ScrollBar",
 			"./core/widget/core/SectionChanger",
