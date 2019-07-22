@@ -14,40 +14,57 @@
 }
 
 .ui-toggleswitch {
-	width: @fixed_toggleswitch_width;
-	height: @fixed_toggleswitch_height;
+	position: relative;
+    display: inline-block;
+    width: 76 * @unit_base;
+    height: 51 * @unit_base;
 
 	&.ui-toggleswitch-large {
 		width: @fixed_toggleswitch_width;
 		height: @fixed_toggleswitch_height;
 	}
 
-	.ui-switch-input {
-		background-color: @color_toggle_off_bg;
-		mask-image: url('images/Controller_icon/On_Off/tw_btn_control_bg_holo_dark.png');
+	input.ui-switch-input {
+		border: 2 * @unit_base solid @color_toggle_off_bg;
+		background-color: transparent;
+		border-radius: 47 * @unit_base;
+        width: 76 * @unit_base;
+        height: 47 * @unit_base;
+        appearance: none;
+        outline: 0;
+        top: 2 * @unit_base;
+        mask-image: none;
+        backface-visibility: hidden;
+
+        &:checked {
+			background-color: @color_toggle_on_bg;
+			border: 0;
+        }
+
+		mask-image: none;
 		.mask-size(100% 100%);
-		.transition(background-color 300ms linear);
+		transition: background-color 150ms linear;
 		&::before {
 			content: none;
 		}
 		&:active {
-			.transition(background-color 300ms linear);
+			transition: background-color 150ms linear;
 			background-color: @color_toggle_off_bg_press;
 			&~ .ui-switch-activation,
 			~ .ui-switch-button{
 				background-color: transparent;
-				&::after {
-					background-color: @color_toggle_off_handler_press;
+				&::before {
+					background-color: @color_toggle_off_handler_off_press;
 				}
 			}
 		}
 		&:disabled {
 			background-color: transparent;
 			&~ .ui-switch-activation,
-			~ .ui-switch-button{
+			~ .ui-switch-button {
 				background-color: transparent;
-				&::after {
-					background-color: @color_toggle_off_handler_dim;
+				&::before {
+					background-color: @color_toggle_off_handler_off_dim;
 				}
 			}
 		}
@@ -61,48 +78,47 @@
 		background-color: transparent;
 		transform: none;
 		&::before {
-			mask-image: url('images/Controller_icon/On_Off/tw_btn_control_on_holo_dark.png');
-			.transform(scale(0));
-			.transition(transform 100ms 0ms linear);
-			background-color: @color_toggle_on_handler;
-			.mask-size(100% 100%);
-			.mask-position(0);
-			animation-fill-mode: both;
-		}
-		&::after {
-			content: "";
-			width: 100%;
-			height: 100%;
-			mask-image: url('images/Controller_icon/On_Off/tw_btn_control_off_holo_dark.png');
-			.transform(scale(1));
-			.transition(transform 200ms 100ms linear);
-			.mask-size(100% 100%);
-			.mask-position(0);
-			animation-fill-mode: both;
-			background-color: @color_toggle_off_handler;
 			position: absolute;
+			content: '';
+			transform: scale(1);
+			height: 51 * @unit_base;
+			width: 51 * @unit_base;
+			border: 2 * @unit_base solid @color_toggle_off_handler;
 			left: 0;
+			top: 0;
+			background-color: @color_toggle_on_handler_on;
+			transition-property: transform;
+			transition-duration: 300ms;
+			transition-timing-function: ease-out;
+			border-radius: 50%;
+			-webkit-mask-image: none;
+			mask-image: none;
+			pointer-events: none;
+			box-sizing: border-box;
+		}
+
+		&::after {
+			content: none;
 		}
 	}
 
-	.ui-switch-input:checked {
+	input.ui-switch-input:checked {
 		background-color: @color_toggle_on_bg;
 		&~ .ui-switch-activation,
 		~ .ui-switch-button {
 			width: 100%;
 			height: 100%;
 			-webkit-mask-image: none;
+			mask-image: none;
 			background-color: transparent;
 			transform: none;
 			&::before {
-				transform: scale(1);
-				.mask-position(0);
-				background-color: @color_toggle_on_handler;
-				.transition(transform 200ms 100ms linear);
+				transform: translateX(25 * @unit_base);
+				background-color: @color_toggle_on_handler_on;
+				border: 2 * @unit_base solid @color_toggle_on_handler;
 			}
 			&::after {
-				transform: scale(0);
-				.transition(transform 100ms 0ms linear);
+				content: none;
 			}
 		}
 		&:active {
@@ -110,8 +126,8 @@
 			&~ .ui-switch-activation, ~ .ui-switch-button {
 				background-color: transparent;
 				&::before {
-					.mask-position(0);
-					background-color: @color_toggle_on_handler_press;
+					background-color: @color_toggle_on_handler_on_press;
+					border-color: @color_toggle_on_handler_press;
 				}
 			}
 		}
@@ -120,8 +136,8 @@
 			&~ .ui-switch-activation, ~ .ui-switch-button {
 				background-color: transparent;
 				&::before {
-					.mask-position(0);
-					background-color: @color_toggle_on_handler_dim;
+					background-color: @color_toggle_on_handler_on_dim;
+					border-color: @color_toggle_on_handler_dim;
 				}
 			}
 		}
