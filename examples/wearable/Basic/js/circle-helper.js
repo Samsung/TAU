@@ -1,6 +1,6 @@
 /*global tau */
 /*jslint unparam: true */
-(function (tau) {
+document.addEventListener("tauinit", function () {
 
 	// This logic works only on circular device.
 	if (tau.support.shape.circle) {
@@ -13,16 +13,15 @@
 			 * page - Active page element
 			 * list - NodeList object for lists in the page
 			 */
-			var page,
+			var page = event.target,
 				list;
 
-			page = event.target;
-			if (page.id !== "page-snaplistview" && page.id !== "page-swipelist" && page.id !== "page-marquee-list") {
+			if (!page.classList.contains("page-snaplistview")) {
 				list = page.querySelector(".ui-listview");
 				if (list) {
-					tau.widget.ArcListview(list);
+					tau.widget.Listview(list);
 				}
 			}
 		});
 	}
-}(tau));
+});
