@@ -4478,6 +4478,10 @@ tau-sectionchanger {
 .ui-spin-enabling .ui-spin-item {
   transition: 300ms opacity linear;
 }
+.ui-spin-placeholder {
+  opacity: 0;
+  pointer-events: none;
+}
 .tau-info-theme:after {
   content: "default";
 }
