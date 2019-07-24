@@ -2489,7 +2489,8 @@ ns.version = '1.0.4';
 					WIDGET_BUILT: "widgetbuilt",
 					DESTROY: "taudestroy",
 					BOUND: "bound",
-					WIDGET_INIT: "init"
+					WIDGET_INIT: "init",
+					STOP_ROUTING: "tauroutingstop"
 				},
 				engine;
 
@@ -3277,6 +3278,7 @@ ns.version = '1.0.4';
 			 * @member ns.engine
 			 */
 			function stop() {
+				eventUtils.trigger(document, eventType.STOP_ROUTING);
 			}
 
 			/**
@@ -3288,7 +3290,7 @@ ns.version = '1.0.4';
 			function destroy() {
 				stop();
 				eventUtils.fastOff(document, "create", createEventHandler);
-				destroyAllWidgets(document.body, true);
+				destroyAllWidgets(document, true);
 				eventUtils.trigger(document, eventType.DESTROY);
 			}
 
@@ -3393,7 +3395,8 @@ ns.version = '1.0.4';
 				 * @member ns.engine
 				 */
 				run: function () {
-										stop();
+										// stop the TAU process if exists before
+					stop();
 
 					eventUtils.fastOn(document, "create", createEventHandler);
 
@@ -3402,9 +3405,11 @@ ns.version = '1.0.4';
 					switch (document.readyState) {
 						case "interactive":
 						case "complete":
+							// build widgets and initiate router
 							build();
 							break;
 						default:
+							// build widgets and initiate router
 							eventUtils.one(document, "DOMContentLoaded", build.bind(engine));
 							break;
 					}
@@ -8027,7 +8032,9 @@ function pathToRegexp (path, keys, options) {
 			 * @return {boolean} False, if any callback invoked preventDefault on event object
 			 */
 			prototype.trigger = function (eventName, data, bubbles, cancelable) {
-				return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				if (this.element) {
+					return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				}
 			};
 
 			/**
@@ -10527,6 +10534,7 @@ function pathToRegexp (path, keys, options) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
 				}
+				ns.setConfig("pageContainer", null);
 			};
 
 			/**
@@ -11158,6 +11166,9 @@ function pathToRegexp (path, keys, options) {
 					Router.getInstance().init();
 				}, false);
 				document.addEventListener(engine.eventType.DESTROY, function () {
+					Router.getInstance().destroy();
+				}, false);
+				document.addEventListener(engine.eventType.STOP_ROUTING, function () {
 					Router.getInstance().destroy();
 				}, false);
 			}
@@ -19218,15 +19229,25 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Marquee
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					marqueeInnerElement;
 
 				self.state = null;
-				self._stateDOM = null;
 				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
 				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 				self.element.style.webkitMaskImage = "";
+
+				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
+				if (marqueeInnerElement) {
+					while (marqueeInnerElement.hasChildNodes()) {
+						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
+					}
+					self._stateDOM.children = [];
+					self.element.removeChild(marqueeInnerElement);
+				}
+				self._stateDOM = null;
 			};
 
 			/**
@@ -22791,7 +22812,7 @@ function pathToRegexp (path, keys, options) {
 			*/
 			orientationchange.unbind = function () {
 				window.removeEventListener("orientationchange", checkReportedOrientation, false);
-				body.removeEventListener("throttledresize", detectOrientationByDimensions, false);
+				document.removeEventListener("throttledresize", detectOrientationByDimensions, true);
 				document.removeEventListener(eventType.DESTROY, orientationchange.unbind, false);
 			};
 
@@ -22815,7 +22836,7 @@ function pathToRegexp (path, keys, options) {
 						}
 						portraitMatchMediaQueryList.addListener(matchMediaHandler);
 					} else {
-						body.addEventListener("throttledresize", detectOrientationByDimensions, false);
+						document.addEventListener("throttledresize", detectOrientationByDimensions, true);
 						detectOrientationByDimensions();
 					}
 				}
@@ -37993,11 +38014,11 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			prototype._unbindEvents = function () {
-				ns.event.disableGesture(this.element);
-
 				utilsEvents.off(this.element, "drag dragstart dragend dragcancel swipe", this);
 				utilsEvents.off(document, "scroll touchcancel", this);
 				utilsEvents.off(this.swipeElement, "touchstart touchmove touchend", blockEvent, false);
+
+				ns.event.disableGesture(this.element);
 			};
 
 			prototype.handleEvent = function (event) {
@@ -41764,7 +41785,8 @@ function pathToRegexp (path, keys, options) {
 					NEXT: WIDGET_CLASS + "-item-next",
 					PREV: WIDGET_CLASS + "-item-prev",
 					ENABLED: "enabled",
-					ENABLING: WIDGET_CLASS + "-enabling"
+					ENABLING: WIDGET_CLASS + "-enabling",
+					PLACEHOLDER: WIDGET_CLASS + "-placeholder"
 				},
 
 				prototype = new BaseWidget();
@@ -42038,7 +42060,13 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			prototype._build = function (element) {
+				var placeholder = document.createElement("div");
+
 				element.classList.add(classes.SPIN);
+				placeholder.classList.add(classes.PLACEHOLDER);
+				element.appendChild(placeholder);
+
+				this._ui.placeholder = placeholder;
 				return element;
 			};
 
@@ -42047,6 +42075,8 @@ function pathToRegexp (path, keys, options) {
 					animation;
 
 				value = window.parseInt(value, 10);
+				self._ui.placeholder.textContent = value;
+
 				if (isNaN(value)) {
 					ns.warn("Spin: value is not a number");
 				} else if (value !== self.options.value) {
@@ -42228,12 +42258,14 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._destroy = function () {
 				var self = this,
-					element = self.element;
+					element = self.element,
+					ui = self._ui;
 
 				self._unbindEvents();
-				self._ui.items.forEach(function (item) {
+				ui.items.forEach(function (item) {
 					item.parentNode.removeChild(item);
 				});
+				element.removeChild(ui.placeholder);
 				element.classList.remove(classes.SPIN);
 			};
 

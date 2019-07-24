@@ -2756,7 +2756,8 @@ ns.version = '1.0.4';
 					WIDGET_BUILT: "widgetbuilt",
 					DESTROY: "taudestroy",
 					BOUND: "bound",
-					WIDGET_INIT: "init"
+					WIDGET_INIT: "init",
+					STOP_ROUTING: "tauroutingstop"
 				},
 				engine;
 
@@ -3544,6 +3545,7 @@ ns.version = '1.0.4';
 			 * @member ns.engine
 			 */
 			function stop() {
+				eventUtils.trigger(document, eventType.STOP_ROUTING);
 			}
 
 			/**
@@ -3555,7 +3557,7 @@ ns.version = '1.0.4';
 			function destroy() {
 				stop();
 				eventUtils.fastOff(document, "create", createEventHandler);
-				destroyAllWidgets(document.body, true);
+				destroyAllWidgets(document, true);
 				eventUtils.trigger(document, eventType.DESTROY);
 			}
 
@@ -3660,7 +3662,8 @@ ns.version = '1.0.4';
 				 * @member ns.engine
 				 */
 				run: function () {
-										stop();
+										// stop the TAU process if exists before
+					stop();
 
 					eventUtils.fastOn(document, "create", createEventHandler);
 
@@ -3669,9 +3672,11 @@ ns.version = '1.0.4';
 					switch (document.readyState) {
 						case "interactive":
 						case "complete":
+							// build widgets and initiate router
 							build();
 							break;
 						default:
+							// build widgets and initiate router
 							eventUtils.one(document, "DOMContentLoaded", build.bind(engine));
 							break;
 					}
@@ -6118,7 +6123,9 @@ ns.version = '1.0.4';
 			 * @return {boolean} False, if any callback invoked preventDefault on event object
 			 */
 			prototype.trigger = function (eventName, data, bubbles, cancelable) {
-				return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				if (this.element) {
+					return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				}
 			};
 
 			/**
@@ -9485,7 +9492,7 @@ ns.version = '1.0.4';
 			*/
 			orientationchange.unbind = function () {
 				window.removeEventListener("orientationchange", checkReportedOrientation, false);
-				body.removeEventListener("throttledresize", detectOrientationByDimensions, false);
+				document.removeEventListener("throttledresize", detectOrientationByDimensions, true);
 				document.removeEventListener(eventType.DESTROY, orientationchange.unbind, false);
 			};
 
@@ -9509,7 +9516,7 @@ ns.version = '1.0.4';
 						}
 						portraitMatchMediaQueryList.addListener(matchMediaHandler);
 					} else {
-						body.addEventListener("throttledresize", detectOrientationByDimensions, false);
+						document.addEventListener("throttledresize", detectOrientationByDimensions, true);
 						detectOrientationByDimensions();
 					}
 				}
@@ -13806,6 +13813,7 @@ function pathToRegexp (path, keys, options) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
 				}
+				ns.setConfig("pageContainer", null);
 			};
 
 			/**
@@ -14437,6 +14445,9 @@ function pathToRegexp (path, keys, options) {
 					Router.getInstance().init();
 				}, false);
 				document.addEventListener(engine.eventType.DESTROY, function () {
+					Router.getInstance().destroy();
+				}, false);
+				document.addEventListener(engine.eventType.STOP_ROUTING, function () {
 					Router.getInstance().destroy();
 				}, false);
 			}
@@ -31364,7 +31375,7 @@ function pathToRegexp (path, keys, options) {
 						eventUtils.on(popupContainer, Popup.events.transition_start, self._backgroundRenderCallback);
 					}
 
-					utilsEvents.on(self.element, "animationend", self, true);
+					utilsEvents.on(self.element, "animationend webkitAnimationEnd", self, true);
 				}
 			};
 
@@ -31380,7 +31391,7 @@ function pathToRegexp (path, keys, options) {
 
 				//phantom hack
 				if (element) {
-					utilsEvents.off(element, "animationend", self, true);
+					utilsEvents.off(element, "animationend webkitAnimationEnd", self, true);
 				}
 
 				if (self._context) {
@@ -31817,6 +31828,7 @@ function pathToRegexp (path, keys, options) {
 							self._end(event);
 							break;
 						case "animationend":
+						case "webkitAnimationEnd":
 							self._animationEnd(event);
 							break;
 					}
@@ -33713,15 +33725,25 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Marquee
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					marqueeInnerElement;
 
 				self.state = null;
-				self._stateDOM = null;
 				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
 				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 				self.element.style.webkitMaskImage = "";
+
+				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
+				if (marqueeInnerElement) {
+					while (marqueeInnerElement.hasChildNodes()) {
+						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
+					}
+					self._stateDOM.children = [];
+					self.element.removeChild(marqueeInnerElement);
+				}
+				self._stateDOM = null;
 			};
 
 			/**
@@ -34003,8 +34025,8 @@ function pathToRegexp (path, keys, options) {
 					};
 					self._marqueeOptions = {
 						ellipsisEffect: "none",
-						marqueeStyle: "alternate",
-						iteration: 5,
+						marqueeStyle: "scroll",
+						iteration: "infinite",
 						delay: 1000
 					};
 				},
@@ -34029,7 +34051,8 @@ function pathToRegexp (path, keys, options) {
 					TABBAR_LANDSCAPE: CLASS_PREFIX + "-landscape",
 					TABBAR_TEXT: CLASS_PREFIX + "-text",
 					TABBAR_STATIC: CLASS_PREFIX + "-static",
-					ANCHOR: CLASS_PREFIX + "-anchor"
+					ANCHOR: CLASS_PREFIX + "-anchor",
+					INACTIVE_TOO_LONG_TEXT: CLASS_PREFIX + "-inactive-text-overflow"
 				},
 				events = ns.event,
 				DEFAULT_NUMBER = {
@@ -34126,7 +34149,10 @@ function pathToRegexp (path, keys, options) {
 					i,
 					linksLength,
 					link,
-					text;
+					text,
+					textRealWidth,
+					visibleTextWidth,
+					prevTextOverflowVal;
 
 				if (links.length === 0) {
 					links = element.querySelectorAll("li div");
@@ -34143,6 +34169,17 @@ function pathToRegexp (path, keys, options) {
 						innerText.classList.add(classes.TABBAR_TEXT);
 						innerText.appendChild(link.firstChild);
 						link.appendChild(innerText);
+
+						prevTextOverflowVal = innerText.style.overflowX;
+						visibleTextWidth = innerText.getBoundingClientRect().width;
+						innerText.style.overflowX = "visible";
+						textRealWidth = innerText.getBoundingClientRect().width;
+						innerText.style.overflowX = prevTextOverflowVal;
+
+						if (textRealWidth > visibleTextWidth) {
+							link.classList.add(classes.INACTIVE_TOO_LONG_TEXT);
+						}
+
 					} else {
 						link.classList.add(classes.TAB_NO_TEXT);
 					}
@@ -34426,8 +34463,8 @@ function pathToRegexp (path, keys, options) {
 					text,
 					marquee,
 					prevStyleValue,
-					linkRect,
-					textRect;
+					textWidth,
+					allTextWidth;
 
 				if (ui.links.length === 0) {
 					return;
@@ -34441,6 +34478,7 @@ function pathToRegexp (path, keys, options) {
 					if (marquee) {
 						marquee.reset();
 						ns.engine.destroyWidget(text);
+						link.classList.add(classes.INACTIVE_TOO_LONG_TEXT);
 					}
 				}
 
@@ -34454,11 +34492,13 @@ function pathToRegexp (path, keys, options) {
 				text = link.querySelector("." + classes.TABBAR_TEXT);
 				if (text) {
 					prevStyleValue = text.style.overflowX;
+					textWidth = text.getBoundingClientRect().width;
 					text.style.overflowX = "visible";
-					textRect = text.getBoundingClientRect();
-					linkRect = link.getBoundingClientRect();
+					allTextWidth = text.getBoundingClientRect().width;
 					text.style.overflowX = prevStyleValue;
-					if (textRect.width > linkRect.width) {
+
+					if (allTextWidth > textWidth) {
+						link.classList.remove(classes.INACTIVE_TOO_LONG_TEXT);
 						ns.widget.Marquee(text, self._marqueeOptions);
 					}
 				}
