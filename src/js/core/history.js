@@ -46,6 +46,14 @@
 					activeState: null,
 
 					/**
+					 * Property contains starting url for tau instance
+					 * @property {Object} startURL
+					 * @static
+					 * @member ns.history
+					 */
+					startURL: null,
+
+					/**
 					 * This method replaces or pushes state to history.
 					 * @method replace
 					 * @param {Object} state The state object
@@ -61,6 +69,9 @@
 							stateTitle: stateTitle
 						});
 
+						if (!this.startURL && url && url.length) {
+							this.startURL = url;
+						}
 						windowHistory[historyVolatileMode ? "replaceState" : "pushState"](newState, stateTitle, url);
 						history.setActive(newState);
 					},
@@ -72,7 +83,11 @@
 					 * @member ns.history
 					 */
 					back: function () {
-						windowHistory.back();
+						// In case of running tau app in web browser
+						// don't allow to go back outside tau history
+						if (this.startURL !== window.location.href) {
+							windowHistory.back();
+						}
 					},
 
 					/**

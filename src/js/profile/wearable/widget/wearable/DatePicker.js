@@ -492,7 +492,7 @@
 					self.trigger("change", {
 						value: self.value()
 					});
-					history.back();
+					ns.history.back();
 				} else {
 					self._setActiveSelector(""); // disable all
 				}
