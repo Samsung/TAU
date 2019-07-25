@@ -513,7 +513,6 @@
 			 * Change month value on rotary event
 			 * @method _changeMonth
 			 * @param {number} changeValue
-			 * @param {boolean} value
 			 * @memberof ns.widget.wearable.DatePicker
 			 * @protected
 			 */
@@ -643,7 +642,7 @@
 			/**
 			 * Change value of spin included in dataPicker
 			 * @method _onSpinChange
-			 * @param {number} value
+			 * @param {number} newValue
 			 * @memberof ns.widget.wearable.DatePicker
 			 * @protected
 			 */
