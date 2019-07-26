@@ -214,7 +214,7 @@
 				copiedArgs = [].slice.call(args);
 
 				if (config) {
-					if (config.loop) {
+					if (config.loop && config.duration > 0) {
 					// when animation is in loop then we create callback on animation and to restart animation
 						self._animate.callback = animateLoopCallback.bind(null, self, copiedArgs);
 					} else if (config.withRevert) {
@@ -238,6 +238,7 @@
 			prototype.start = function (callback) {
 				var self = this;
 
+				self.active = true;
 			// init animate options
 				self._initAnimate();
 
@@ -262,6 +263,7 @@
 			prototype.stop = function () {
 				var self = this;
 
+				self.active = false;
 				// reset index of animations chain
 				self._animate.chainIndex = 0;
 				// reset current animation config
@@ -274,6 +276,7 @@
 			prototype.pause = function () {
 				var self = this;
 
+				self.active = false;
 				if (self._animateConfig) {
 					self._pausedTimeDiff = Date.now() - self._animateConfig[0].startTime;
 					self.stop();
@@ -282,7 +285,7 @@
 
 			function calculateOption(option, time) {
 				var timeDiff,
-					current;
+					current = null;
 
 				if (option && option.startTime < time) {
 				// if option is not delayed
@@ -295,8 +298,16 @@
 							option.callback();
 						}
 					}
-					current = option.calculate(option.timing(timeDiff / option.duration),
-						option.diff, option.from, option.current);
+
+					if (option.duration > 0) {
+						current = option.calculate(
+							option.timing(timeDiff / option.duration),
+							option.diff,
+							option.from,
+							option.current
+						);
+					}
+
 					if (current !== null) {
 						option.current = current;
 						// we set next calculation time
@@ -308,6 +319,7 @@
 						// inform widget about redraw
 						return 1;
 					}
+
 					if (timeDiff >= option.duration) {
 						// inform about remove animation config
 						return 2;
@@ -340,16 +352,20 @@
 
 					// calculating options changed in animation
 					while (i < length) {
-						calculatedOption = calculateOption(animateConfig[i], time);
-						if (calculatedOption === 2) {
+						if (animateConfig[i].duration > 0) {
+							calculatedOption = calculateOption(animateConfig[i], time);
+							if (calculatedOption === 2) {
+								notFinishedAnimationsCount--;
+								// remove current config and recalculate loop arguments
+								animateConfig.splice(i, 1);
+								length--;
+								i--;
+								redraw = true;
+							} else if (calculatedOption === 1) {
+								redraw = true;
+							}
+						} else {
 							notFinishedAnimationsCount--;
-							// remove current config and recalculate loop arguments
-							animateConfig.splice(i, 1);
-							length--;
-							i--;
-							redraw = true;
-						} else if (calculatedOption === 1) {
-							redraw = true;
 						}
 						i++;
 					}
