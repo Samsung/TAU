@@ -34,8 +34,7 @@
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
-			var body = document.body,
-				eventUtils = ns.event,
+			var eventUtils = ns.event,
 				eventType = ns.engine.eventType,
 				orientationchange = {
 					/**
