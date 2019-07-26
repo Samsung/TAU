@@ -11,11 +11,9 @@
 
 	/**
 	 * Updates text for an selected radio
-	 * @param {Event} e
+	 * @param {HTMLElement} target
 	 */
-	function onChangeHandler(e) {
-		var target = e.target;
-
+	function setRadioresultFromTarget(target) {
 		if (target.checked) {
 			radioresult.innerHTML = "The Active Radio is " + target.id;
 		}
@@ -27,7 +25,10 @@
 	 */
 	page.addEventListener("pageshow", function () {
 		for (idx = 0; idx < radios.length; idx++) {
-			radios[idx].addEventListener("change", onChangeHandler);
+			radios[idx].addEventListener("change", function (event) {
+				setRadioresultFromTarget(event.target);
+			});
+			setRadioresultFromTarget(radios[idx]);
 		}
 	});
 }());
