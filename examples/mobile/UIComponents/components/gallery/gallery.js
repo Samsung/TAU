@@ -63,7 +63,7 @@
 
 		resetChildSectionInfo();
 		if (sectionsLength > 0) {
-			sectionChangerWidget.setActiveSection((activeIndex - 1) >= 0 ? activeIndex - 1 : 0);
+			sectionChangerWidget.setActiveSection(activeIndex > 0 ? activeIndex - 1 : 0);
 		}
 		sectionChangerWidget.refresh();
 
