@@ -9,10 +9,23 @@
 	var page = document.getElementById("indexscrollbarPage"),
 		isbElement = document.getElementById("indexscrollbar"),
 		dividers = page.getElementsByClassName("ui-group-index"),
+		searchButton = page.querySelector("#searchButton"),
+		searchInput = page.querySelector("#indexscrollbar-search-input"),
+		header = page.querySelector(".ui-header"),
+		backButton = header.querySelector("a.ui-btn"),
+		list = page.querySelector("#isbList"),
+		listItems = list.querySelectorAll("[data-filtertext]"),
+		listItemsArray = [].slice.call(listItems),
+		listview,
 		isb,
 		scroller,
+		clearButton,
 		dividerIndexObject = {},
-		selectBound;
+		selectBound,
+		disableSearchBound,
+		searchClickBound,
+		searchInputKeyupBound,
+		clearSearchBound;
 
 	/**
 	 * Moves the scroll to selected index
@@ -36,14 +49,24 @@
 			idx;
 
 		scroller = tau.util.selectors.getScrollableParent(document.getElementById("isbList"));
+		clearButton = header.querySelector(".ui-text-input-clear");
 		len = dividers.length;
 		for (i = 0; i < len; i++) {
 			idx = dividers[i].textContent;
 			dividerIndexObject[idx] = dividers[i];
 		}
 		isb = new tau.widget.IndexScrollbar(isbElement);
+		listview = new tau.widget.Listview(list);
 		selectBound = onSelect.bind();
 		isb.addEventListener("select", selectBound);
+		searchClickBound = onSearchBtnClick.bind();
+		searchButton.addEventListener("click", searchClickBound);
+		searchInputKeyupBound = onSearchInputKeyup.bind();
+		searchInput.addEventListener("keyup", searchInputKeyupBound);
+		disableSearchBound = disableSearch.bind();
+		backButton.addEventListener("click", disableSearchBound);
+		clearSearchBound = onClearClick.bind();
+		clearButton.addEventListener("click", clearSearchBound);
 	});
 
 	/**
@@ -52,6 +75,59 @@
 	 */
 	page.addEventListener("pagehide", function () {
 		isb.removeEventListener("select", selectBound);
+		searchButton.removeEventListener("click", searchClickBound);
+		searchInput.removeEventListener("keyup", searchInputKeyupBound);
+		backButton.removeEventListener("click", disableSearchBound);
+		clearButton.removeEventListener("click", clearSearchBound);
 		isb.destroy();
 	});
+
+	/**
+	 * Search button click callback
+	 * Sets focus on search input field
+	 */
+	function onSearchBtnClick() {
+		header.classList.add("search-active");
+		searchInput.focus();
+	}
+
+	/**
+	 * Search button click callback
+	 * Sets focus on search input field
+	 */
+	function disableSearch() {
+		header.classList.remove("search-active");
+	}
+
+	/**
+	 * TextInput clear button click handler
+	 * Resets search results
+	 */
+
+	function onClearClick() {
+		listItemsArray.forEach(function (item) {
+			item.classList.toggle("li-search-hidden", false);
+		});
+
+		listview.refresh();
+	}
+
+	/**
+	 * Shows items that match the entered value
+	 * keyup event handler
+	 */
+	function onSearchInputKeyup() {
+		listItemsArray.forEach(function (item) {
+			var itemText = item.getAttribute("data-filtertext");
+
+			if (itemText.toString().toLowerCase().indexOf(searchInput.value.toLowerCase()) === -1) {
+				item.classList.add("li-search-hidden");
+			} else {
+				item.classList.remove("li-search-hidden");
+			}
+		});
+
+		listview.refresh();
+	}
+
 }(window.tau));

@@ -439,7 +439,7 @@
 				ns.event.trigger(self.element, "change", {
 					value: self.value()
 				});
-				history.back();
+				ns.history.back();
 			}
 
 			function onRotary(self, ev) {
