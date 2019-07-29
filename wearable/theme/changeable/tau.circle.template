@@ -37,6 +37,7 @@
 /***************************************************************************
                   Listview
 ***************************************************************************/
+/* B011 */
 /****************************************************************************
                Listview with Marquee
 ****************************************************************************/
@@ -1219,7 +1220,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
 }
 .ui-listview.ui-snap-listview li a,
 .ui-listview.ui-arc-listview-carousel-item li a {
@@ -1359,9 +1360,7 @@ a {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  -webkit-mask-image: url("images/List/b_list_focus_bg.png");
-  -webkit-mask-size: 100% 100%;
-  background-color: B0210;
+  background-color: rgba(48, 48, 48, 0.65);
   border-radius: 20vw;
   pointer-events: none;
 }
@@ -1426,11 +1425,16 @@ a {
   display: flex;
   flex-direction: column;
 }
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline .ui-li-sub-text,
-.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline a .ui-li-sub-text {
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline .ui-li-sub-text {
   color: T0262;
   font-size: 1.5rem;
   line-height: 2rem;
+}
+.ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline a .ui-li-sub-text {
+  width: 100%;
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow: hidden;
 }
 .ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline.ui-li-active .ui-li-sub-text,
 .ui-listview:not(.ui-arc-listview):not(.ui-arc-listview-carousel-item):not(.ui-snap-listview) li:not(.ui-listview-divider).ui-li-has-multiline.ui-li-active a .ui-li-sub-text {
@@ -1600,6 +1604,35 @@ input[type="radio"]:disabled:checked::before {
 }
 input[type="radio"]:disabled:checked::after {
   content: none;
+}
+/** CheckBox / Radio button on arc-listview **/
+.ui-arc-listview-carousel-item.ui-listview li label {
+  display: flex;
+  align-items: center;
+}
+.ui-arc-listview-carousel-item.ui-listview li label input[type="checkbox"],
+.ui-arc-listview-carousel-item.ui-listview li label input[type="radio"] {
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: none;
+  min-width: 4.75rem;
+}
+.ui-arc-listview-carousel-item.ui-listview li.li-has-checkbox label,
+.ui-arc-listview-carousel-item.ui-listview li.li-has-radio label {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.ui-arc-listview-carousel-item.ui-listview li.li-has-checkbox label div + input,
+.ui-arc-listview-carousel-item.ui-listview li.li-has-radio label div + input {
+  margin-left: 0.625rem;
+}
+.ui-arc-listview-carousel-item.ui-listview li.li-has-checkbox label .ui-arc-listview-text-content,
+.ui-arc-listview-carousel-item.ui-listview li.li-has-radio label .ui-arc-listview-text-content {
+  overflow: hidden;
 }
 /***************************************************************************
                   button
@@ -2546,15 +2579,13 @@ a.ui-hyperlink:hover {
   transition: opacity 250ms;
   pointer-events: none;
   transform: translateY(-50%);
-  mask-image: url("images/List/b_list_focus_bg.png");
-  mask-size: 100% 100%;
   top: 50%;
   width: 22.5rem;
   height: 7.5rem;
   left: 0;
   right: 0;
   border-radius: 4.5rem;
-  background-color: B0210;
+  background-color: rgba(48, 48, 48, 0.65);
 }
 .ui-arc-listview-selection-show {
   opacity: 1;
