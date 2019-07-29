@@ -1113,8 +1113,14 @@
 				}
 			}
 
-			function render(stateObject, element, isChild) {
-				var recalculate = false;
+			function render(stateObject, element, isChild, options) {
+				var recalculate = false,
+					animation = (options) ? options.animation : null;
+
+				if (animation && !animation.active) {
+					// Animation has stopped before render
+					return false;
+				}
 
 				if (stateObject.classList !== undefined) {
 					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
@@ -1148,12 +1154,13 @@
 			prototype._render = function (now) {
 				var self = this,
 					stateDOM = self._stateDOM,
-					element = self.element;
+					element = self.element,
+					animation = self._animation;
 
 				if (now) {
-					render(stateDOM, element);
+					render(stateDOM, element, false, {animation: animation});
 				} else {
-					util.requestAnimationFrame(render.bind(null, stateDOM, element));
+					util.requestAnimationFrame(render.bind(null, stateDOM, element, false, {animation: animation}));
 				}
 			};
 
