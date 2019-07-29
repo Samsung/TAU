@@ -91,6 +91,7 @@
 }
 
 .ui-listview li.li-has-multiline {
+	flex-direction: column;
 	min-height: 100px;
 }
 
