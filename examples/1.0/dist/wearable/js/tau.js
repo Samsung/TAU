@@ -5287,6 +5287,14 @@ function pathToRegexp (path, keys, options) {
 					activeState: null,
 
 					/**
+					 * Property contains starting url for tau instance
+					 * @property {Object} startURL
+					 * @static
+					 * @member ns.history
+					 */
+					startURL: null,
+
+					/**
 					 * This method replaces or pushes state to history.
 					 * @method replace
 					 * @param {Object} state The state object
@@ -5302,6 +5310,9 @@ function pathToRegexp (path, keys, options) {
 							stateTitle: stateTitle
 						});
 
+						if (!this.startURL && url && url.length) {
+							this.startURL = url;
+						}
 						windowHistory[historyVolatileMode ? "replaceState" : "pushState"](newState, stateTitle, url);
 						history.setActive(newState);
 					},
@@ -5313,7 +5324,11 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.history
 					 */
 					back: function () {
-						windowHistory.back();
+						// In case of running tau app in web browser
+						// don't allow to go back outside tau history
+						if (this.startURL !== window.location.href) {
+							windowHistory.back();
+						}
 					},
 
 					/**
@@ -8616,7 +8631,8 @@ function pathToRegexp (path, keys, options) {
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
 					uiPageScroll: "ui-scroll-on",
-					uiScroller: "ui-scroller"
+					uiScroller: "ui-scroller",
+					uiContentUnderPopup: "ui-content-under-popup"
 				},
 				HEADER_SELECTOR = "header,[data-role='header'],." + classes.uiHeader,
 				FOOTER_SELECTOR = "footer,[data-role='footer'],." + classes.uiFooter,
@@ -12146,6 +12162,14 @@ function pathToRegexp (path, keys, options) {
 				 */
 				Router = ns.router && ns.router.Router,
 
+				/**
+				 * Alias for class ns.widget.core.Page
+				 * @property {ns.router.Router} Router
+				 * @member ns.widget.core.Popup
+				 * @private
+				 */
+				Page = ns.widget.core.Page,
+
 				POPUP_SELECTOR = "[data-role='popup'], .ui-popup",
 
 				Popup = function () {
@@ -12237,7 +12261,8 @@ function pathToRegexp (path, keys, options) {
 					wrapper: CLASSES_PREFIX + "-wrapper",
 					toast: CLASSES_PREFIX + "-toast",
 					toastSmall: CLASSES_PREFIX + "-toast-small",
-					build: "ui-build"
+					build: "ui-build",
+					overlayShown: CLASSES_PREFIX + "-overlay-shown"
 				},
 				/**
 				 * Dictionary for popup related selectors
@@ -12566,8 +12591,9 @@ function pathToRegexp (path, keys, options) {
 				ui.wrapper = ui.wrapper || element.querySelector("." + classes.wrapper);
 				ui.container = ui.wrapper || element;
 
-				// @todo - use selector from page's definition in engine
-				ui.page = utilSelector.getClosestByClass(element, "ui-page") || window;
+				ui.page = utilSelector.getClosestByClass(element, Page.classes.uiPage) || window;
+				ui.pageContent = (typeof ui.page.querySelector === "function") ?
+					ui.page.querySelector("." + Page.classes.uiContent) : null;
 
 				if (elementClassList.contains(classes.toast)) {
 					options.closeAfter = options.closeAfter || 2000;
@@ -12630,7 +12656,7 @@ function pathToRegexp (path, keys, options) {
 
 				eventUtils.on(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.on(window, "resize", self, false);
-				eventUtils.on(document, "click touchstart", self, false);
+				eventUtils.on(document, "vclick", self, false);
 			};
 
 
@@ -12645,7 +12671,7 @@ function pathToRegexp (path, keys, options) {
 
 				eventUtils.off(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.off(window, "resize", self, false);
-				eventUtils.off(document, "click touchstart", self, false);
+				eventUtils.off(document, "vclick", self, false);
 			};
 
 			/**
@@ -12767,7 +12793,8 @@ function pathToRegexp (path, keys, options) {
 			prototype._show = function (options) {
 				var self = this,
 					transitionOptions = objectUtils.merge({}, options),
-					overlay = self._ui.overlay;
+					overlay = self._ui.overlay,
+					pageContent = self._ui.pageContent;
 
 				// set layout
 				self._layout(self.element);
@@ -12780,8 +12807,14 @@ function pathToRegexp (path, keys, options) {
 				self.trigger(events.before_show);
 				// show overlay
 				if (overlay) {
-					overlay.style.display = "block";
+					overlay.classList.toggle(classes.overlayShown, true);
 				}
+
+				// disable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, true);
+				}
+
 				// start opening animation
 				self._transition(transitionOptions, self._onShow.bind(self));
 
@@ -12812,12 +12845,18 @@ function pathToRegexp (path, keys, options) {
 			prototype._hide = function (options) {
 				var self = this,
 					isOpened = self._isOpened(),
-					callbacks = self._callbacks;
+					callbacks = self._callbacks,
+					pageContent = self._ui.pageContent;
 
 				// change state of popup
 				self.state = states.DURING_CLOSING;
 
 				self.trigger(events.before_hide);
+
+				// enable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, false);
+				}
 
 				if (isOpened) {
 					// popup is opened, so we start closing animation
@@ -12850,7 +12889,7 @@ function pathToRegexp (path, keys, options) {
 				self._setActive(false);
 
 				if (overlay) {
-					overlay.style.display = "";
+					overlay.classList.toggle(classes.overlayShown, false);
 				}
 				self._restoreOpenOptions();
 				self.trigger(events.hide);
@@ -12874,14 +12913,9 @@ function pathToRegexp (path, keys, options) {
 					case "resize":
 						self._onResize(event);
 						break;
-					case "click":
+					case "vclick":
 						if (event.target === self._ui.overlay) {
 							self._onClickOverlay(event);
-						}
-						break;
-					case "touchstart":
-						if (self.element.classList.contains(classes.toast) && self._isActive()) {
-							router.close(null, {rel: "popup"});
 						}
 						break;
 				}
@@ -22706,8 +22740,7 @@ function pathToRegexp (path, keys, options) {
  */
 (function (window, document, ns) {
 	"use strict";
-				var body = document.body,
-				eventUtils = ns.event,
+				var eventUtils = ns.event,
 				eventType = ns.engine.eventType,
 				orientationchange = {
 					/**
@@ -31973,11 +32006,10 @@ function pathToRegexp (path, keys, options) {
 			/**
 			 * Handler for popupbeforehide event
 			 * @method _onPopupHide
-			 * @param {Event} event
 			 * @memberof ns.widget.wearable.ArcListview
 			 * @protected
 			 */
-			prototype._onPopupHide = function (event) {
+			prototype._onPopupHide = function () {
 				var self = this;
 
 				if (self._disabledByPopup) {
@@ -32168,7 +32200,7 @@ function pathToRegexp (path, keys, options) {
 							self._onClick(event);
 							break;
 						case "popupbeforehide":
-							self._onPopupHide(event);
+							self._onPopupHide();
 							break;
 						case "popupbeforeshow":
 							self._onPopupShow(event);
@@ -43322,7 +43354,7 @@ function pathToRegexp (path, keys, options) {
 				ns.event.trigger(self.element, "change", {
 					value: self.value()
 				});
-				history.back();
+				ns.history.back();
 			}
 
 			function onRotary(self, ev) {
@@ -43783,7 +43815,7 @@ function pathToRegexp (path, keys, options) {
 					self.trigger("change", {
 						value: self.value()
 					});
-					history.back();
+					ns.history.back();
 				} else {
 					ui.labelHours.classList.remove(classes.HIDDEN_LABEL);
 					ui.labelMinutes.classList.remove(classes.HIDDEN_LABEL);
@@ -44796,7 +44828,7 @@ function pathToRegexp (path, keys, options) {
 					self.trigger("change", {
 						value: self.value()
 					});
-					history.back();
+					ns.history.back();
 				} else {
 					self._setActiveSelector(""); // disable all
 				}
@@ -44817,7 +44849,6 @@ function pathToRegexp (path, keys, options) {
 			 * Change month value on rotary event
 			 * @method _changeMonth
 			 * @param {number} changeValue
-			 * @param {boolean} value
 			 * @memberof ns.widget.wearable.DatePicker
 			 * @protected
 			 */
@@ -44947,7 +44978,7 @@ function pathToRegexp (path, keys, options) {
 			/**
 			 * Change value of spin included in dataPicker
 			 * @method _onSpinChange
-			 * @param {number} value
+			 * @param {number} newValue
 			 * @memberof ns.widget.wearable.DatePicker
 			 * @protected
 			 */

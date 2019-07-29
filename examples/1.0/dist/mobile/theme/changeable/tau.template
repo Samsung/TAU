@@ -575,6 +575,9 @@ header:not(.ui-header-searchbar):not(.ui-header-navigation) > .ui-btn:not(.ui-bt
   padding-left: 12px;
   padding-right: 12px;
 }
+.ui-content.ui-content-under-popup {
+  pointer-events: none;
+}
 .ui-page-fullscreen .ui-content {
   padding: 0;
 }
@@ -1818,6 +1821,9 @@ a.ui-link-inherit {
   width: 100%;
   height: 100%;
   z-index: 1200;
+}
+.ui-popup-overlay.ui-popup-overlay-shown {
+  display: block;
 }
 .ui-popup.ui-popup-activity .ui-popup-content {
   text-align: right;
@@ -7270,6 +7276,10 @@ input[type="search"][disabled] {
 }
 .scrollbar-disabled .ui-scrollview-clip {
   width: 105%;
+}
+.scrollbar-disabled .ui-scrollview-clip[data-direction="x"] {
+  width: 100%;
+  height: 105%;
 }
 .ui-collapsible-heading .ui-btn-icon-right .ui-btn-inner {
   padding-left: 4px;

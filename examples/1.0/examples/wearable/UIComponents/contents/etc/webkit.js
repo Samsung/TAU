@@ -11,7 +11,6 @@
 			inputTime.click();
 		});
 		inputTime.addEventListener("change", function () {
-			console.log(inputTime.value);
 			val.innerText = inputTime.value;
 		});
 	});

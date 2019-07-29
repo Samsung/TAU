@@ -2040,6 +2040,9 @@ div.ui-popup.ui-ctxpopup.ui-popup-content-size .ui-popup-content {
 .ui-popup-overlay.in {
   display: block;
 }
+.ui-popup-overlay.ui-popup-overlay-shown {
+  display: block;
+}
 .ui-popup.slideup.in {
   animation-name: popupslideinfrombottom;
   animation-duration: 250ms;
