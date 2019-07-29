@@ -1345,11 +1345,10 @@
 			/**
 			 * Handler for popupbeforehide event
 			 * @method _onPopupHide
-			 * @param {Event} event
 			 * @memberof ns.widget.wearable.ArcListview
 			 * @protected
 			 */
-			prototype._onPopupHide = function (event) {
+			prototype._onPopupHide = function () {
 				var self = this;
 
 				if (self._disabledByPopup) {
@@ -1540,7 +1539,7 @@
 							self._onClick(event);
 							break;
 						case "popupbeforehide":
-							self._onPopupHide(event);
+							self._onPopupHide();
 							break;
 						case "popupbeforeshow":
 							self._onPopupShow(event);

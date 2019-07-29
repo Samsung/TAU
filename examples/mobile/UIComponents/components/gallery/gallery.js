@@ -60,8 +60,12 @@
 		var activeIndex = sectionChangerWidget.getActiveSectionIndex();
 
 		sectionsParentNode.removeChild(sections[activeIndex]);
-		sectionChangerWidget.refresh();
+
 		resetChildSectionInfo();
+		if (sectionsLength > 0) {
+			sectionChangerWidget.setActiveSection(activeIndex > 0 ? activeIndex - 1 : 0);
+		}
+		sectionChangerWidget.refresh();
 
 		if (sectionsLength === 1) {
 			deleteBtnWidget.disable();

@@ -367,7 +367,7 @@
 					self.trigger("change", {
 						value: self.value()
 					});
-					history.back();
+					ns.history.back();
 				} else {
 					ui.labelHours.classList.remove(classes.HIDDEN_LABEL);
 					ui.labelMinutes.classList.remove(classes.HIDDEN_LABEL);
