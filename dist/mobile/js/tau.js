@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.4';
+ns.version = '1.0.5';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2756,7 +2756,8 @@ ns.version = '1.0.4';
 					WIDGET_BUILT: "widgetbuilt",
 					DESTROY: "taudestroy",
 					BOUND: "bound",
-					WIDGET_INIT: "init"
+					WIDGET_INIT: "init",
+					STOP_ROUTING: "tauroutingstop"
 				},
 				engine;
 
@@ -3544,6 +3545,7 @@ ns.version = '1.0.4';
 			 * @member ns.engine
 			 */
 			function stop() {
+				eventUtils.trigger(document, eventType.STOP_ROUTING);
 			}
 
 			/**
@@ -3555,7 +3557,7 @@ ns.version = '1.0.4';
 			function destroy() {
 				stop();
 				eventUtils.fastOff(document, "create", createEventHandler);
-				destroyAllWidgets(document.body, true);
+				destroyAllWidgets(document, true);
 				eventUtils.trigger(document, eventType.DESTROY);
 			}
 
@@ -3660,7 +3662,8 @@ ns.version = '1.0.4';
 				 * @member ns.engine
 				 */
 				run: function () {
-										stop();
+										// stop the TAU process if exists before
+					stop();
 
 					eventUtils.fastOn(document, "create", createEventHandler);
 
@@ -3669,9 +3672,11 @@ ns.version = '1.0.4';
 					switch (document.readyState) {
 						case "interactive":
 						case "complete":
+							// build widgets and initiate router
 							build();
 							break;
 						default:
+							// build widgets and initiate router
 							eventUtils.one(document, "DOMContentLoaded", build.bind(engine));
 							break;
 					}
@@ -6118,7 +6123,9 @@ ns.version = '1.0.4';
 			 * @return {boolean} False, if any callback invoked preventDefault on event object
 			 */
 			prototype.trigger = function (eventName, data, bubbles, cancelable) {
-				return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				if (this.element) {
+					return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
+				}
 			};
 
 			/**
@@ -6227,8 +6234,14 @@ ns.version = '1.0.4';
 				}
 			}
 
-			function render(stateObject, element, isChild) {
-				var recalculate = false;
+			function render(stateObject, element, isChild, options) {
+				var recalculate = false,
+					animation = (options) ? options.animation : null;
+
+				if (animation && !animation.active) {
+					// Animation has stopped before render
+					return false;
+				}
 
 				if (stateObject.classList !== undefined) {
 					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
@@ -6262,12 +6275,13 @@ ns.version = '1.0.4';
 			prototype._render = function (now) {
 				var self = this,
 					stateDOM = self._stateDOM,
-					element = self.element;
+					element = self.element,
+					animation = self._animation;
 
 				if (now) {
-					render(stateDOM, element);
+					render(stateDOM, element, false, {animation: animation});
 				} else {
-					util.requestAnimationFrame(render.bind(null, stateDOM, element));
+					util.requestAnimationFrame(render.bind(null, stateDOM, element, false, {animation: animation}));
 				}
 			};
 
@@ -9373,8 +9387,7 @@ ns.version = '1.0.4';
  */
 (function (window, document, ns) {
 	"use strict";
-				var body = document.body,
-				eventUtils = ns.event,
+				var eventUtils = ns.event,
 				eventType = ns.engine.eventType,
 				orientationchange = {
 					/**
@@ -9485,7 +9498,7 @@ ns.version = '1.0.4';
 			*/
 			orientationchange.unbind = function () {
 				window.removeEventListener("orientationchange", checkReportedOrientation, false);
-				body.removeEventListener("throttledresize", detectOrientationByDimensions, false);
+				document.removeEventListener("throttledresize", detectOrientationByDimensions, true);
 				document.removeEventListener(eventType.DESTROY, orientationchange.unbind, false);
 			};
 
@@ -9509,7 +9522,7 @@ ns.version = '1.0.4';
 						}
 						portraitMatchMediaQueryList.addListener(matchMediaHandler);
 					} else {
-						body.addEventListener("throttledresize", detectOrientationByDimensions, false);
+						document.addEventListener("throttledresize", detectOrientationByDimensions, true);
 						detectOrientationByDimensions();
 					}
 				}
@@ -11101,6 +11114,14 @@ function pathToRegexp (path, keys, options) {
 					activeState: null,
 
 					/**
+					 * Property contains starting url for tau instance
+					 * @property {Object} startURL
+					 * @static
+					 * @member ns.history
+					 */
+					startURL: null,
+
+					/**
 					 * This method replaces or pushes state to history.
 					 * @method replace
 					 * @param {Object} state The state object
@@ -11116,6 +11137,9 @@ function pathToRegexp (path, keys, options) {
 							stateTitle: stateTitle
 						});
 
+						if (!this.startURL && url && url.length) {
+							this.startURL = url;
+						}
 						windowHistory[historyVolatileMode ? "replaceState" : "pushState"](newState, stateTitle, url);
 						history.setActive(newState);
 					},
@@ -11127,7 +11151,11 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.history
 					 */
 					back: function () {
-						windowHistory.back();
+						// In case of running tau app in web browser
+						// don't allow to go back outside tau history
+						if (this.startURL !== window.location.href) {
+							windowHistory.back();
+						}
 					},
 
 					/**
@@ -11888,7 +11916,8 @@ function pathToRegexp (path, keys, options) {
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
 					uiPageScroll: "ui-scroll-on",
-					uiScroller: "ui-scroller"
+					uiScroller: "ui-scroller",
+					uiContentUnderPopup: "ui-content-under-popup"
 				},
 				HEADER_SELECTOR = "header,[data-role='header'],." + classes.uiHeader,
 				FOOTER_SELECTOR = "footer,[data-role='footer'],." + classes.uiFooter,
@@ -13806,6 +13835,7 @@ function pathToRegexp (path, keys, options) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
 				}
+				ns.setConfig("pageContainer", null);
 			};
 
 			/**
@@ -14437,6 +14467,9 @@ function pathToRegexp (path, keys, options) {
 					Router.getInstance().init();
 				}, false);
 				document.addEventListener(engine.eventType.DESTROY, function () {
+					Router.getInstance().destroy();
+				}, false);
+				document.addEventListener(engine.eventType.STOP_ROUTING, function () {
 					Router.getInstance().destroy();
 				}, false);
 			}
@@ -15424,7 +15457,7 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			/**
-			 * Function invoked during touch move
+			 * Function invoked during touch move (and mouse)
 			 * @method touchmoveHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -15448,7 +15481,7 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			/**
-			 * Function invoked after touch start
+			 * Function invoked after touch start (and mouse)
 			 * @method touchstartHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -15457,13 +15490,13 @@ function pathToRegexp (path, keys, options) {
 			 */
 			function touchstartHandler(event) {
 				var touches = event.touches,
-					touch;
+					pointer = (!touches) ? event : // mouse event
+						(touches.length === 1) ? touches[0] : null; // touch event
 
-				if (touches.length === 1) {
-					touch = touches[0];
+				if (pointer) {
 					anchorHighlight._didScroll = false;
-					startX = touch.clientX;
-					startY = touch.clientY;
+					startX = pointer.clientX;
+					startY = pointer.clientY;
 					anchorHighlight._target = event.target;
 					anchorHighlight._startTime = Date.now();
 					anchorHighlight._startRemoveTime = 0;
@@ -15474,7 +15507,7 @@ function pathToRegexp (path, keys, options) {
 
 
 			/**
-			 * Function invoked after touch
+			 * Function invoked after touch (and mouse)
 			 * @method touchendHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -15484,7 +15517,7 @@ function pathToRegexp (path, keys, options) {
 			function touchendHandler(event) {
 				anchorHighlight._startRemoveTime = event.timeStamp;
 
-				if (event.touches.length === 0) {
+				if (!event.touches || event.touches && event.touches.length === 0) {
 					if (!anchorHighlight._didScroll) {
 						anchorHighlight._startTime = 0;
 						anchorHighlight._requestAnimationFrame(removeActiveClassLoop);
@@ -15542,6 +15575,9 @@ function pathToRegexp (path, keys, options) {
 				document.addEventListener("touchstart", anchorHighlight._touchstartHandler, false);
 				document.addEventListener("touchend", anchorHighlight._touchendHandler, false);
 				document.addEventListener("touchmove", anchorHighlight._touchmoveHandler, false);
+				// for TAU in browser
+				document.addEventListener("mousedown", anchorHighlight._touchstartHandler, false);
+				document.addEventListener("mouseup", anchorHighlight._touchendHandler, false);
 
 				document.addEventListener("visibilitychange", anchorHighlight._checkPageVisibility, false);
 				document.addEventListener("pagehide", anchorHighlight._hideClear, false);
@@ -15562,6 +15598,9 @@ function pathToRegexp (path, keys, options) {
 				document.removeEventListener("touchstart", anchorHighlight._touchstartHandler, false);
 				document.removeEventListener("touchend", anchorHighlight._touchendHandler, false);
 				document.removeEventListener("touchmove", anchorHighlight._touchmoveHandler, false);
+				// for TAU in browser
+				document.removeEventListener("mousedown", anchorHighlight._touchstartHandler, false);
+				document.removeEventListener("mouseup", anchorHighlight._touchendHandler, false);
 
 				document.removeEventListener("visibilitychange", anchorHighlight._checkPageVisibility,
 					false);
@@ -25775,6 +25814,14 @@ function pathToRegexp (path, keys, options) {
 				 */
 				Router = ns.router && ns.router.Router,
 
+				/**
+				 * Alias for class ns.widget.core.Page
+				 * @property {ns.router.Router} Router
+				 * @member ns.widget.core.Popup
+				 * @private
+				 */
+				Page = ns.widget.core.Page,
+
 				POPUP_SELECTOR = "[data-role='popup'], .ui-popup",
 
 				Popup = function () {
@@ -25866,7 +25913,8 @@ function pathToRegexp (path, keys, options) {
 					wrapper: CLASSES_PREFIX + "-wrapper",
 					toast: CLASSES_PREFIX + "-toast",
 					toastSmall: CLASSES_PREFIX + "-toast-small",
-					build: "ui-build"
+					build: "ui-build",
+					overlayShown: CLASSES_PREFIX + "-overlay-shown"
 				},
 				/**
 				 * Dictionary for popup related selectors
@@ -26195,8 +26243,9 @@ function pathToRegexp (path, keys, options) {
 				ui.wrapper = ui.wrapper || element.querySelector("." + classes.wrapper);
 				ui.container = ui.wrapper || element;
 
-				// @todo - use selector from page's definition in engine
-				ui.page = utilSelector.getClosestByClass(element, "ui-page") || window;
+				ui.page = utilSelector.getClosestByClass(element, Page.classes.uiPage) || window;
+				ui.pageContent = (typeof ui.page.querySelector === "function") ?
+					ui.page.querySelector("." + Page.classes.uiContent) : null;
 
 				if (elementClassList.contains(classes.toast)) {
 					options.closeAfter = options.closeAfter || 2000;
@@ -26259,7 +26308,7 @@ function pathToRegexp (path, keys, options) {
 
 				eventUtils.on(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.on(window, "resize", self, false);
-				eventUtils.on(document, "click touchstart", self, false);
+				eventUtils.on(document, "vclick", self, false);
 			};
 
 
@@ -26274,7 +26323,7 @@ function pathToRegexp (path, keys, options) {
 
 				eventUtils.off(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.off(window, "resize", self, false);
-				eventUtils.off(document, "click touchstart", self, false);
+				eventUtils.off(document, "vclick", self, false);
 			};
 
 			/**
@@ -26396,7 +26445,8 @@ function pathToRegexp (path, keys, options) {
 			prototype._show = function (options) {
 				var self = this,
 					transitionOptions = objectUtils.merge({}, options),
-					overlay = self._ui.overlay;
+					overlay = self._ui.overlay,
+					pageContent = self._ui.pageContent;
 
 				// set layout
 				self._layout(self.element);
@@ -26409,8 +26459,14 @@ function pathToRegexp (path, keys, options) {
 				self.trigger(events.before_show);
 				// show overlay
 				if (overlay) {
-					overlay.style.display = "block";
+					overlay.classList.toggle(classes.overlayShown, true);
 				}
+
+				// disable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, true);
+				}
+
 				// start opening animation
 				self._transition(transitionOptions, self._onShow.bind(self));
 
@@ -26441,12 +26497,18 @@ function pathToRegexp (path, keys, options) {
 			prototype._hide = function (options) {
 				var self = this,
 					isOpened = self._isOpened(),
-					callbacks = self._callbacks;
+					callbacks = self._callbacks,
+					pageContent = self._ui.pageContent;
 
 				// change state of popup
 				self.state = states.DURING_CLOSING;
 
 				self.trigger(events.before_hide);
+
+				// enable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, false);
+				}
 
 				if (isOpened) {
 					// popup is opened, so we start closing animation
@@ -26479,7 +26541,7 @@ function pathToRegexp (path, keys, options) {
 				self._setActive(false);
 
 				if (overlay) {
-					overlay.style.display = "";
+					overlay.classList.toggle(classes.overlayShown, false);
 				}
 				self._restoreOpenOptions();
 				self.trigger(events.hide);
@@ -26503,14 +26565,9 @@ function pathToRegexp (path, keys, options) {
 					case "resize":
 						self._onResize(event);
 						break;
-					case "click":
+					case "vclick":
 						if (event.target === self._ui.overlay) {
 							self._onClickOverlay(event);
-						}
-						break;
-					case "touchstart":
-						if (self.element.classList.contains(classes.toast) && self._isActive()) {
-							router.close(null, {rel: "popup"});
 						}
 						break;
 				}
@@ -31364,7 +31421,7 @@ function pathToRegexp (path, keys, options) {
 						eventUtils.on(popupContainer, Popup.events.transition_start, self._backgroundRenderCallback);
 					}
 
-					utilsEvents.on(self.element, "animationend", self, true);
+					utilsEvents.on(self.element, "animationend webkitAnimationEnd", self, true);
 				}
 			};
 
@@ -31380,7 +31437,7 @@ function pathToRegexp (path, keys, options) {
 
 				//phantom hack
 				if (element) {
-					utilsEvents.off(element, "animationend", self, true);
+					utilsEvents.off(element, "animationend webkitAnimationEnd", self, true);
 				}
 
 				if (self._context) {
@@ -31817,6 +31874,7 @@ function pathToRegexp (path, keys, options) {
 							self._end(event);
 							break;
 						case "animationend":
+						case "webkitAnimationEnd":
 							self._animationEnd(event);
 							break;
 					}
@@ -33019,7 +33077,7 @@ function pathToRegexp (path, keys, options) {
 				copiedArgs = [].slice.call(args);
 
 				if (config) {
-					if (config.loop) {
+					if (config.loop && config.duration > 0) {
 					// when animation is in loop then we create callback on animation and to restart animation
 						self._animate.callback = animateLoopCallback.bind(null, self, copiedArgs);
 					} else if (config.withRevert) {
@@ -33043,6 +33101,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.start = function (callback) {
 				var self = this;
 
+				self.active = true;
 			// init animate options
 				self._initAnimate();
 
@@ -33067,6 +33126,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.stop = function () {
 				var self = this;
 
+				self.active = false;
 				// reset index of animations chain
 				self._animate.chainIndex = 0;
 				// reset current animation config
@@ -33079,6 +33139,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.pause = function () {
 				var self = this;
 
+				self.active = false;
 				if (self._animateConfig) {
 					self._pausedTimeDiff = Date.now() - self._animateConfig[0].startTime;
 					self.stop();
@@ -33087,7 +33148,7 @@ function pathToRegexp (path, keys, options) {
 
 			function calculateOption(option, time) {
 				var timeDiff,
-					current;
+					current = null;
 
 				if (option && option.startTime < time) {
 				// if option is not delayed
@@ -33100,8 +33161,16 @@ function pathToRegexp (path, keys, options) {
 							option.callback();
 						}
 					}
-					current = option.calculate(option.timing(timeDiff / option.duration),
-						option.diff, option.from, option.current);
+
+					if (option.duration > 0) {
+						current = option.calculate(
+							option.timing(timeDiff / option.duration),
+							option.diff,
+							option.from,
+							option.current
+						);
+					}
+
 					if (current !== null) {
 						option.current = current;
 						// we set next calculation time
@@ -33113,6 +33182,7 @@ function pathToRegexp (path, keys, options) {
 						// inform widget about redraw
 						return 1;
 					}
+
 					if (timeDiff >= option.duration) {
 						// inform about remove animation config
 						return 2;
@@ -33145,16 +33215,20 @@ function pathToRegexp (path, keys, options) {
 
 					// calculating options changed in animation
 					while (i < length) {
-						calculatedOption = calculateOption(animateConfig[i], time);
-						if (calculatedOption === 2) {
+						if (animateConfig[i].duration > 0) {
+							calculatedOption = calculateOption(animateConfig[i], time);
+							if (calculatedOption === 2) {
+								notFinishedAnimationsCount--;
+								// remove current config and recalculate loop arguments
+								animateConfig.splice(i, 1);
+								length--;
+								i--;
+								redraw = true;
+							} else if (calculatedOption === 1) {
+								redraw = true;
+							}
+						} else {
 							notFinishedAnimationsCount--;
-							// remove current config and recalculate loop arguments
-							animateConfig.splice(i, 1);
-							length--;
-							i--;
-							redraw = true;
-						} else if (calculatedOption === 1) {
-							redraw = true;
 						}
 						i++;
 					}
@@ -33713,15 +33787,25 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Marquee
 			 */
 			prototype._destroy = function () {
-				var self = this;
+				var self = this,
+					marqueeInnerElement;
 
 				self.state = null;
-				self._stateDOM = null;
 				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
 				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 				self.element.style.webkitMaskImage = "";
+
+				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
+				if (marqueeInnerElement) {
+					while (marqueeInnerElement.hasChildNodes()) {
+						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
+					}
+					self._stateDOM.children = [];
+					self.element.removeChild(marqueeInnerElement);
+				}
+				self._stateDOM = null;
 			};
 
 			/**
@@ -34003,8 +34087,8 @@ function pathToRegexp (path, keys, options) {
 					};
 					self._marqueeOptions = {
 						ellipsisEffect: "none",
-						marqueeStyle: "alternate",
-						iteration: 5,
+						marqueeStyle: "scroll",
+						iteration: "infinite",
 						delay: 1000
 					};
 				},
@@ -34029,7 +34113,8 @@ function pathToRegexp (path, keys, options) {
 					TABBAR_LANDSCAPE: CLASS_PREFIX + "-landscape",
 					TABBAR_TEXT: CLASS_PREFIX + "-text",
 					TABBAR_STATIC: CLASS_PREFIX + "-static",
-					ANCHOR: CLASS_PREFIX + "-anchor"
+					ANCHOR: CLASS_PREFIX + "-anchor",
+					INACTIVE_TOO_LONG_TEXT: CLASS_PREFIX + "-inactive-text-overflow"
 				},
 				events = ns.event,
 				DEFAULT_NUMBER = {
@@ -34126,7 +34211,10 @@ function pathToRegexp (path, keys, options) {
 					i,
 					linksLength,
 					link,
-					text;
+					text,
+					textRealWidth,
+					visibleTextWidth,
+					prevTextOverflowVal;
 
 				if (links.length === 0) {
 					links = element.querySelectorAll("li div");
@@ -34143,6 +34231,17 @@ function pathToRegexp (path, keys, options) {
 						innerText.classList.add(classes.TABBAR_TEXT);
 						innerText.appendChild(link.firstChild);
 						link.appendChild(innerText);
+
+						prevTextOverflowVal = innerText.style.overflowX;
+						visibleTextWidth = innerText.getBoundingClientRect().width;
+						innerText.style.overflowX = "visible";
+						textRealWidth = innerText.getBoundingClientRect().width;
+						innerText.style.overflowX = prevTextOverflowVal;
+
+						if (textRealWidth > visibleTextWidth) {
+							link.classList.add(classes.INACTIVE_TOO_LONG_TEXT);
+						}
+
 					} else {
 						link.classList.add(classes.TAB_NO_TEXT);
 					}
@@ -34426,8 +34525,8 @@ function pathToRegexp (path, keys, options) {
 					text,
 					marquee,
 					prevStyleValue,
-					linkRect,
-					textRect;
+					textWidth,
+					allTextWidth;
 
 				if (ui.links.length === 0) {
 					return;
@@ -34441,6 +34540,7 @@ function pathToRegexp (path, keys, options) {
 					if (marquee) {
 						marquee.reset();
 						ns.engine.destroyWidget(text);
+						link.classList.add(classes.INACTIVE_TOO_LONG_TEXT);
 					}
 				}
 
@@ -34454,11 +34554,13 @@ function pathToRegexp (path, keys, options) {
 				text = link.querySelector("." + classes.TABBAR_TEXT);
 				if (text) {
 					prevStyleValue = text.style.overflowX;
+					textWidth = text.getBoundingClientRect().width;
 					text.style.overflowX = "visible";
-					textRect = text.getBoundingClientRect();
-					linkRect = link.getBoundingClientRect();
+					allTextWidth = text.getBoundingClientRect().width;
 					text.style.overflowX = prevStyleValue;
-					if (textRect.width > linkRect.width) {
+
+					if (allTextWidth > textWidth) {
+						link.classList.remove(classes.INACTIVE_TOO_LONG_TEXT);
 						ns.widget.Marquee(text, self._marqueeOptions);
 					}
 				}
@@ -45290,7 +45392,7 @@ function pathToRegexp (path, keys, options) {
 					})
 				);
 
-				utilsEvents.on(element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup", self);
+				utilsEvents.on(element, "drag dragstart dragend dragcancel", self);
 			};
 
 			/**
@@ -45301,7 +45403,7 @@ function pathToRegexp (path, keys, options) {
 			*/
 			prototype._unbindEvents = function () {
 				utilsEvents.disableGesture(this.element);
-				utilsEvents.off(this.element, "drag dragstart dragend dragcancel touchstart touchend vmousedown vmouseup", this);
+				utilsEvents.off(this.element, "drag dragstart dragend dragcancel", this);
 			};
 
 			/**
