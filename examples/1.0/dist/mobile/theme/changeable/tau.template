@@ -1269,6 +1269,7 @@ a.ui-link-inherit {
   overflow: auto;
   margin-left: 16px;
   margin-right: 16px;
+  width: auto;
 }
 .ui-popup.ui-ctxpopup :focus {
   outline: none;

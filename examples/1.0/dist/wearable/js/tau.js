@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.4';
+ns.version = '1.0.5';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -8158,8 +8158,14 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
-			function render(stateObject, element, isChild) {
-				var recalculate = false;
+			function render(stateObject, element, isChild, options) {
+				var recalculate = false,
+					animation = (options) ? options.animation : null;
+
+				if (animation && !animation.active) {
+					// Animation has stopped before render
+					return false;
+				}
 
 				if (stateObject.classList !== undefined) {
 					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
@@ -8193,12 +8199,13 @@ function pathToRegexp (path, keys, options) {
 			prototype._render = function (now) {
 				var self = this,
 					stateDOM = self._stateDOM,
-					element = self.element;
+					element = self.element,
+					animation = self._animation;
 
 				if (now) {
-					render(stateDOM, element);
+					render(stateDOM, element, false, {animation: animation});
 				} else {
-					util.requestAnimationFrame(render.bind(null, stateDOM, element));
+					util.requestAnimationFrame(render.bind(null, stateDOM, element, false, {animation: animation}));
 				}
 			};
 
@@ -16562,129 +16569,6 @@ function pathToRegexp (path, keys, options) {
 			ns.util.date = date;
 			}(ns));
 
-/*global window, define, ns, HTMLElement, HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement, HTMLButtonElement */
-/*
- * Copyright (c) 2010 - 2014 Samsung Electronics Co., Ltd.
- * License : MIT License V2
- */
-/*
- * #Namespace For Widgets
- * @author Krzysztof Antoszek <k.antoszek@samsung.com>
- * @class ns.widget
- */
-(function (document) {
-	"use strict";
-				var engine = ns.engine,
-				registeredTags = {},
-				registerQueue = {};
-
-			function defineCustomElement(event) {
-				var name = event.detail.name,
-					BaseElement = event.detail.BaseElement || HTMLElement,
-					CustomWidgetProto = Object.create(BaseElement.prototype),
-					//define types on elements defined by is selector
-					controlTypes = ["search", "text", "slider", "checkbox", "radio", "button"],
-					//define if to use elements with is attribute
-					lowerName = name.toLowerCase(),
-					tagName = "tau-" + lowerName,
-					extendTo = "";
-
-				switch (BaseElement) {
-					case HTMLInputElement :
-						extendTo = "input";
-						break;
-					case HTMLSelectElement :
-						extendTo = "select";
-						break;
-					case HTMLTextAreaElement :
-						extendTo = "textarea";
-						break;
-					case HTMLButtonElement :
-						extendTo = "button";
-						break;
-				}
-
-				CustomWidgetProto._tauName = name;
-
-				CustomWidgetProto.createdCallback = function () {
-					var self = this,
-						//needs to be extended for elements which will be extended by "is" attribute
-						//it should contain the type in the name like "search" in 'tau-inputsearch'
-						itemText = self.getAttribute("is");
-
-					if (itemText) {
-						[].some.call(controlTypes, function (item) {
-							// if element is a control then set the proper type
-							if (itemText && itemText.indexOf(item) !== -1) {
-								switch (item) {
-									case "slider":
-										//force proper type as cannot extract this from name
-										self.type = "range";
-										break;
-									default:
-										// omit textarea elements since it has a readonly prop "type"
-										if (self.tagName.toLowerCase() !== "textarea") {
-											self.type = item;
-										}
-										break;
-								}
-								return true;
-							}
-						});
-					}
-
-					
-					self._tauWidget = engine.instanceWidget(self, self._tauName);
-				};
-
-				CustomWidgetProto.attributeChangedCallback = function (attrName, oldVal, newVal) {
-					var tauWidget = this._tauWidget;
-
-					if (tauWidget) {
-						if (attrName === "value") {
-							tauWidget.value(newVal);
-						} else if (tauWidget.options && tauWidget.options[attrName] !== undefined) {
-							if (newVal === "false") {
-								newVal = false;
-							}
-							if (newVal === "true") {
-								newVal = true;
-							}
-
-							tauWidget.option(attrName, newVal);
-							tauWidget.refresh();
-						}
-					}
-				};
-
-				CustomWidgetProto.attachedCallback = function () {
-					if (typeof this._tauWidget.onAttach === "function") {
-						this._tauWidget.onAttach();
-					}
-				};
-
-				registerQueue[tagName] = (extendTo !== "") ?
-					{extends: extendTo, prototype: CustomWidgetProto} :
-					{prototype: CustomWidgetProto};
-
-			}
-
-			document.addEventListener("tauinit", function () {
-				Object.keys(registerQueue).forEach(function (tagName) {
-					if (registeredTags[tagName]) {
-						ns.warn(tagName + " already registered");
-					} else {
-						registeredTags[tagName] = document.registerElement(tagName, registerQueue[tagName]);
-					}
-				});
-			});
-
-			if (typeof document.registerElement === "function" && ns.getConfig("registerCustomElements", true)) {
-				document.addEventListener("widgetdefined", defineCustomElement);
-			}
-
-			}(window.document));
-
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -18575,7 +18459,7 @@ function pathToRegexp (path, keys, options) {
 				copiedArgs = [].slice.call(args);
 
 				if (config) {
-					if (config.loop) {
+					if (config.loop && config.duration > 0) {
 					// when animation is in loop then we create callback on animation and to restart animation
 						self._animate.callback = animateLoopCallback.bind(null, self, copiedArgs);
 					} else if (config.withRevert) {
@@ -18599,6 +18483,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.start = function (callback) {
 				var self = this;
 
+				self.active = true;
 			// init animate options
 				self._initAnimate();
 
@@ -18623,6 +18508,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.stop = function () {
 				var self = this;
 
+				self.active = false;
 				// reset index of animations chain
 				self._animate.chainIndex = 0;
 				// reset current animation config
@@ -18635,6 +18521,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.pause = function () {
 				var self = this;
 
+				self.active = false;
 				if (self._animateConfig) {
 					self._pausedTimeDiff = Date.now() - self._animateConfig[0].startTime;
 					self.stop();
@@ -18643,7 +18530,7 @@ function pathToRegexp (path, keys, options) {
 
 			function calculateOption(option, time) {
 				var timeDiff,
-					current;
+					current = null;
 
 				if (option && option.startTime < time) {
 				// if option is not delayed
@@ -18656,8 +18543,16 @@ function pathToRegexp (path, keys, options) {
 							option.callback();
 						}
 					}
-					current = option.calculate(option.timing(timeDiff / option.duration),
-						option.diff, option.from, option.current);
+
+					if (option.duration > 0) {
+						current = option.calculate(
+							option.timing(timeDiff / option.duration),
+							option.diff,
+							option.from,
+							option.current
+						);
+					}
+
 					if (current !== null) {
 						option.current = current;
 						// we set next calculation time
@@ -18669,6 +18564,7 @@ function pathToRegexp (path, keys, options) {
 						// inform widget about redraw
 						return 1;
 					}
+
 					if (timeDiff >= option.duration) {
 						// inform about remove animation config
 						return 2;
@@ -18701,16 +18597,20 @@ function pathToRegexp (path, keys, options) {
 
 					// calculating options changed in animation
 					while (i < length) {
-						calculatedOption = calculateOption(animateConfig[i], time);
-						if (calculatedOption === 2) {
+						if (animateConfig[i].duration > 0) {
+							calculatedOption = calculateOption(animateConfig[i], time);
+							if (calculatedOption === 2) {
+								notFinishedAnimationsCount--;
+								// remove current config and recalculate loop arguments
+								animateConfig.splice(i, 1);
+								length--;
+								i--;
+								redraw = true;
+							} else if (calculatedOption === 1) {
+								redraw = true;
+							}
+						} else {
 							notFinishedAnimationsCount--;
-							// remove current config and recalculate loop arguments
-							animateConfig.splice(i, 1);
-							length--;
-							i--;
-							redraw = true;
-						} else if (calculatedOption === 1) {
-							redraw = true;
 						}
 						i++;
 					}
