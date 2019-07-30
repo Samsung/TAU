@@ -312,15 +312,18 @@
 		QUnit.test("_selectItem", function (assert) {
 			var listWidget = new ArcListview(),
 				element = document.getElementById("arc-list"),
+				pageElement = document.getElementById("arc-list-page"),
 				liElement = element.querySelector("li"),
 				height = liElement.getBoundingClientRect().height + "px";
 
 			expect(3);
 			listWidget._ui.arcListviewSelection = element;
+			listWidget._ui.page = pageElement;
 			listWidget._state = {
 				items: [{
 					element: liElement
-				}]
+				}],
+				currentIndex: 0
 			};
 
 			listWidget._selectItem(0);
@@ -328,7 +331,7 @@
 			helpers.triggerEvent(liElement, "transitionend");
 
 			assert.ok(element.classList.contains("ui-arc-listview-selection-show"), "list selection element is active");
-			assert.equal(element.style.height, height, "list selection element has proper height");
+			assert.ok(parseInt(element.style.height, 10), parseInt(height, 10), "list selection element has proper height");
 			assert.ok(liElement.classList.contains("ui-arc-listview-selected"), "list selection element is active");
 		});
 
