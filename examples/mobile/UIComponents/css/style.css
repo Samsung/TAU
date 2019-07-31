@@ -669,3 +669,20 @@
 		height: auto;
 	}
 }
+
+/******************************************************
+        Indexscrollbar with search floating button
+******************************************************/
+
+#indexscrollbarPage .ui-header.search-active h1 {
+	display: none;
+}
+
+#indexscrollbarPage .ui-header input, #indexscrollbarPage .ui-header a {
+	display: none;
+}
+
+#indexscrollbarPage .ui-header.search-active input,
+#indexscrollbarPage .ui-header.search-active a  {
+	display: block;
+}

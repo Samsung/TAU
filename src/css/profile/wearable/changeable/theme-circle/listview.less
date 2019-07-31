@@ -194,7 +194,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			flex-direction: column;
+			flex-direction: row;
 			a {
 				display: flex;
 				flex-direction: column;
@@ -323,8 +323,6 @@
 					left: 50%;
 					top: 50%;
 					transform: translate(-50%, -50%);
-					-webkit-mask-image: url("images/List/b_list_focus_bg.png");
-					-webkit-mask-size: 100% 100%;
 					background-color: @color_listview_focus;
 					border-radius: 20vw;
 					pointer-events: none;
@@ -403,10 +401,18 @@
 					flex-direction: column;
 				}
 
-				.ui-li-sub-text, a .ui-li-sub-text{
+				.ui-li-sub-text {
 					color: @color_multiline_list_subtext;
 					font-size: 24 * @unit_base;
 					line-height: 32 * @unit_base;
+				}
+				a {
+					.ui-li-sub-text {
+						width: 100%;
+						text-overflow: ellipsis;
+						display: inline-block;
+						overflow: hidden;
+					}
 				}
 
 				&.ui-li-active {

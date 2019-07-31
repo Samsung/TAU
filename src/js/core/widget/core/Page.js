@@ -389,7 +389,8 @@
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
 					uiPageScroll: "ui-scroll-on",
-					uiScroller: "ui-scroller"
+					uiScroller: "ui-scroller",
+					uiContentUnderPopup: "ui-content-under-popup"
 				},
 				HEADER_SELECTOR = "header,[data-role='header'],." + classes.uiHeader,
 				FOOTER_SELECTOR = "footer,[data-role='footer'],." + classes.uiFooter,
