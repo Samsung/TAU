@@ -2,31 +2,43 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="../../../lib/tau/tv/theme/default/tau.css">
-	<link rel="stylesheet" href="../../../lib/tau/tv/theme/default/tau.tv.css">
-	<link rel="stylesheet" href="../../../css/style.css">
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../../lib/tau/tv/theme/default/tau.tv.css" rel="stylesheet" />
+	<link href="../../../lib/tau/tv/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../../lib/tau/tv/js/tau.js">
+	</script>
 </head>
 
 <body>
 	<div class="ui-page" id="progresscircle-demo">
 		<header>
-			<h1>Progress circle</h1>
+			<h1>
+				Progress circle
+			</h1>
 		</header>
 		<div class="ui-content">
 			<ul class="ui-listview ui-colored-list">
 				<li class="ui-li-static">
-					<div class="result" id="result"></div>
-					<div data-type="circle" data-size="large" data-value="0" class="ui-progress" id="circle"></div>
+					<div class="result" id="result">
+					</div>
+					<div class="ui-progress" data-size="large" data-type="circle" data-value="0" id="circle">
+					</div>
 				</li>
 			</ul>
-		</div><!-- /content -->
-		<div class="ui-footer" data-position="fixed">
-			<a id="minus" href="#" class="ui-btn">-10%</a>
-			<a id="plus" href="#" class="ui-btn">+10%</a>
 		</div>
-		<script src="progresscircle.js"></script>
+		<!-- /content -->
+		<div class="ui-footer" data-position="fixed">
+			<a class="ui-btn" href="#" id="minus">
+				-10%
+			</a>
+			<a class="ui-btn" href="#" id="plus">
+				+10%
+			</a>
+		</div>
+		<script src="progresscircle.js">
+		</script>
 	</div>
-	<script type="text/javascript" src="../../../lib/tau/tv/js/tau.js" data-build-remove="false"></script>
 </body>
 
 </html>

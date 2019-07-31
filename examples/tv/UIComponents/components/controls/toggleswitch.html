@@ -2,55 +2,60 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="../../lib/tau/tv/theme/default/tau.min.css">
-	<link rel="stylesheet" href="../../css/style.css">
-	<script type="text/javascript" src="../../lib/tau/tv/js/tau.js" data-build-remove="false"></script>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/tv/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/tv/js/tau.js">
+	</script>
 </head>
 
 <body>
 	<div class="ui-page" id="switch-demo">
 		<div class="ui-header">
-			<h1>Toggle switch</h1>
+			<h1>
+				Toggle switch
+			</h1>
 		</div>
-
 		<div class="ui-content">
 			<ul class="ui-listview ui-colored-list">
 				<li class="ui-group-index">
 					1-1. Proper way of defining toggleswitch with &lt;input&gt; tag
 				</li>
 				<li>
-					<input type="checkbox" name="toggle-1" id="toggle-1" class="ui-toggleswitch" />
+					<input class="ui-toggleswitch" id="toggle-1" name="toggle-1" type="checkbox" />
 				</li>
 				<li class="ui-group-index">
 					1-2. Proper way of defining disabled toggleswitch with &lt;input&gt; tag
 				</li>
 				<li>
-					<input type="checkbox" name="toggle-2" id="toggle-2" class="ui-toggleswitch" disabled />
+					<input class="ui-toggleswitch" disabled="" id="toggle-2" name="toggle-2" type="checkbox" />
 				</li>
 				<li class="ui-group-index">
 					2. Define toggleswitch based on &lt;select&gt; tag and class="ui-toggleswitch"
 				</li>
 				<li>
-					<select name="flip-1" id="flip-1" class="ui-toggleswitch">
-						<option value="off"></option>
-						<option value="on"></option>
+					<select class="ui-toggleswitch" id="flip-1" name="flip-1">
+						<option value="off">
+						</option>
+						<option value="on">
+						</option>
 					</select>
 				</li>
 				<li class="ui-group-index">
 					3. Define toggleswitch based on &lt;input&gt; tag with slider style
 				</li>
 				<li>
-					<input type="checkbox" name="toggle-3" id="toggle-3" class="ui-toggleswitch" data-style="slider" />
+					<input class="ui-toggleswitch" data-style="slider" id="toggle-3" name="toggle-3" type="checkbox" />
 				</li>
 				<li class="ui-group-index">
 					3-1. Define disabled toggleswitch based on &lt;input&gt; tag with slider style
 				</li>
 				<li>
-					<input type="checkbox" name="toggle-4" id="toggle-4" class="ui-toggleswitch" data-style="slider" disabled />
+					<input class="ui-toggleswitch" data-style="slider" disabled="" id="toggle-4" name="toggle-4" type="checkbox" />
 				</li>
 			</ul>
 		</div>
-		<link rel="stylesheet" href="toggleswitch.css" />
+		<link href="toggleswitch.css" rel="stylesheet" />
 	</div>
 </body>
 
