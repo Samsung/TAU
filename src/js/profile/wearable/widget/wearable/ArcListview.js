@@ -1249,9 +1249,8 @@
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
 				} else {
-					eventUtils.one(selectedElement, "transitionend", function () {
-						showHighlight(ui.arcListviewSelection, selectedElement);
-					});
+					selectedElement.addEventListener("transitionend", this, true);
+					selectedElement.addEventListener("webkitTransitionEnd", this, true);
 					selectedElement.classList.add(classes.SELECTED);
 				}
 			};
@@ -1277,6 +1276,8 @@
 					} else {
 						classList.remove(classes.SELECTION_SHOW);
 						selectedElement = this._state.items[unselectedIndex].element,
+						selectedElement.removeEventListener("transitionend", this, true);
+						selectedElement.removeEventListener("webkitTransitionEnd", this, true);
 						selectedElement.classList.remove(classes.SELECTED);
 						// stop marque;
 						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
@@ -1290,6 +1291,22 @@
 					}
 				}
 			};
+
+			/**
+			 * Handler for transitionend event of active element
+			 * @method _onSelectedElementTransitionEnd
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onSelectedElementTransitionEnd = function () {
+				var self = this,
+					selectionElement = self._ui.arcListviewSelection,
+					items = self._state.items,
+					index = self._state.currentIndex,
+					activeElement = items[index].element;
+
+				showHighlight(selectionElement, activeElement);
+			}
 
 			/**
 			 * Handler for click event
@@ -1546,6 +1563,10 @@
 							break;
 						case "currentindexchange" :
 							self._onCurrentIndexChange(event);
+							break;
+						case "transitionend":
+						case "webkitTransitionEnd":
+							self._onSelectedElementTransitionEnd();
 							break;
 					}
 				}

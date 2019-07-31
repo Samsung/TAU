@@ -164,3 +164,37 @@ input[type="radio"] {
 		}
 	}
 }
+
+/** CheckBox / Radio button on arc-listview **/
+.ui-arc-listview-carousel-item.ui-listview {
+	li {
+		label {
+			display: flex;
+			align-items: center;
+
+			input[type="checkbox"], input[type="radio"] {
+				position: relative;
+				top: 0;
+				left: 0;
+				transform: none;
+				min-width: 76 * @unit_base;
+			}
+		}
+		&.li-has-checkbox, &.li-has-radio {
+			label {
+				display: flex;
+				justify-content: flex-end;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+
+				div + input {
+					margin-left: 10 * @unit_base;
+				}
+				.ui-arc-listview-text-content {
+					overflow: hidden;
+				}
+			}
+		}
+	}
+} 
