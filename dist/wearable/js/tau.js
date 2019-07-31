@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.0';
+ns.version = '1.1.1';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -5291,6 +5291,14 @@ function pathToRegexp (path, keys, options) {
 					activeState: null,
 
 					/**
+					 * Property contains starting url for tau instance
+					 * @property {Object} startURL
+					 * @static
+					 * @member ns.history
+					 */
+					startURL: null,
+
+					/**
 					 * This method replaces or pushes state to history.
 					 * @method replace
 					 * @param {Object} state The state object
@@ -5306,6 +5314,9 @@ function pathToRegexp (path, keys, options) {
 							stateTitle: stateTitle
 						});
 
+						if (!this.startURL && url && url.length) {
+							this.startURL = url;
+						}
 						windowHistory[historyVolatileMode ? "replaceState" : "pushState"](newState, stateTitle, url);
 						history.setActive(newState);
 					},
@@ -5317,7 +5328,11 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.history
 					 */
 					back: function () {
-						windowHistory.back();
+						// In case of running tau app in web browser
+						// don't allow to go back outside tau history
+						if (this.startURL !== window.location.href) {
+							windowHistory.back();
+						}
 					},
 
 					/**
@@ -8262,8 +8277,14 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
-			function render(stateObject, element, isChild) {
-				var recalculate = false;
+			function render(stateObject, element, isChild, options) {
+				var recalculate = false,
+					animation = (options) ? options.animation : null;
+
+				if (animation && !animation.active) {
+					// Animation has stopped before render
+					return false;
+				}
 
 				if (stateObject.classList !== undefined) {
 					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
@@ -8297,12 +8318,13 @@ function pathToRegexp (path, keys, options) {
 			prototype._render = function (now) {
 				var self = this,
 					stateDOM = self._stateDOM,
-					element = self.element;
+					element = self.element,
+					animation = self._animation;
 
 				if (now) {
-					render(stateDOM, element);
+					render(stateDOM, element, false, {animation: animation});
 				} else {
-					util.requestAnimationFrame(render.bind(null, stateDOM, element));
+					util.requestAnimationFrame(render.bind(null, stateDOM, element, false, {animation: animation}));
 				}
 			};
 
@@ -10229,7 +10251,8 @@ function pathToRegexp (path, keys, options) {
 					uiContent: "ui-content",
 					uiTitle: "ui-title",
 					uiPageScroll: "ui-scroll-on",
-					uiScroller: "ui-scroller"
+					uiScroller: "ui-scroller",
+					uiContentUnderPopup: "ui-content-under-popup"
 				},
 				HEADER_SELECTOR = "header,[data-role='header'],." + classes.uiHeader,
 				FOOTER_SELECTOR = "footer,[data-role='footer'],." + classes.uiFooter,
@@ -13819,6 +13842,13 @@ function pathToRegexp (path, keys, options) {
 				Router = ns.router && ns.router.Router,
 
 				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+				/**
+				 * Alias for class ns.widget.core.Page
+				 * @property {ns.router.Router} Router
+				 * @member ns.widget.core.Popup
+				 * @private
+				 */
+				Page = ns.widget.core.Page,
 
 				POPUP_SELECTOR = "[data-role='popup'], .ui-popup",
 
@@ -13913,7 +13943,8 @@ function pathToRegexp (path, keys, options) {
 					wrapper: CLASSES_PREFIX + "-wrapper",
 					toast: CLASSES_PREFIX + "-toast",
 					toastSmall: CLASSES_PREFIX + "-toast-small",
-					build: "ui-build"
+					build: "ui-build",
+					overlayShown: CLASSES_PREFIX + "-overlay-shown"
 				},
 				/**
 				 * Dictionary for popup related selectors
@@ -14242,8 +14273,9 @@ function pathToRegexp (path, keys, options) {
 				ui.wrapper = ui.wrapper || element.querySelector("." + classes.wrapper);
 				ui.container = ui.wrapper || element;
 
-				// @todo - use selector from page's definition in engine
-				ui.page = utilSelector.getClosestByClass(element, "ui-page") || window;
+				ui.page = utilSelector.getClosestByClass(element, Page.classes.uiPage) || window;
+				ui.pageContent = (typeof ui.page.querySelector === "function") ?
+					ui.page.querySelector("." + Page.classes.uiContent) : null;
 
 				if (elementClassList.contains(classes.toast)) {
 					options.closeAfter = options.closeAfter || 2000;
@@ -14306,7 +14338,7 @@ function pathToRegexp (path, keys, options) {
 
 				eventUtils.on(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.on(window, "resize", self, false);
-				eventUtils.on(document, "click touchstart", self, false);
+				eventUtils.on(document, "vclick", self, false);
 			};
 
 
@@ -14321,7 +14353,7 @@ function pathToRegexp (path, keys, options) {
 
 				eventUtils.off(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.off(window, "resize", self, false);
-				eventUtils.off(document, "click touchstart", self, false);
+				eventUtils.off(document, "vclick", self, false);
 			};
 
 			/**
@@ -14443,7 +14475,8 @@ function pathToRegexp (path, keys, options) {
 			prototype._show = function (options) {
 				var self = this,
 					transitionOptions = objectUtils.merge({}, options),
-					overlay = self._ui.overlay;
+					overlay = self._ui.overlay,
+					pageContent = self._ui.pageContent;
 
 				// set layout
 				self._layout(self.element);
@@ -14456,8 +14489,14 @@ function pathToRegexp (path, keys, options) {
 				self.trigger(events.before_show);
 				// show overlay
 				if (overlay) {
-					overlay.style.display = "block";
+					overlay.classList.toggle(classes.overlayShown, true);
 				}
+
+				// disable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, true);
+				}
+
 				// start opening animation
 				self._transition(transitionOptions, self._onShow.bind(self));
 
@@ -14493,12 +14532,18 @@ function pathToRegexp (path, keys, options) {
 			prototype._hide = function (options) {
 				var self = this,
 					isOpened = self._isOpened(),
-					callbacks = self._callbacks;
+					callbacks = self._callbacks,
+					pageContent = self._ui.pageContent;
 
 				// change state of popup
 				self.state = states.DURING_CLOSING;
 
 				self.trigger(events.before_hide);
+
+				// enable page pointer events
+				if (pageContent) {
+					pageContent.classList.toggle(Page.classes.uiContentUnderPopup, false);
+				}
 
 				if (isOpened) {
 					// popup is opened, so we start closing animation
@@ -14535,7 +14580,7 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				if (overlay) {
-					overlay.style.display = "";
+					overlay.classList.toggle(classes.overlayShown, false);
 				}
 				self._restoreOpenOptions();
 				self.trigger(events.hide);
@@ -14559,14 +14604,9 @@ function pathToRegexp (path, keys, options) {
 					case "resize":
 						self._onResize(event);
 						break;
-					case "click":
+					case "vclick":
 						if (event.target === self._ui.overlay) {
 							self._onClickOverlay(event);
-						}
-						break;
-					case "touchstart":
-						if (self.element.classList.contains(classes.toast) && self._isActive()) {
-							router.close(null, {rel: "popup"});
 						}
 						break;
 				}
@@ -16789,7 +16829,7 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			/**
-			 * Function invoked during touch move
+			 * Function invoked during touch move (and mouse)
 			 * @method touchmoveHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -16813,7 +16853,7 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			/**
-			 * Function invoked after touch start
+			 * Function invoked after touch start (and mouse)
 			 * @method touchstartHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -16822,13 +16862,13 @@ function pathToRegexp (path, keys, options) {
 			 */
 			function touchstartHandler(event) {
 				var touches = event.touches,
-					touch;
+					pointer = (!touches) ? event : // mouse event
+						(touches.length === 1) ? touches[0] : null; // touch event
 
-				if (touches.length === 1) {
-					touch = touches[0];
+				if (pointer) {
 					anchorHighlight._didScroll = false;
-					startX = touch.clientX;
-					startY = touch.clientY;
+					startX = pointer.clientX;
+					startY = pointer.clientY;
 					anchorHighlight._target = event.target;
 					anchorHighlight._startTime = Date.now();
 					anchorHighlight._startRemoveTime = 0;
@@ -16839,7 +16879,7 @@ function pathToRegexp (path, keys, options) {
 
 
 			/**
-			 * Function invoked after touch
+			 * Function invoked after touch (and mouse)
 			 * @method touchendHandler
 			 * @param {Event} event
 			 * @member ns.util.anchorHighlight
@@ -16849,7 +16889,7 @@ function pathToRegexp (path, keys, options) {
 			function touchendHandler(event) {
 				anchorHighlight._startRemoveTime = event.timeStamp;
 
-				if (event.touches.length === 0) {
+				if (!event.touches || event.touches && event.touches.length === 0) {
 					if (!anchorHighlight._didScroll) {
 						anchorHighlight._startTime = 0;
 						anchorHighlight._requestAnimationFrame(removeActiveClassLoop);
@@ -16907,6 +16947,9 @@ function pathToRegexp (path, keys, options) {
 				document.addEventListener("touchstart", anchorHighlight._touchstartHandler, false);
 				document.addEventListener("touchend", anchorHighlight._touchendHandler, false);
 				document.addEventListener("touchmove", anchorHighlight._touchmoveHandler, false);
+				// for TAU in browser
+				document.addEventListener("mousedown", anchorHighlight._touchstartHandler, false);
+				document.addEventListener("mouseup", anchorHighlight._touchendHandler, false);
 
 				document.addEventListener("visibilitychange", anchorHighlight._checkPageVisibility, false);
 				document.addEventListener("pagehide", anchorHighlight._hideClear, false);
@@ -16927,6 +16970,9 @@ function pathToRegexp (path, keys, options) {
 				document.removeEventListener("touchstart", anchorHighlight._touchstartHandler, false);
 				document.removeEventListener("touchend", anchorHighlight._touchendHandler, false);
 				document.removeEventListener("touchmove", anchorHighlight._touchmoveHandler, false);
+				// for TAU in browser
+				document.removeEventListener("mousedown", anchorHighlight._touchstartHandler, false);
+				document.removeEventListener("mouseup", anchorHighlight._touchendHandler, false);
 
 				document.removeEventListener("visibilitychange", anchorHighlight._checkPageVisibility,
 					false);
@@ -20770,7 +20816,7 @@ function pathToRegexp (path, keys, options) {
 				copiedArgs = [].slice.call(args);
 
 				if (config) {
-					if (config.loop) {
+					if (config.loop && config.duration > 0) {
 					// when animation is in loop then we create callback on animation and to restart animation
 						self._animate.callback = animateLoopCallback.bind(null, self, copiedArgs);
 					} else if (config.withRevert) {
@@ -20794,6 +20840,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.start = function (callback) {
 				var self = this;
 
+				self.active = true;
 			// init animate options
 				self._initAnimate();
 
@@ -20818,6 +20865,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.stop = function () {
 				var self = this;
 
+				self.active = false;
 				// reset index of animations chain
 				self._animate.chainIndex = 0;
 				// reset current animation config
@@ -20830,6 +20878,7 @@ function pathToRegexp (path, keys, options) {
 			prototype.pause = function () {
 				var self = this;
 
+				self.active = false;
 				if (self._animateConfig) {
 					self._pausedTimeDiff = Date.now() - self._animateConfig[0].startTime;
 					self.stop();
@@ -20838,7 +20887,7 @@ function pathToRegexp (path, keys, options) {
 
 			function calculateOption(option, time) {
 				var timeDiff,
-					current;
+					current = null;
 
 				if (option && option.startTime < time) {
 				// if option is not delayed
@@ -20851,8 +20900,16 @@ function pathToRegexp (path, keys, options) {
 							option.callback();
 						}
 					}
-					current = option.calculate(option.timing(timeDiff / option.duration),
-						option.diff, option.from, option.current);
+
+					if (option.duration > 0) {
+						current = option.calculate(
+							option.timing(timeDiff / option.duration),
+							option.diff,
+							option.from,
+							option.current
+						);
+					}
+
 					if (current !== null) {
 						option.current = current;
 						// we set next calculation time
@@ -20864,6 +20921,7 @@ function pathToRegexp (path, keys, options) {
 						// inform widget about redraw
 						return 1;
 					}
+
 					if (timeDiff >= option.duration) {
 						// inform about remove animation config
 						return 2;
@@ -20896,16 +20954,20 @@ function pathToRegexp (path, keys, options) {
 
 					// calculating options changed in animation
 					while (i < length) {
-						calculatedOption = calculateOption(animateConfig[i], time);
-						if (calculatedOption === 2) {
+						if (animateConfig[i].duration > 0) {
+							calculatedOption = calculateOption(animateConfig[i], time);
+							if (calculatedOption === 2) {
+								notFinishedAnimationsCount--;
+								// remove current config and recalculate loop arguments
+								animateConfig.splice(i, 1);
+								length--;
+								i--;
+								redraw = true;
+							} else if (calculatedOption === 1) {
+								redraw = true;
+							}
+						} else {
 							notFinishedAnimationsCount--;
-							// remove current config and recalculate loop arguments
-							animateConfig.splice(i, 1);
-							length--;
-							i--;
-							redraw = true;
-						} else if (calculatedOption === 1) {
-							redraw = true;
 						}
 						i++;
 					}
@@ -24935,8 +24997,7 @@ function pathToRegexp (path, keys, options) {
  */
 (function (window, document, ns) {
 	"use strict";
-				var body = document.body,
-				eventUtils = ns.event,
+				var eventUtils = ns.event,
 				eventType = ns.engine.eventType,
 				orientationchange = {
 					/**
@@ -35449,9 +35510,8 @@ function pathToRegexp (path, keys, options) {
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
 				} else {
-					eventUtils.one(selectedElement, "transitionend", function () {
-						showHighlight(ui.arcListviewSelection, selectedElement);
-					});
+					selectedElement.addEventListener("transitionend", this, true);
+					selectedElement.addEventListener("webkitTransitionEnd", this, true);
 					selectedElement.classList.add(classes.SELECTED);
 				}
 			};
@@ -35477,6 +35537,8 @@ function pathToRegexp (path, keys, options) {
 					} else {
 						classList.remove(classes.SELECTION_SHOW);
 						selectedElement = this._state.items[unselectedIndex].element,
+						selectedElement.removeEventListener("transitionend", this, true);
+						selectedElement.removeEventListener("webkitTransitionEnd", this, true);
 						selectedElement.classList.remove(classes.SELECTED);
 						// stop marque;
 						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
@@ -35490,6 +35552,22 @@ function pathToRegexp (path, keys, options) {
 					}
 				}
 			};
+
+			/**
+			 * Handler for transitionend event of active element
+			 * @method _onSelectedElementTransitionEnd
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onSelectedElementTransitionEnd = function () {
+				var self = this,
+					selectionElement = self._ui.arcListviewSelection,
+					items = self._state.items,
+					index = self._state.currentIndex,
+					activeElement = items[index].element;
+
+				showHighlight(selectionElement, activeElement);
+			}
 
 			/**
 			 * Handler for click event
@@ -35746,6 +35824,10 @@ function pathToRegexp (path, keys, options) {
 							break;
 						case "currentindexchange" :
 							self._onCurrentIndexChange(event);
+							break;
+						case "transitionend":
+						case "webkitTransitionEnd":
+							self._onSelectedElementTransitionEnd();
 							break;
 					}
 				}
@@ -46901,7 +46983,7 @@ function pathToRegexp (path, keys, options) {
 				ns.event.trigger(self.element, "change", {
 					value: self.value()
 				});
-				history.back();
+				ns.history.back();
 			}
 
 			function onRotary(self, ev) {
@@ -47362,7 +47444,7 @@ function pathToRegexp (path, keys, options) {
 					self.trigger("change", {
 						value: self.value()
 					});
-					history.back();
+					ns.history.back();
 				} else {
 					ui.labelHours.classList.remove(classes.HIDDEN_LABEL);
 					ui.labelMinutes.classList.remove(classes.HIDDEN_LABEL);
@@ -48375,7 +48457,7 @@ function pathToRegexp (path, keys, options) {
 					self.trigger("change", {
 						value: self.value()
 					});
-					history.back();
+					ns.history.back();
 				} else {
 					self._setActiveSelector(""); // disable all
 				}
@@ -48396,7 +48478,6 @@ function pathToRegexp (path, keys, options) {
 			 * Change month value on rotary event
 			 * @method _changeMonth
 			 * @param {number} changeValue
-			 * @param {boolean} value
 			 * @memberof ns.widget.wearable.DatePicker
 			 * @protected
 			 */
@@ -48526,7 +48607,7 @@ function pathToRegexp (path, keys, options) {
 			/**
 			 * Change value of spin included in dataPicker
 			 * @method _onSpinChange
-			 * @param {number} value
+			 * @param {number} newValue
 			 * @memberof ns.widget.wearable.DatePicker
 			 * @protected
 			 */
