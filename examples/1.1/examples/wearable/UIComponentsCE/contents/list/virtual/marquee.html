@@ -1,0 +1,35 @@
+<!DOCTYPE html><html><head>
+	<link rel="stylesheet" href="../../../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="../../../lib/tau/wearable/theme/default/tau.circle.min.css">
+	<link rel="stylesheet" href="../../../css/style.css">
+	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="../../../css/style.circle.css">
+</head>
+<body>
+<tau-page class="ui-page page-snaplistview" id="virtual-marquee-page">
+	<header>
+		<h1>Marquee</h1>
+	</header>
+	<div class="ui-content">
+		<tau-listview class="ui-listview" id="virtual-marquee"></tau-listview>
+	</div>
+
+	<!-- sample list for virtual list -->
+	<script id="template-li-marquee" type="text">
+		<div class="ui-marquee ui-marquee-gradient">${NAME}</div>
+	</script>
+	<script>
+			window.pageId = "virtual-marquee-page";
+			window.listId = "virtual-marquee";
+			window.templateId = "template-li-marquee";
+			window.itemClass = ["ui-li-static"];
+	</script>
+	<script src="virtuallist-db-demo.js"></script>
+	<script src="virtuallist.js"></script>
+</tau-page>
+<script src="../../../js/circle-helper.js"></script>
+<script src="../../../js/app.js"></script>
+<script src="../../../js/lowBatteryCheck.js"></script>
+<script src="../../../lib/tau/wearable/js/tau.js"></script>
+
+
+</body></html>
