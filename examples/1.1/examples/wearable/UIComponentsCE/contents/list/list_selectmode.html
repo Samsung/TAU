@@ -1,0 +1,56 @@
+<!DOCTYPE html><html><head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<title>Wearable UI</title>
+		<link rel="stylesheet" href="../../lib/tau/wearable/theme/default/tau.css">
+		<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="../../lib/tau/wearable/theme/default/tau.circle.min.css">
+		<link rel="stylesheet" href="../../css/style.css">
+		<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="../../css/style.circle.css">
+	</head>
+	<body>
+	<tau-page class="ui-page" id="selectModePage">
+		<header class="ui-header">
+			<h2 class="ui-title">Select Mode</h2>
+		</header>
+		<div class="ui-content">
+			<div class="ui-more">handler</div>
+			<tau-listview class="ui-listview ui-selectmode-list">
+				<li class="ui-selectmode-item">List one</li>
+				<li class="ui-selectmode-item">List two</li>
+				<li class="ui-selectmode-item">List three</li>
+				<li class="ui-selectmode-item">List four</li>
+				<li class="ui-selectmode-item">List five</li>
+				<li class="ui-selectmode-item">List six</li>
+			</tau-listview>
+		</div>
+
+		<div class="select-mode">
+			<!-- select button -->
+			<div class="select-btn" id="select-btn">
+				<a class="select-btn-text" id="select-btn-text"></a>
+			</div>
+			<!-- select option popup -->
+			<div class="select-popup">
+				<tau-listview class="ui-listview select-mode-btn-list">
+					<li><a href="#" id="select-all">Select all</a></li>
+					<li><a href="#" id="deselect-all">Deselect all</a></li>
+				</tau-listview>
+			</div>
+		</div>
+
+		<!-- Circle Profile -->
+		<tau-popup id="moreoptionsPopupCircle" class="ui-popup">
+			<div id="selector" class="ui-selector">
+				<div class="ui-item show-icon" data-title="Show"></div>
+				<div class="ui-item human-icon" data-title="Human"></div>
+				<div class="ui-item delete-icon" data-title="Delete"></div>
+				<div class="ui-item show-icon" data-title="Show"></div>
+				<div class="ui-item human-icon" data-title="Human"></div>
+				<div class="ui-item delete-icon" data-title="Delete"></div>
+			</div>
+		</tau-popup>
+		<script src="list_selectmode.js"></script>
+	</tau-page>
+	<script type="text/javascript" src="../../lib/tau/wearable/js/tau.js"></script>
+	
+	
+</body></html>

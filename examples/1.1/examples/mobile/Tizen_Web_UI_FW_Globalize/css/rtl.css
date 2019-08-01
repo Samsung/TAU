@@ -1,0 +1,5 @@
+.ui-script-direction-rtl .ui-li-static.test  {
+    direction: rtl;
+    text-align: right;
+    unicode-bidi: bidi-override;
+}
