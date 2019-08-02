@@ -32,7 +32,7 @@
 		}
 
 		scroller = tau.util.selectors.getScrollableParent(listviewElement);
-
+		listviewElement.style.display = "none";
 		if (!isCircle) {
 			indexScrollbar = new tau.widget.IndexScrollbar(indexScrollbarElement, {index: indices, container: scroller});
 		} else {

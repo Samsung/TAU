@@ -404,12 +404,12 @@
 					});
 
 					parentClassList.remove(classes.FORCE_RELATIVE);
-
-					arrayUtil.forEach(items, function (item) {
-						if (item.parentElement === parentElement) {
-							parentElement.removeChild(item);
-						}
-					});
+					// TO DO -> commented because of deleting list dividers from listview where is state for displaying indexes
+					// arrayUtil.forEach(items, function (item) {
+					// 	if (item.parentElement === parentElement) {
+					// 		parentElement.removeChild(item);
+					// 	}
+					// });
 				}
 			};
 
@@ -575,7 +575,9 @@
 									while (carouselSeparator.firstChild) {
 										carouselSeparator.removeChild(carouselSeparator.firstChild);
 									}
-									carouselSeparator.appendChild(separatorElement);
+									// variable added to not delete separator from list of state
+									var cloneSeparatorElement = separatorElement.cloneNode(true);
+									carouselSeparator.appendChild(cloneSeparatorElement);
 								} else if (carouselSeparator.firstChild) {
 									carouselSeparator.removeChild(carouselSeparator.firstChild);
 								}
@@ -587,7 +589,9 @@
 										while (nextCarouselSeparatorElement.firstChild) {
 											nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
 										}
-										nextCarouselSeparatorElement.appendChild(lowerSeparator.itemElement.element);
+										// variable added to not delete separator from list of state
+										var cloneLowerSeparator = lowerSeparator.itemElement.element.cloneNode(true);
+										nextCarouselSeparatorElement.appendChild(cloneLowerSeparator);
 										self._wrapTextContent(itemElement);
 									} else if (nextCarouselSeparatorElement.firstChild) {
 										nextCarouselSeparatorElement.removeChild(nextCarouselSeparatorElement.firstChild);
