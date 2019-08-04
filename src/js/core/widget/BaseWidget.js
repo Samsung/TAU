@@ -214,6 +214,9 @@
 				TYPE_FUNCTION = "function",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
+				commonClasses = {
+					INLINE: "ui-inline"
+				},
 				__callbacks;
 
 			BaseWidget.classes = {
@@ -365,10 +368,17 @@
 						if (prefixedValue !== null) {
 							options[option] = prefixedValue;
 						} else {
-							if (typeof options[option] === "boolean" &&
-								!self._readBooleanOptionFromElement(element, option)) {
-								if (typeof self._getDefaultOption === TYPE_FUNCTION) {
-									options[option] = self._getDefaultOption(option);
+							if (typeof options[option] === "boolean") {
+								if (!self._readCommonOptionFromElementClassname(element, option)) {
+									if (!self._readPrefixedOptionFromElementClassname(element, option)) {
+										if (typeof self._readWidgetSpecyficOptionFromElementClassname !== TYPE_FUNCTION ||
+											typeof self._readWidgetSpecyficOptionFromElementClassname === TYPE_FUNCTION &&
+											!self._readWidgetSpecyficOptionFromElementClassname(element, option)) {
+											if (typeof self._getDefaultOption === TYPE_FUNCTION) {
+												options[option] = self._getDefaultOption(option);
+											}
+										}
+									}
 								}
 							}
 						}
@@ -810,24 +820,56 @@
 			 * For example for option middle in Button widget we will check existing of class
 			 * ui-btn-middle.
 			 *
-			 * @method _readBooleanOptionFromElement
+			 * @method _readPrefixedOptionFromElementClassname
 			 * @param {HTMLElement} element Main element of widget
 			 * @param {string} name Name of option which should be used
 			 * @return {boolean} If option value was successfully read
 			 * @member ns.widget.BaseWidget
 			 * @protected
 			 */
-			prototype._readBooleanOptionFromElement = function (element, name) {
+			prototype._readPrefixedOptionFromElementClassname = function (element, name) {
 				var classesPrefix = this._classesPrefix,
 					className;
 
 				if (classesPrefix) {
 					className = classesPrefix + utilString.camelCaseToDashes(name);
-					this.options[name] = element.classList.contains(className);
-
-					return true;
+					if (element.classList.contains(className)) {
+						this.options[name] = element.classList.contains(className);
+						// property exists in classname
+						return true;
+					}
 				}
 
+				return false;
+			};
+
+			/**
+			 * Reads class based on name conversion option value, for all options which have boolean value
+			 * we can read option value by check that exists classname connected with option name.
+			 * Method returns true if class name contains common option, otherwise returns false.
+			 *
+			 * For example for option inline in widget we will check existing of class
+			 * ui-inline.
+			 *
+			 * @method _readPrefixedOptionFromElementClassname
+			 * @param {HTMLElement} element Main element of widget
+			 * @param {string} name Name of option which should be used
+			 * @return {boolean} If option value was successfully read
+			 * @member ns.widget.BaseWidget
+			 * @protected
+			 */
+			prototype._readCommonOptionFromElementClassname = function (element, name) {
+				var options = this.options,
+					classList = element.classList;
+
+				switch (name) {
+					case "inline" :
+						if (classList.contains(commonClasses.INLINE)) {
+							options.inline = true;
+							return true;
+						}
+						break;
+				}
 				return false;
 			};
 

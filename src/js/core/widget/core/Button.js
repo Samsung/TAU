@@ -258,6 +258,8 @@
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
+				MIN_SIZE = 32,
+				MAX_SIZE = 230,
 				defaultOptions = {
 					// common options
 					inline: true,
@@ -268,7 +270,8 @@
 					iconpos: "left",
 					size: null,
 					middle: false,
-					value: null
+					value: null,
+					enabledIcon: false
 				},
 				Button = function () {
 					var self = this;
@@ -276,7 +279,6 @@
 					BaseKeyboardSupport.call(self);
 					self.options = {};
 					self._classesPrefix = classes.BTN + "-";
-
 				},
 				buttonStyle = {
 					CIRCLE: "circle",
@@ -316,6 +318,31 @@
 				 * @static
 				 */
 				this.options = ns.util.object.copy(defaultOptions);
+			};
+
+			/**
+			 * Reads class based on name conversion option value
+			 *
+			 * @method _readWidgetSpecyficOptionFromElementClassname
+			 * @param {HTMLElement} element Main element of widget
+			 * @param {string} name Name of option which should be used
+			 * @return {boolean} If option value was successfully read
+			 * @member ns.widget.BaseWidget
+			 * @protected
+			 */
+			prototype._readWidgetSpecyficOptionFromElementClassname = function (element, name) {
+				var options = this.options,
+					classList = element.classList;
+
+				switch (name) {
+					case "enabledIcon" :
+						if (classList.contains(classes.BTN_ICON)) {
+							options.enabledIcon = true;
+							return true;
+						}
+						break;
+				}
+				return false;
 			};
 
 			/**
@@ -409,22 +436,33 @@
 				icon = icon || options.icon;
 				options.icon = icon;
 
+				if (icon) { // icon setting enables icon style
+					options.enabledIcon = true;
+				}
+
 				self._saveOption("icon", icon);
 
-				if (icon) {
+				if (options.enabledIcon) {
 					classList.add(classes.BTN_ICON);
-					if (icon.indexOf(".") === -1) {
-						classList.add(classes.ICON_PREFIX + icon);
-						self._setTitleForIcon(element);
-						if (iconCSSRule) {
-							utilDOM.removeCSSRule(iconCSSRule);
+					if (icon) {
+						if (icon.indexOf(".") === -1) {
+							classList.add(classes.ICON_PREFIX + icon);
+							self._setTitleForIcon(element);
+							if (iconCSSRule) {
+								utilDOM.removeCSSRule(iconCSSRule);
+							}
+						} else {
+							// if icon is file path
+							urlIcon = "url(\"" + icon + "\")";
+							styles["-webkit-mask-image"] = urlIcon;
+							styles["mask-image"] = urlIcon;
+							self._iconCSSRule = utilDOM.setStylesForPseudoClass("#" + element.id, "after", styles);
 						}
-					} else {
-						// if icon is file path
-						urlIcon = "url(\"" + icon + "\")";
-						styles["-webkit-mask-image"] = urlIcon;
-						styles["mask-image"] = urlIcon;
-						self._iconCSSRule = utilDOM.setStylesForPseudoClass("#" + element.id, "after", styles);
+					} // else - icon can be defined from app css styles
+
+					// remove button text class if text content is empty
+					if (!element.textContent.trim()) {
+						classList.remove(classes.BTN_TEXT);
 					}
 				} else {
 					classList.remove(classes.BTN_ICON);
@@ -595,16 +633,24 @@
 			prototype._setSize = function (element, value) {
 				var style = element.style,
 					options = this.options,
-					size = parseInt(value || options.size, 10);
+					size = value || options.size;
 
-				if (size < 32) {
-					size = 32;
+				if (size) {
+					size = parseInt(size, 10);
+
+					if (size < MIN_SIZE) {
+						size = MIN_SIZE;
+					}
+					if (size > MAX_SIZE) {
+						size = MAX_SIZE;
+					}
+					style.height = size + "px";
+					style.width = size + "px";
+
+					// @to do: why size has the same value for width and height
+					options.size = size;
 				}
-				if (size > 230) {
-					size = 230;
-				}
-				style.height = size + "px";
-				style.width = size + "px";
+
 			};
 
 			/**
@@ -615,7 +661,7 @@
 			 * @member ns.widget.core.Button
 			 */
 			prototype._setTextButton = function (element) {
-				if (element.textContent) {
+				if (element.textContent.trim()) {
 					element.classList.add(classes.BTN_TEXT);
 				} else {
 					element.classList.remove(classes.BTN_TEXT);
