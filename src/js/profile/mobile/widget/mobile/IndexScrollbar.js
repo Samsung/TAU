@@ -182,7 +182,7 @@
 
 				len = elements.length;
 				for (i = 0; i < len; i++) {
-					indices.push(elements[i].textContent);
+					indices.push(elements[i].textContent.trim());
 				}
 				return indices;
 			}

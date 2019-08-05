@@ -52,7 +52,7 @@
 		clearButton = header.querySelector(".ui-text-input-clear");
 		len = dividers.length;
 		for (i = 0; i < len; i++) {
-			idx = dividers[i].textContent;
+			idx = dividers[i].textContent.trim();
 			dividerIndexObject[idx] = dividers[i];
 		}
 		isb = new tau.widget.IndexScrollbar(isbElement);
