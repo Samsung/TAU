@@ -599,7 +599,8 @@
 					context = self._context,
 					canvas,
 					foundSelf = false,
-					siblingLists;
+					siblingLists,
+					childrenLists;
 
 				self.options.firstColorStep = parseInt(self.options.firstColorStep, 10);
 
@@ -623,16 +624,26 @@
 
 				// check other sibling colored lists
 				siblingLists = [].slice.call(self.element.parentElement.querySelectorAll(WIDGET_SELECTOR));
+				childrenLists = [].slice.call(self.element.querySelectorAll(WIDGET_SELECTOR));
 				// remove itself listview from list and above listview elements
 				self._siblingListsBellow = siblingLists.filter(function (listviewElement) {
+					// filter children
+					if (childrenLists.indexOf(listviewElement) > -1) {
+						return false;
+					}
 					if (foundSelf) {
 						return true;
 					}
 					foundSelf = listviewElement === self.element;
+
 					return false;
 				});
 				foundSelf = false;
 				self._siblingListsAbove = siblingLists.filter(function (listviewElement) {
+					// filter children
+					if (childrenLists.indexOf(listviewElement) > -1) {
+						return false;
+					}
 					if (foundSelf || listviewElement === self.element) {
 						foundSelf = true;
 						return false;
