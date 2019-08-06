@@ -258,7 +258,7 @@
 					options = self.options;
 
 				if (options.type === "circle") {
-					events.on(document, "rotarydetent touchstart touchmove touchend click", self, false);
+					events.on(document, "rotarydetent touchstart touchmove touchend click mousedown mousemove mouseup", self, false);
 				} else {
 					CoreSliderPrototype._bindEvents.call(self);
 				}
@@ -275,7 +275,7 @@
 				var self = this,
 					options = self.options;
 
-				if (options.type === "circle") {
+				if (options && options.type === "circle") {
 					switch (event.type) {
 						case "rotarydetent":
 							self._onRotary(event);
@@ -283,7 +283,10 @@
 						case "touchstart":
 						case "touchmove":
 						case "touchend":
-							self._onTouch(event);
+						case "mousedown":
+						case "mousemove":
+						case "mouseup":
+							self._onPointer(event);
 							break;
 						case "click":
 							self._onClick(event);
@@ -310,20 +313,20 @@
 			};
 
 			/**
-			 * Touchstart handler
-			 * @method _onTouch
+			 * Pointer handler (touches or mouse)
+			 * @method _onPointer
 			 * @param {Event} event
 			 * @member ns.widget.wearable.Slider
 			 * @protected
 			 */
-			prototype._onTouch = function (event) {
+			prototype._onPointer = function (event) {
 				var self = this,
 					pointer = event.changedTouches && event.changedTouches[0] || event,
 					clientX = pointer.clientX,
 					clientY = pointer.clientY,
 					isValid = self._isValidStartPosition(clientX, clientY);
 
-				if (isValid) {
+				if (isValid && self.option("pressed")) {
 					event.preventDefault();
 					event.stopPropagation();
 
@@ -331,9 +334,9 @@
 				}
 
 				if (self.options.endPoint) {
-					if (event.type === "touchstart") {
+					if (event.type === "touchstart" || event.type === "mousedown") {
 						self.option("pressed", true);
-					} else if (event.type === "touchend") {
+					} else if (event.type === "touchend" || event.type === "mouseup") {
 						self.option("pressed", false);
 					}
 				}
