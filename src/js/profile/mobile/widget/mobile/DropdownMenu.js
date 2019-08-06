@@ -263,7 +263,7 @@
 					native: "ui-dropdownmenu-native",
 					top: "ui-dropdownmenu-options-top",
 					bottom: "ui-dropdownmenu-options-bottom",
-					focus: "ui-focus"
+					focus: BaseKeyboardSupport.classes.focus
 				},
 				prototype = new BaseWidget();
 
@@ -353,9 +353,11 @@
 				var ui = self._ui,
 					target = event.target;
 
-				if (target === ui.elSelectWrapper ||
-					target.parentNode === ui.elOptionContainer) {
-					target.classList.add(classes.focus);
+				if (ns.getConfig("keyboardSupport")) {
+					if (target === ui.elSelectWrapper ||
+						target.parentNode === ui.elOptionContainer) {
+						target.classList.add(classes.focus);
+					}
 				}
 			}
 
@@ -371,9 +373,11 @@
 				var ui = self._ui,
 					target = event.target;
 
-				if (target === ui.elSelectWrapper ||
-					target.parentNode === ui.elOptionContainer) {
-					target.classList.remove(classes.focus);
+				if (ns.getConfig("keyboardSupport")) {
+					if (target === ui.elSelectWrapper ||
+						target.parentNode === ui.elOptionContainer) {
+						target.classList.remove(classes.focus);
+					}
 				}
 			}
 
