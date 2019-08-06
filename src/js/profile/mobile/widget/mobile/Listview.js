@@ -1063,7 +1063,7 @@
 				var target = event.detail.element,
 					liElement = selectorUtils.getClosestByTag(target, "li");
 
-				if (target.tagName === "A") {
+				if (ns.getConfig("keyboardSupport") && (target.tagName === "A")) {
 					liElement.classList.add(classes.ITEMFOCUS);
 				}
 			};
@@ -1072,17 +1072,21 @@
 				var target = event.detail.element,
 					liElement = selectorUtils.getClosestByTag(target, "li");
 
-				if (target.tagName === "A") {
+				if (ns.getConfig("keyboardSupport") && (target.tagName === "A")) {
 					liElement.classList.remove(classes.ITEMFOCUS);
 				}
 			};
 
 			prototype._focus = function (element) {
-				element.classList.add(classes.FOCUS);
+				if (ns.getConfig("keyboardSupport")) {
+					element.classList.add(classes.FOCUS);
+				}
 			}
 
 			prototype._blur = function (element) {
-				element.classList.remove(classes.FOCUS);
+				if (ns.getConfig("keyboardSupport")) {
+					element.classList.remove(classes.FOCUS);
+				}
 			}
 
 			/**
