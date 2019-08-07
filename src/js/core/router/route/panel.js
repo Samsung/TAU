@@ -116,6 +116,29 @@
 				return false;
 			};
 
+			/**
+			 * This method handles tauback event
+			 * @method tauback
+			 * @param {event} event
+			 */
+			routePanel.tauback = function (event) {
+				var self = this,
+					storageName = panelChanger.default.STORAGE_NAME,
+					panelHistory = JSON.parse(localStorage[storageName] || "[]"),
+					panelChangerComponent = self._panelChangerComponent;
+
+				if (panelChangerComponent) {
+					panelHistory.pop();
+					if (panelChangerComponent.options && panelChangerComponent.options.manageHistory && panelHistory.length > 0) {
+						localStorage[storageName] = JSON.stringify(panelHistory);
+						panelChangerComponent.changePanel("#" + panelHistory.pop(), CONST.REVERSE, "back");
+						event.stopPropagation();
+					}
+				}
+			}
+
+			window.addEventListener("tauback", routePanel.tauback.bind(routePanel), false);
+
 			ns.router.route.panel = routePanel;
 
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);

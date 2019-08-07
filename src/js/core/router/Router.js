@@ -649,11 +649,15 @@
 			 * @member ns.router.Router
 			 */
 			Router.prototype.destroy = function () {
-				var self = this;
+				var self = this,
+					routePanel = this.getRoute("panel");
 
 				historyManager.disable();
 
 				window.removeEventListener("popstate", self.popStateHandler, false);
+				if (routePanel) {
+					window.removeEventListener("tauback", routePanel.tauback, false);
+				}
 				if (body) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
