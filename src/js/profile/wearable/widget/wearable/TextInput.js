@@ -151,13 +151,19 @@
 			};
 
 			prototype._onFocus = function (event) {
-				var self = this;
+				var self = this,
+					element = self.element,
+					currentValueLength = element.value.length;
 
 				event.preventDefault();
 				self.element.blur();
 				if (!self._isInputPaneVisible) {
 					self._showInputPane();
 				}
+
+				// setting caret position at the end
+				element.selectionStart = currentValueLength;
+				element.selectionEnd = currentValueLength;
 			};
 
 			prototype._onWindowResize = function () {
