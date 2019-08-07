@@ -222,6 +222,7 @@
 						iteration: "infinite",
 						delay: 1000
 					};
+					self._actualActiveTab = null;
 				},
 				CLASS_PREFIX = "ui-tabbar",
 				/**
@@ -659,7 +660,7 @@
 					textWidth,
 					allTextWidth;
 
-				if (ui.links.length === 0) {
+				if (ui.links.length === 0 || index === self._actualActiveTab) {
 					return;
 				}
 				// disable previous link
@@ -703,6 +704,7 @@
 
 				self._setTabbarPosition();
 				TabPrototype._setActive.call(self, index);
+				self._actualActiveTab = index;
 			};
 
 			/**
