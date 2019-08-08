@@ -294,7 +294,7 @@
 				// Move header out
 				element.insertBefore(expandableHeading, element.firstChild);
 
-				domUtils.wrapInHTML(expandableHeading.childNodes, "<a class='" + classes.uiExpandableHeadingToggle + "' href='#'></a>");
+				domUtils.wrapInHTML(expandableHeading.childNodes, "<a class='" + classes.uiExpandableHeadingToggle + "' tabindex='0'></a>");
 
 				expandableContent = expandableHeading.nextElementSibling;
 
