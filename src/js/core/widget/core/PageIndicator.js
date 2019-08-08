@@ -74,7 +74,7 @@
 				 * @property {number} [options.numberOfPages=null] Number of pages to be linked to PageIndicator.
 				 * @property {string} [options.layout="linear"] Layout type of page indicator.
 				 * @property {number} [options.intervalAngle=6] angle between each dot in page indicator.
-				 * @property {string} [options.style="dashed"] style of the page indicator "dotted" "dashed"
+				 * @property {string} [options.appearance="dashed"] style of the page indicator "dotted" "dashed"
 				 * @member ns.widget.core.PageIndicator
 				 */
 				this.options = {
@@ -82,7 +82,7 @@
 					numberOfPages: null,
 					layout: "linear",
 					intervalAngle: 6,
-					style: "dashed"
+					appearance: "dashed"
 				};
 			};
 			/**
@@ -101,7 +101,7 @@
 				if (options.layout === layoutType.CIRCULAR) {
 					self._circularPositioning(element);
 				}
-				if (options.style === "dashed") {
+				if (options.appearance === "dashed") {
 					element.classList.add(classes.indicatorDashed);
 				}
 				return element;
