@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.1';
+ns.version = '1.1.2';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -5368,6 +5368,9 @@ ns.version = '1.1.1';
 				TYPE_FUNCTION = "function",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
+				commonClasses = {
+					INLINE: "ui-inline"
+				},
 				__callbacks;
 
 			BaseWidget.classes = {
@@ -5519,10 +5522,17 @@ ns.version = '1.1.1';
 						if (prefixedValue !== null) {
 							options[option] = prefixedValue;
 						} else {
-							if (typeof options[option] === "boolean" &&
-								!self._readBooleanOptionFromElement(element, option)) {
-								if (typeof self._getDefaultOption === TYPE_FUNCTION) {
-									options[option] = self._getDefaultOption(option);
+							if (typeof options[option] === "boolean") {
+								if (!self._readCommonOptionFromElementClassname(element, option)) {
+									if (!self._readPrefixedOptionFromElementClassname(element, option)) {
+										if (typeof self._readWidgetSpecyficOptionFromElementClassname !== TYPE_FUNCTION ||
+											typeof self._readWidgetSpecyficOptionFromElementClassname === TYPE_FUNCTION &&
+											!self._readWidgetSpecyficOptionFromElementClassname(element, option)) {
+											if (typeof self._getDefaultOption === TYPE_FUNCTION) {
+												options[option] = self._getDefaultOption(option);
+											}
+										}
+									}
 								}
 							}
 						}
@@ -5964,24 +5974,56 @@ ns.version = '1.1.1';
 			 * For example for option middle in Button widget we will check existing of class
 			 * ui-btn-middle.
 			 *
-			 * @method _readBooleanOptionFromElement
+			 * @method _readPrefixedOptionFromElementClassname
 			 * @param {HTMLElement} element Main element of widget
 			 * @param {string} name Name of option which should be used
 			 * @return {boolean} If option value was successfully read
 			 * @member ns.widget.BaseWidget
 			 * @protected
 			 */
-			prototype._readBooleanOptionFromElement = function (element, name) {
+			prototype._readPrefixedOptionFromElementClassname = function (element, name) {
 				var classesPrefix = this._classesPrefix,
 					className;
 
 				if (classesPrefix) {
 					className = classesPrefix + utilString.camelCaseToDashes(name);
-					this.options[name] = element.classList.contains(className);
-
-					return true;
+					if (element.classList.contains(className)) {
+						this.options[name] = element.classList.contains(className);
+						// property exists in classname
+						return true;
+					}
 				}
 
+				return false;
+			};
+
+			/**
+			 * Reads class based on name conversion option value, for all options which have boolean value
+			 * we can read option value by check that exists classname connected with option name.
+			 * Method returns true if class name contains common option, otherwise returns false.
+			 *
+			 * For example for option inline in widget we will check existing of class
+			 * ui-inline.
+			 *
+			 * @method _readPrefixedOptionFromElementClassname
+			 * @param {HTMLElement} element Main element of widget
+			 * @param {string} name Name of option which should be used
+			 * @return {boolean} If option value was successfully read
+			 * @member ns.widget.BaseWidget
+			 * @protected
+			 */
+			prototype._readCommonOptionFromElementClassname = function (element, name) {
+				var options = this.options,
+					classList = element.classList;
+
+				switch (name) {
+					case "inline" :
+						if (classList.contains(commonClasses.INLINE)) {
+							options.inline = true;
+							return true;
+						}
+						break;
+				}
 				return false;
 			};
 
@@ -11316,10 +11358,23 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.history
 					 */
 					back: function () {
-						// In case of running tau app in web browser
-						// don't allow to go back outside tau history
+
+						var event;
+
+						// If we are out of the start page go back to previous page
+						// otherwise handle page internal history e.g. for panel
+						//
+						// TODO: handle widget history when on page different than start page
+						//
 						if (this.startURL !== window.location.href) {
 							windowHistory.back();
+						} else {
+							event = new CustomEvent("tauback", {
+								"bubbles": true,
+								"cancelable": true
+							});
+
+							document.body.dispatchEvent(event);
 						}
 					},
 
@@ -15516,11 +15571,15 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.router.Router
 			 */
 			Router.prototype.destroy = function () {
-				var self = this;
+				var self = this,
+					routePanel = this.getRoute("panel");
 
 				historyManager.disable();
 
 				window.removeEventListener("popstate", self.popStateHandler, false);
+				if (routePanel) {
+					window.removeEventListener("tauback", routePanel.tauback, false);
+				}
 				if (body) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
@@ -26084,7 +26143,7 @@ function pathToRegexp (path, keys, options) {
 				 * @property {number} [options.numberOfPages=null] Number of pages to be linked to PageIndicator.
 				 * @property {string} [options.layout="linear"] Layout type of page indicator.
 				 * @property {number} [options.intervalAngle=6] angle between each dot in page indicator.
-				 * @property {string} [options.style="dashed"] style of the page indicator "dotted" "dashed"
+				 * @property {string} [options.appearance="dashed"] style of the page indicator "dotted" "dashed"
 				 * @member ns.widget.core.PageIndicator
 				 */
 				this.options = {
@@ -26092,7 +26151,7 @@ function pathToRegexp (path, keys, options) {
 					numberOfPages: null,
 					layout: "linear",
 					intervalAngle: 6,
-					style: "dashed"
+					appearance: "dashed"
 				};
 			};
 			/**
@@ -26111,7 +26170,7 @@ function pathToRegexp (path, keys, options) {
 				if (options.layout === layoutType.CIRCULAR) {
 					self._circularPositioning(element);
 				}
-				if (options.style === "dashed") {
+				if (options.appearance === "dashed") {
 					element.classList.add(classes.indicatorDashed);
 				}
 				return element;
@@ -26555,11 +26614,18 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					input = self.element,
 					barElement = self._ui.barElement,
+					options = self.options,
 					rectBar = barElement.getBoundingClientRect();
 
-				input.style.width = (rectBar.width + 16) + "px";
-				input.style.top = "-12px"; // @todo change this hardcoded size;
-				input.style.left = "-8px";
+				if (options.orientation === DEFAULT.HORIZONTAL) {
+					input.style.width = (rectBar.width + 16) + "px";
+					input.style.top = "-12px"; // @todo change this hardcoded size;
+					input.style.left = "-8px";
+				} else {
+					input.style.width = (rectBar.width + 16) + "px";
+					input.style.height = rectBar.height + "px";
+					input.style.left = "-10px";
+				}
 			};
 
 			/**
@@ -31438,6 +31504,8 @@ function pathToRegexp (path, keys, options) {
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
+				MIN_SIZE = 32,
+				MAX_SIZE = 230,
 				defaultOptions = {
 					// common options
 					inline: true,
@@ -31448,7 +31516,8 @@ function pathToRegexp (path, keys, options) {
 					iconpos: "left",
 					size: null,
 					middle: false,
-					value: null
+					value: null,
+					enabledIcon: false
 				},
 				Button = function () {
 					var self = this;
@@ -31456,7 +31525,6 @@ function pathToRegexp (path, keys, options) {
 					BaseKeyboardSupport.call(self);
 					self.options = {};
 					self._classesPrefix = classes.BTN + "-";
-
 				},
 				buttonStyle = {
 					CIRCLE: "circle",
@@ -31496,6 +31564,31 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				this.options = ns.util.object.copy(defaultOptions);
+			};
+
+			/**
+			 * Reads class based on name conversion option value
+			 *
+			 * @method _readWidgetSpecyficOptionFromElementClassname
+			 * @param {HTMLElement} element Main element of widget
+			 * @param {string} name Name of option which should be used
+			 * @return {boolean} If option value was successfully read
+			 * @member ns.widget.BaseWidget
+			 * @protected
+			 */
+			prototype._readWidgetSpecyficOptionFromElementClassname = function (element, name) {
+				var options = this.options,
+					classList = element.classList;
+
+				switch (name) {
+					case "enabledIcon" :
+						if (classList.contains(classes.BTN_ICON)) {
+							options.enabledIcon = true;
+							return true;
+						}
+						break;
+				}
+				return false;
 			};
 
 			/**
@@ -31589,22 +31682,33 @@ function pathToRegexp (path, keys, options) {
 				icon = icon || options.icon;
 				options.icon = icon;
 
+				if (icon) { // icon setting enables icon style
+					options.enabledIcon = true;
+				}
+
 				self._saveOption("icon", icon);
 
-				if (icon) {
+				if (options.enabledIcon) {
 					classList.add(classes.BTN_ICON);
-					if (icon.indexOf(".") === -1) {
-						classList.add(classes.ICON_PREFIX + icon);
-						self._setTitleForIcon(element);
-						if (iconCSSRule) {
-							utilDOM.removeCSSRule(iconCSSRule);
+					if (icon) {
+						if (icon.indexOf(".") === -1) {
+							classList.add(classes.ICON_PREFIX + icon);
+							self._setTitleForIcon(element);
+							if (iconCSSRule) {
+								utilDOM.removeCSSRule(iconCSSRule);
+							}
+						} else {
+							// if icon is file path
+							urlIcon = "url(\"" + icon + "\")";
+							styles["-webkit-mask-image"] = urlIcon;
+							styles["mask-image"] = urlIcon;
+							self._iconCSSRule = utilDOM.setStylesForPseudoClass("#" + element.id, "after", styles);
 						}
-					} else {
-						// if icon is file path
-						urlIcon = "url(\"" + icon + "\")";
-						styles["-webkit-mask-image"] = urlIcon;
-						styles["mask-image"] = urlIcon;
-						self._iconCSSRule = utilDOM.setStylesForPseudoClass("#" + element.id, "after", styles);
+					} // else - icon can be defined from app css styles
+
+					// remove button text class if text content is empty
+					if (!element.textContent.trim()) {
+						classList.remove(classes.BTN_TEXT);
 					}
 				} else {
 					classList.remove(classes.BTN_ICON);
@@ -31775,16 +31879,24 @@ function pathToRegexp (path, keys, options) {
 			prototype._setSize = function (element, value) {
 				var style = element.style,
 					options = this.options,
-					size = parseInt(value || options.size, 10);
+					size = value || options.size;
 
-				if (size < 32) {
-					size = 32;
+				if (size) {
+					size = parseInt(size, 10);
+
+					if (size < MIN_SIZE) {
+						size = MIN_SIZE;
+					}
+					if (size > MAX_SIZE) {
+						size = MAX_SIZE;
+					}
+					style.height = size + "px";
+					style.width = size + "px";
+
+					// @to do: why size has the same value for width and height
+					options.size = size;
 				}
-				if (size > 230) {
-					size = 230;
-				}
-				style.height = size + "px";
-				style.width = size + "px";
+
 			};
 
 			/**
@@ -31795,7 +31907,7 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Button
 			 */
 			prototype._setTextButton = function (element) {
-				if (element.textContent) {
+				if (element.textContent.trim()) {
 					element.classList.add(classes.BTN_TEXT);
 				} else {
 					element.classList.remove(classes.BTN_TEXT);
@@ -33418,7 +33530,7 @@ function pathToRegexp (path, keys, options) {
 				// Move header out
 				element.insertBefore(expandableHeading, element.firstChild);
 
-				domUtils.wrapInHTML(expandableHeading.childNodes, "<a class='" + classes.uiExpandableHeadingToggle + "' href='#'></a>");
+				domUtils.wrapInHTML(expandableHeading.childNodes, "<a class='" + classes.uiExpandableHeadingToggle + "' tabindex='0'></a>");
 
 				expandableContent = expandableHeading.nextElementSibling;
 
@@ -34144,7 +34256,8 @@ function pathToRegexp (path, keys, options) {
 					context = self._context,
 					canvas,
 					foundSelf = false,
-					siblingLists;
+					siblingLists,
+					childrenLists;
 
 				self.options.firstColorStep = parseInt(self.options.firstColorStep, 10);
 
@@ -34168,16 +34281,26 @@ function pathToRegexp (path, keys, options) {
 
 				// check other sibling colored lists
 				siblingLists = [].slice.call(self.element.parentElement.querySelectorAll(WIDGET_SELECTOR));
+				childrenLists = [].slice.call(self.element.querySelectorAll(WIDGET_SELECTOR));
 				// remove itself listview from list and above listview elements
 				self._siblingListsBellow = siblingLists.filter(function (listviewElement) {
+					// filter children
+					if (childrenLists.indexOf(listviewElement) > -1) {
+						return false;
+					}
 					if (foundSelf) {
 						return true;
 					}
 					foundSelf = listviewElement === self.element;
+
 					return false;
 				});
 				foundSelf = false;
 				self._siblingListsAbove = siblingLists.filter(function (listviewElement) {
+					// filter children
+					if (childrenLists.indexOf(listviewElement) > -1) {
+						return false;
+					}
 					if (foundSelf || listviewElement === self.element) {
 						foundSelf = true;
 						return false;
@@ -34597,7 +34720,7 @@ function pathToRegexp (path, keys, options) {
 				var target = event.detail.element,
 					liElement = selectorUtils.getClosestByTag(target, "li");
 
-				if (target.tagName === "A") {
+				if (ns.getConfig("keyboardSupport") && (target.tagName === "A")) {
 					liElement.classList.add(classes.ITEMFOCUS);
 				}
 			};
@@ -34606,17 +34729,21 @@ function pathToRegexp (path, keys, options) {
 				var target = event.detail.element,
 					liElement = selectorUtils.getClosestByTag(target, "li");
 
-				if (target.tagName === "A") {
+				if (ns.getConfig("keyboardSupport") && (target.tagName === "A")) {
 					liElement.classList.remove(classes.ITEMFOCUS);
 				}
 			};
 
 			prototype._focus = function (element) {
-				element.classList.add(classes.FOCUS);
+				if (ns.getConfig("keyboardSupport")) {
+					element.classList.add(classes.FOCUS);
+				}
 			}
 
 			prototype._blur = function (element) {
-				element.classList.remove(classes.FOCUS);
+				if (ns.getConfig("keyboardSupport")) {
+					element.classList.remove(classes.FOCUS);
+				}
 			}
 
 			/**
@@ -37336,6 +37463,7 @@ function pathToRegexp (path, keys, options) {
 						iteration: "infinite",
 						delay: 1000
 					};
+					self._actualActiveTab = null;
 				},
 				CLASS_PREFIX = "ui-tabbar",
 				/**
@@ -37773,7 +37901,7 @@ function pathToRegexp (path, keys, options) {
 					textWidth,
 					allTextWidth;
 
-				if (ui.links.length === 0) {
+				if (ui.links.length === 0 || index === self._actualActiveTab) {
 					return;
 				}
 				// disable previous link
@@ -37817,6 +37945,7 @@ function pathToRegexp (path, keys, options) {
 
 				self._setTabbarPosition();
 				TabPrototype._setActive.call(self, index);
+				self._actualActiveTab = index;
 			};
 
 			/**
@@ -38626,12 +38755,17 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.mobile.TextInput
 			 */
 			prototype._onFocus = function (self) {
-				var element = self.element;
+				var element = self.element,
+					currentValueLength = element.value.length;
 
 				element.classList.add(classes.uiTextInputFocused);
 				if (element.value !== "" && self._ui.textClearButtonElement) {
 					self._ui.textClearButtonElement.classList.remove(classes.uiTextInputClearHidden);
 				}
+
+				// setting caret position at the end
+				element.selectionStart = currentValueLength;
+				element.selectionEnd = currentValueLength;
 			};
 
 			/**
@@ -39363,7 +39497,7 @@ function pathToRegexp (path, keys, options) {
 					native: "ui-dropdownmenu-native",
 					top: "ui-dropdownmenu-options-top",
 					bottom: "ui-dropdownmenu-options-bottom",
-					focus: "ui-focus"
+					focus: BaseKeyboardSupport.classes.focus
 				},
 				prototype = new BaseWidget();
 
@@ -39453,9 +39587,11 @@ function pathToRegexp (path, keys, options) {
 				var ui = self._ui,
 					target = event.target;
 
-				if (target === ui.elSelectWrapper ||
-					target.parentNode === ui.elOptionContainer) {
-					target.classList.add(classes.focus);
+				if (ns.getConfig("keyboardSupport")) {
+					if (target === ui.elSelectWrapper ||
+						target.parentNode === ui.elOptionContainer) {
+						target.classList.add(classes.focus);
+					}
 				}
 			}
 
@@ -39471,9 +39607,11 @@ function pathToRegexp (path, keys, options) {
 				var ui = self._ui,
 					target = event.target;
 
-				if (target === ui.elSelectWrapper ||
-					target.parentNode === ui.elOptionContainer) {
-					target.classList.remove(classes.focus);
+				if (ns.getConfig("keyboardSupport")) {
+					if (target === ui.elSelectWrapper ||
+						target.parentNode === ui.elOptionContainer) {
+						target.classList.remove(classes.focus);
+					}
 				}
 			}
 
@@ -48699,7 +48837,7 @@ function pathToRegexp (path, keys, options) {
 
 				len = elements.length;
 				for (i = 0; i < len; i++) {
-					indices.push(elements[i].textContent);
+					indices.push(elements[i].textContent.trim());
 				}
 				return indices;
 			}
@@ -52943,6 +53081,29 @@ function pathToRegexp (path, keys, options) {
 				self.active = false;
 				return false;
 			};
+
+			/**
+			 * This method handles tauback event
+			 * @method tauback
+			 * @param {event} event
+			 */
+			routePanel.tauback = function (event) {
+				var self = this,
+					storageName = panelChanger.default.STORAGE_NAME,
+					panelHistory = JSON.parse(localStorage[storageName] || "[]"),
+					panelChangerComponent = self._panelChangerComponent;
+
+				if (panelChangerComponent) {
+					panelHistory.pop();
+					if (panelChangerComponent.options && panelChangerComponent.options.manageHistory && panelHistory.length > 0) {
+						localStorage[storageName] = JSON.stringify(panelHistory);
+						panelChangerComponent.changePanel("#" + panelHistory.pop(), CONST.REVERSE, "back");
+						event.stopPropagation();
+					}
+				}
+			}
+
+			window.addEventListener("tauback", routePanel.tauback.bind(routePanel), false);
 
 			ns.router.route.panel = routePanel;
 

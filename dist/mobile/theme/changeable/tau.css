@@ -2463,6 +2463,11 @@ a.ui-link-inherit {
 .ui-slider.ui-slider-vertical:not(.ui-slider-center) .ui-slider-value {
   background: linear-gradient(to top, rgba(61, 185, 204, 1) 100%, rgba(255, 25, 25, 1) 100%);
 }
+.ui-slider.ui-slider-vertical input[data-tau-built="Slider"] {
+  -webkit-appearance: slider-vertical;
+     -moz-appearance: slider-vertical;
+          appearance: slider-vertical;
+}
 input[data-tau-built="Slider"] {
   opacity: 0;
   display: block;
@@ -7117,6 +7122,9 @@ a.ui-btn {
   height: 20px;
   line-height: 20px;
 }
+.ui-listview .ui-expandable .ui-expandable-heading .ui-expandable-heading-toggle:focus {
+  outline: 0;
+}
 .ui-listview .ui-expandable .ui-expandable-heading .ui-expandable-heading-toggle:active {
   color: rgba(34, 104, 115, 1);
 }
@@ -7437,6 +7445,7 @@ tau-expandable {
   top: 0;
   left: 0;
   pointer-events: none;
+  z-index: -1;
 }
 .ui-listview .ui-listview-background::before {
   content: "250,250,250,1::0,0,0,-0.04";
