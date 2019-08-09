@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.5';
+ns.version = '1.0.6';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -11151,10 +11151,23 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.history
 					 */
 					back: function () {
-						// In case of running tau app in web browser
-						// don't allow to go back outside tau history
+
+						var event;
+
+						// If we are out of the start page go back to previous page
+						// otherwise handle page internal history e.g. for panel
+						//
+						// TODO: handle widget history when on page different than start page
+						//
 						if (this.startURL !== window.location.href) {
 							windowHistory.back();
+						} else {
+							event = new CustomEvent("tauback", {
+								"bubbles": true,
+								"cancelable": true
+							});
+
+							document.body.dispatchEvent(event);
 						}
 					},
 
@@ -13826,11 +13839,15 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.router.Router
 			 */
 			Router.prototype.destroy = function () {
-				var self = this;
+				var self = this,
+					routePanel = this.getRoute("panel");
 
 				historyManager.disable();
 
 				window.removeEventListener("popstate", self.popStateHandler, false);
+				if (routePanel) {
+					window.removeEventListener("tauback", routePanel.tauback, false);
+				}
 				if (body) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
@@ -23778,7 +23795,7 @@ function pathToRegexp (path, keys, options) {
 				 * @property {number} [options.numberOfPages=null] Number of pages to be linked to PageIndicator.
 				 * @property {string} [options.layout="linear"] Layout type of page indicator.
 				 * @property {number} [options.intervalAngle=6] angle between each dot in page indicator.
-				 * @property {string} [options.style="dashed"] style of the page indicator "dotted" "dashed"
+				 * @property {string} [options.appearance="dashed"] style of the page indicator "dotted" "dashed"
 				 * @member ns.widget.core.PageIndicator
 				 */
 				this.options = {
@@ -23786,7 +23803,7 @@ function pathToRegexp (path, keys, options) {
 					numberOfPages: null,
 					layout: "linear",
 					intervalAngle: 6,
-					style: "dashed"
+					appearance: "dashed"
 				};
 			};
 			/**
@@ -23805,7 +23822,7 @@ function pathToRegexp (path, keys, options) {
 				if (options.layout === layoutType.CIRCULAR) {
 					self._circularPositioning(element);
 				}
-				if (options.style === "dashed") {
+				if (options.appearance === "dashed") {
 					element.classList.add(classes.indicatorDashed);
 				}
 				return element;
@@ -30811,7 +30828,8 @@ function pathToRegexp (path, keys, options) {
 					context = self._context,
 					canvas,
 					foundSelf = false,
-					siblingLists;
+					siblingLists,
+					childrenLists;
 
 				self.options.firstColorStep = parseInt(self.options.firstColorStep, 10);
 
@@ -30835,16 +30853,26 @@ function pathToRegexp (path, keys, options) {
 
 				// check other sibling colored lists
 				siblingLists = [].slice.call(self.element.parentElement.querySelectorAll(WIDGET_SELECTOR));
+				childrenLists = [].slice.call(self.element.querySelectorAll(WIDGET_SELECTOR));
 				// remove itself listview from list and above listview elements
 				self._siblingListsBellow = siblingLists.filter(function (listviewElement) {
+					// filter children
+					if (childrenLists.indexOf(listviewElement) > -1) {
+						return false;
+					}
 					if (foundSelf) {
 						return true;
 					}
 					foundSelf = listviewElement === self.element;
+
 					return false;
 				});
 				foundSelf = false;
 				self._siblingListsAbove = siblingLists.filter(function (listviewElement) {
+					// filter children
+					if (childrenLists.indexOf(listviewElement) > -1) {
+						return false;
+					}
 					if (foundSelf || listviewElement === self.element) {
 						foundSelf = true;
 						return false;
@@ -35225,12 +35253,17 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.mobile.TextInput
 			 */
 			prototype._onFocus = function (self) {
-				var element = self.element;
+				var element = self.element,
+					currentValueLength = element.value.length;
 
 				element.classList.add(classes.uiTextInputFocused);
 				if (element.value !== "" && self._ui.textClearButtonElement) {
 					self._ui.textClearButtonElement.classList.remove(classes.uiTextInputClearHidden);
 				}
+
+				// setting caret position at the end
+				element.selectionStart = currentValueLength;
+				element.selectionEnd = currentValueLength;
 			};
 
 			/**
@@ -42018,7 +42051,7 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._setActive = function (active) {
 				var self = this,
-					route = ns.router.getInstance().getRoute("drawer");
+					route = ns.router.Router.getInstance().getRoute("drawer");
 
 				if (active) {
 					route.setActive(self);
@@ -44997,7 +45030,7 @@ function pathToRegexp (path, keys, options) {
 
 				len = elements.length;
 				for (i = 0; i < len; i++) {
-					indices.push(elements[i].textContent);
+					indices.push(elements[i].textContent.trim());
 				}
 				return indices;
 			}
@@ -49106,6 +49139,29 @@ function pathToRegexp (path, keys, options) {
 				self.active = false;
 				return false;
 			};
+
+			/**
+			 * This method handles tauback event
+			 * @method tauback
+			 * @param {event} event
+			 */
+			routePanel.tauback = function (event) {
+				var self = this,
+					storageName = panelChanger.default.STORAGE_NAME,
+					panelHistory = JSON.parse(localStorage[storageName] || "[]"),
+					panelChangerComponent = self._panelChangerComponent;
+
+				if (panelChangerComponent) {
+					panelHistory.pop();
+					if (panelChangerComponent.options && panelChangerComponent.options.manageHistory && panelHistory.length > 0) {
+						localStorage[storageName] = JSON.stringify(panelHistory);
+						panelChangerComponent.changePanel("#" + panelHistory.pop(), CONST.REVERSE, "back");
+						event.stopPropagation();
+					}
+				}
+			}
+
+			window.addEventListener("tauback", routePanel.tauback.bind(routePanel), false);
 
 			ns.router.route.panel = routePanel;
 
