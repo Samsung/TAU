@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.5';
+ns.version = '1.0.6';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -5324,10 +5324,23 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.history
 					 */
 					back: function () {
-						// In case of running tau app in web browser
-						// don't allow to go back outside tau history
+
+						var event;
+
+						// If we are out of the start page go back to previous page
+						// otherwise handle page internal history e.g. for panel
+						//
+						// TODO: handle widget history when on page different than start page
+						//
 						if (this.startURL !== window.location.href) {
 							windowHistory.back();
+						} else {
+							event = new CustomEvent("tauback", {
+								"bubbles": true,
+								"cancelable": true
+							});
+
+							document.body.dispatchEvent(event);
 						}
 					},
 
@@ -10548,11 +10561,15 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.router.Router
 			 */
 			Router.prototype.destroy = function () {
-				var self = this;
+				var self = this,
+					routePanel = this.getRoute("panel");
 
 				historyManager.disable();
 
 				window.removeEventListener("popstate", self.popStateHandler, false);
+				if (routePanel) {
+					window.removeEventListener("tauback", routePanel.tauback, false);
+				}
 				if (body) {
 					body.removeEventListener("pagebeforechange", self.pagebeforechangeHandler, false);
 					body.removeEventListener("vclick", self.linkClickHandler, false);
@@ -14240,7 +14257,7 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype._setActive = function (active) {
 				var self = this,
-					route = ns.router.getInstance().getRoute("drawer");
+					route = ns.router.Router.getInstance().getRoute("drawer");
 
 				if (active) {
 					route.setActive(self);
@@ -20132,7 +20149,7 @@ function pathToRegexp (path, keys, options) {
 				 * @property {number} [options.numberOfPages=null] Number of pages to be linked to PageIndicator.
 				 * @property {string} [options.layout="linear"] Layout type of page indicator.
 				 * @property {number} [options.intervalAngle=6] angle between each dot in page indicator.
-				 * @property {string} [options.style="dashed"] style of the page indicator "dotted" "dashed"
+				 * @property {string} [options.appearance="dashed"] style of the page indicator "dotted" "dashed"
 				 * @member ns.widget.core.PageIndicator
 				 */
 				this.options = {
@@ -20140,7 +20157,7 @@ function pathToRegexp (path, keys, options) {
 					numberOfPages: null,
 					layout: "linear",
 					intervalAngle: 6,
-					style: "dashed"
+					appearance: "dashed"
 				};
 			};
 			/**
@@ -20159,7 +20176,7 @@ function pathToRegexp (path, keys, options) {
 				if (options.layout === layoutType.CIRCULAR) {
 					self._circularPositioning(element);
 				}
-				if (options.style === "dashed") {
+				if (options.appearance === "dashed") {
 					element.classList.add(classes.indicatorDashed);
 				}
 				return element;
@@ -29975,7 +29992,7 @@ function pathToRegexp (path, keys, options) {
 					options = self.options;
 
 				if (options.type === "circle") {
-					events.on(document, "rotarydetent touchstart touchmove touchend click", self, false);
+					events.on(document, "rotarydetent touchstart touchmove touchend click mousedown mousemove mouseup", self, false);
 				} else {
 					CoreSliderPrototype._bindEvents.call(self);
 				}
@@ -29992,7 +30009,7 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					options = self.options;
 
-				if (options.type === "circle") {
+				if (options && options.type === "circle") {
 					switch (event.type) {
 						case "rotarydetent":
 							self._onRotary(event);
@@ -30000,7 +30017,10 @@ function pathToRegexp (path, keys, options) {
 						case "touchstart":
 						case "touchmove":
 						case "touchend":
-							self._onTouch(event);
+						case "mousedown":
+						case "mousemove":
+						case "mouseup":
+							self._onPointer(event);
 							break;
 						case "click":
 							self._onClick(event);
@@ -30027,20 +30047,20 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			/**
-			 * Touchstart handler
-			 * @method _onTouch
+			 * Pointer handler (touches or mouse)
+			 * @method _onPointer
 			 * @param {Event} event
 			 * @member ns.widget.wearable.Slider
 			 * @protected
 			 */
-			prototype._onTouch = function (event) {
+			prototype._onPointer = function (event) {
 				var self = this,
 					pointer = event.changedTouches && event.changedTouches[0] || event,
 					clientX = pointer.clientX,
 					clientY = pointer.clientY,
 					isValid = self._isValidStartPosition(clientX, clientY);
 
-				if (isValid) {
+				if (isValid && self.option("pressed")) {
 					event.preventDefault();
 					event.stopPropagation();
 
@@ -30048,9 +30068,9 @@ function pathToRegexp (path, keys, options) {
 				}
 
 				if (self.options.endPoint) {
-					if (event.type === "touchstart") {
+					if (event.type === "touchstart" || event.type === "mousedown") {
 						self.option("pressed", true);
-					} else if (event.type === "touchend") {
+					} else if (event.type === "touchend" || event.type === "mouseup") {
 						self.option("pressed", false);
 					}
 				}
@@ -31810,9 +31830,8 @@ function pathToRegexp (path, keys, options) {
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
 				} else {
-					eventUtils.one(selectedElement, "transitionend", function () {
-						showHighlight(ui.arcListviewSelection, selectedElement);
-					});
+					selectedElement.addEventListener("transitionend", this, true);
+					selectedElement.addEventListener("webkitTransitionEnd", this, true);
 					selectedElement.classList.add(classes.SELECTED);
 				}
 			};
@@ -31838,6 +31857,8 @@ function pathToRegexp (path, keys, options) {
 					} else {
 						classList.remove(classes.SELECTION_SHOW);
 						selectedElement = this._state.items[unselectedIndex].element,
+						selectedElement.removeEventListener("transitionend", this, true);
+						selectedElement.removeEventListener("webkitTransitionEnd", this, true);
 						selectedElement.classList.remove(classes.SELECTED);
 						// stop marque;
 						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
@@ -31851,6 +31872,22 @@ function pathToRegexp (path, keys, options) {
 					}
 				}
 			};
+
+			/**
+			 * Handler for transitionend event of active element
+			 * @method _onSelectedElementTransitionEnd
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onSelectedElementTransitionEnd = function () {
+				var self = this,
+					selectionElement = self._ui.arcListviewSelection,
+					items = self._state.items,
+					index = self._state.currentIndex,
+					activeElement = items[index].element;
+
+				showHighlight(selectionElement, activeElement);
+			}
 
 			/**
 			 * Handler for click event
@@ -32107,6 +32144,10 @@ function pathToRegexp (path, keys, options) {
 							break;
 						case "currentindexchange" :
 							self._onCurrentIndexChange(event);
+							break;
+						case "transitionend":
+						case "webkitTransitionEnd":
+							self._onSelectedElementTransitionEnd();
 							break;
 					}
 				}
@@ -45061,13 +45102,19 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			prototype._onFocus = function (event) {
-				var self = this;
+				var self = this,
+					element = self.element,
+					currentValueLength = element.value.length;
 
 				event.preventDefault();
 				self.element.blur();
 				if (!self._isInputPaneVisible) {
 					self._showInputPane();
 				}
+
+				// setting caret position at the end
+				element.selectionStart = currentValueLength;
+				element.selectionEnd = currentValueLength;
 			};
 
 			prototype._onWindowResize = function () {
