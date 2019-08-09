@@ -2048,7 +2048,9 @@ Processing
   pointer-events: none;
   position: fixed;
   width: 100vw;
-  height: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
   top: 0;
   left: 0;
   margin: 0;
@@ -2673,9 +2675,6 @@ a.ui-hyperlink:hover {
 }
 .ui-arc-listview-text-content {
   margin-left: 0;
-}
-.ui-arc-listview-5 .ui-marquee {
-  line-height: 4.375rem;
 }
 .ui-number-picker-container {
   display: flex;
