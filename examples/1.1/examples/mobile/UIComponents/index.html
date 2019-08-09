@@ -2,100 +2,82 @@
 <html>
 
 <head>
-	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
 	<title>
-		UI Components
+		Tizen UI Components
 	</title>
-	<link href="lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
-	<link href="lib/tau/wearable/theme/default/tau.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<link href="lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
 	<link href="css/style.css" rel="stylesheet" />
-	<link href="css/style.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
-	<script src="js/circle-helper.js">
-	</script>
-	<script src="lib/tau/wearable/js/tau.js">
+	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js">
 	</script>
 </head>
 
 <body>
-	<div class="ui-page" id="main">
-		<header class="ui-header">
-			<h2 class="ui-title">
-				UI Components
-			</h2>
+	<div class="ui-page ui-page-active" id="main">
+		<header>
+			<h1>
+				Tizen Web UI
+			</h1>
 		</header>
 		<div class="ui-content">
-			<ul class="ui-listview">
+			<ul class="ui-listview ui-colored-list">
+				<li class="ui-group-index">
+					UI Components
+				</li>
 				<li>
-					<a href="contents/header/index.html">
-						Header
+					<a href="components/headerfooter/index.html">
+						Header and Footer
 					</a>
 				</li>
 				<li>
-					<a href="contents/content/index.html">
-						Content
+					<a href="components/navigationelements/index.html">
+						Navigation Elements
 					</a>
 				</li>
 				<li>
-					<a href="contents/list/index.html">
+					<a href="components/list/index.html">
 						List
 					</a>
 				</li>
 				<li>
-					<a href="contents/grid/index.html">
-						Grid
-					</a>
-				</li>
-				<li>
-					<a href="contents/popup/index.html">
-						Popup
-					</a>
-				</li>
-				<li>
-					<a href="contents/controls/index.html">
+					<a href="components/controls/index.html">
 						Controls
 					</a>
 				</li>
 				<li>
-					<a href="contents/navcontrols/index.html">
-						Navigation
+					<a href="components/popup/index.html">
+						Popup
 					</a>
 				</li>
 				<li>
-					<a href="contents/moreoptions/index.html">
-						More Options
+					<a href="components/gallery/gallery.html">
+						Gallery
 					</a>
 				</li>
 				<li>
-					<a href="contents/rotaryevent/index.html">
-						Rotary Scrolling
+					<a href="components/multimediaview/index.html">
+						Multimedia View
 					</a>
 				</li>
 				<li>
-					<a href="contents/empty-state/index.html">
-						Empty State
+					<a href="components/recommendations/index.html">
+						Recommendations
 					</a>
 				</li>
 				<li>
-					<a href="contents/interactive/index.html">
+					<a href="components/interactive/index.html">
 						Interactive
 					</a>
 				</li>
 				<li>
-					<a href="contents/graphs/index.html">
+					<a href="components/graphs/index.html">
 						Graphs
-					</a>
-				</li>
-				<li>
-					<a href="contents/etc/index.html">
-						Etc
 					</a>
 				</li>
 			</ul>
 		</div>
 	</div>
 	<script src="js/app.js">
-	</script>
-	<script src="js/lowBatteryCheck.js">
 	</script>
 </body>
 
