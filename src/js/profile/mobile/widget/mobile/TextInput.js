@@ -305,12 +305,17 @@
 			 * @member ns.widget.mobile.TextInput
 			 */
 			prototype._onFocus = function (self) {
-				var element = self.element;
+				var element = self.element,
+					currentValueLength = element.value.length;
 
 				element.classList.add(classes.uiTextInputFocused);
 				if (element.value !== "" && self._ui.textClearButtonElement) {
 					self._ui.textClearButtonElement.classList.remove(classes.uiTextInputClearHidden);
 				}
+
+				// setting caret position at the end
+				element.selectionStart = currentValueLength;
+				element.selectionEnd = currentValueLength;
 			};
 
 			/**

@@ -83,10 +83,23 @@
 					 * @member ns.history
 					 */
 					back: function () {
-						// In case of running tau app in web browser
-						// don't allow to go back outside tau history
+
+						var event;
+
+						// If we are out of the start page go back to previous page
+						// otherwise handle page internal history e.g. for panel
+						//
+						// TODO: handle widget history when on page different than start page
+						//
 						if (this.startURL !== window.location.href) {
 							windowHistory.back();
+						} else {
+							event = new CustomEvent("tauback", {
+								"bubbles": true,
+								"cancelable": true
+							});
+
+							document.body.dispatchEvent(event);
 						}
 					},
 
