@@ -514,7 +514,7 @@
 			 */
 			prototype._setActive = function (active) {
 				var self = this,
-					route = ns.router.getInstance().getRoute("drawer");
+					route = ns.router.Router.getInstance().getRoute("drawer");
 
 				if (active) {
 					route.setActive(self);
