@@ -664,28 +664,30 @@
 					self._carouselIndex = currentIndex;
 				}
 
-				for (i = -halfItemsCount, len = halfItemsCount; i <= len; i++) {
-					index = self._carouselIndex + i;
-					item = state.items[index];
-					carouselItemElement = carousel.items[i + halfItemsCount].carouselElement;
-					carouselItemUpperSeparatorElement = carousel.items[i + halfItemsCount].carouselSeparator;
+				if (carousel.items.length) {
+					for (i = -halfItemsCount, len = halfItemsCount; i <= len; i++) {
+						index = self._carouselIndex + i;
+						item = state.items[index];
+						carouselItemElement = carousel.items[i + halfItemsCount].carouselElement;
+						carouselItemUpperSeparatorElement = carousel.items[i + halfItemsCount].carouselSeparator;
 
-					if (item !== undefined) {
-						top = (state.scroll.current + item.y - item.height / 2);
-						separatorTop = (carouselItemUpperSeparatorElement.childElementCount) ? top - (item.height + carouselItemUpperSeparatorElement.offsetHeight) / 2 : 0;
-					} else {
-						top = 0;
-						separatorTop = 0;
-					}
+						if (item !== undefined) {
+							top = (state.scroll.current + item.y - item.height / 2);
+							separatorTop = (carouselItemUpperSeparatorElement.childElementCount) ? top - (item.height + carouselItemUpperSeparatorElement.offsetHeight) / 2 : 0;
+						} else {
+							top = 0;
+							separatorTop = 0;
+						}
 
-					carouselItemElement.style.transform = "translateY(" + top + "px)";
-					carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
+						carouselItemElement.style.transform = "translateY(" + top + "px)";
+						carouselItemUpperSeparatorElement.style.transform = "translateY(" + separatorTop + "px)";
 
-					// hide unused carousel items
-					if (carouselItemElement.firstElementChild === null) {
-						carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
-					} else {
-						carouselItemElement.classList.remove(classes.HIDDEN_CAROUSEL_ITEM);
+						// hide unused carousel items
+						if (carouselItemElement.firstElementChild === null) {
+							carouselItemElement.classList.add(classes.HIDDEN_CAROUSEL_ITEM);
+						} else {
+							carouselItemElement.classList.remove(classes.HIDDEN_CAROUSEL_ITEM);
+						}
 					}
 				}
 			};
@@ -1631,7 +1633,9 @@
 				page.removeEventListener("touchstart", self, true);
 				page.removeEventListener("touchmove", self, true);
 				page.removeEventListener("touchend", self, true);
-				self._ui.arcListviewCarousel.removeEventListener("vclick", self, true);
+				if (self._ui.arcListviewCarousel) {
+					self._ui.arcListviewCarousel.removeEventListener("vclick", self, true);
+				}
 				document.removeEventListener("rotarydetent", self, true);
 			}
 
