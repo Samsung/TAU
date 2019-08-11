@@ -422,7 +422,7 @@
 			prototype._setIconpos = function (element, iconpos) {
 				var options = this.options,
 					style = options.style,
-					innerTextLength = element.textContent.length || (element.value ? element.value.length : 0);
+					innerTextLength = element.textContent.trim().length || (element.value ? element.value.length : 0);
 
 				iconpos = iconpos || options.iconpos;
 
