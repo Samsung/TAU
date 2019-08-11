@@ -362,7 +362,7 @@
 				if (options) {
 					Object.keys(options).forEach(function (option) {
 						var attributeName = utilString.camelCaseToDashes(option),
-							baseValue = getNSData(element, attributeName, true),
+							baseValue,
 							prefixedValue = getNSData(element, attributeName);
 
 						if (prefixedValue !== null) {
@@ -383,10 +383,13 @@
 							}
 						}
 
-						if (option === "type" && tag === "input") { // don't set conflicting props
+						if (option === "type" && tag === "input" ||
+							option === "style"
+						) { // don't set conflicting props
 							return;
 						}
 
+						baseValue = getNSData(element, attributeName, true);
 						if (baseValue !== null) {
 							options[option] = baseValue;
 						}
