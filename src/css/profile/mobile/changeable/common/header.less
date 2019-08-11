@@ -87,6 +87,15 @@
 		font-stretch: condensed;
 		border-radius: 0;
 
+		&.ui-btn-circle {
+			border-radius: 50%;
+			&.ui-btn-active {
+				&::before {
+					border-radius: 50%;
+				}
+			}
+		}
+
 		&.ui-header-btn-icon, &.ui-btn-icon {
 			width: 80 * @unit_base;
 			height: 80 * @unit_base;
