@@ -338,7 +338,6 @@
 					scrollTop: direction ? 0 : -(moveToPosition),
 					fromAPI: false
 				});
-				event.stopImmediatePropagation();
 			}
 
 			function moveToCalculatePosition() {
