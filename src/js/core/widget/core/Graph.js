@@ -119,8 +119,6 @@
 					color: "#0097D8",
 					xlabel: "",
 					ylabel: "",
-					xinit: 0,
-					yinit: 0,
 					axisXType: "time",
 					axisYType: "linear",
 					mode: MODE_INTERMITTENT,
@@ -177,8 +175,8 @@
 
 			prototype._setChartAxis = function (identifier) {
 				var self = this,
-				    axisDimensions = self.dimensions[identifier],
-				    axisType = self.options["axis" + identifier.toUpperCase() + "Type"];
+					axisDimensions = self.dimensions[identifier],
+					axisType = self.options["axis" + identifier.toUpperCase() + "Type"];
 
 				axisDimensions.type = "order";
 				switch (axisType) {
@@ -186,13 +184,13 @@
 					case "index":
 						axisDimensions.scale = "time";
 						self.guide[identifier].tickFormat = "day";
-					break;
+						break;
 					case "order":
 						axisDimensions.scale = "ordinal";
-					break;
+						break;
 					case "linear":
 						axisDimensions.scale = "linear";
-					break;
+						break;
 				}
 			}
 
