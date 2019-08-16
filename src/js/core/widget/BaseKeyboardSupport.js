@@ -135,6 +135,12 @@
 				previousKeyboardWidgets = [],
 				ANIMATION_MIN_TIME = 50;
 
+			document.addEventListener("pagebeforeshow", function () {
+				// TODO: create a map that would store last focused element
+				// on page to restore focus after back action
+				blurOnActiveElement();
+			});
+
 			BaseKeyboardSupport.KEY_CODES = KEY_CODES;
 			BaseKeyboardSupport.EVENTS = EVENTS;
 			BaseKeyboardSupport.CAPTURE_KEYBOARD_ATTR = CAPTURE_KEYBOARD_ATTR;
