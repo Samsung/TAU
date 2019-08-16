@@ -120,6 +120,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.DropdownMenu
+ * @component-selector .ui-dropdownmenu
  * @extends ns.widget.mobile.BaseWidgetMobile
  * @author Hagun Kim <hagun.kim@samsung.com>
  */
@@ -245,24 +246,119 @@
 				 * @static
 				 */
 				classes = {
+					/**
+					 * Standard dropdown menu widget
+					 * @style ui-dropdownmenu
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					selectWrapper: "ui-dropdownmenu",
+					/**
+					 * Set an option group in dropdown menu widget
+					 * @style ui-dropdownmenu-optiongroup
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					optionGroup: "ui-dropdownmenu-optiongroup",
+					/**
+					 * Set a placeholder in dropdown menu widget
+					 * @style ui-dropdownmenu-placeholder
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					placeHolder: "ui-dropdownmenu-placeholder",
+					/**
+					 * Set an option list in dropdown menu widget
+					 * @style ui-dropdownmenu-options
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					optionList: "ui-dropdownmenu-options",
+					/**
+					 * Set a wrapper for options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-wrapper
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					optionsWrapper: "ui-dropdownmenu-options-wrapper",
+					/**
+					 * Set selected to dropdown menu widget
+					 * @style ui-dropdownmenu-selected
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					selected: "ui-dropdownmenu-selected",
+					/**
+					 * Set active to dropdown menu widget
+					 * @style ui-dropdownmenu-active
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					active: "ui-dropdownmenu-active",
+					/**
+					 * Opens options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-opening
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					opening: "ui-dropdownmenu-options-opening",
+					/**
+					 * Closes options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-closing
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					closing: "ui-dropdownmenu-options-closing",
+					/**
+					 * Set class for opened options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-opened
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					opened: "ui-dropdownmenu-options-opened",
+					/**
+					 * Set filter structure in dropdown menu widget
+					 * @style ui-dropdownmenu-overlay
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					filter: "ui-dropdownmenu-overlay",
+					/**
+					 * Set hidden filter structure in dropdown menu widget
+					 * @style ui-dropdownmenu-overlay-hidden
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					filterHidden: "ui-dropdownmenu-overlay-hidden",
+					/**
+					 * Set disabled in dropdownmenu widget
+					 * @style ui-dropdownmenu-disabled
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					disabled: "ui-dropdownmenu-disabled",
+					/**
+					 * Set dropdown menu widget as disabled
+					 * @style ui-disabled
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					widgetDisabled: "ui-disabled",
+					/**
+					 * Set dropdown menu widget as inline
+					 * @style ui-dropdownmenu-inline
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					inline: "ui-dropdownmenu-inline",
+					/**
+					 * Set dropdown menu widget as native
+					 * @style ui-dropdownmenu-native
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					native: "ui-dropdownmenu-native",
+					/**
+					 * Set dropdown menu options to displayed on top
+					 * @style ui-dropdownmenu-top
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					top: "ui-dropdownmenu-options-top",
+					/**
+					 * Set dropdown menu options to displayed on bottom
+					 * @style ui-dropdownmenu-bottom
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					bottom: "ui-dropdownmenu-options-bottom",
+					/**
+					 * Set dropdown menu widget as focus
+					 * @style ui-focus
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					focus: BaseKeyboardSupport.classes.focus
 				},
 				prototype = new BaseWidget();
@@ -661,6 +757,7 @@
 				domUtils.insertNodesBefore(element, selectWrapperElement);
 
 				selectWrapperElement.appendChild(element);
+
 				this._ui.elSelectWrapper = selectWrapperElement;
 			};
 

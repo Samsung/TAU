@@ -39,6 +39,7 @@
  * documentation of profiles
  *
  * @class ns.widget.core.Drawer
+ * @component-selector .ui-drawer, [data-role]="drawer"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -155,11 +156,41 @@
 				 */
 				classes = {
 					page: Page.classes.uiPage,
+					/**
+					 * Standard drawer
+					 * @style ui-drawer
+					 * @member ns.widget.core.Drawer
+					 */
 					drawer: "ui-drawer",
+					/**
+					 * Drawer appears from the left side.
+					 * @style ui-drawer-left
+					 * @member ns.widget.core.Drawer
+					 */
 					left: "ui-drawer-left",
+					/**
+					 * Drawer appears from the right side.
+					 * @style ui-drawer-right
+					 * @member ns.widget.core.Drawer
+					 */
 					right: "ui-drawer-right",
+					/**
+					 * Set the drawer overlay when the drawer is opened.
+					 * @style ui-drawer-overlay
+					 * @member ns.widget.core.Drawer
+					 */
 					overlay: "ui-drawer-overlay",
+					/**
+					 * Opens the drawer.
+					 * @style ui-drawer-open
+					 * @member ns.widget.core.Drawer
+					 */
 					open: "ui-drawer-open",
+					/**
+					 * Closes the drawer.
+					 * @style ui-drawer-close
+					 * @member ns.widget.core.Drawer
+					 */
 					close: "ui-drawer-close"
 				},
 				/**
@@ -514,7 +545,7 @@
 			 */
 			prototype._setActive = function (active) {
 				var self = this,
-					route = ns.router.getInstance().getRoute("drawer");
+					route = ns.router.Router.getInstance().getRoute("drawer");
 
 				if (active) {
 					route.setActive(self);
