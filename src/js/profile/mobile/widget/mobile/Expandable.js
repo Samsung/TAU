@@ -87,6 +87,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.Expandable
+ * @component-selector .ui-expandable [data-role]="expandable"
  * @author Piotr Karny <p.karny@samsung.com>
  * @author Marcin Jakuszko <m.jakuszko@samsung.com>
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
@@ -173,13 +174,53 @@
 				 * @member ns.widget.mobile.Expandable
 				 */
 				classes = {
+					/**
+					 * Standard expandable widget
+					 * @style ui-expandable
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandable: "ui-expandable",
+					/**
+					 * Set content to expandable widget
+					 * @style ui-expandable-content
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableContent: "ui-expandable-content",
+					/**
+					 * Set collapsed content to expandable widget
+					 * @style ui-expandable-content-collapsed
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableContentCollapsed: "ui-expandable-content-collapsed",
+					/**
+					 * Set expandable widget as collapsed
+					 * @style ui-expandable-collapsed
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableCollapsed: "ui-expandable-collapsed",
+					/**
+					 * Set heading to expandable widget
+					 * @style ui-expandable-heading
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeading: "ui-expandable-heading",
+					/**
+					 * Set collapsed heading to expandable widget
+					 * @style ui-expandable-heading-collapsed
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeadingCollapsed: "ui-expandable-heading-collapsed",
+					/**
+					 * Set toggle to expandable widget heading
+					 * @style ui-expandable-heading-toggle
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeadingToggle: "ui-expandable-heading-toggle",
+					/**
+					 * Set active to expandable widget heading
+					 * @style ui-expandable-heading-active
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeadingActive: "ui-expandable-heading-active"
 				};
 

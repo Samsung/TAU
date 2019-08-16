@@ -97,6 +97,7 @@
  * your indicator manually, change this options to false.
  *
  * @class ns.widget.wearable.Selector
+ * @component-selector .ui-selector
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
 (function (document, ns) {
@@ -144,34 +145,179 @@
 					self._reorderAnimationEnd = null;
 				},
 				classes = {
+					/**
+					* Standard selector widget
+					* @style ui-selector
+					* @member ns.widget.wearable.Selector
+					*/
 					SELECTOR: "ui-selector",
+					/**
+					* Layer element on selector widget
+					* @style ui-layer
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER: "ui-layer",
+					/**
+					* Active layer element on selector widget
+					* @style ui-layer-active
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_ACTIVE: "ui-layer-active",
+					/**
+					* Previous layer element on selector widget
+					* @style ui-layer-prev
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_PREV: "ui-layer-prev",
+					/**
+					* Next layer element on selector widget
+					* @style ui-layer-next
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_NEXT: "ui-layer-next",
+					/**
+					* Hide layer element on selector widget
+					* @style ui-layer-hide
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_HIDE: "ui-layer-hide",
+					/**
+					* Item element on selector widget
+					* @style ui-item
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM: "ui-item",
+					/**
+					* Active item element on selector widget
+					* @style ui-item-active
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_ACTIVE: "ui-item-active",
+					/**
+					* Removable item element on selector widget
+					* @style ui-item-removable
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_REMOVABLE: "ui-item-removable",
+					/**
+					* Add remove item element on selector widget
+					* @style ui-item-icon-remove
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_ICON_REMOVE: "ui-item-icon-remove",
+					/**
+					* Add remove item element without background on selector widget
+					* @style ui-item-icon-remove-bg
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_ICON_REMOVE_BG: "ui-item-icon-remove-bg",
+					/**
+					* Add indicator item element to selector widget
+					* @style ui-selector-indicator
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR: "ui-selector-indicator",
+					/**
+					* Add active indicator item element to selector widget
+					* @style ui-selector-indicator-active
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ACTIVE: "ui-selector-indicator-active",
+					/**
+					* Add text indicator item element to selector widget
+					* @style ui-selector-indicator-text
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_TEXT: "ui-selector-indicator-text",
+					/**
+					* Add icon indicator item element to selector widget
+					* @style ui-selector-indicator-icon
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ICON: "ui-selector-indicator-icon",
+					/**
+					* Add active indicator icon element to selector widget
+					* @style ui-selector-indicator-icon-active
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ICON_ACTIVE: "ui-selector-indicator-icon-active",
+					/**
+					* Add active indicator icon element with text to selector widget
+					* @style ui-selector-indicator-icon-active-with-text
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ICON_ACTIVE_WITH_TEXT: "ui-selector-indicator-icon-active-with-text",
+					/**
+					* Add subtext to selector indicator in selector widget
+					* @style ui-selector-indicator-subtext
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_SUBTEXT: "ui-selector-indicator-subtext",
+					/**
+					* Add subtitle to selector indicator in selector widget
+					* @style ui-selector-indicator-with-subtext
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_WITH_SUBTITLE: "ui-selector-indicator-with-subtext",
+					/**
+					* Set indicator to next element as the end of selector indicator in selector widget
+					* @style ui-selector-indicator-next-end
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_NEXT_END: "ui-selector-indicator-next-end",
+					/**
+					* Set indicator to previous element as the end of selector indicator in selector widget
+					* @style ui-selector-indicator-prev-end
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_PREV_END: "ui-selector-indicator-prev-end",
+					/**
+					* Set arrow indicator style to selector indicator
+					* @style ui-selector-indicator-arrow
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ARROW: "ui-selector-indicator-arrow",
+					/**
+					* Set edit mode in selector widget
+					* @style ui-selector-edit-mode
+					* @member ns.widget.wearable.Selector
+					*/
 					EDIT_MODE: "ui-selector-edit-mode",
+					/**
+					* Reorder elements in selector widget
+					* @style ui-selector-reorder
+					* @member ns.widget.wearable.Selector
+					*/
 					REORDER: "ui-selector-reorder",
+					/**
+					* Add plus button in selector widget
+					* @style ui-item-plus
+					* @member ns.widget.wearable.Selector
+					*/
 					PLUS_BUTTON: "ui-item-plus",
+					/**
+					* Add placeholder to item in selector widget
+					* @style ui-item-placeholder
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_PLACEHOLDER: "ui-item-placeholder",
+					/**
+					* Add moved item class in selector widget
+					* @style ui-item-moved
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_MOVED: "ui-item-moved",
+					/**
+					* Add removed item class in selector widget
+					* @style ui-item-removed
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_REMOVED: "ui-item-removed",
+					/**
+					* Add moved end item class in selector widget
+					* @style ui-item-moved-end
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_END: "ui-item-moved-end"
 				},
 				STATIC = {

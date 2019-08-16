@@ -214,14 +214,44 @@
 					 * @member ns.widget.core.Button
 					 */
 					DISABLED: "ui-state-disabled",
+					/**
+					 * Make inline button
+					 * @style ui-inline
+					 * @member ns.widget.core.Button
+					 */
 					INLINE: "ui-inline",
+					/**
+					 * Creates an icon button
+					 * @style ui-btn-icon
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON: "ui-btn-icon",
 					ICON_PREFIX: "ui-icon-",
+					/**
+					 * Creates a circle icon button
+					 * @style ui-btn-circle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_CIRCLE: "ui-btn-circle",
+					/**
+					 * Creates a button without background
+					 * @style ui-btn-nobg
+					 * @member ns.widget.core.Button
+					 */
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
 					BTN_TEXT: "ui-btn-text",
+					/**
+					 * Creates a button widget with light text
+					 * @style ui-btn-text-light
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_LIGHT: "ui-btn-text-light",
+					/**
+					 * Creates a button widget with dark text
+					 * @style ui-btn-text-dark
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_DARK: "ui-btn-text-dark",
 					FOCUS: "ui-btn-focus",
 					/**
@@ -256,6 +286,11 @@
 					 * @member ns.widget.core.Button
 					 */
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
+					/**
+					 * Creates a button widget with position in middle
+					 * @style ui-btn-text-middle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
 				MIN_SIZE = 32,
@@ -483,7 +518,7 @@
 			prototype._setIconpos = function (element, iconpos) {
 				var options = this.options,
 					style = options.style,
-					innerTextLength = element.textContent.length;
+					innerTextLength = element.textContent.trim().length || (element.value ? element.value.length : 0);
 
 				element.classList.remove(classes.BTN_ICON_POSITION_PREFIX + options.iconpos);
 				element.classList.remove(classes.BTN_ICON_ONLY);

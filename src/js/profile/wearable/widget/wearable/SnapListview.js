@@ -45,6 +45,7 @@
  *
  * @author Heeju Joo <heeju.joo@samsung.com>
  * @class ns.widget.wearable.SnapListview
+ * @component-selector .ui-snap-listview
  * @extends ns.widget.BaseWidget
  */
 (function (window, document, ns) {
@@ -167,13 +168,38 @@
 
 				prototype = new BaseWidget(),
 
+				/**
+				* Standard snap listview widget
+				* @style ui-snap-listview
+				* @member ns.widget.wearable.SnapListview
+				*/
 				CLASSES_PREFIX = "ui-snap-listview",
 
 				classes = {
+					/**
+					* Set container for snap listview widget
+					* @style ui-snap-container
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_CONTAINER: "ui-snap-container",
+					/**
+					* Set snap listview widget as disabled
+					* @style ui-snap-disabled
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_DISABLED: "ui-snap-disabled",
 					SNAP_LISTVIEW: CLASSES_PREFIX,
+					/**
+					* Set snap listview widget as selected
+					* @style ui-snap-listview-selected
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_LISTVIEW_SELECTED: CLASSES_PREFIX + "-selected",
+					/**
+					* Set item for snap listview widget
+					* @style ui-snap-listview-item
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_LISTVIEW_ITEM: CLASSES_PREFIX + "-item"
 				},
 

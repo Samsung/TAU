@@ -69,6 +69,20 @@
 /****************************************************************************
 		Toggle Switch
 ****************************************************************************/
+/* rgba(77, 207, 255, 1) */
+/* rgba(54, 145, 179, 1) */
+/* rgba(77, 207, 255, 0.3) */
+/* rgba(250, 250, 250, 0.5) */
+/* rgba(77, 207, 255, 1) */
+/*rgba(54, 145, 179, 1)*/
+/* rgba(77, 207, 255, 0.3) */
+/* rgba(250, 250, 250, 0.3) */
+/* W014L5 */
+/* W014L5P */
+/* W014L5D */
+/* W014L5 */
+/* W014L5P */
+/* W014L5D */
 /***************************************************************************
                    Scroller
 ***************************************************************************/
@@ -484,49 +498,66 @@ a {
   color: T161;
 }
 .ui-toggleswitch {
-  width: 76px;
-  height: 76px;
+  position: relative;
+  display: inline-block;
+  width: 4.75rem;
+  height: 3.1875rem;
 }
 .ui-toggleswitch.ui-toggleswitch-large {
   width: 76px;
   height: 76px;
 }
-.ui-toggleswitch .ui-switch-input {
-  background-color: rgba(250, 250, 250, 0.3);
-  -webkit-mask-image: url('images/Controller_icon/On_Off/tw_btn_control_bg_holo_dark.png');
-          mask-image: url('images/Controller_icon/On_Off/tw_btn_control_bg_holo_dark.png');
+.ui-toggleswitch input.ui-switch-input {
+  border: 0.125rem solid rgba(250, 250, 250, 0.3);
+  background-color: transparent;
+  border-radius: 2.9375rem;
+  width: 4.75rem;
+  height: 2.9375rem;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  outline: 0;
+  top: 0.125rem;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-mask-image: none;
+          mask-image: none;
   -webkit-mask-size: 100% 100%;
   -moz-mask-size: 100% 100%;
   -ms-mask-size: 100% 100%;
   -o-mask-size: 100% 100%;
   mask-size: 100% 100%;
-  transition: background-color 300ms linear;
+  transition: background-color 150ms linear;
 }
-.ui-toggleswitch .ui-switch-input::before {
+.ui-toggleswitch input.ui-switch-input:checked {
+  background-color: #4297ff;
+  border: 0;
+}
+.ui-toggleswitch input.ui-switch-input::before {
   content: none;
 }
-.ui-toggleswitch .ui-switch-input:active {
-  transition: background-color 300ms linear;
-  background-color: rgba(250, 250, 250, 0.3);
+.ui-toggleswitch input.ui-switch-input:active {
+  transition: background-color 150ms linear;
+  background-color: #000000;
 }
-.ui-toggleswitch .ui-switch-input:active ~ .ui-switch-activation,
-.ui-toggleswitch .ui-switch-input:active ~ .ui-switch-button {
+.ui-toggleswitch input.ui-switch-input:active ~ .ui-switch-activation,
+.ui-toggleswitch input.ui-switch-input:active ~ .ui-switch-button {
   background-color: transparent;
 }
-.ui-toggleswitch .ui-switch-input:active ~ .ui-switch-activation::after,
-.ui-toggleswitch .ui-switch-input:active ~ .ui-switch-button::after {
-  background-color: rgba(250, 250, 250, 0.4);
+.ui-toggleswitch input.ui-switch-input:active ~ .ui-switch-activation::before,
+.ui-toggleswitch input.ui-switch-input:active ~ .ui-switch-button::before {
+  background-color: #bebebe;
 }
-.ui-toggleswitch .ui-switch-input:disabled {
+.ui-toggleswitch input.ui-switch-input:disabled {
   background-color: transparent;
 }
-.ui-toggleswitch .ui-switch-input:disabled ~ .ui-switch-activation,
-.ui-toggleswitch .ui-switch-input:disabled ~ .ui-switch-button {
+.ui-toggleswitch input.ui-switch-input:disabled ~ .ui-switch-activation,
+.ui-toggleswitch input.ui-switch-input:disabled ~ .ui-switch-button {
   background-color: transparent;
 }
-.ui-toggleswitch .ui-switch-input:disabled ~ .ui-switch-activation::after,
-.ui-toggleswitch .ui-switch-input:disabled ~ .ui-switch-button::after {
-  background-color: rgba(250, 250, 250, 0.2);
+.ui-toggleswitch input.ui-switch-input:disabled ~ .ui-switch-activation::before,
+.ui-toggleswitch input.ui-switch-input:disabled ~ .ui-switch-button::before {
+  background-color: #4b4b4b;
 }
 .ui-toggleswitch .ui-switch-activation,
 .ui-toggleswitch .ui-switch-button {
@@ -540,125 +571,81 @@ a {
 }
 .ui-toggleswitch .ui-switch-activation::before,
 .ui-toggleswitch .ui-switch-button::before {
-  -webkit-mask-image: url('images/Controller_icon/On_Off/tw_btn_control_on_holo_dark.png');
-          mask-image: url('images/Controller_icon/On_Off/tw_btn_control_on_holo_dark.png');
-  -webkit-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  transition: -webkit-transform 100ms 0ms linear;
-  transition: transform 100ms 0ms linear;
-  transition: transform 100ms 0ms linear, -webkit-transform 100ms 0ms linear;
-  background-color: rgba(77, 207, 255, 1);
-  -webkit-mask-size: 100% 100%;
-  -moz-mask-size: 100% 100%;
-  -ms-mask-size: 100% 100%;
-  -o-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-position: 0;
-  -moz-mask-position: 0;
-  -ms-mask-position: 0;
-  -o-mask-position: 0;
-  mask-position: 0;
-  -webkit-animation-fill-mode: both;
-          animation-fill-mode: both;
+  position: absolute;
+  content: '';
+  -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+          transform: scale(1);
+  height: 3.1875rem;
+  width: 3.1875rem;
+  border: 0.125rem solid rgba(0, 0, 0, 0.5);
+  left: 0;
+  top: 0;
+  background-color: #ffffff;
+  transition-property: -webkit-transform;
+  transition-property: transform;
+  transition-property: transform, -webkit-transform;
+  transition-duration: 300ms;
+  transition-timing-function: ease-out;
+  border-radius: 50%;
+  -webkit-mask-image: none;
+  mask-image: none;
+  pointer-events: none;
+  box-sizing: border-box;
 }
 .ui-toggleswitch .ui-switch-activation::after,
 .ui-toggleswitch .ui-switch-button::after {
-  content: "";
-  width: 100%;
-  height: 100%;
-  -webkit-mask-image: url('images/Controller_icon/On_Off/tw_btn_control_off_holo_dark.png');
-          mask-image: url('images/Controller_icon/On_Off/tw_btn_control_off_holo_dark.png');
-  -webkit-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  transition: -webkit-transform 200ms 100ms linear;
-  transition: transform 200ms 100ms linear;
-  transition: transform 200ms 100ms linear, -webkit-transform 200ms 100ms linear;
-  -webkit-mask-size: 100% 100%;
-  -moz-mask-size: 100% 100%;
-  -ms-mask-size: 100% 100%;
-  -o-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-position: 0;
-  -moz-mask-position: 0;
-  -ms-mask-position: 0;
-  -o-mask-position: 0;
-  mask-position: 0;
-  -webkit-animation-fill-mode: both;
-          animation-fill-mode: both;
-  background-color: rgba(250, 250, 250, 0.5);
-  position: absolute;
-  left: 0;
+  content: none;
 }
-.ui-toggleswitch .ui-switch-input:checked {
-  background-color: rgba(77, 207, 255, 1);
+.ui-toggleswitch input.ui-switch-input:checked {
+  background-color: #4297ff;
 }
-.ui-toggleswitch .ui-switch-input:checked ~ .ui-switch-activation,
-.ui-toggleswitch .ui-switch-input:checked ~ .ui-switch-button {
+.ui-toggleswitch input.ui-switch-input:checked ~ .ui-switch-activation,
+.ui-toggleswitch input.ui-switch-input:checked ~ .ui-switch-button {
   width: 100%;
   height: 100%;
   -webkit-mask-image: none;
+  mask-image: none;
   background-color: transparent;
   -webkit-transform: none;
       -ms-transform: none;
           transform: none;
 }
-.ui-toggleswitch .ui-switch-input:checked ~ .ui-switch-activation::before,
-.ui-toggleswitch .ui-switch-input:checked ~ .ui-switch-button::before {
-  -webkit-transform: scale(1);
-      -ms-transform: scale(1);
-          transform: scale(1);
-  -webkit-mask-position: 0;
-  -moz-mask-position: 0;
-  -ms-mask-position: 0;
-  -o-mask-position: 0;
-  mask-position: 0;
-  background-color: rgba(77, 207, 255, 1);
-  transition: -webkit-transform 200ms 100ms linear;
-  transition: transform 200ms 100ms linear;
-  transition: transform 200ms 100ms linear, -webkit-transform 200ms 100ms linear;
+.ui-toggleswitch input.ui-switch-input:checked ~ .ui-switch-activation::before,
+.ui-toggleswitch input.ui-switch-input:checked ~ .ui-switch-button::before {
+  -webkit-transform: translateX(1.5625rem);
+      -ms-transform: translateX(1.5625rem);
+          transform: translateX(1.5625rem);
+  background-color: #ffffff;
+  border: 0.125rem solid #0d7cd6;
 }
-.ui-toggleswitch .ui-switch-input:checked ~ .ui-switch-activation::after,
-.ui-toggleswitch .ui-switch-input:checked ~ .ui-switch-button::after {
-  -webkit-transform: scale(0);
-      -ms-transform: scale(0);
-          transform: scale(0);
-  transition: -webkit-transform 100ms 0ms linear;
-  transition: transform 100ms 0ms linear;
-  transition: transform 100ms 0ms linear, -webkit-transform 100ms 0ms linear;
+.ui-toggleswitch input.ui-switch-input:checked ~ .ui-switch-activation::after,
+.ui-toggleswitch input.ui-switch-input:checked ~ .ui-switch-button::after {
+  content: none;
 }
-.ui-toggleswitch .ui-switch-input:checked:active {
-  background-color: rgba(54, 145, 179, 1);
+.ui-toggleswitch input.ui-switch-input:checked:active {
+  background-color: #4297ff;
 }
-.ui-toggleswitch .ui-switch-input:checked:active ~ .ui-switch-activation,
-.ui-toggleswitch .ui-switch-input:checked:active ~ .ui-switch-button {
+.ui-toggleswitch input.ui-switch-input:checked:active ~ .ui-switch-activation,
+.ui-toggleswitch input.ui-switch-input:checked:active ~ .ui-switch-button {
   background-color: transparent;
 }
-.ui-toggleswitch .ui-switch-input:checked:active ~ .ui-switch-activation::before,
-.ui-toggleswitch .ui-switch-input:checked:active ~ .ui-switch-button::before {
-  -webkit-mask-position: 0;
-  -moz-mask-position: 0;
-  -ms-mask-position: 0;
-  -o-mask-position: 0;
-  mask-position: 0;
-  background-color: rgba(54, 145, 179, 1);
+.ui-toggleswitch input.ui-switch-input:checked:active ~ .ui-switch-activation::before,
+.ui-toggleswitch input.ui-switch-input:checked:active ~ .ui-switch-button::before {
+  background-color: #bebebe;
+  border-color: #0777d3;
 }
-.ui-toggleswitch .ui-switch-input:checked:disabled {
-  background-color: rgba(77, 207, 255, 0.3);
+.ui-toggleswitch input.ui-switch-input:checked:disabled {
+  background-color: #142e4d;
 }
-.ui-toggleswitch .ui-switch-input:checked:disabled ~ .ui-switch-activation,
-.ui-toggleswitch .ui-switch-input:checked:disabled ~ .ui-switch-button {
+.ui-toggleswitch input.ui-switch-input:checked:disabled ~ .ui-switch-activation,
+.ui-toggleswitch input.ui-switch-input:checked:disabled ~ .ui-switch-button {
   background-color: transparent;
 }
-.ui-toggleswitch .ui-switch-input:checked:disabled ~ .ui-switch-activation::before,
-.ui-toggleswitch .ui-switch-input:checked:disabled ~ .ui-switch-button::before {
-  -webkit-mask-position: 0;
-  -moz-mask-position: 0;
-  -ms-mask-position: 0;
-  -o-mask-position: 0;
-  mask-position: 0;
-  background-color: rgba(77, 207, 255, 0.3);
+.ui-toggleswitch input.ui-switch-input:checked:disabled ~ .ui-switch-activation::before,
+.ui-toggleswitch input.ui-switch-input:checked:disabled ~ .ui-switch-button::before {
+  background-color: #4b4b4b;
+  border-color: #032441;
 }
 /***************************************************************************
                                   Popup
@@ -1581,6 +1568,7 @@ a {
   background-color: rgba(48, 48, 48, 0.65);
   border-radius: 20vw;
   pointer-events: none;
+  z-index: -1;
 }
 .ui-listview.ui-snap-listview li li,
 .ui-listview.ui-arc-listview-carousel-item li li {
@@ -2651,6 +2639,7 @@ Processing
   top: 0;
   left: 0;
   margin: 0;
+  z-index: 1000;
 }
 /** widget interactions **/
 .ui-listview li .ui-processing {

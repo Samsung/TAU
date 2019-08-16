@@ -69,6 +69,7 @@
  *
  * @since 2.3
  * @class ns.widget.mobile.Navigation
+ * @component-selector .ui-navigation, [data-role]="navigation"
  * @extends ns.widget.BaseWidget
  * @author Junhyeon Lee <juneh.lee@samsung.com>
  * @author Maciej Moczulski <m.moczulsku@samsung.com>
@@ -118,13 +119,53 @@
 				 * @member ns.widget.mobile.Navigation
 				 */
 				classes = {
+					/**
+					 * Standard navigation widget
+					 * @style ui-navigation
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION: "ui-navigation",
+					/**
+					 * Set a container with navigation widget
+					 * @style ui-navigation-container
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_CONTAINER: "ui-navigation-container",
+					/**
+					 * Set an item of navigation widget
+					 * @style ui-navigation-item
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_ITEM: "ui-navigation-item",
+					/**
+					 * Set navigation widget as active
+					 * @style ui-navigation-active
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_ACTIVE: "ui-navigation-active",
+					/**
+					 * Hide navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_HIDE: "ui-navigator-hide",
+					/**
+					 * Set item to back in navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_BACK: "ui-navigator-back",
+					/**
+					 * Hide item back in navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_BACK_HIDE: "ui-navigator-back-hide",
+					/**
+					 * Set active animation in navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_ACTIVE_ANIMATION: "ui-navigator-active-animation"
 				},
 				prototype = new BaseWidget();

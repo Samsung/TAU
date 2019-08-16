@@ -96,6 +96,7 @@
  * creation.
  *
  * @class ns.widget.mobile.Listview
+ * @component-selector .ui-listview, [data-role]="listview"
  * @extends ns.widget.core.Listview
  * @author Krzysztof Antoszek <k.antoszek@samsung.com>
  * @since 2.0
@@ -215,18 +216,71 @@
 				 */
 				classes = {
 					/**
+					 * Set background for listview widget
+					 * @style ui-listview-background
+					 * @member ns.widget.mobile.Listview
 					 */
 					"BACKGROUND_LAYER": "ui-listview-background",
+					/**
+					 * Set background as disable for listview widget
+					 * @style ui-listview-background-disabled
+					 * @member ns.widget.mobile.Listview
+					 */
 					"GRADIENT_BACKGROUND_DISABLED": "ui-listview-background-disabled",
+					/**
+					 * Set index for group in listview widget
+					 * @style ui-group-index
+					 * @member ns.widget.mobile.Listview
+					 */
 					"GROUP_INDEX": "ui-group-index",
+					/**
+					 * Set listview to show in popup widget
+					 * @style ui-popup-listview
+					 * @member ns.widget.mobile.Listview
+					 */
 					"POPUP_LISTVIEW": "ui-popup-listview",
+					/**
+					 * Set drag as active for listview widget
+					 * @style ui-drag-active
+					 * @member ns.widget.mobile.Listview
+					 */
 					"DRAG_ACTIVE": "ui-drag-active",
+					/**
+					 * Set expandable widget. Expandable component allows you to expand or collapse content when tapped.
+					 * @style ui-expandable
+					 * @member ns.widget.mobile.Listview
+					 */
 					"EXPANDABLE": "ui-expandable",
+					/**
+					 * Set element as listview item
+					 * @style ui-listview-item
+					 * @member ns.widget.mobile.Listview
+					 */
 					"ITEM": "ui-listview-item",
+					/**
+					 * Set element as active listview item
+					 * @style ui-listview-item-active
+					 * @member ns.widget.mobile.Listview
+					 */
 					"ITEM_ACTIVE": "ui-listview-item-active",
+					/**
+					 * Set helper for listview widget
+					 * @style ui-listview-helper
+					 * @member ns.widget.mobile.Listview
+					 */
 					"HELPER": "ui-listview-helper",
+					/**
+					 * Create holder element to help reordering
+					 * @style ui-listview-holder
+					 * @member ns.widget.mobile.Listview
+					 */
 					"HOLDER": "ui-listview-holder",
 					"SNAPSHOT": "snapshot",
+					/**
+					 * Create handler for listview widget
+					 * @style ui-listview-handler
+					 * @member ns.widget.mobile.Listview
+					 */
 					"HANDLER": "ui-listview-handler",
 					"DRAG_MODE": "dragMode",
 					"ACTIVATE_HANDLERS": "activateHandlers",

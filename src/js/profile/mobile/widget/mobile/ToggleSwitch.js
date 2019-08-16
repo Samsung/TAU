@@ -67,6 +67,7 @@
  *
  * @since 2.0
  * @class ns.widget.mobile.ToggleSwitch
+ * @component-selector .ui-toggleswitch, [data-role]="toggleswitch"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -107,8 +108,23 @@
 				events = ns.event,
 
 				classes = {
+					/**
+					 * Set container for toggle switch widget
+					 * @style ui-toggle-container
+					 * @member ns.widget.mobile.ToggleSwitch
+					 */
 					toggleContainer: "ui-toggle-container",
+					/**
+					 * Standard toggle switch widget
+					 * @style ui-toggle-switch
+					 * @member ns.widget.mobile.ToggleSwitch
+					 */
 					toggle: "ui-toggle-switch",
+					/**
+					 * Set handler for toggle switch widget
+					 * @style ui-switch-handler
+					 * @member ns.widget.mobile.ToggleSwitch
+					 */
 					toggleHandler: "ui-switch-handler",
 					toggleSliderContainer: "ui-toggle-slider-container",
 					toggleSlider: "ui-toggle-slider",

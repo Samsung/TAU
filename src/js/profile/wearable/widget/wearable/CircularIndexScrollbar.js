@@ -125,6 +125,7 @@
  * @author Junyoung Park <jy-.park@samsung.com>
  * @author Hagun Kim <hagun.kim@samsung.com>
  * @class ns.widget.wearable.CircularIndexScrollbar
+ * @component-selector .ui-circularindexscrollbar
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -176,9 +177,29 @@
 				},
 
 				classes = {
+					/**
+					 * Standard circular index scroll bar widget
+					 * @style ui-circularindexscrollbar
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					INDEXSCROLLBAR: "ui-circularindexscrollbar",
+					/**
+					 * Circle progress bar widget with indicator
+					 * @style ui-circularindexscrollbar-indicator
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					INDICATOR: "ui-circularindexscrollbar-indicator",
+					/**
+					 * Circular progress bar widget with text indicator
+					 * @style ui-circularindexscrollbar-indicator-text
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					INDICATOR_TEXT: "ui-circularindexscrollbar-indicator-text",
+					/**
+					 * Show circular progress bar widget
+					 * @style ui-circularindexscrollbar-show
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					SHOW: "ui-circularindexscrollbar-show"
 				};
 

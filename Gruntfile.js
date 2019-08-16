@@ -1257,6 +1257,14 @@ module.exports = function (grunt) {
 						src: ["dist/wearable/js/tau.js"]
 					}
 				},
+				"mobile-components": {
+					profile: "mobile",
+					template: "components",
+					version: version,
+					files: {
+						src: ["dist/mobile/js/tau.js"]
+					}
+				},
 				"wearable-components": {
 					profile: "wearable",
 					template: "components",
@@ -1276,6 +1284,9 @@ module.exports = function (grunt) {
 				},
 				wearable: {
 					profile: "wearable"
+				},
+				"mobile-components": {
+					profile: "mobile-components"
 				},
 				"wearable-components": {
 					profile: "wearable-components"
