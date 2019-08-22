@@ -96,6 +96,25 @@ module.exports = function (grunt) {
 			"tauCharts.min.css"
 		],
 
+		bundleConfig = {
+			graph: {
+				components: ["d3.min.js", "tauCharts.min.js", "tauCharts.min.css"],
+				outputFileName: "tau.graphs.js",
+				profile: "common"
+			},
+			flipster: {
+				components: ["jquery.min.js", "jquery.flipster.min.js"],
+				outputFileName: "tau.flipster.js",
+				profile: "common"
+			},
+			i3d: {
+				components: ["r-type.min.js"],
+				outputFileName: "tau.i3d.js",
+				profile: "common"
+			}
+
+		}
+
 		files = {
 			js: {
 				minifiedFiles: [],
@@ -1477,14 +1496,14 @@ module.exports = function (grunt) {
 		}
 	}
 
-	function createBundleProfile(profile, callback) {
-		const distJs = path.join(__dirname, dist, profile, "js");
+	function createBundledFiles(name, callback) {
+		const config = bundleConfig[name],
+			distJs = path.join(__dirname, dist, config.profile, "js");
 
 		webpack({
 			mode: "production",
-			entry: ["jquery.min.js"].concat(externalLibs)
+			entry: config.components
 				.map((lib) => "./" + path.join("libs", lib))
-				.concat([path.join(distJs, "tau.min.js")])
 				.map((src) => {
 					if (src.endsWith(".js")) {
 						return `script-loader!${src}`;
@@ -1494,7 +1513,7 @@ module.exports = function (grunt) {
 				}),
 			output: {
 				path: distJs,
-				filename: "tau.bundle.js"
+				filename: config.outputFileName
 			},
 			module: {
 				rules: [
@@ -1518,11 +1537,10 @@ module.exports = function (grunt) {
 		});
 	}
 
-	function createBundle(profile) {
-		const done = this.async(),
-			profiles = profile ? [profile] : ["tv", "mobile", "wearable"];
+	function createBundle() {
+		const done = this.async();
 
-		async.parallel(profiles.map((p) => createBundleProfile.bind(null, p)), done);
+		async.parallel(Object.keys(bundleConfig).map((b) => createBundledFiles.bind(null, b)), done);
 	}
 
 	grunt.initConfig(initConfig);
@@ -1658,10 +1676,10 @@ module.exports = function (grunt) {
 		"bundle"
 	]);
 
-	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJquery", "bundle:mobile"]);
+	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJquery"]); //"bundle:mobile"
 	grunt.registerTask("js-mobile_support", "Prepare JS for mobile 2.3", ["clean:js", "requirejs:mobile", "requirejs:mobile_support", "jsmin", "themesjs:mobile", "copy:mobileJquery"]);
-	grunt.registerTask("js-wearable", "Prepare JS wearable", ["clean:js", "requirejs:wearable", "jsmin", "themesjs:wearable", "copy:wearableJquery", "bundle:wearable"]);
-	grunt.registerTask("js-tv", "Prepare JS tv", ["clean:js", "requirejs:tv", "jsmin", "themesjs:tv", "copy:tvJquery", "bundle:tv"]);
+	grunt.registerTask("js-wearable", "Prepare JS wearable", ["clean:js", "requirejs:wearable", "jsmin", "themesjs:wearable", "copy:wearableJquery"]); //"bundle:wearable"
+	grunt.registerTask("js-tv", "Prepare JS tv", ["clean:js", "requirejs:tv", "jsmin", "themesjs:tv", "copy:tvJquery"]); //"bundle:tv"
 	grunt.registerTask("license", "Add licence information to files", ["concat:licenseJs", "concat:licenseDefaultCss", "concat:licenseChangeableCss", "concat:licenseWearableCss", "copy:license"]);
 
 	grunt.registerTask("docs-mobile", ["js-mobile", "analize-docs:mobile", "copy:sdk-docs"]);
