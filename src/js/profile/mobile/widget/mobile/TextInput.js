@@ -505,6 +505,7 @@
 				if (newDiv) {
 					container.className = classes.CONTAINER;
 					element.parentElement.replaceChild(container, element);
+					container.classList.add(CLASSES_PREFIX + "-type-" + element.type);
 					container.appendChild(element);
 				}
 
