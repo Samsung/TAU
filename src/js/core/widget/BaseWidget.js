@@ -728,7 +728,10 @@
 			 * @return {ns.widget.BaseWidget}
 			 */
 			prototype.refresh = function () {
-				var self = this;
+				var self = this,
+					element = self.element;
+
+				self._getCreateOptions(element);
 
 				if (typeof self._refresh === TYPE_FUNCTION) {
 					self._refresh.apply(self, arguments);
