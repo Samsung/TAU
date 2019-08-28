@@ -408,7 +408,7 @@
 
 				self.guide = {
 					color: {
-						brewer: self.options.color
+						brewer: self.options.color.split(",")
 					},
 					x: {
 						label: {
