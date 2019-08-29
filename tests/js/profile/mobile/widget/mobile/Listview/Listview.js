@@ -136,6 +136,8 @@
 			popupContainer.classList.add(Listview.classes.POPUP_LISTVIEW);
 
 			listview = new Listview(element);
+			listview.element = element;
+
 			assert.ok(!!listview, "Listview exists");
 
 			helpers.stub(listview, "_refreshColoredBackground", function () {
