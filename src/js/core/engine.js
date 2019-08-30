@@ -305,7 +305,8 @@
 			 */
 			function getBinding(element, type) {
 				var id = !element || typeof element === TYPE_STRING ? element : element.id,
-					binding;
+					binding,
+					wrapper;
 
 				if (typeof element === TYPE_STRING) {
 					element = document.getElementById(id);
@@ -315,8 +316,19 @@
 					// Fetch group of widget defined for this element
 					binding = widgetBindingMap[id];
 
+
 					if (binding && typeof binding === "object") {
 						return getInstanceByElement(binding, element, type);
+					} else {
+						// Check if widget was created wrapper
+						if (element.classList.contains("ui-widget-wrapper")) {
+							wrapper = slice.call(element.children).filter(function (child) {
+								return child.hasAttribute("data-tau-built");
+							})[0];
+							if (wrapper) {
+								return getBinding(wrapper, type);
+							}
+						}
 					}
 				}
 

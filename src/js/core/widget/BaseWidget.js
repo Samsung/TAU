@@ -215,7 +215,11 @@
 				__callbacks;
 
 			BaseWidget.classes = {
-				disable: disableClass
+				disable: disableClass,
+				/**
+				 * Class indicates that widget added wrapper for base widget element
+				 */
+				wrapper: "ui-widget-wrapper"
 			};
 
 			prototype._configureDefinition = function (definition) {

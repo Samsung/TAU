@@ -671,6 +671,7 @@
 				var selectWrapperElement = document.createElement("div");
 
 				selectWrapperElement.className = classes.selectWrapper;
+				selectWrapperElement.classList.add(BaseWidget.classes.wrapper);
 				selectWrapperElement.id = element.id + "-dropdownmenu";
 				selectWrapperElement.setAttribute("tabindex", "0");
 
