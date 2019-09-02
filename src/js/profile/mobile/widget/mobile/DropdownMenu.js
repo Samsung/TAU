@@ -668,7 +668,8 @@
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			prototype._buildWrapper = function (element) {
-				var selectWrapperElement = document.createElement("div");
+				var self = this,
+					selectWrapperElement = self._createWrapper();
 
 				selectWrapperElement.className = classes.selectWrapper;
 				selectWrapperElement.id = element.id + "-dropdownmenu";
@@ -677,7 +678,7 @@
 				domUtils.insertNodesBefore(element, selectWrapperElement);
 				selectWrapperElement.appendChild(element);
 
-				this._ui.elSelectWrapper = selectWrapperElement;
+				self._ui.elSelectWrapper = selectWrapperElement;
 			};
 
 			/**
@@ -807,7 +808,10 @@
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			prototype._refresh = function () {
-				this._generate(this.element, false);
+				var self = this;
+
+				self._generate(self.element, false);
+				self._updatePlaceHolderBySelectedIndex();
 			};
 
 			/**
@@ -1080,6 +1084,20 @@
 			};
 
 			/**
+			 * Update visible value of DropDownMenu based on selected index
+			 * @method _updatePlaceHolderBySelectedIndex
+			 * @protected
+			 * @member ns.widget.mobile.DropdownMenu
+			 */
+			prototype._updatePlaceHolderBySelectedIndex = function () {
+				var self = this,
+					ui = self._ui,
+					selectedOption = ui.elOptions[self._selectedIndex];
+
+				ui.elPlaceHolder.textContent = selectedOption.textContent;
+			}
+
+			/**
 			 * Change Value of Select tag and Placeholder
 			 * @method changeOption
 			 * @protected
@@ -1093,7 +1111,8 @@
 					getData = domUtils.getNSData;
 
 				if ((selectedOption !== previousOption) || (ui.elDefaultOption && (ui.elPlaceHolder.textContent === ui.elDefaultOption.textContent))) {
-					ui.elPlaceHolder.textContent = selectedOption.textContent;
+					self._updatePlaceHolderBySelectedIndex();
+
 					ui.elSelect.value = getData(selectedOption, "value");
 					if (ui.elSelect.value === "") {
 						ui.elSelect.value = getData(previousOption, "value");

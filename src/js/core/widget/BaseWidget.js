@@ -210,6 +210,7 @@
 				 * @readonly
 				 */
 				TYPE_FUNCTION = "function",
+				TYPE_STRING = "string",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
 				__callbacks;
@@ -1187,6 +1188,23 @@
 				}
 				return requireRefresh;
 			};
+
+			/**
+			 * Create widget wrapper element
+			 * @param {string|null} [type=div] type of HTML element
+			 * @protected
+			 * @member ns.widget.BaseWidget
+			 * @return {HTMLElement}
+			 */
+			prototype._createWrapper = function (type) {
+				var wrapper;
+
+				type = (typeof type === TYPE_STRING) ? type : "div";
+
+				wrapper = document.createElement(type);
+				wrapper.setAttribute(engineDataTau.widgetWrapper, true);
+				return wrapper;
+			}
 
 			BaseWidget.prototype = prototype;
 
