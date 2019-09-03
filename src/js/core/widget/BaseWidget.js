@@ -1018,7 +1018,7 @@
 				methodName = "_set" + (field[0].toUpperCase() + field.slice(1));
 				if (typeof self[methodName] === TYPE_FUNCTION) {
 					refresh = self[methodName](self.element, value);
-					if (self.element) {
+					if (self.element && (typeof value !== "object" || Array.isArray(value))) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
 						})), value);
@@ -1028,7 +1028,7 @@
 				} else {
 					self.options[field] = value;
 
-					if (self.element) {
+					if (self.element && (typeof value !== "object" || Array.isArray(value))) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
 						})), value);

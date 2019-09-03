@@ -250,7 +250,7 @@
 						if (dataItem.hasOwnProperty(itemName)) {
 							dataBoundElement = element.querySelector("[data-bind='" + itemName + "']");
 							if (dataBoundElement) {
-								if (typeof directive[itemName] === "function") {
+								if (directive && typeof directive[itemName] === "function") {
 									directive[itemName].call(dataBoundElement, dataItem[itemName]);
 								} else {
 									dataBoundElement.innerText = dataItem[itemName];
@@ -258,6 +258,11 @@
 							}
 						}
 					}
+				},
+
+				_setModel: function (element, value) {
+					this.options.model = value;
+					this._findDataBinding();
 				},
 
 				/**

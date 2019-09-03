@@ -315,7 +315,7 @@ QUnit.config.reorder = false;
 
 		test("set option data-model", function test() {
 			var element = document.getElementById("sectionchanger-data-bind"),
-				sectionChanger = new ns.widget.SectionChanger(element);
+				sectionChanger = ns.widget.SectionChanger(element);
 
 			sectionChanger.option({
 				"model": {
