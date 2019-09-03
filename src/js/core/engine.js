@@ -125,6 +125,14 @@
 				 */
 				DATA_BOUND = "data-tau-bound",
 				/**
+				 * @property {string} [DATA_WIDGET_WRAPPER="data-tau-wrapper"] attribute informs that widget has wrapper
+				 * @private
+				 * @static
+				 * @readonly
+				 * @member ns.engine
+				 */
+				DATA_WIDGET_WRAPPER = "data-tau-wrapper",
+				/**
 				 * @property {string} NAMES_SEPARATOR
 				 * @private
 				 * @static
@@ -295,6 +303,15 @@
 			}
 
 			/**
+			 * Filter children with DATA_BUILT attribute
+			 * @param {HTMLElement} child
+			 * @private
+			 */
+			function filterBuiltWidget(child) {
+				return child.hasAttribute(DATA_BUILT);
+			}
+
+			/**
 			 * Get binding for element
 			 * @method getBinding
 			 * @static
@@ -305,7 +322,8 @@
 			 */
 			function getBinding(element, type) {
 				var id = !element || typeof element === TYPE_STRING ? element : element.id,
-					binding;
+					binding,
+					baseElement;
 
 				if (typeof element === TYPE_STRING) {
 					element = document.getElementById(id);
@@ -317,6 +335,15 @@
 
 					if (binding && typeof binding === "object") {
 						return getInstanceByElement(binding, element, type);
+					} else {
+						// Check if widget has wrapper and find base element
+						if (element && typeof element.hasAttribute === TYPE_FUNCTION &&
+								element.hasAttribute(DATA_WIDGET_WRAPPER)) {
+							baseElement = slice.call(element.children).filter(filterBuiltWidget)[0];
+							if (baseElement) {
+								return getBinding(baseElement, type);
+							}
+						}
 					}
 				}
 
@@ -1085,7 +1112,8 @@
 					built: DATA_BUILT,
 					name: DATA_NAME,
 					bound: DATA_BOUND,
-					separator: NAMES_SEPARATOR
+					separator: NAMES_SEPARATOR,
+					widgetWrapper: DATA_WIDGET_WRAPPER
 				},
 				destroyWidget: destroyWidget,
 				destroyAllWidgets: destroyAllWidgets,
