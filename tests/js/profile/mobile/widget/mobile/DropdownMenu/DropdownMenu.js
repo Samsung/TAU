@@ -158,14 +158,14 @@
 				"class=\"ui-dropdownmenu-placeholder\">text</span>", "elPlaceHolder has correct HTML");
 		});
 
-		test("_buildWrapper", 1, function (assert) {
+		test("_buildWrapper", 3, function (assert) {
 			var widget = new DropdownMenu(),
 				element = document.getElementById("select");
 
 			widget._buildWrapper(element);
-			assert.equal(widget._ui.elSelectWrapper.outerHTML, "<div class=\"ui-dropdownmenu\" " +
-				"id=\"select-dropdownmenu\" tabindex=\"0\"><select id=\"select\"></select></div>",
-				"elSelectWrapper has correct HTML");
+			assert.equal(widget._ui.elSelectWrapper.tagName, "DIV", "elSelectWrapper is DIV");
+			assert.ok(widget._ui.elSelectWrapper.hasAttribute("data-tau-wrapper"), "elSelectWrapper has wrapper attribute");
+			assert.ok(widget._ui.elSelectWrapper.querySelector("select") === element, "elSelectWrapper contains select");
 		});
 
 		test("_generate", 15, function (assert) {

@@ -212,6 +212,7 @@
 				 * @readonly
 				 */
 				TYPE_FUNCTION = "function",
+				TYPE_STRING = "string",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
 				commonClasses = {
@@ -366,6 +367,9 @@
 							prefixedValue = getNSData(element, attributeName);
 
 						if (prefixedValue !== null) {
+							if (typeof options[option] === "number") {
+								prefixedValue = parseFloat(prefixedValue);
+							}
 							options[option] = prefixedValue;
 						} else {
 							if (typeof options[option] === "boolean") {
@@ -806,7 +810,10 @@
 			 * @return {ns.widget.BaseWidget}
 			 */
 			prototype.refresh = function () {
-				var self = this;
+				var self = this,
+					element = self.element;
+
+				self._getCreateOptions(element);
 
 				if (typeof self._refresh === TYPE_FUNCTION) {
 					self._refresh.apply(self, arguments);
@@ -1014,7 +1021,7 @@
 				methodName = "_set" + (field[0].toUpperCase() + field.slice(1));
 				if (typeof self[methodName] === TYPE_FUNCTION) {
 					refresh = self[methodName](self.element, value);
-					if (self.element) {
+					if (self.element && (typeof value !== "object" || Array.isArray(value))) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
 						})), value);
@@ -1024,7 +1031,7 @@
 				} else {
 					self.options[field] = value;
 
-					if (self.element) {
+					if (self.element && (typeof value !== "object" || Array.isArray(value))) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
 						})), value);
@@ -1315,6 +1322,23 @@
 				}
 				return requireRefresh;
 			};
+
+			/**
+			 * Create widget wrapper element
+			 * @param {string|null} [type=div] type of HTML element
+			 * @protected
+			 * @member ns.widget.BaseWidget
+			 * @return {HTMLElement}
+			 */
+			prototype._createWrapper = function (type) {
+				var wrapper;
+
+				type = (typeof type === TYPE_STRING) ? type : "div";
+
+				wrapper = document.createElement(type);
+				wrapper.setAttribute(engineDataTau.widgetWrapper, true);
+				return wrapper;
+			}
 
 			BaseWidget.prototype = prototype;
 

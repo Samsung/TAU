@@ -35,11 +35,11 @@ QUnit.config.reorder = false;
 			0, /* button, left */
 			null /* related target */
 		);
-		ev.touches = [{clientX: move.clientX, clientY: move.clientY}];
+		ev.touches = [{clientX: move.clientX, clientY: move.clientY, pageX: move.clientX, pageY: move.clientY}];
 		if (event === "touchend") {
 			ev.touches = [];
 		}
-		ev.changedTouches = [{clientX: move.clientX, clientY: move.clientY}];
+		ev.changedTouches = [{clientX: move.clientX, clientY: move.clientY, pageX: move.clientX, pageY: move.clientY}];
 		el.dispatchEvent(ev);
 	}
 
@@ -315,7 +315,7 @@ QUnit.config.reorder = false;
 
 		test("set option data-model", function test() {
 			var element = document.getElementById("sectionchanger-data-bind"),
-				sectionChanger = new ns.widget.SectionChanger(element);
+				sectionChanger = ns.widget.SectionChanger(element);
 
 			sectionChanger.option({
 				"model": {

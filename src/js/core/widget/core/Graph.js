@@ -199,7 +199,9 @@
 					oldData = [],
 					guide = self.guide;
 
-				self.options.color = self.options.color.split(",")
+				self.options.color = (typeof self.options.color === "string") ?
+					self.options.color.split(",") :
+					self.options.color;
 				guide.color.brewer = self.options.color;
 				guide.x.label.text = self.options.xlabel;
 				guide.y.label.text = self.options.ylabel;
@@ -406,7 +408,9 @@
 
 				self.guide = {
 					color: {
-						brewer: self.options.color.split(",")
+						brewer: (typeof self.options.color === "string") ?
+							self.options.color.split(",") :
+							self.options.color
 					},
 					x: {
 						label: {

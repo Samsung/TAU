@@ -1821,6 +1821,7 @@
 					itemsOnLayer = self.options.maxItemNumber;
 
 				removeLayers(self.element, self.options);
+
 				element.removeChild(ui.items[index]);
 				ui.items = element.querySelectorAll(self.options.itemSelector);
 				length = ui.items.length;
@@ -1838,6 +1839,22 @@
 
 				self._refresh();
 			};
+
+			/**
+			 * Removes given item from widget
+			 * @method removeGivenItem
+			 * @param {HTMLElement} item
+			 * @public
+			 * @member ns.widget.wearable.Selector
+			 */
+			prototype.removeItemByElement = function (item) {
+				var self = this,
+					index = Array.prototype.indexOf.call(self._ui.items, item);
+
+				if (index !== -1) {
+					self.removeItem(index);
+				}
+			}
 
 			prototype._destroy = function () {
 				var self = this,
