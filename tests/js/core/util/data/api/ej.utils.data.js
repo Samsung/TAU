@@ -1,4 +1,6 @@
-var data = ej.util.data;
+/*global tau */
+var ej = ej || tau,
+	data = ej.util.data;
 
 module("core/util/data");
 
