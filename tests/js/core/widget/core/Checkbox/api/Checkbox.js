@@ -4,10 +4,13 @@
 	function runTests(Checkbox, helpers) {
 
 		function initHTML() {
-			var HTML = helpers.loadHTMLFromFile("/base/tests/js/core/widget/core/Checkbox/test-data/sample.html"),
+			var HTML,
 				parent = document.getElementById("qunit-fixture") || helpers.initFixture();
 
-			parent.innerHTML = HTML;
+			if (parent.innerHTML === "") {
+				HTML = helpers.loadHTMLFromFile("/base/tests/js/core/widget/core/Checkbox/test-data/sample.html");
+				parent.innerHTML = HTML;
+			}
 		}
 
 		module("core/widget/core/Checkbox", {
