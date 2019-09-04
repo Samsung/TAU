@@ -463,6 +463,7 @@
 						self._extended(false);
 					}
 
+					self._setIndex(self.element, self.options.index);
 					self._updateLayout();
 					self.indexBar1.options.index = self.options.index;
 					self.indexBar1.refresh();
