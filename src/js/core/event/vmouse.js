@@ -350,8 +350,8 @@
 				if (touches && touches.length === 1) {
 					didScroll = false;
 					firstTouch = touches[0];
-					startX = firstTouch.pageX;
-					startY = firstTouch.pageY;
+					startX = firstTouch.pageX || firstTouch.clientX || 0; // for touch converted from mouse event
+					startY = firstTouch.pageY || firstTouch.clientX || 0; // for touch converted from mouse event
 
 					// Check if we have touched something on our page
 					// @TODO refactor for multi touch
@@ -397,6 +397,8 @@
 			function handleTouchMove(evt) {
 				var over,
 					firstTouch = evt.touches && evt.touches[0],
+					pointerX,
+					pointerY,
 					didCancel = didScroll,
 					//sets the threshold, based on which we consider if it was the touch-move event
 					moveThreshold = vmouse.eventDistanceThreshold;
@@ -415,15 +417,18 @@
 					return;
 				}
 
+				pointerX = firstTouch.pageX || firstTouch.clientX || 0, // for touch converted from mouse event
+				pointerY = firstTouch.pageY || firstTouch.clientY || 0, // for touch converted from mouse event
+
 				didScroll = didScroll ||
 					//check in both axes X,Y if the touch-move event occur
-					(Math.abs(firstTouch.pageX - startX) > moveThreshold ||
-					Math.abs(firstTouch.pageY - startY) > moveThreshold);
+					(Math.abs(pointerX - startX) > moveThreshold ||
+					Math.abs(pointerY - startY) > moveThreshold);
 
 				// detect over event
 				// for compatibility with mouseover because "touchenter" fires only once
 				// @TODO Handle many touches
-				over = document.elementFromPoint(firstTouch.pageX, firstTouch.pageY);
+				over = document.elementFromPoint(pointerX, pointerY);
 				if (over && lastOver !== over) {
 					lastOver = over;
 					fireEvent("vmouseover", evt);
