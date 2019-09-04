@@ -5,7 +5,7 @@
  */
 var shell = require("shelljs"),
 	path = require("path"),
-	TIZEN_VERSION = "5.0",
+	TIZEN_VERSION = "5.5",
 	TCT_MANAGER_NAME = "tizen_web_" + TIZEN_VERSION;
 
 module.exports = function (grunt) {

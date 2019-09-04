@@ -6,7 +6,7 @@
 echo "tct-paker.sh"
 
 # Config params
-TIZEN_VERSION=5.0
+TIZEN_VERSION=5.5
 TEST_FILENAME=tct-webuifw-tests01-${TIZEN_VERSION}.zip
 TEST_NAME=tct-webuifw-tests
 
