@@ -279,11 +279,15 @@
 				var result = [],
 					script;
 
-				[].slice.call(element.querySelectorAll(
+				slice.call(element.querySelectorAll(
 					"script:not([data-src]):not([type]):not([id]):not([src])"
 					)).forEach(function (item) {
 						script = document.createElement("script");
 						script.innerText = item.textContent;
+						// move attributes from original script element
+						slice.call(item.attributes).forEach(function (attribute) {
+							script.setAttribute(attribute.name, item.getAttribute(attribute.name));
+						});
 						item.parentNode.removeChild(item);
 						result.push(script);
 					});
