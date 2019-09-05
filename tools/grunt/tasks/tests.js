@@ -126,6 +126,12 @@ module.exports = function (grunt) {
 				cwd: path.join(buildFrameworkPath, "wearable", "theme", "default"),
 				src: "**",
 				dest: path.join("tests", "libs", "dist", "theme", "default")
+			},
+			{
+				expand: true,
+				cwd: path.join(buildFrameworkPath, "common"),
+				src: "**",
+				dest: path.join("tests", "libs", "dist", "common")
 			}
 		]
 	};
@@ -142,6 +148,12 @@ module.exports = function (grunt) {
 				cwd: path.join(buildFrameworkPath, "mobile", "theme", "default"),
 				src: "**",
 				dest: path.join("tests", "libs", "dist", "theme", "default")
+			},
+			{
+				expand: true,
+				cwd: path.join(buildFrameworkPath, "common"),
+				src: "**",
+				dest: path.join("tests", "libs", "dist", "common")
 			}
 		]
 	};
