@@ -178,7 +178,7 @@
 					// set sizes of page for correct display
 					toPageWidget.layout();
 
-					if (toPageWidget.option("autoBuildWidgets") || toPageElement.querySelector('.ui-i3d')) {
+					if (toPageWidget.option("autoBuildWidgets") || toPageElement.querySelector(".ui-i3d") || toPageElement.querySelector(".ui-coverflow")) {
 						engine.createWidgets(toPageElement, options);
 					}
 
