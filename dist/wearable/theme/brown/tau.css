@@ -5250,6 +5250,9 @@ tau-sectionchanger {
   width: 100%;
   height: 15.625rem;
 }
+.ui-coverflow:focus {
+  background-color: black;
+}
 .tau-info-theme:after {
   content: "default";
 }
