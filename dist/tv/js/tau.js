@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.3';
+ns.version = '1.1.4';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -1015,11 +1015,15 @@ ns.version = '1.1.3';
 				var result = [],
 					script;
 
-				[].slice.call(element.querySelectorAll(
+				slice.call(element.querySelectorAll(
 					"script:not([data-src]):not([type]):not([id]):not([src])"
 					)).forEach(function (item) {
 						script = document.createElement("script");
 						script.innerText = item.textContent;
+						// move attributes from original script element
+						slice.call(item.attributes).forEach(function (attribute) {
+							script.setAttribute(attribute.name, item.getAttribute(attribute.name));
+						});
 						item.parentNode.removeChild(item);
 						result.push(script);
 					});
@@ -2716,6 +2720,14 @@ ns.version = '1.1.3';
 				 */
 				DATA_BOUND = "data-tau-bound",
 				/**
+				 * @property {string} [DATA_WIDGET_WRAPPER="data-tau-wrapper"] attribute informs that widget has wrapper
+				 * @private
+				 * @static
+				 * @readonly
+				 * @member ns.engine
+				 */
+				DATA_WIDGET_WRAPPER = "data-tau-wrapper",
+				/**
 				 * @property {string} NAMES_SEPARATOR
 				 * @private
 				 * @static
@@ -2873,6 +2885,15 @@ ns.version = '1.1.3';
 			}
 
 			/**
+			 * Filter children with DATA_BUILT attribute
+			 * @param {HTMLElement} child
+			 * @private
+			 */
+			function filterBuiltWidget(child) {
+				return child.hasAttribute(DATA_BUILT);
+			}
+
+			/**
 			 * Get binding for element
 			 * @method getBinding
 			 * @static
@@ -2883,7 +2904,8 @@ ns.version = '1.1.3';
 			 */
 			function getBinding(element, type) {
 				var id = !element || typeof element === TYPE_STRING ? element : element.id,
-					binding;
+					binding,
+					baseElement;
 
 				if (typeof element === TYPE_STRING) {
 					element = document.getElementById(id);
@@ -2895,6 +2917,15 @@ ns.version = '1.1.3';
 
 					if (binding && typeof binding === "object") {
 						return getInstanceByElement(binding, element, type);
+					} else {
+						// Check if widget has wrapper and find base element
+						if (element && typeof element.hasAttribute === TYPE_FUNCTION &&
+								element.hasAttribute(DATA_WIDGET_WRAPPER)) {
+							baseElement = slice.call(element.children).filter(filterBuiltWidget)[0];
+							if (baseElement) {
+								return getBinding(baseElement, type);
+							}
+						}
 					}
 				}
 
@@ -3613,7 +3644,8 @@ ns.version = '1.1.3';
 					built: DATA_BUILT,
 					name: DATA_NAME,
 					bound: DATA_BOUND,
-					separator: NAMES_SEPARATOR
+					separator: NAMES_SEPARATOR,
+					widgetWrapper: DATA_WIDGET_WRAPPER
 				},
 				destroyWidget: destroyWidget,
 				destroyAllWidgets: destroyAllWidgets,
@@ -5367,6 +5399,7 @@ ns.version = '1.1.3';
 				 * @readonly
 				 */
 				TYPE_FUNCTION = "function",
+				TYPE_STRING = "string",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
 				commonClasses = {
@@ -5521,6 +5554,9 @@ ns.version = '1.1.3';
 							prefixedValue = getNSData(element, attributeName);
 
 						if (prefixedValue !== null) {
+							if (typeof options[option] === "number") {
+								prefixedValue = parseFloat(prefixedValue);
+							}
 							options[option] = prefixedValue;
 						} else {
 							if (typeof options[option] === "boolean") {
@@ -5961,7 +5997,10 @@ ns.version = '1.1.3';
 			 * @return {ns.widget.BaseWidget}
 			 */
 			prototype.refresh = function () {
-				var self = this;
+				var self = this,
+					element = self.element;
+
+				self._getCreateOptions(element);
 
 				if (typeof self._refresh === TYPE_FUNCTION) {
 					self._refresh.apply(self, arguments);
@@ -6169,7 +6208,7 @@ ns.version = '1.1.3';
 				methodName = "_set" + (field[0].toUpperCase() + field.slice(1));
 				if (typeof self[methodName] === TYPE_FUNCTION) {
 					refresh = self[methodName](self.element, value);
-					if (self.element) {
+					if (self.element && (typeof value !== "object" || Array.isArray(value))) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
 						})), value);
@@ -6179,7 +6218,7 @@ ns.version = '1.1.3';
 				} else {
 					self.options[field] = value;
 
-					if (self.element) {
+					if (self.element && (typeof value !== "object" || Array.isArray(value))) {
 						self.element.setAttribute("data-" + (field.replace(/[A-Z]/g, function (c) {
 							return "-" + c.toLowerCase();
 						})), value);
@@ -6470,6 +6509,23 @@ ns.version = '1.1.3';
 				}
 				return requireRefresh;
 			};
+
+			/**
+			 * Create widget wrapper element
+			 * @param {string|null} [type=div] type of HTML element
+			 * @protected
+			 * @member ns.widget.BaseWidget
+			 * @return {HTMLElement}
+			 */
+			prototype._createWrapper = function (type) {
+				var wrapper;
+
+				type = (typeof type === TYPE_STRING) ? type : "div";
+
+				wrapper = document.createElement(type);
+				wrapper.setAttribute(engineDataTau.widgetWrapper, true);
+				return wrapper;
+			}
 
 			BaseWidget.prototype = prototype;
 
@@ -9309,8 +9365,8 @@ ns.version = '1.1.3';
 				if (touches && touches.length === 1) {
 					didScroll = false;
 					firstTouch = touches[0];
-					startX = firstTouch.pageX;
-					startY = firstTouch.pageY;
+					startX = firstTouch.pageX || firstTouch.clientX || 0; // for touch converted from mouse event
+					startY = firstTouch.pageY || firstTouch.clientX || 0; // for touch converted from mouse event
 
 					// Check if we have touched something on our page
 					// @TODO refactor for multi touch
@@ -9356,6 +9412,8 @@ ns.version = '1.1.3';
 			function handleTouchMove(evt) {
 				var over,
 					firstTouch = evt.touches && evt.touches[0],
+					pointerX,
+					pointerY,
 					didCancel = didScroll,
 					//sets the threshold, based on which we consider if it was the touch-move event
 					moveThreshold = vmouse.eventDistanceThreshold;
@@ -9374,15 +9432,18 @@ ns.version = '1.1.3';
 					return;
 				}
 
+				pointerX = firstTouch.pageX || firstTouch.clientX || 0, // for touch converted from mouse event
+				pointerY = firstTouch.pageY || firstTouch.clientY || 0, // for touch converted from mouse event
+
 				didScroll = didScroll ||
 					//check in both axes X,Y if the touch-move event occur
-					(Math.abs(firstTouch.pageX - startX) > moveThreshold ||
-					Math.abs(firstTouch.pageY - startY) > moveThreshold);
+					(Math.abs(pointerX - startX) > moveThreshold ||
+					Math.abs(pointerY - startY) > moveThreshold);
 
 				// detect over event
 				// for compatibility with mouseover because "touchenter" fires only once
 				// @TODO Handle many touches
-				over = document.elementFromPoint(firstTouch.pageX, firstTouch.pageY);
+				over = document.elementFromPoint(pointerX, pointerY);
 				if (over && lastOver !== over) {
 					lastOver = over;
 					fireEvent("vmouseover", evt);
@@ -14513,7 +14574,7 @@ function pathToRegexp (path, keys, options) {
 					// set sizes of page for correct display
 					toPageWidget.layout();
 
-					if (toPageWidget.option("autoBuildWidgets") || toPageElement.querySelector('.ui-i3d')) {
+					if (toPageWidget.option("autoBuildWidgets") || toPageElement.querySelector(".ui-i3d") || toPageElement.querySelector(".ui-coverflow")) {
 						engine.createWidgets(toPageElement, options);
 					}
 
@@ -24216,7 +24277,7 @@ function pathToRegexp (path, keys, options) {
 						if (dataItem.hasOwnProperty(itemName)) {
 							dataBoundElement = element.querySelector("[data-bind='" + itemName + "']");
 							if (dataBoundElement) {
-								if (typeof directive[itemName] === "function") {
+								if (directive && typeof directive[itemName] === "function") {
 									directive[itemName].call(dataBoundElement, dataItem[itemName]);
 								} else {
 									dataBoundElement.innerText = dataItem[itemName];
@@ -24224,6 +24285,11 @@ function pathToRegexp (path, keys, options) {
 							}
 						}
 					}
+				},
+
+				_setModel: function (element, value) {
+					this.options.model = value;
+					this._findDataBinding();
 				},
 
 				/**
@@ -28610,8 +28676,6 @@ function pathToRegexp (path, keys, options) {
 					color: "#0097D8",
 					xlabel: "",
 					ylabel: "",
-					xinit: 0,
-					yinit: 0,
 					axisXType: "time",
 					axisYType: "linear",
 					mode: MODE_INTERMITTENT,
@@ -28668,8 +28732,8 @@ function pathToRegexp (path, keys, options) {
 
 			prototype._setChartAxis = function (identifier) {
 				var self = this,
-				    axisDimensions = self.dimensions[identifier],
-				    axisType = self.options["axis" + identifier.toUpperCase() + "Type"];
+					axisDimensions = self.dimensions[identifier],
+					axisType = self.options["axis" + identifier.toUpperCase() + "Type"];
 
 				axisDimensions.type = "order";
 				switch (axisType) {
@@ -28677,13 +28741,13 @@ function pathToRegexp (path, keys, options) {
 					case "index":
 						axisDimensions.scale = "time";
 						self.guide[identifier].tickFormat = "day";
-					break;
+						break;
 					case "order":
 						axisDimensions.scale = "ordinal";
-					break;
+						break;
 					case "linear":
 						axisDimensions.scale = "linear";
-					break;
+						break;
 				}
 			}
 
@@ -28692,7 +28756,9 @@ function pathToRegexp (path, keys, options) {
 					oldData = [],
 					guide = self.guide;
 
-				self.options.color = self.options.color.split(",")
+				self.options.color = (typeof self.options.color === "string") ?
+					self.options.color.split(",") :
+					self.options.color;
 				guide.color.brewer = self.options.color;
 				guide.x.label.text = self.options.xlabel;
 				guide.y.label.text = self.options.ylabel;
@@ -28899,7 +28965,9 @@ function pathToRegexp (path, keys, options) {
 
 				self.guide = {
 					color: {
-						brewer: self.options.color
+						brewer: (typeof self.options.color === "string") ?
+							self.options.color.split(",") :
+							self.options.color
 					},
 					x: {
 						label: {
@@ -37329,6 +37397,7 @@ function pathToRegexp (path, keys, options) {
 				if (newDiv) {
 					container.className = classes.CONTAINER;
 					element.parentElement.replaceChild(container, element);
+					container.classList.add(CLASSES_PREFIX + "-type-" + element.type);
 					container.appendChild(element);
 					ui.container = container;
 				}
@@ -38396,7 +38465,8 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			prototype._buildWrapper = function (element) {
-				var selectWrapperElement = document.createElement("div");
+				var self = this,
+					selectWrapperElement = self._createWrapper();
 
 				selectWrapperElement.className = classes.selectWrapper;
 				selectWrapperElement.id = element.id + "-dropdownmenu";
@@ -38406,7 +38476,7 @@ function pathToRegexp (path, keys, options) {
 
 				selectWrapperElement.appendChild(element);
 
-				this._ui.elSelectWrapper = selectWrapperElement;
+				self._ui.elSelectWrapper = selectWrapperElement;
 			};
 
 			/**
@@ -38537,7 +38607,10 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			prototype._refresh = function () {
-				this._generate(this.element, false);
+				var self = this;
+
+				self._generate(self.element, false);
+				self._updatePlaceHolderBySelectedIndex();
 			};
 
 			/**
@@ -38837,6 +38910,20 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			/**
+			 * Update visible value of DropDownMenu based on selected index
+			 * @method _updatePlaceHolderBySelectedIndex
+			 * @protected
+			 * @member ns.widget.mobile.DropdownMenu
+			 */
+			prototype._updatePlaceHolderBySelectedIndex = function () {
+				var self = this,
+					ui = self._ui,
+					selectedOption = ui.elOptions[self._selectedIndex];
+
+				ui.elPlaceHolder.textContent = selectedOption.textContent;
+			}
+
+			/**
 			 * Change Value of Select tag and Placeholder
 			 * @method changeOption
 			 * @protected
@@ -38850,7 +38937,8 @@ function pathToRegexp (path, keys, options) {
 					getData = domUtils.getNSData;
 
 				if ((selectedOption !== previousOption) || (ui.elDefaultOption && (ui.elPlaceHolder.textContent === ui.elDefaultOption.textContent))) {
-					ui.elPlaceHolder.textContent = selectedOption.textContent;
+					self._updatePlaceHolderBySelectedIndex();
+
 					ui.elSelect.value = getData(selectedOption, "value");
 					if (ui.elSelect.value === "") {
 						ui.elSelect.value = getData(previousOption, "value");
@@ -46714,6 +46802,7 @@ function pathToRegexp (path, keys, options) {
 						self._extended(false);
 					}
 
+					self._setIndex(self.element, self.options.index);
 					self._updateLayout();
 					self.indexBar1.options.index = self.options.index;
 					self.indexBar1.refresh();
