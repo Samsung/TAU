@@ -439,7 +439,8 @@
 					scroller,
 					visibleOffset,
 					elementHeight,
-					scrollMargin;
+					scrollMargin,
+					listItem;
 
 				// finding page  and scroller
 				ui.page = utilSelector.getClosestByClass(listview, "ui-page") || document.body;
@@ -450,14 +451,20 @@
 						scrolling.enable(scroller, "y");
 					}
 
-					elementHeight = (listview.firstElementChild) ? listview.firstElementChild.getBoundingClientRect().height : 0;
+					listItem = listview.querySelector(self.options.selector);
+					elementHeight = (listItem) ? listItem.getBoundingClientRect().height : 0;
 
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
 
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
-					scrolling.setSnapSize(elementHeight);
+					scrolling.setSnapSize(self._listItems.map(function (item) {
+						return {
+							position: item.coord.top,
+							length: item.coord.height
+						};
+					}));
 
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
@@ -492,6 +499,12 @@
 						self._currentIndex = index;
 					}
 				});
+				scrolling.setSnapSize(listItems.map(function (item) {
+					return {
+						position: item.coord.top,
+						length: item.coord.height
+					};
+				}));
 
 				self._listItems = listItems;
 				self._listItemAnimate();
