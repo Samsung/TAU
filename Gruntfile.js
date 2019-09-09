@@ -88,31 +88,22 @@ module.exports = function (grunt) {
 
 		wrapEnd = "}(window, window.document));\n",
 
-		externalLibs = [
-			"d3.min.js",
-			"jquery.flipster.min.js",
-			"r-type.min.js",
-			"tauCharts.min.js",
-			"tauCharts.min.css"
-		],
-
 		bundleConfig = {
 			graph: {
 				components: ["d3.min.js", "tauCharts.min.js", "tauCharts.min.css"],
-				outputFileName: "tau.graphs.js",
-				profile: "common"
+				outputFileName: "tau.graph.js",
+				outputDir: "libs"
 			},
 			flipster: {
 				components: ["jquery.min.js", "jquery.flipster.min.js"],
-				outputFileName: "tau.flipster.js",
-				profile: "common"
+				outputFileName: "tau.coverflow.js",
+				outputDir: "libs"
 			},
 			i3d: {
 				components: ["r-type.min.js"],
 				outputFileName: "tau.i3d.js",
-				profile: "common"
+				outputDir: "libs"
 			}
-
 		}
 
 		files = {
@@ -989,13 +980,6 @@ module.exports = function (grunt) {
 					]
 				},
 
-				"external-libs": {
-					files: externalLibs.map((libPath) => ({
-						src: `libs/${libPath}`,
-						dest: path.join(dist, "libs", libPath)
-					}))
-				},
-
 				"sdk-docs": {
 					files: [
 						{expand: true, cwd: "tools/grunt/tasks/templates/sdk/files", src: "**/*", dest: "docs/sdk/mobile/html"},
@@ -1498,7 +1482,7 @@ module.exports = function (grunt) {
 
 	function createBundledFiles(name, callback) {
 		const config = bundleConfig[name],
-			distJs = path.join(__dirname, dist, config.profile, "js");
+			distJs = path.join(__dirname, dist, config.outputDir);
 
 		webpack({
 			mode: "production",
@@ -1672,7 +1656,6 @@ module.exports = function (grunt) {
 		"copy:wearableJquery",
 		"copy:tvJquery",
 		"copy:animation",
-		"copy:external-libs",
 		"bundle"
 	]);
 
