@@ -473,7 +473,8 @@
 					options = self.options,
 					listItems = [],
 					scroller = ui.scrollableParent.element,
-					visibleOffset;
+					visibleOffset,
+					lastItem;
 
 				if (!scroller) {
 					self._initSnapListview(listview);
@@ -492,6 +493,14 @@
 						self._currentIndex = index;
 					}
 				});
+
+				lastItem = listItems.slice(-1)[0];
+				if (lastItem) {
+					scrolling.setMaxScroll(lastItem.position.end + lastItem.coord.height);
+					scrolling.setSnapSize(lastItem.coord.height);
+				} else {
+					scrolling.setMaxScroll(0);
+				}
 
 				self._listItems = listItems;
 				self._listItemAnimate();
