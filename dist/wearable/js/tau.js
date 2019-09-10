@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.6';
+ns.version = '1.0.7';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2444,6 +2444,14 @@ ns.version = '1.0.6';
 				 */
 				DATA_BOUND = "data-tau-bound",
 				/**
+				 * @property {string} [DATA_WIDGET_WRAPPER="data-tau-wrapper"] attribute informs that widget has wrapper
+				 * @private
+				 * @static
+				 * @readonly
+				 * @member ns.engine
+				 */
+				DATA_WIDGET_WRAPPER = "data-tau-wrapper",
+				/**
 				 * @property {string} NAMES_SEPARATOR
 				 * @private
 				 * @static
@@ -2601,6 +2609,15 @@ ns.version = '1.0.6';
 			}
 
 			/**
+			 * Filter children with DATA_BUILT attribute
+			 * @param {HTMLElement} child
+			 * @private
+			 */
+			function filterBuiltWidget(child) {
+				return child.hasAttribute(DATA_BUILT);
+			}
+
+			/**
 			 * Get binding for element
 			 * @method getBinding
 			 * @static
@@ -2611,7 +2628,8 @@ ns.version = '1.0.6';
 			 */
 			function getBinding(element, type) {
 				var id = !element || typeof element === TYPE_STRING ? element : element.id,
-					binding;
+					binding,
+					baseElement;
 
 				if (typeof element === TYPE_STRING) {
 					element = document.getElementById(id);
@@ -2623,6 +2641,15 @@ ns.version = '1.0.6';
 
 					if (binding && typeof binding === "object") {
 						return getInstanceByElement(binding, element, type);
+					} else {
+						// Check if widget has wrapper and find base element
+						if (element && typeof element.hasAttribute === TYPE_FUNCTION &&
+								element.hasAttribute(DATA_WIDGET_WRAPPER)) {
+							baseElement = slice.call(element.children).filter(filterBuiltWidget)[0];
+							if (baseElement) {
+								return getBinding(baseElement, type);
+							}
+						}
 					}
 				}
 
@@ -3341,7 +3368,8 @@ ns.version = '1.0.6';
 					built: DATA_BUILT,
 					name: DATA_NAME,
 					bound: DATA_BOUND,
-					separator: NAMES_SEPARATOR
+					separator: NAMES_SEPARATOR,
+					widgetWrapper: DATA_WIDGET_WRAPPER
 				},
 				destroyWidget: destroyWidget,
 				destroyAllWidgets: destroyAllWidgets,
@@ -7268,6 +7296,7 @@ function pathToRegexp (path, keys, options) {
 				 * @readonly
 				 */
 				TYPE_FUNCTION = "function",
+				TYPE_STRING = "string",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
 				__callbacks;
@@ -7786,7 +7815,10 @@ function pathToRegexp (path, keys, options) {
 			 * @return {ns.widget.BaseWidget}
 			 */
 			prototype.refresh = function () {
-				var self = this;
+				var self = this,
+					element = self.element;
+
+				self._getCreateOptions(element);
 
 				if (typeof self._refresh === TYPE_FUNCTION) {
 					self._refresh.apply(self, arguments);
@@ -8242,6 +8274,23 @@ function pathToRegexp (path, keys, options) {
 				}
 				return requireRefresh;
 			};
+
+			/**
+			 * Create widget wrapper element
+			 * @param {string|null} [type=div] type of HTML element
+			 * @protected
+			 * @member ns.widget.BaseWidget
+			 * @return {HTMLElement}
+			 */
+			prototype._createWrapper = function (type) {
+				var wrapper;
+
+				type = (typeof type === TYPE_STRING) ? type : "div";
+
+				wrapper = document.createElement(type);
+				wrapper.setAttribute(engineDataTau.widgetWrapper, true);
+				return wrapper;
+			}
 
 			BaseWidget.prototype = prototype;
 
@@ -12131,7 +12180,8 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.0
  * @author Hyunkook Cho <hk0713.cho@samsung.com>
- * @class ns.widget.mobile.Popup
+ * @class ns.widget.core.Popup
+ * @component-selector .ui-popup, [data-role]="popup"
  * @extends ns.widget.core.BaseWidget
  */
 (function () {
@@ -12264,26 +12314,74 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				/**
-				 * Toast style of popup
-				 * @style ui-popup-toast
-				 * @member ns.widget.core.Popup
-				 * @wearable
-				 */
-				/**
 				 * Toast style of popup with graphic
 				 * @style ui-popup-toast-graphic
 				 * @member ns.widget.core.Popup
 				 * @wearable
 				 */
 				classes = {
+				/**
+				 * Style for normal popup widget
+				 * @style ui-popup
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					popup: CLASSES_PREFIX,
+				/**
+				 * Set style for active popup widget
+				 * @style ui-popup-active
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					active: CLASSES_PREFIX + "-active",
+				/**
+				 * Set style for overlay popup widget
+				 * @style ui-popup-overlay
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					overlay: CLASSES_PREFIX + "-overlay",
+				/**
+				 * Set header for popup widget
+				 * @style ui-popup-header
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					header: CLASSES_PREFIX + "-header",
+				/**
+				 * Set footer for popup widget
+				 * @style ui-popup-footer
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					footer: CLASSES_PREFIX + "-footer",
+				/**
+				 * Set content for popup widget
+				 * @style ui-popup-content
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					content: CLASSES_PREFIX + "-content",
+				/**
+				 * Style for wrapper of popup widget
+				 * @style ui-popup-wrapper
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					wrapper: CLASSES_PREFIX + "-wrapper",
+				/**
+				 * Toast style of popup
+				 * @style ui-popup-toast
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					toast: CLASSES_PREFIX + "-toast",
+				/**
+				 * Small toast style of popup
+				 * @style ui-popup-toast-small
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					toastSmall: CLASSES_PREFIX + "-toast-small",
 					build: "ui-build",
 					overlayShown: CLASSES_PREFIX + "-overlay-shown"
@@ -13797,6 +13895,7 @@ function pathToRegexp (path, keys, options) {
  * documentation of profiles
  *
  * @class ns.widget.core.Drawer
+ * @component-selector .ui-drawer, [data-role]="drawer"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -13898,11 +13997,41 @@ function pathToRegexp (path, keys, options) {
 				 */
 				classes = {
 					page: Page.classes.uiPage,
+					/**
+					 * Standard drawer
+					 * @style ui-drawer
+					 * @member ns.widget.core.Drawer
+					 */
 					drawer: "ui-drawer",
+					/**
+					 * Drawer appears from the left side.
+					 * @style ui-drawer-left
+					 * @member ns.widget.core.Drawer
+					 */
 					left: "ui-drawer-left",
+					/**
+					 * Drawer appears from the right side.
+					 * @style ui-drawer-right
+					 * @member ns.widget.core.Drawer
+					 */
 					right: "ui-drawer-right",
+					/**
+					 * Set the drawer overlay when the drawer is opened.
+					 * @style ui-drawer-overlay
+					 * @member ns.widget.core.Drawer
+					 */
 					overlay: "ui-drawer-overlay",
+					/**
+					 * Opens the drawer.
+					 * @style ui-drawer-open
+					 * @member ns.widget.core.Drawer
+					 */
 					open: "ui-drawer-open",
+					/**
+					 * Closes the drawer.
+					 * @style ui-drawer-close
+					 * @member ns.widget.core.Drawer
+					 */
 					close: "ui-drawer-close"
 				},
 				/**
@@ -15752,6 +15881,10 @@ function pathToRegexp (path, keys, options) {
 				fromAPI = false,
 				virtualMode = false,
 				snapSize = null,
+				snapPoints = null,
+				currentIndex = 0,
+				previousIndex = 0,
+				containerSize = 0,
 				requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 			/**
@@ -15877,14 +16010,64 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
+			/**
+			 * Get position of scroll for indicated index
+			 * @method getScrollPositionByIndex
+			 * @param {number} index
+			 * @member ns.util.scrolling
+			 * @return {number}
+			 */
+			function getScrollPositionByIndex(index) {
+				if (snapPoints) {
+					index = max(min(snapPoints.length - 1, index), 0); // validate index value
+					return snapPoints[index].position - snapPoints[0].position;
+				}
+				return 0;
+			}
+
+			/**
+			 * Find index of snap point by given scroll position
+			 * @method getSnapPointIndexByScrollPosition
+			 * @param {number} position scroll position (usually negative value)
+			 * @member ns.util.scrolling
+			 * @return {number}
+			 */
+			function getSnapPointIndexByScrollPosition(position) {
+				var current = null,
+					next = null,
+					len,
+					i;
+
+				if (snapPoints) {
+					position -= containerSize / 2; // half of screen
+					position = Math.abs(position);
+					for (i = 0, len = snapPoints.length; i < len; i++) {
+						current = snapPoints[i];
+						next = snapPoints[i + 1];
+						if (!next || // this is last snap point
+							current.position < position && next.position > position) {
+							return i;
+						}
+					}
+				}
+				return -1;
+			}
+
 			function touchEndCalculateSpeed(inBounds) {
-				var diffTime = Date.now() - lastTime;
+				var diffTime = Date.now() - lastTime,
+					snapPoint = null;
 
 				if (inBounds && abs(lastScrollPosition / diffTime) > 1) {
 					// if it was fast move, we start animation of scrolling after touch end
 					moveToPosition = max(min(round(scrollPosition + 1000 * lastScrollPosition / diffTime),
 						0), -maxScrollPosition);
-					if (snapSize) {
+					if (snapPoints) {
+						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition + 1000 * lastScrollPosition / diffTime);
+						snapPoint = snapPoints[currentIndex];
+						if (snapPoint) {
+							moveToPosition = -getScrollPositionByIndex(currentIndex);
+						}
+					} else if (snapSize) {
 						moveToPosition = snapSize * round(moveToPosition / snapSize);
 					}
 					if (abs(lastScrollPosition / diffTime) > 1) {
@@ -15897,7 +16080,14 @@ function pathToRegexp (path, keys, options) {
 					requestAnimationFrame(moveTo);
 				} else {
 					// touch move was slow
-					if (snapSize) {
+					if (snapPoints) {
+						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition);
+						snapPoint = snapPoints[currentIndex];
+						if (snapPoint) {
+							moveToPosition = -getScrollPositionByIndex(currentIndex);
+							requestAnimationFrame(moveTo);
+						}
+					} else if (snapSize) {
 						moveToPosition = snapSize * round(scrollPosition / snapSize);
 						requestAnimationFrame(moveTo);
 					}
@@ -15971,6 +16161,14 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
+			function getSnapSize(index) {
+				if (snapPoints) {
+					return Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
+				} else {
+					return snapSize;
+				}
+			}
+
 			/**
 			 * Handler for rotary event
 			 * @param {Event} event
@@ -15978,13 +16176,27 @@ function pathToRegexp (path, keys, options) {
 			function rotary(event) {
 				var eventDirection = event.detail && event.detail.direction;
 
+				previousIndex = currentIndex;
+
 				// update position by snapSize
 				if (eventDirection === "CW") {
-					moveToPosition -= snapSize || 50;
+					currentIndex++;
+					if (snapPoints && currentIndex >= snapPoints.length) {
+						currentIndex = snapPoints.length - 1;
+					}
+					snapSize = -1 * getSnapSize(currentIndex);
+
 				} else {
-					moveToPosition += snapSize || 50;
+					currentIndex--;
+					if (snapPoints && currentIndex < 0) {
+						currentIndex = 0;
+					}
+					snapSize = getSnapSize(currentIndex);
 				}
-				if (snapSize) {
+
+				moveToPosition += snapSize;
+
+				if (!snapPoints && snapSize) {
 					moveToPosition = snapSize * round(moveToPosition / snapSize);
 				}
 				if (moveToPosition < -maxScrollPosition) {
@@ -15993,6 +16205,7 @@ function pathToRegexp (path, keys, options) {
 				if (moveToPosition > 0) {
 					moveToPosition = 0;
 				}
+
 				requestAnimationFrame(moveTo);
 				requestAnimationFrame(render);
 				eventUtil.trigger(scrollingElement, EVENTS.SCROLL_START, {
@@ -16000,7 +16213,6 @@ function pathToRegexp (path, keys, options) {
 					scrollTop: direction ? 0 : -(moveToPosition),
 					fromAPI: false
 				});
-				event.stopImmediatePropagation();
 			}
 
 			function moveToCalculatePosition() {
@@ -16355,6 +16567,104 @@ function pathToRegexp (path, keys, options) {
 				return maxScrollPosition;
 			}
 
+			function scrollToIndex(index) {
+				var previousIndex = currentIndex;
+
+				currentIndex = index;
+
+				if (snapPoints) {
+					moveToPosition = snapPoints[index].position;
+					snapSize = Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
+				} else {
+					moveToPosition = snapSize * index;
+				}
+			}
+
+			/**
+			 * Update max scrolling position
+			 * @method setMaxScroll
+			 * @param {number} maxValue
+			 * @member ns.util.scrolling
+			 */
+			function setMaxScroll(maxValue) {
+				var boundingRect = scrollingElement.getBoundingClientRect(),
+					directionDimension = direction ? "width" : "height",
+					directionSize = boundingRect[directionDimension],
+					tempMaxPosition = max(maxValue - directionSize, 0);
+
+				// Change size of thumb only when necessary
+				if (tempMaxPosition !== maxScrollPosition) {
+					maxScrollPosition = tempMaxPosition || Number.POSITIVE_INFINITY;
+					if (scrollBar) {
+						if (circularScrollBar) {
+							// Calculate new thumb size based on max scrollbar size
+							circularScrollThumbSize = max((directionSize / (maxScrollPosition + directionSize)) *
+								CIRCULAR_SCROLL_BAR_SIZE, CIRCULAR_SCROLL_MIN_THUMB_SIZE);
+							maxScrollBarPosition = CIRCULAR_SCROLL_BAR_SIZE - circularScrollThumbSize;
+							polarUtil.updatePosition(svgScrollBar, "." + classes.thumb, {
+								arcStart: scrollBarPosition,
+								arcEnd: scrollBarPosition + circularScrollThumbSize,
+								r: RADIUS
+							});
+						} else {
+							directionSize -= 2 * SCROLL_MARGIN;
+							scrollThumb.style[directionDimension] =
+								(directionSize / (maxScrollPosition + directionSize) * directionSize) + "px";
+							// Cannot use direct value from style here because CSS may override the minimum
+							// size of thumb here
+							maxScrollBarPosition = directionSize -
+								scrollThumb.getBoundingClientRect()[directionDimension];
+						}
+					}
+				}
+			}
+
+			/**
+			 * Method sets snap points for scroll
+			 * @param {Array} _snapPoints
+			 * @method setSnapSize
+			 * @member ns.util.scrolling
+			 */
+			function setSnapPoints(_snapPoints) {
+				snapPoints = _snapPoints;
+				snapSize = null;
+				maxScrollPosition = (snapPoints.length) ? snapPoints.reduce(function (previousValue, value) {
+					return previousValue + value.length;
+				}, snapPoints[0].position) : 0;
+			}
+
+			/**
+			 * Method sets snap size for scroll or array of snap points
+			 * @param {number|Array} _snapSize
+			 * @method setSnapSize
+			 * @member ns.util.scrolling
+			 */
+			function setSnapSize(_snapSize) {
+				containerSize = (direction) ? scrollingElement.getBoundingClientRect().height :
+					scrollingElement.getBoundingClientRect().width;
+
+				if (Array.isArray(_snapSize)) {
+					setSnapPoints(_snapSize);
+				} else {
+					snapPoints = null;
+					snapSize = _snapSize;
+					if (snapSize) {
+						maxScrollPosition = snapSize * round(maxScrollPosition / snapSize);
+					}
+				}
+			}
+
+			/**
+			 * Return true is given element is current scrolling element
+			 * @method isElement
+			 * @param {HTMLElement} element element to check
+			 * @return {boolean}
+			 * @member ns.util.scrolling
+			 */
+			function isElement(element) {
+				return scrollingElement === element;
+			}
+
 			ns.util.scrolling = {
 				getScrollPosition: getScrollPosition,
 				enable: enable,
@@ -16362,62 +16672,11 @@ function pathToRegexp (path, keys, options) {
 				enableScrollBar: enableScrollBar,
 				disableScrollBar: disableScrollBar,
 				scrollTo: scrollTo,
-				/**
-				 * Return true is given element is current scrolling element
-				 * @method isElement
-				 * @param {HTMLElement} element element to check
-				 * @return {boolean}
-				 * @member ns.util.scrolling
-				 */
-				isElement: function (element) {
-					return scrollingElement === element;
-				},
-
-				/**
-				 * Update max scrolling position
-				 * @method setMaxScroll
-				 * @param {number} maxValue
-				 * @member ns.util.scrolling
-				 */
-				setMaxScroll: function (maxValue) {
-					var boundingRect = scrollingElement.getBoundingClientRect(),
-						directionDimension = direction ? "width" : "height",
-						directionSize = boundingRect[directionDimension],
-						tempMaxPosition = max(maxValue - directionSize, 0);
-
-					// Change size of thumb only when necessary
-					if (tempMaxPosition !== maxScrollPosition) {
-						maxScrollPosition = tempMaxPosition || Number.POSITIVE_INFINITY;
-						if (scrollBar) {
-							if (circularScrollBar) {
-								// Calculate new thumb size based on max scrollbar size
-								circularScrollThumbSize = max((directionSize / (maxScrollPosition + directionSize)) *
-									CIRCULAR_SCROLL_BAR_SIZE, CIRCULAR_SCROLL_MIN_THUMB_SIZE);
-								maxScrollBarPosition = CIRCULAR_SCROLL_BAR_SIZE - circularScrollThumbSize;
-								polarUtil.updatePosition(svgScrollBar, "." + classes.thumb, {
-									arcStart: scrollBarPosition,
-									arcEnd: scrollBarPosition + circularScrollThumbSize,
-									r: RADIUS
-								});
-							} else {
-								directionSize -= 2 * SCROLL_MARGIN;
-								scrollThumb.style[directionDimension] =
-									(directionSize / (maxScrollPosition + directionSize) * directionSize) + "px";
-								// Cannot use direct value from style here because CSS may override the minimum
-								// size of thumb here
-								maxScrollBarPosition = directionSize -
-									scrollThumb.getBoundingClientRect()[directionDimension];
-							}
-						}
-					}
-				},
+				setMaxScroll: setMaxScroll,
 				getMaxScroll: getMaxScroll,
-				setSnapSize: function (setSnapSize) {
-					snapSize = setSnapSize;
-					if (snapSize) {
-						maxScrollPosition = snapSize * round(maxScrollPosition / snapSize);
-					}
-				},
+				setSnapSize: setSnapSize,
+				scrollToIndex: scrollToIndex,
+				isElement: isElement,
 				setBounceBack: function (setBounceBack) {
 					bounceBack = setBounceBack;
 				}
@@ -16787,13 +17046,43 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.widget.core.Button
 					 */
 					DISABLED: "ui-state-disabled",
+					/**
+					 * Make inline button
+					 * @style ui-inline
+					 * @member ns.widget.core.Button
+					 */
 					INLINE: "ui-inline",
+					/**
+					 * Creates an icon button
+					 * @style ui-btn-icon
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON: "ui-btn-icon",
 					ICON_PREFIX: "ui-icon-",
+					/**
+					 * Creates a circle icon button
+					 * @style ui-btn-circle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_CIRCLE: "ui-btn-circle",
+					/**
+					 * Creates a button without background
+					 * @style ui-btn-nobg
+					 * @member ns.widget.core.Button
+					 */
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
+					/**
+					 * Creates a button widget with light text
+					 * @style ui-btn-text-light
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_LIGHT: "ui-btn-text-light",
+					/**
+					 * Creates a button widget with dark text
+					 * @style ui-btn-text-dark
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_DARK: "ui-btn-text-dark",
 					/**
 					 * Change background color of button to red
@@ -16827,6 +17116,11 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.widget.core.Button
 					 */
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
+					/**
+					 * Creates a button widget with position in middle
+					 * @style ui-btn-text-middle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
 				Button = function () {
@@ -16998,7 +17292,7 @@ function pathToRegexp (path, keys, options) {
 			prototype._setIconpos = function (element, iconpos) {
 				var options = this.options,
 					style = options.style,
-					innerTextLength = element.textContent.length || (element.value ? element.value.length : 0);
+					innerTextLength = element.textContent.trim().length || (element.value ? element.value.length : 0);
 
 				iconpos = iconpos || options.iconpos;
 
@@ -17368,6 +17662,11 @@ function pathToRegexp (path, keys, options) {
 					this.element = null;
 				},
 				classes = {
+					/**
+					 * Standard radio widget
+					 * @style ui-radio
+					 * @member ns.widget.core.Radio
+					 */
 					radio: "ui-radio"
 				},
 				prototype = new BaseWidget();
@@ -18716,6 +19015,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @author Heeju Joo <heeju.joo@samsung.com>
  * @class ns.widget.core.Marquee
+ * @component-selector .ui-marquee
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -18753,6 +19053,11 @@ function pathToRegexp (path, keys, options) {
 
 				prototype = new BaseWidget(),
 
+				/**
+				* Standard marquee widget
+				* @style ui-marquee
+				* @member ns.widget.core.Marquee
+				*/
 				CLASSES_PREFIX = "ui-marquee",
 
 				eventType = {
@@ -18772,11 +19077,41 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				classes = {
+					/**
+					* Content for marquee widget
+					* @style ui-marquee-content
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_CONTENT: CLASSES_PREFIX + "-content",
+					/**
+					* Add gradient for marquee widget
+					* @style ui-marquee-gradient
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_GRADIENT: CLASSES_PREFIX + "-gradient",
+					/**
+					* Set ellipsis effect for marquee widget
+					* @style ui-marquee-ellipsis
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_ELLIPSIS: CLASSES_PREFIX + "-ellipsis",
+					/**
+					* Start animation for marquee widget
+					* @style ui-marquee-anim-running
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_RUNNING: CLASSES_PREFIX + "-anim-running",
+					/**
+					* Stop animation for marquee widget
+					* @style ui-marquee-anim-stopped
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_STOPPED: CLASSES_PREFIX + "-anim-stopped",
+					/**
+					* Idle animation for marquee widget
+					* @style ui-marquee-anim-idle
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_IDLE: CLASSES_PREFIX + "-anim-idle"
 				},
 
@@ -19649,6 +19984,7 @@ function pathToRegexp (path, keys, options) {
  * You can set or get the active index as the setActiveIndex() and getActiveIndex()
  *
  * @class ns.widget.core.viewswitcher.ViewSwitcher
+ * @component-selector .ui-view, [data-role] ='viewSwitcher'
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -19706,7 +20042,17 @@ function pathToRegexp (path, keys, options) {
 				 * @readonly
 				 */
 				classes = {
+					/**
+					* Standard view switcher widget
+					* @style ui-view
+					* @member ns.widget.core.viewswitcher.ViewSwitcher
+					*/
 					VIEW: "ui-view",
+					/**
+					* Set active class to view switcher widget
+					* @style ui-view-active
+					* @member ns.widget.core.viewswitcher.ViewSwitcher
+					*/
 					VIEW_ACTIVE: "ui-view-active",
 					ANIMATION_TYPE: "ui-animation-"
 				},
@@ -20120,11 +20466,41 @@ function pathToRegexp (path, keys, options) {
 					self.options = {};
 				},
 				classes = {
+					/**
+					 * Standard page indicator widget
+					 * @style ui-page-indicator
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicator: "ui-page-indicator",
+					/**
+					 * Set dots of page indicator to be active
+					 * @style ui-page-indicator-active
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorActive: "ui-page-indicator-active",
+					/**
+					 * Create items for page indicator widget
+					 * @style ui-page-indicator-item
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorItem: "ui-page-indicator-item",
+					/**
+					 * Set style of page indicator dots to dashed
+					 * @style ui-page-indicator-dashed
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorDashed: "ui-page-indicator-dashed",
+					/**
+					 * Set page indicator to set dots in linear order
+					 * @style ui-page-indicator-linear
+					 * @member ns.widget.core.PageIndicator
+					 */
 					linearIndicator: "ui-page-indicator-linear",
+					/**
+					 * Set page indicator to set dots in circular order
+					 * @style ui-page-indicator-circular
+					 * @member ns.widget.core.PageIndicator
+					 */
 					circularIndicator: "ui-page-indicator-circular"
 				},
 				maxDots = {
@@ -28687,6 +29063,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.0
  * @class ns.widget.core.Slider
+ * @component-selector .ui-slider [data-type]="slider"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -29333,10 +29710,35 @@ function pathToRegexp (path, keys, options) {
 				CLASSES_PREFIX = "ui-progressbar",
 
 				classes = {
+					/**
+					 * Standard circle progress bar widget
+					 * @style ui-circle-progress
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					uiProgressbar: CLASSES_PREFIX,
+					/**
+					 * Full circle progress bar widget
+					 * @style ui-circle-progress-full
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					uiProgressbarFull: CLASSES_PREFIX + "-full",
+					/**
+					 * Circle progress bar widget with endpoint
+					 * @style ui-circle-progress-end-point
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					endPoint: CLASSES_PREFIX + "-end-point",
+					/**
+					 * Circle progress bar widget with active endpoint
+					 * @style ui-circle-progress-end-point-active
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					endPointActive: CLASSES_PREFIX + "-end-point-active",
+					/**
+					 * Circle progress bar widget with pressed endpoint
+					 * @style ui-circle-progress-end-point-pressed
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					endPointPressed: CLASSES_PREFIX + "-end-point-pressed"
 				},
 
@@ -29766,6 +30168,7 @@ function pathToRegexp (path, keys, options) {
  * ## JavaScript API
  *
  * @class ns.widget.wearable.Slider
+ * @component-selector .ui-slider
  * @extends ns.widget.core.Slider
  */
 (function (document, ns) {
@@ -29804,16 +30207,66 @@ function pathToRegexp (path, keys, options) {
 					 */
 					CHANGE: "change"
 				},
+				/**
+				* Standard slider widget
+				* @style ui-slider
+				* @member ns.widget.wearable.Slider
+				*/
 				PREFIX = "ui-slider",
 				classes = {
+					/**
+					* Set container for slider widget
+					* @style ui-slider-container
+					* @member ns.widget.wearable.Slider
+					*/
 					container: PREFIX + "-container",
+					/**
+					* Set titles for slider widget
+					* @style ui-slider-titles
+					* @member ns.widget.wearable.Slider
+					*/
 					titles: PREFIX + "-titles",
+					/**
+					* Set buttons for slider widget
+					* @style ui-slider-buttons
+					* @member ns.widget.wearable.Slider
+					*/
 					buttons: PREFIX + "-buttons",
+					/**
+					* Plus value for slider widget
+					* @style ui-slider-plus
+					* @member ns.widget.wearable.Slider
+					*/
 					plus: PREFIX + "-plus",
+					/**
+					* Minus value for slider widget
+					* @style ui-slider-minus
+					* @member ns.widget.wearable.Slider
+					*/
 					minus: PREFIX + "-minus",
+					/**
+					* Number for slider widget
+					* @style ui-slider-number
+					* @member ns.widget.wearable.Slider
+					*/
 					number: PREFIX + "-number",
+					/**
+					* Icon for slider widget
+					* @style ui-slider-icon
+					* @member ns.widget.wearable.Slider
+					*/
 					icon: PREFIX + "-icon",
+					/**
+					* Title for slider widget
+					* @style ui-slider-title
+					* @member ns.widget.wearable.Slider
+					*/
 					title: PREFIX + "-title",
+					/**
+					* Subtitle for slider widget
+					* @style ui-slider-subtitle
+					* @member ns.widget.wearable.Slider
+					*/
 					subtitle: PREFIX + "-subtitle"
 				},
 				slice = Array.prototype.slice;
@@ -33486,6 +33939,7 @@ function pathToRegexp (path, keys, options) {
 						self._extended(false);
 					}
 
+					self._setIndex(self.element, self.options.index);
 					self._updateLayout();
 					self.indexBar1.options.index = self.options.index;
 					self.indexBar1.refresh();
@@ -34138,6 +34592,7 @@ function pathToRegexp (path, keys, options) {
  * Shows an index scroll bar with indices, usually for the list.
  *
  * @class ns.widget.wearable.IndexScrollbar
+ * @component-selector .ui-indexscrollbar
  * @extends ns.widget.core.IndexScrollbar
  * @since 2.0
  */
@@ -34292,6 +34747,7 @@ function pathToRegexp (path, keys, options) {
  * @author Junyoung Park <jy-.park@samsung.com>
  * @author Hagun Kim <hagun.kim@samsung.com>
  * @class ns.widget.wearable.CircularIndexScrollbar
+ * @component-selector .ui-circularindexscrollbar
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -34332,9 +34788,29 @@ function pathToRegexp (path, keys, options) {
 				},
 
 				classes = {
+					/**
+					 * Standard circular index scroll bar widget
+					 * @style ui-circularindexscrollbar
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					INDEXSCROLLBAR: "ui-circularindexscrollbar",
+					/**
+					 * Circle progress bar widget with indicator
+					 * @style ui-circularindexscrollbar-indicator
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					INDICATOR: "ui-circularindexscrollbar-indicator",
+					/**
+					 * Circular progress bar widget with text indicator
+					 * @style ui-circularindexscrollbar-indicator-text
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					INDICATOR_TEXT: "ui-circularindexscrollbar-indicator-text",
+					/**
+					 * Show circular progress bar widget
+					 * @style ui-circularindexscrollbar-show
+					 * @member ns.widget.wearable.CircleProgressBar
+					 */
 					SHOW: "ui-circularindexscrollbar-show"
 				};
 
@@ -34762,6 +35238,7 @@ function pathToRegexp (path, keys, options) {
  * Progress widget hasn't JavaScript API.
  *
  * @class ns.widget.wearable.Progress
+ * @component-selector .ui-progress-indeterminate, .ui-progress-proportion, .ui-progress-ratio
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -34990,7 +35467,7 @@ function pathToRegexp (path, keys, options) {
  * ToggleSwitch widget hasn't JavaScript API.
  *
  * @class ns.widget.wearable.ToggleSwitch
- * @component-selector .ui-toggleswitch
+ * @component-selector .ui-switch
  * @component-type standalone-component
  * @extends ns.widget.BaseWidget
  */
@@ -35013,16 +35490,41 @@ function pathToRegexp (path, keys, options) {
 				events = {},
 				classesPrefix = "ui-switch",
 				classes = {
+				/**
+				 * Style for handler in toggleswitch
+				 * @style ui-switch-handler
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					handler: classesPrefix + "-handler",
+				/**
+				 * Style for inneroffset in toggleswitch
+				 * @style ui-switch-inneroffset
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					inneroffset: classesPrefix + "-inneroffset",
+				/**
+				 * Style for activation in toggleswitch
+				 * @style ui-switch-activation
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					activation: classesPrefix + "-activation",
+				/**
+				 * Style for input in toggleswitch
+				 * @style ui-switch-input
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					input: classesPrefix + "-input",
+				/**
+				 * Style for text in toggleswitch
+				 * @style ui-switch-text
+				 * @member ns.widget.wearable.ToggleSwitch
+				 */
 					text: classesPrefix + "-text"
-					/**
-					 * Set big size
-					 * @style ui-toggleswitch-large
-					 * @member ns.widget.wearable.ToggleSwitch
-					 */
+				/**
+				* Set big size
+				* @style ui-toggleswitch-large
+				* @member ns.widget.wearable.ToggleSwitch
+				*/
 				},
 				prototype = new BaseWidget();
 
@@ -35417,7 +35919,17 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.VirtualListview
 			 */
 			VirtualListview.classes = {
+				/**
+				* Container for virtual list widget
+				* @style ui-virtual-list-container
+				* @member ns.widget.core.VirtualListview
+				*/
 				uiVirtualListContainer: "ui-virtual-list-container",
+				/**
+				* Prepare spacer - element which makes scrollBar proper size
+				* @style ui-virtual-list-spacer
+				* @member ns.widget.core.VirtualListview
+				*/
 				spacer: "ui-virtual-list-spacer"
 			};
 
@@ -36411,6 +36923,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @class ns.widget.wearable.VirtualListview
  * @since 2.2
+ * @component-selector .ui-virtuallistview
  * @extends ns.widget.BaseWidget
  * @author Maciej Urbanski <m.urbanski@samsung.com>
  * @author Piotr Karny <p.karny@samsung.com>
@@ -36796,6 +37309,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @author Heeju Joo <heeju.joo@samsung.com>
  * @class ns.widget.wearable.SnapListview
+ * @component-selector .ui-snap-listview
  * @extends ns.widget.BaseWidget
  */
 (function (window, document, ns) {
@@ -36904,13 +37418,38 @@ function pathToRegexp (path, keys, options) {
 
 				prototype = new BaseWidget(),
 
+				/**
+				* Standard snap listview widget
+				* @style ui-snap-listview
+				* @member ns.widget.wearable.SnapListview
+				*/
 				CLASSES_PREFIX = "ui-snap-listview",
 
 				classes = {
+					/**
+					* Set container for snap listview widget
+					* @style ui-snap-container
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_CONTAINER: "ui-snap-container",
+					/**
+					* Set snap listview widget as disabled
+					* @style ui-snap-disabled
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_DISABLED: "ui-snap-disabled",
 					SNAP_LISTVIEW: CLASSES_PREFIX,
+					/**
+					* Set snap listview widget as selected
+					* @style ui-snap-listview-selected
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_LISTVIEW_SELECTED: CLASSES_PREFIX + "-selected",
+					/**
+					* Set item for snap listview widget
+					* @style ui-snap-listview-item
+					* @member ns.widget.wearable.SnapListview
+					*/
 					SNAP_LISTVIEW_ITEM: CLASSES_PREFIX + "-item"
 				},
 
@@ -37150,7 +37689,8 @@ function pathToRegexp (path, keys, options) {
 					scroller,
 					visibleOffset,
 					elementHeight,
-					scrollMargin;
+					scrollMargin,
+					listItem;
 
 				// finding page  and scroller
 				ui.page = utilSelector.getClosestByClass(listview, "ui-page") || document.body;
@@ -37161,14 +37701,20 @@ function pathToRegexp (path, keys, options) {
 						scrolling.enable(scroller, "y");
 					}
 
-					elementHeight = (listview.firstElementChild) ? listview.firstElementChild.getBoundingClientRect().height : 0;
+					listItem = listview.querySelector(self.options.selector);
+					elementHeight = (listItem) ? listItem.getBoundingClientRect().height : 0;
 
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
 
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
-					scrolling.setSnapSize(elementHeight);
+					scrolling.setSnapSize(self._listItems.map(function (item) {
+						return {
+							position: item.coord.top,
+							length: item.coord.height
+						};
+					}));
 
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
@@ -37203,6 +37749,12 @@ function pathToRegexp (path, keys, options) {
 						self._currentIndex = index;
 					}
 				});
+				scrolling.setSnapSize(listItems.map(function (item) {
+					return {
+						position: item.coord.top,
+						length: item.coord.height
+					};
+				}));
 
 				self._listItems = listItems;
 				self._listItemAnimate();
@@ -37733,6 +38285,7 @@ function pathToRegexp (path, keys, options) {
  *         </script>
  * @class ns.widget.wearable.SwipeList
  * @since 2.2
+ * @component-selector .ui-swipelist
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -38473,6 +39026,7 @@ function pathToRegexp (path, keys, options) {
  * your indicator manually, change this options to false.
  *
  * @class ns.widget.wearable.Selector
+ * @component-selector .ui-selector
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
 (function (document, ns) {
@@ -38503,34 +39057,179 @@ function pathToRegexp (path, keys, options) {
 					self._reorderAnimationEnd = null;
 				},
 				classes = {
+					/**
+					* Standard selector widget
+					* @style ui-selector
+					* @member ns.widget.wearable.Selector
+					*/
 					SELECTOR: "ui-selector",
+					/**
+					* Layer element on selector widget
+					* @style ui-layer
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER: "ui-layer",
+					/**
+					* Active layer element on selector widget
+					* @style ui-layer-active
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_ACTIVE: "ui-layer-active",
+					/**
+					* Previous layer element on selector widget
+					* @style ui-layer-prev
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_PREV: "ui-layer-prev",
+					/**
+					* Next layer element on selector widget
+					* @style ui-layer-next
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_NEXT: "ui-layer-next",
+					/**
+					* Hide layer element on selector widget
+					* @style ui-layer-hide
+					* @member ns.widget.wearable.Selector
+					*/
 					LAYER_HIDE: "ui-layer-hide",
+					/**
+					* Item element on selector widget
+					* @style ui-item
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM: "ui-item",
+					/**
+					* Active item element on selector widget
+					* @style ui-item-active
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_ACTIVE: "ui-item-active",
+					/**
+					* Removable item element on selector widget
+					* @style ui-item-removable
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_REMOVABLE: "ui-item-removable",
+					/**
+					* Add remove item element on selector widget
+					* @style ui-item-icon-remove
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_ICON_REMOVE: "ui-item-icon-remove",
+					/**
+					* Add remove item element without background on selector widget
+					* @style ui-item-icon-remove-bg
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_ICON_REMOVE_BG: "ui-item-icon-remove-bg",
+					/**
+					* Add indicator item element to selector widget
+					* @style ui-selector-indicator
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR: "ui-selector-indicator",
+					/**
+					* Add active indicator item element to selector widget
+					* @style ui-selector-indicator-active
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ACTIVE: "ui-selector-indicator-active",
+					/**
+					* Add text indicator item element to selector widget
+					* @style ui-selector-indicator-text
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_TEXT: "ui-selector-indicator-text",
+					/**
+					* Add icon indicator item element to selector widget
+					* @style ui-selector-indicator-icon
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ICON: "ui-selector-indicator-icon",
+					/**
+					* Add active indicator icon element to selector widget
+					* @style ui-selector-indicator-icon-active
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ICON_ACTIVE: "ui-selector-indicator-icon-active",
+					/**
+					* Add active indicator icon element with text to selector widget
+					* @style ui-selector-indicator-icon-active-with-text
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ICON_ACTIVE_WITH_TEXT: "ui-selector-indicator-icon-active-with-text",
+					/**
+					* Add subtext to selector indicator in selector widget
+					* @style ui-selector-indicator-subtext
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_SUBTEXT: "ui-selector-indicator-subtext",
+					/**
+					* Add subtitle to selector indicator in selector widget
+					* @style ui-selector-indicator-with-subtext
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_WITH_SUBTITLE: "ui-selector-indicator-with-subtext",
+					/**
+					* Set indicator to next element as the end of selector indicator in selector widget
+					* @style ui-selector-indicator-next-end
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_NEXT_END: "ui-selector-indicator-next-end",
+					/**
+					* Set indicator to previous element as the end of selector indicator in selector widget
+					* @style ui-selector-indicator-prev-end
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_PREV_END: "ui-selector-indicator-prev-end",
+					/**
+					* Set arrow indicator style to selector indicator
+					* @style ui-selector-indicator-arrow
+					* @member ns.widget.wearable.Selector
+					*/
 					INDICATOR_ARROW: "ui-selector-indicator-arrow",
+					/**
+					* Set edit mode in selector widget
+					* @style ui-selector-edit-mode
+					* @member ns.widget.wearable.Selector
+					*/
 					EDIT_MODE: "ui-selector-edit-mode",
+					/**
+					* Reorder elements in selector widget
+					* @style ui-selector-reorder
+					* @member ns.widget.wearable.Selector
+					*/
 					REORDER: "ui-selector-reorder",
+					/**
+					* Add plus button in selector widget
+					* @style ui-item-plus
+					* @member ns.widget.wearable.Selector
+					*/
 					PLUS_BUTTON: "ui-item-plus",
+					/**
+					* Add placeholder to item in selector widget
+					* @style ui-item-placeholder
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_PLACEHOLDER: "ui-item-placeholder",
+					/**
+					* Add moved item class in selector widget
+					* @style ui-item-moved
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_MOVED: "ui-item-moved",
+					/**
+					* Add removed item class in selector widget
+					* @style ui-item-removed
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_REMOVED: "ui-item-removed",
+					/**
+					* Add moved end item class in selector widget
+					* @style ui-item-moved-end
+					* @member ns.widget.wearable.Selector
+					*/
 					ITEM_END: "ui-item-moved-end"
 				},
 				STATIC = {
@@ -40034,6 +40733,7 @@ function pathToRegexp (path, keys, options) {
 					itemsOnLayer = self.options.maxItemNumber;
 
 				removeLayers(self.element, self.options);
+
 				element.removeChild(ui.items[index]);
 				ui.items = element.querySelectorAll(self.options.itemSelector);
 				length = ui.items.length;
@@ -40051,6 +40751,22 @@ function pathToRegexp (path, keys, options) {
 
 				self._refresh();
 			};
+
+			/**
+			 * Removes given item from widget
+			 * @method removeGivenItem
+			 * @param {HTMLElement} item
+			 * @public
+			 * @member ns.widget.wearable.Selector
+			 */
+			prototype.removeItemByElement = function (item) {
+				var self = this,
+					index = Array.prototype.indexOf.call(self._ui.items, item);
+
+				if (index !== -1) {
+					self.removeItem(index);
+				}
+			}
 
 			prototype._destroy = function () {
 				var self = this,
@@ -42885,6 +43601,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @class ns.widget.wearable.NumberPicker
  * @since 3.0
+ * @component-selector .ui-number-picker input[type='number']
  * @extends ns.widget.core.BaseWidget
  * @author Tomasz Lukawski <t.lukawski@samsung.com>
  */
@@ -42902,15 +43619,56 @@ function pathToRegexp (path, keys, options) {
 				prototype = new ns.widget.BaseWidget(),
 				Spin = ns.widget.wearable.Spin,
 				SPIN_CLASS = Spin.classes.SPIN,
+
+				/**
+				* Standard number picker widget
+				* @style ui-number-picker
+				* @member ns.widget.wearable.NumberPicker
+				*/
 				WIDGET_CLASS = "ui-number-picker",
 				WIDGET_SELECTOR = "input[type='number']",
 				classes = {
+					/**
+					* Set container for number picker widget
+					* @style ui-number-picker-container
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					CONTAINER: WIDGET_CLASS + "-container",
+					/**
+					* Number for number picker widget
+					* @style ui-number-picker-number
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					NUMBER: WIDGET_CLASS + "-number",
+					/**
+					* Number blink for number picker widget
+					* @style ui-number-picker-number-blink
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					NUMBER_BLINK: WIDGET_CLASS + "-number-blink",
+					/**
+					* Label for number picker widget
+					* @style ui-number-picker-label
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					LABEL: WIDGET_CLASS + "-label",
+					/**
+					* Pressed label for number picker widget
+					* @style ui-number-picker-label-pressed
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					LABEL_PRESSED: WIDGET_CLASS + "-label-pressed",
+					/**
+					* Set button for number picker widget
+					* @style ui-number-picker-set
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					BUTTON_SET: WIDGET_CLASS + "-set",
+					/**
+					* Set disabled for number picker widget
+					* @style ui-number-picker-disabled
+					* @member ns.widget.wearable.NumberPicker
+					*/
 					DISABLED: WIDGET_CLASS + "-disabled",
 					HIDDEN: "hidden"
 				};
@@ -43439,6 +44197,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @class ns.widget.wearable.TimePicker
  * @since 4.0
+ * @component-selector .ui-time-picker
  * @extends ns.widget.wearable.NumberPicker
  * @author Maciej Moczulski <m.moczulski@samsung.com>
  */
@@ -43456,23 +44215,108 @@ function pathToRegexp (path, keys, options) {
 				NumberPicker = ns.widget.wearable.NumberPicker,
 				prototype = Object.create(NumberPicker.prototype),
 
+				/**
+				* Standard time picker widget
+				* @style ui-time-picker
+				* @member ns.widget.wearable.TimePicker
+				*/
 				WIDGET_CLASS = "ui-time-picker",
 				classes = {
+					/**
+					* Container for time picker widget
+					* @style ui-time-picker-container
+					* @member ns.widget.wearable.TimePicker
+					*/
 					CONTAINER: WIDGET_CLASS + "-container",
+					/**
+					* Container with hours for time picker widget
+					* @style ui-time-picker-container-hours
+					* @member ns.widget.wearable.TimePicker
+					*/
 					HOURS_CONTAINER: WIDGET_CLASS + "-container-hours",
+					/**
+					* Container with minutes for time picker widget
+					* @style ui-time-picker-container-minutes
+					* @member ns.widget.wearable.TimePicker
+					*/
 					MINUTES_CONTAINER: WIDGET_CLASS + "-container-minutes",
+					/**
+					* AM/PM container for time picker widget
+					* @style ui-time-picker-container-ampm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM_CONTAINER: WIDGET_CLASS + "-container-ampm",
+					/**
+					* AM/PM container pressed class for time picker widget
+					* @style ui-time-picker-container-ampm-pressed
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM_PRESSED: WIDGET_CLASS + "-container-ampm-pressed",
+					/**
+					* Colon container class for time picker widget
+					* @style ui-time-picker-colon-container
+					* @member ns.widget.wearable.TimePicker
+					*/
 					COLON: WIDGET_CLASS + "-colon-container",
+					/**
+					* Set am, pm for time picker widget
+					* @style ui-time-picker-am-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM: WIDGET_CLASS + "-am-pm",
+					/**
+					* Set inner AM/PM container class for time picker widget
+					* @style ui-time-picker-am-pm-inner-container
+					* @member ns.widget.wearable.TimePicker
+					*/
 					AMPM_INNER_CONTAINER: WIDGET_CLASS + "-am-pm-inner-container",
+					/**
+					* Set time picker widget with no AM/PM
+					* @style ui-time-picker-no-am-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					NO_AMPM: WIDGET_CLASS + "-no-am-pm",
+					/**
+					* Set active label for time picker widget
+					* @style ui-time-picker-active-label
+					* @member ns.widget.wearable.TimePicker
+					*/
 					ACTIVE_LABEL: WIDGET_CLASS + "-active-label",
+					/**
+					* Set animation for active label in time picker widget
+					* @style ui-time-picker-active-label-animation
+					* @member ns.widget.wearable.TimePicker
+					*/
 					ACTIVE_LABEL_ANIMATION: WIDGET_CLASS + "-active-label-animation",
+					/**
+					* Set animation for showing PM in time picker widget
+					* @style ui-time-picker-show-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					SHOW_PM_ANIMATION: WIDGET_CLASS + "-show-pm",
+					/**
+					* Set animation for hiding PM in time picker widget
+					* @style ui-time-picker-hide-pm
+					* @member ns.widget.wearable.TimePicker
+					*/
 					HIDE_PM_ANIMATION: WIDGET_CLASS + "-hide-pm",
+					/**
+					* Disable animation in time picker widget
+					* @style ui-time-picker-show-disable-animation
+					* @member ns.widget.wearable.TimePicker
+					*/
 					DISABLE_ANIMATION: WIDGET_CLASS + "-disable-animation",
+					/**
+					* Set circle indicator background in time picker widget
+					* @style ui-time-picker-background
+					* @member ns.widget.wearable.TimePicker
+					*/
 					CIRCLE_INDICATOR_BACKGROUND: WIDGET_CLASS + "-background",
+					/**
+					* Set time picker widget as hidden
+					* @style ui-time-picker-hidden
+					* @member ns.widget.wearable.TimePicker
+					*/
 					HIDDEN: WIDGET_CLASS + "-hidden",
 					HIDDEN_LABEL: "ui-number-picker-label-hidden"
 				},
@@ -44308,6 +45152,7 @@ function pathToRegexp (path, keys, options) {
  * #DatePicker Widget
  *
  * @class ns.widget.wearable.DatePicker
+ * @component-selector .ui-date-picker
  * @since 4.0
  * @extends ns.widget.BaseWidget
  */
@@ -44320,13 +45165,43 @@ function pathToRegexp (path, keys, options) {
 				prototype = new BaseWidget(),
 				getClosestByClass = ns.util.selectors.getClosestByClass,
 
+				/**
+				* Standard date picker widget
+				* @style ui-date-picker
+				* @member ns.widget.wearable.DatePicker
+				*/
 				WIDGET_CLASS = "ui-date-picker",
 				classes = {
+					/**
+					* Container for date picker widget
+					* @style ui-date-picker-container
+					* @member ns.widget.wearable.DatePicker
+					*/
 					CONTAINER: WIDGET_CLASS + "-container",
 					CONTAINER_PREFIX: WIDGET_CLASS + "-container-",
-					DAYNAME_CONTAINER: WIDGET_CLASS + "-containter-dayname",
+					/**
+					* Container with dayname for date picker widget
+					* @style ui-date-picker-container-dayname
+					* @member ns.widget.wearable.DatePicker
+					*/
+					DAYNAME_CONTAINER: WIDGET_CLASS + "-container-dayname",
+					/**
+					* Active label animation in date picker widget
+					* @style ui-date-picker-active-label-animation
+					* @member ns.widget.wearable.DatePicker
+					*/
 					ACTIVE_LABEL_ANIMATION: WIDGET_CLASS + "-active-label-animation",
+					/**
+					* Hidden date picker widget
+					* @style ui-date-picker-hidden
+					* @member ns.widget.wearable.DatePicker
+					*/
 					HIDDEN: WIDGET_CLASS + "-hidden",
+					/**
+					* Hidden label in date picker widget
+					* @style ui-number-picker-label-hidden
+					* @member ns.widget.wearable.DatePicker
+					*/
 					LABEL_HIDDEN: "ui-number-picker-label-hidden"
 				},
 

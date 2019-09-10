@@ -2825,6 +2825,13 @@ tau-toggleswitch {
 .ui-tabbar.ui-tabbar-landscape.ui-tabbar-with-title a span {
   align-self: flex-start;
   top: 2px;
+  line-height: 26px;
+  margin-top: 2px;
+  overflow: hidden;
+}
+.ui-tabbar.ui-tabbar-portrait.ui-tabbar-with-title a span::before,
+.ui-tabbar.ui-tabbar-landscape.ui-tabbar-with-title a span::before {
+  bottom: 2px;
 }
 .ui-tabbar.ui-tabbar-portrait.ui-tabbar-with-title.ui-tabbar-before-title,
 .ui-tabbar.ui-tabbar-landscape.ui-tabbar-with-title.ui-tabbar-before-title {
@@ -9222,6 +9229,9 @@ a.ui-btn {
   background-color: transparent;
   color: T1016;
 }
+.ui-floatingactions .ui-btn.ui-btn-icon {
+  width: 60px;
+}
 .ui-floatingactions .ui-btn::before {
   background-color: B042;
   opacity: 0;
@@ -9348,6 +9358,12 @@ a.ui-btn {
 }
 .ui-indexscrollbar ~ .ui-floatingactions .ui-btn::before {
   background-color: B043;
+}
+.ui-listview ~ .ui-floatingactions .ui-btn.ui-btn-icon::after {
+  background-color: W017i;
+}
+.ui-listview ~ .ui-floatingactions .ui-btn.ui-btn-icon.ui-btn-active::after {
+  background-color: W017iP;
 }
 .ui-page-floatingactions.ui-empty-state .ui-content {
   box-sizing: border-box;

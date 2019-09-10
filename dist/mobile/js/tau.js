@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.6';
+ns.version = '1.0.7';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2711,6 +2711,14 @@ ns.version = '1.0.6';
 				 */
 				DATA_BOUND = "data-tau-bound",
 				/**
+				 * @property {string} [DATA_WIDGET_WRAPPER="data-tau-wrapper"] attribute informs that widget has wrapper
+				 * @private
+				 * @static
+				 * @readonly
+				 * @member ns.engine
+				 */
+				DATA_WIDGET_WRAPPER = "data-tau-wrapper",
+				/**
 				 * @property {string} NAMES_SEPARATOR
 				 * @private
 				 * @static
@@ -2868,6 +2876,15 @@ ns.version = '1.0.6';
 			}
 
 			/**
+			 * Filter children with DATA_BUILT attribute
+			 * @param {HTMLElement} child
+			 * @private
+			 */
+			function filterBuiltWidget(child) {
+				return child.hasAttribute(DATA_BUILT);
+			}
+
+			/**
 			 * Get binding for element
 			 * @method getBinding
 			 * @static
@@ -2878,7 +2895,8 @@ ns.version = '1.0.6';
 			 */
 			function getBinding(element, type) {
 				var id = !element || typeof element === TYPE_STRING ? element : element.id,
-					binding;
+					binding,
+					baseElement;
 
 				if (typeof element === TYPE_STRING) {
 					element = document.getElementById(id);
@@ -2890,6 +2908,15 @@ ns.version = '1.0.6';
 
 					if (binding && typeof binding === "object") {
 						return getInstanceByElement(binding, element, type);
+					} else {
+						// Check if widget has wrapper and find base element
+						if (element && typeof element.hasAttribute === TYPE_FUNCTION &&
+								element.hasAttribute(DATA_WIDGET_WRAPPER)) {
+							baseElement = slice.call(element.children).filter(filterBuiltWidget)[0];
+							if (baseElement) {
+								return getBinding(baseElement, type);
+							}
+						}
 					}
 				}
 
@@ -3608,7 +3635,8 @@ ns.version = '1.0.6';
 					built: DATA_BUILT,
 					name: DATA_NAME,
 					bound: DATA_BOUND,
-					separator: NAMES_SEPARATOR
+					separator: NAMES_SEPARATOR,
+					widgetWrapper: DATA_WIDGET_WRAPPER
 				},
 				destroyWidget: destroyWidget,
 				destroyAllWidgets: destroyAllWidgets,
@@ -5331,6 +5359,7 @@ ns.version = '1.0.6';
 				 * @readonly
 				 */
 				TYPE_FUNCTION = "function",
+				TYPE_STRING = "string",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
 				__callbacks;
@@ -5849,7 +5878,10 @@ ns.version = '1.0.6';
 			 * @return {ns.widget.BaseWidget}
 			 */
 			prototype.refresh = function () {
-				var self = this;
+				var self = this,
+					element = self.element;
+
+				self._getCreateOptions(element);
 
 				if (typeof self._refresh === TYPE_FUNCTION) {
 					self._refresh.apply(self, arguments);
@@ -6305,6 +6337,23 @@ ns.version = '1.0.6';
 				}
 				return requireRefresh;
 			};
+
+			/**
+			 * Create widget wrapper element
+			 * @param {string|null} [type=div] type of HTML element
+			 * @protected
+			 * @member ns.widget.BaseWidget
+			 * @return {HTMLElement}
+			 */
+			prototype._createWrapper = function (type) {
+				var wrapper;
+
+				type = (typeof type === TYPE_STRING) ? type : "div";
+
+				wrapper = document.createElement(type);
+				wrapper.setAttribute(engineDataTau.widgetWrapper, true);
+				return wrapper;
+			}
 
 			BaseWidget.prototype = prototype;
 
@@ -23115,6 +23164,11 @@ function pathToRegexp (path, keys, options) {
 					this.element = null;
 				},
 				classes = {
+					/**
+					 * Standard radio widget
+					 * @style ui-radio
+					 * @member ns.widget.core.Radio
+					 */
 					radio: "ui-radio"
 				},
 				prototype = new BaseWidget();
@@ -23209,7 +23263,17 @@ function pathToRegexp (path, keys, options) {
 				engine = ns.engine,
 				events = ns.event,
 				classes = {
+					/**
+					 * Standard panel widget
+					 * @style ui-panel
+					 * @member ns.widget.core.Panel
+					 */
 					PANEL: "ui-panel",
+					/**
+					 * Set panel widget as active
+					 * @style ui-panel-active
+					 * @member ns.widget.core.Panel
+					 */
 					ACTIVE_PANEL: "ui-panel-active"
 				},
 				EVENT_TYPE = {
@@ -23295,6 +23359,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.4
  * @class ns.widget.core.PanelChanger
+ * @component-selector .ui-panel-changer, [data-role]="panel-changer"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -23766,11 +23831,41 @@ function pathToRegexp (path, keys, options) {
 					self.options = {};
 				},
 				classes = {
+					/**
+					 * Standard page indicator widget
+					 * @style ui-page-indicator
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicator: "ui-page-indicator",
+					/**
+					 * Set dots of page indicator to be active
+					 * @style ui-page-indicator-active
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorActive: "ui-page-indicator-active",
+					/**
+					 * Create items for page indicator widget
+					 * @style ui-page-indicator-item
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorItem: "ui-page-indicator-item",
+					/**
+					 * Set style of page indicator dots to dashed
+					 * @style ui-page-indicator-dashed
+					 * @member ns.widget.core.PageIndicator
+					 */
 					indicatorDashed: "ui-page-indicator-dashed",
+					/**
+					 * Set page indicator to set dots in linear order
+					 * @style ui-page-indicator-linear
+					 * @member ns.widget.core.PageIndicator
+					 */
 					linearIndicator: "ui-page-indicator-linear",
+					/**
+					 * Set page indicator to set dots in circular order
+					 * @style ui-page-indicator-circular
+					 * @member ns.widget.core.PageIndicator
+					 */
 					circularIndicator: "ui-page-indicator-circular"
 				},
 				maxDots = {
@@ -24063,6 +24158,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.0
  * @class ns.widget.core.Slider
+ * @component-selector .ui-slider [data-type]="slider"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -25653,7 +25749,8 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.0
  * @author Hyunkook Cho <hk0713.cho@samsung.com>
- * @class ns.widget.mobile.Popup
+ * @class ns.widget.core.Popup
+ * @component-selector .ui-popup, [data-role]="popup"
  * @extends ns.widget.core.BaseWidget
  */
 (function () {
@@ -25786,26 +25883,74 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				/**
-				 * Toast style of popup
-				 * @style ui-popup-toast
-				 * @member ns.widget.core.Popup
-				 * @wearable
-				 */
-				/**
 				 * Toast style of popup with graphic
 				 * @style ui-popup-toast-graphic
 				 * @member ns.widget.core.Popup
 				 * @wearable
 				 */
 				classes = {
+				/**
+				 * Style for normal popup widget
+				 * @style ui-popup
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					popup: CLASSES_PREFIX,
+				/**
+				 * Set style for active popup widget
+				 * @style ui-popup-active
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					active: CLASSES_PREFIX + "-active",
+				/**
+				 * Set style for overlay popup widget
+				 * @style ui-popup-overlay
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					overlay: CLASSES_PREFIX + "-overlay",
+				/**
+				 * Set header for popup widget
+				 * @style ui-popup-header
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					header: CLASSES_PREFIX + "-header",
+				/**
+				 * Set footer for popup widget
+				 * @style ui-popup-footer
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					footer: CLASSES_PREFIX + "-footer",
+				/**
+				 * Set content for popup widget
+				 * @style ui-popup-content
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					content: CLASSES_PREFIX + "-content",
+				/**
+				 * Style for wrapper of popup widget
+				 * @style ui-popup-wrapper
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					wrapper: CLASSES_PREFIX + "-wrapper",
+				/**
+				 * Toast style of popup
+				 * @style ui-popup-toast
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					toast: CLASSES_PREFIX + "-toast",
+				/**
+				 * Small toast style of popup
+				 * @style ui-popup-toast-small
+				 * @member ns.widget.core.Popup
+				 * @wearable
+				 */
 					toastSmall: CLASSES_PREFIX + "-toast-small",
 					build: "ui-build",
 					overlayShown: CLASSES_PREFIX + "-overlay-shown"
@@ -28207,13 +28352,43 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.widget.core.Button
 					 */
 					DISABLED: "ui-state-disabled",
+					/**
+					 * Make inline button
+					 * @style ui-inline
+					 * @member ns.widget.core.Button
+					 */
 					INLINE: "ui-inline",
+					/**
+					 * Creates an icon button
+					 * @style ui-btn-icon
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON: "ui-btn-icon",
 					ICON_PREFIX: "ui-icon-",
+					/**
+					 * Creates a circle icon button
+					 * @style ui-btn-circle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_CIRCLE: "ui-btn-circle",
+					/**
+					 * Creates a button without background
+					 * @style ui-btn-nobg
+					 * @member ns.widget.core.Button
+					 */
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
+					/**
+					 * Creates a button widget with light text
+					 * @style ui-btn-text-light
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_LIGHT: "ui-btn-text-light",
+					/**
+					 * Creates a button widget with dark text
+					 * @style ui-btn-text-dark
+					 * @member ns.widget.core.Button
+					 */
 					BTN_TEXT_DARK: "ui-btn-text-dark",
 					/**
 					 * Change background color of button to red
@@ -28247,6 +28422,11 @@ function pathToRegexp (path, keys, options) {
 					 * @member ns.widget.core.Button
 					 */
 					BTN_ICON_POSITION_PREFIX: "ui-btn-icon-",
+					/**
+					 * Creates a button widget with position in middle
+					 * @style ui-btn-text-middle
+					 * @member ns.widget.core.Button
+					 */
 					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
 				},
 				Button = function () {
@@ -28418,7 +28598,7 @@ function pathToRegexp (path, keys, options) {
 			prototype._setIconpos = function (element, iconpos) {
 				var options = this.options,
 					style = options.style,
-					innerTextLength = element.textContent.length || (element.value ? element.value.length : 0);
+					innerTextLength = element.textContent.trim().length || (element.value ? element.value.length : 0);
 
 				iconpos = iconpos || options.iconpos;
 
@@ -29135,6 +29315,7 @@ function pathToRegexp (path, keys, options) {
 
  * @since 2.0
  * @class ns.widget.mobile.Popup
+ * @component-selector .ui-popup, [data-role]="popup"
  * @extends ns.widget.core.Popup
  * @author Jadwiga Sosnowska <j.sosnowska@samsung.com>
  * @author Maciej Urbanski <m.urbanski@samsung.com>
@@ -29914,6 +30095,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.4
  * @class ns.widget.mobile.Expandable
+ * @component-selector .ui-expandable [data-role]="expandable"
  * @author Piotr Karny <p.karny@samsung.com>
  * @author Marcin Jakuszko <m.jakuszko@samsung.com>
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
@@ -29988,13 +30170,53 @@ function pathToRegexp (path, keys, options) {
 				 * @member ns.widget.mobile.Expandable
 				 */
 				classes = {
+					/**
+					 * Standard expandable widget
+					 * @style ui-expandable
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandable: "ui-expandable",
+					/**
+					 * Set content to expandable widget
+					 * @style ui-expandable-content
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableContent: "ui-expandable-content",
+					/**
+					 * Set collapsed content to expandable widget
+					 * @style ui-expandable-content-collapsed
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableContentCollapsed: "ui-expandable-content-collapsed",
+					/**
+					 * Set expandable widget as collapsed
+					 * @style ui-expandable-collapsed
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableCollapsed: "ui-expandable-collapsed",
+					/**
+					 * Set heading to expandable widget
+					 * @style ui-expandable-heading
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeading: "ui-expandable-heading",
+					/**
+					 * Set collapsed heading to expandable widget
+					 * @style ui-expandable-heading-collapsed
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeadingCollapsed: "ui-expandable-heading-collapsed",
+					/**
+					 * Set toggle to expandable widget heading
+					 * @style ui-expandable-heading-toggle
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeadingToggle: "ui-expandable-heading-toggle",
+					/**
+					 * Set active to expandable widget heading
+					 * @style ui-expandable-heading-active
+					 * @member ns.widget.mobile.Expandable
+					 */
 					uiExpandableHeadingActive: "ui-expandable-heading-active"
 				};
 
@@ -30349,6 +30571,7 @@ function pathToRegexp (path, keys, options) {
  * creation.
  *
  * @class ns.widget.mobile.Listview
+ * @component-selector .ui-listview, [data-role]="listview"
  * @extends ns.widget.core.Listview
  * @author Krzysztof Antoszek <k.antoszek@samsung.com>
  * @since 2.0
@@ -30446,18 +30669,71 @@ function pathToRegexp (path, keys, options) {
 				 */
 				classes = {
 					/**
+					 * Set background for listview widget
+					 * @style ui-listview-background
+					 * @member ns.widget.mobile.Listview
 					 */
 					"BACKGROUND_LAYER": "ui-listview-background",
+					/**
+					 * Set background as disable for listview widget
+					 * @style ui-listview-background-disabled
+					 * @member ns.widget.mobile.Listview
+					 */
 					"GRADIENT_BACKGROUND_DISABLED": "ui-listview-background-disabled",
+					/**
+					 * Set index for group in listview widget
+					 * @style ui-group-index
+					 * @member ns.widget.mobile.Listview
+					 */
 					"GROUP_INDEX": "ui-group-index",
+					/**
+					 * Set listview to show in popup widget
+					 * @style ui-popup-listview
+					 * @member ns.widget.mobile.Listview
+					 */
 					"POPUP_LISTVIEW": "ui-popup-listview",
+					/**
+					 * Set drag as active for listview widget
+					 * @style ui-drag-active
+					 * @member ns.widget.mobile.Listview
+					 */
 					"DRAG_ACTIVE": "ui-drag-active",
+					/**
+					 * Set expandable widget. Expandable component allows you to expand or collapse content when tapped.
+					 * @style ui-expandable
+					 * @member ns.widget.mobile.Listview
+					 */
 					"EXPANDABLE": "ui-expandable",
+					/**
+					 * Set element as listview item
+					 * @style ui-listview-item
+					 * @member ns.widget.mobile.Listview
+					 */
 					"ITEM": "ui-listview-item",
+					/**
+					 * Set element as active listview item
+					 * @style ui-listview-item-active
+					 * @member ns.widget.mobile.Listview
+					 */
 					"ITEM_ACTIVE": "ui-listview-item-active",
+					/**
+					 * Set helper for listview widget
+					 * @style ui-listview-helper
+					 * @member ns.widget.mobile.Listview
+					 */
 					"HELPER": "ui-listview-helper",
+					/**
+					 * Create holder element to help reordering
+					 * @style ui-listview-holder
+					 * @member ns.widget.mobile.Listview
+					 */
 					"HOLDER": "ui-listview-holder",
 					"SNAPSHOT": "snapshot",
+					/**
+					 * Create handler for listview widget
+					 * @style ui-listview-handler
+					 * @member ns.widget.mobile.Listview
+					 */
 					"HANDLER": "ui-listview-handler",
 					"DRAG_MODE": "dragMode",
 					"ACTIVATE_HANDLERS": "activateHandlers",
@@ -33222,6 +33498,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @author Heeju Joo <heeju.joo@samsung.com>
  * @class ns.widget.core.Marquee
+ * @component-selector .ui-marquee
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -33259,6 +33536,11 @@ function pathToRegexp (path, keys, options) {
 
 				prototype = new BaseWidget(),
 
+				/**
+				* Standard marquee widget
+				* @style ui-marquee
+				* @member ns.widget.core.Marquee
+				*/
 				CLASSES_PREFIX = "ui-marquee",
 
 				eventType = {
@@ -33278,11 +33560,41 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				classes = {
+					/**
+					* Content for marquee widget
+					* @style ui-marquee-content
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_CONTENT: CLASSES_PREFIX + "-content",
+					/**
+					* Add gradient for marquee widget
+					* @style ui-marquee-gradient
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_GRADIENT: CLASSES_PREFIX + "-gradient",
+					/**
+					* Set ellipsis effect for marquee widget
+					* @style ui-marquee-ellipsis
+					* @member ns.widget.core.Marquee
+					*/
 					MARQUEE_ELLIPSIS: CLASSES_PREFIX + "-ellipsis",
+					/**
+					* Start animation for marquee widget
+					* @style ui-marquee-anim-running
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_RUNNING: CLASSES_PREFIX + "-anim-running",
+					/**
+					* Stop animation for marquee widget
+					* @style ui-marquee-anim-stopped
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_STOPPED: CLASSES_PREFIX + "-anim-stopped",
+					/**
+					* Idle animation for marquee widget
+					* @style ui-marquee-anim-idle
+					* @member ns.widget.core.Marquee
+					*/
 					ANIMATION_IDLE: CLASSES_PREFIX + "-anim-idle"
 				},
 
@@ -35062,6 +35374,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.0
  * @class ns.widget.mobile.TextInput
+ * @component-selector .ui-text-input
  * @extends ns.widget.BaseWidget
  * @author Maciej Urbanski <m.urbanski@samsung.com>
  * @author Jadwiga Sosnowska <j.sosnowska@samsung.com>
@@ -35109,16 +35422,61 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				classes = {
+					/**
+					 * Standard text input widget
+					 * @style ui-text-input
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInput: CLASSES_PREFIX,
+					/**
+					 * Create text input widget with clear button
+					 * @style ui-text-input-clear
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputClear: CLASSES_PREFIX + "-clear",
+					/**
+					 * Hide clear button in text input widget
+					 * @style ui-text-input-clear-hidden
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputClearHidden: CLASSES_PREFIX + "-clear-hidden",
+					/**
+					 * Set clear button to active in text input widget
+					 * @style ui-text-input-clear-active
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputClearActive: CLASSES_PREFIX + "-clear-active",
+					/**
+					 * Set text input to text input widget
+					 * @style ui-text-input-textline
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputTextLine: CLASSES_PREFIX + "-textline",
+					/**
+					 * Set text input as disabled in text input widget
+					 * @style ui-text-input-disabled
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputDisabled: CLASSES_PREFIX + "-disabled",
+					/**
+					 * Set text input as focus in text input widget
+					 * @style ui-text-input-focused
+					 * @member ns.widget.mobile.TextInput
+					 */
 					uiTextInputFocused: CLASSES_PREFIX + "-focused",
 					HEADER_WITH_SEARCH: "ui-header-searchbar",
+					/**
+					 * Set search-input widget in text input widget
+					 * @style ui-search-input
+					 * @member ns.widget.mobile.TextInput
+					 */
 					SEARCHINPUT: "ui-search-input",
 					HEADER: "ui-header",
+					/**
+					 * Set container for text input widget
+					 * @style ui-text-input-container
+					 * @member ns.widget.mobile.TextInput
+					 */
 					CONTAINER: CLASSES_PREFIX + "-container"
 				},
 				/**
@@ -35412,6 +35770,7 @@ function pathToRegexp (path, keys, options) {
 				if (newDiv) {
 					container.className = classes.CONTAINER;
 					element.parentElement.replaceChild(container, element);
+					container.classList.add(CLASSES_PREFIX + "-type-" + element.type);
 					container.appendChild(element);
 				}
 
@@ -35811,6 +36170,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.4
  * @class ns.widget.mobile.DropdownMenu
+ * @component-selector .ui-dropdownmenu
  * @extends ns.widget.mobile.BaseWidgetMobile
  * @author Hagun Kim <hagun.kim@samsung.com>
  */
@@ -35911,24 +36271,119 @@ function pathToRegexp (path, keys, options) {
 				 * @static
 				 */
 				classes = {
+					/**
+					 * Standard dropdown menu widget
+					 * @style ui-dropdownmenu
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					selectWrapper: "ui-dropdownmenu",
+					/**
+					 * Set an option group in dropdown menu widget
+					 * @style ui-dropdownmenu-optiongroup
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					optionGroup: "ui-dropdownmenu-optiongroup",
+					/**
+					 * Set a placeholder in dropdown menu widget
+					 * @style ui-dropdownmenu-placeholder
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					placeHolder: "ui-dropdownmenu-placeholder",
+					/**
+					 * Set an option list in dropdown menu widget
+					 * @style ui-dropdownmenu-options
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					optionList: "ui-dropdownmenu-options",
+					/**
+					 * Set a wrapper for options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-wrapper
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					optionsWrapper: "ui-dropdownmenu-options-wrapper",
+					/**
+					 * Set selected to dropdown menu widget
+					 * @style ui-dropdownmenu-selected
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					selected: "ui-dropdownmenu-selected",
+					/**
+					 * Set active to dropdown menu widget
+					 * @style ui-dropdownmenu-active
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					active: "ui-dropdownmenu-active",
+					/**
+					 * Opens options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-opening
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					opening: "ui-dropdownmenu-options-opening",
+					/**
+					 * Closes options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-closing
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					closing: "ui-dropdownmenu-options-closing",
+					/**
+					 * Set class for opened options in dropdown menu widget
+					 * @style ui-dropdownmenu-options-opened
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					opened: "ui-dropdownmenu-options-opened",
+					/**
+					 * Set filter structure in dropdown menu widget
+					 * @style ui-dropdownmenu-overlay
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					filter: "ui-dropdownmenu-overlay",
+					/**
+					 * Set hidden filter structure in dropdown menu widget
+					 * @style ui-dropdownmenu-overlay-hidden
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					filterHidden: "ui-dropdownmenu-overlay-hidden",
+					/**
+					 * Set disabled in dropdownmenu widget
+					 * @style ui-dropdownmenu-disabled
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					disabled: "ui-dropdownmenu-disabled",
+					/**
+					 * Set dropdown menu widget as disabled
+					 * @style ui-disabled
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					widgetDisabled: "ui-disabled",
+					/**
+					 * Set dropdown menu widget as inline
+					 * @style ui-dropdownmenu-inline
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					inline: "ui-dropdownmenu-inline",
+					/**
+					 * Set dropdown menu widget as native
+					 * @style ui-dropdownmenu-native
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					native: "ui-dropdownmenu-native",
+					/**
+					 * Set dropdown menu options to displayed on top
+					 * @style ui-dropdownmenu-top
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					top: "ui-dropdownmenu-options-top",
+					/**
+					 * Set dropdown menu options to displayed on bottom
+					 * @style ui-dropdownmenu-bottom
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					bottom: "ui-dropdownmenu-options-bottom",
+					/**
+					 * Set dropdown menu widget as focus
+					 * @style ui-focus
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
 					focus: "ui-focus"
 				},
 				prototype = new BaseWidget();
@@ -36249,7 +36704,8 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			prototype._buildWrapper = function (element) {
-				var selectWrapperElement = document.createElement("div");
+				var self = this,
+					selectWrapperElement = self._createWrapper();
 
 				selectWrapperElement.className = classes.selectWrapper;
 				selectWrapperElement.id = element.id + "-dropdownmenu";
@@ -36258,7 +36714,7 @@ function pathToRegexp (path, keys, options) {
 				domUtils.insertNodesBefore(element, selectWrapperElement);
 				selectWrapperElement.appendChild(element);
 
-				this._ui.elSelectWrapper = selectWrapperElement;
+				self._ui.elSelectWrapper = selectWrapperElement;
 			};
 
 			/**
@@ -36388,7 +36844,10 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			prototype._refresh = function () {
-				this._generate(this.element, false);
+				var self = this;
+
+				self._generate(self.element, false);
+				self._updatePlaceHolderBySelectedIndex();
 			};
 
 			/**
@@ -36661,6 +37120,20 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			/**
+			 * Update visible value of DropDownMenu based on selected index
+			 * @method _updatePlaceHolderBySelectedIndex
+			 * @protected
+			 * @member ns.widget.mobile.DropdownMenu
+			 */
+			prototype._updatePlaceHolderBySelectedIndex = function () {
+				var self = this,
+					ui = self._ui,
+					selectedOption = ui.elOptions[self._selectedIndex];
+
+				ui.elPlaceHolder.textContent = selectedOption.textContent;
+			}
+
+			/**
 			 * Change Value of Select tag and Placeholder
 			 * @method changeOption
 			 * @protected
@@ -36674,7 +37147,8 @@ function pathToRegexp (path, keys, options) {
 					getData = domUtils.getNSData;
 
 				if ((selectedOption !== previousOption) || (ui.elDefaultOption && (ui.elPlaceHolder.textContent === ui.elDefaultOption.textContent))) {
-					ui.elPlaceHolder.textContent = selectedOption.textContent;
+					self._updatePlaceHolderBySelectedIndex();
+
 					ui.elSelect.value = getData(selectedOption, "value");
 					if (ui.elSelect.value === "") {
 						ui.elSelect.value = getData(previousOption, "value");
@@ -36829,6 +37303,7 @@ function pathToRegexp (path, keys, options) {
  * @since 2.4
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  * @class ns.widget.mobile.TextEnveloper
+ * @component-selector .ui-text-enveloper, [data-role]="textenveloper"
  * @extends ns.widget.BaseWidget
  */
 
@@ -36862,21 +37337,91 @@ function pathToRegexp (path, keys, options) {
 				 * @member ns.widget.mobile.TextEnveloper
 				 */
 				classes = {
+					/**
+					 * Standard text enveloper widget
+					 * @style ui-text-enveloper
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER: "ui-text-enveloper",
+					/**
+					 * Create text enveloper widget with container
+					 * @style ui-text-enveloper-with-container
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					WITH_CONTAINER: "ui-text-enveloper-with-container",
+					/**
+					 * Set container for text enveloper widget
+					 * @style ui-text-enveloper-container
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					CONTAINER: "ui-text-enveloper-container",
+					/**
+					 * Set input for text enveloper widget
+					 * @style ui-text-enveloper-input
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_INPUT: "ui-text-enveloper-input",
+					/**
+					 * Set button for text enveloper widget
+					 * @style ui-text-enveloper-btn
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN: "ui-text-enveloper-btn",
+					/**
+					 * Set selected to button in text enveloper widget
+					 * @style ui-text-enveloper-btn-selected
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					BTN_SELECTED: "ui-text-enveloper-btn-selected",
+					/**
+					 * Set active to button in text enveloper widget
+					 * @style ui-text-enveloper-btn-active
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_ACTIVE: "ui-text-enveloper-btn-active",
+					/**
+					 * Set blur to button in text enveloper widget
+					 * @style ui-text-enveloper-btn-blur
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_BLUR: "ui-text-enveloper-btn-blur",
+					/**
+					 * Set button as expanded in text enveloper widget
+					 * @style ui-text-enveloper-btn-expanded
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_EXPANDED: "ui-text-enveloper-btn-expanded",
+					/**
+					 * Set a label to text enveloper widget
+					 * @style ui-text-enveloper-start
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_START: "ui-text-enveloper-start",
 					TEXT_ENVELOPER_TEXTLINE: "ui-text-input-textline",
+					/**
+					 * Add slash to text enveloper widget
+					 * @style ui-text-enveloper-slash
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					SLASH: "ui-text-enveloper-slash",
+					/**
+					 * Hide slash in text enveloper widget
+					 * @style ui-text-enveloper-slash-hidden
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					SLASH_HIDDEN: "ui-text-enveloper-slash-hidden",
+					/**
+					 * Add slash to be a separator for button in text enveloper widget
+					 * @style ui-text-enveloper-btn-separator
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					TEXT_ENVELOPER_BTN_SLASH: "ui-text-enveloper-btn-separator",
 					INPUT_STYLE_PREFIX: "ui-text-enveloper-input-",
+					/**
+					 * Add blur to input in text enveloper widget
+					 * @style ui-text-enveloper-input-blur
+					 * @member ns.widget.mobile.TextEnveloper
+					 */
 					INPUT_BLUR: "ui-text-enveloper-input-blur"
 				},
 
@@ -38089,6 +38634,10 @@ function pathToRegexp (path, keys, options) {
 				fromAPI = false,
 				virtualMode = false,
 				snapSize = null,
+				snapPoints = null,
+				currentIndex = 0,
+				previousIndex = 0,
+				containerSize = 0,
 				requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 			/**
@@ -38214,14 +38763,64 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
+			/**
+			 * Get position of scroll for indicated index
+			 * @method getScrollPositionByIndex
+			 * @param {number} index
+			 * @member ns.util.scrolling
+			 * @return {number}
+			 */
+			function getScrollPositionByIndex(index) {
+				if (snapPoints) {
+					index = max(min(snapPoints.length - 1, index), 0); // validate index value
+					return snapPoints[index].position - snapPoints[0].position;
+				}
+				return 0;
+			}
+
+			/**
+			 * Find index of snap point by given scroll position
+			 * @method getSnapPointIndexByScrollPosition
+			 * @param {number} position scroll position (usually negative value)
+			 * @member ns.util.scrolling
+			 * @return {number}
+			 */
+			function getSnapPointIndexByScrollPosition(position) {
+				var current = null,
+					next = null,
+					len,
+					i;
+
+				if (snapPoints) {
+					position -= containerSize / 2; // half of screen
+					position = Math.abs(position);
+					for (i = 0, len = snapPoints.length; i < len; i++) {
+						current = snapPoints[i];
+						next = snapPoints[i + 1];
+						if (!next || // this is last snap point
+							current.position < position && next.position > position) {
+							return i;
+						}
+					}
+				}
+				return -1;
+			}
+
 			function touchEndCalculateSpeed(inBounds) {
-				var diffTime = Date.now() - lastTime;
+				var diffTime = Date.now() - lastTime,
+					snapPoint = null;
 
 				if (inBounds && abs(lastScrollPosition / diffTime) > 1) {
 					// if it was fast move, we start animation of scrolling after touch end
 					moveToPosition = max(min(round(scrollPosition + 1000 * lastScrollPosition / diffTime),
 						0), -maxScrollPosition);
-					if (snapSize) {
+					if (snapPoints) {
+						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition + 1000 * lastScrollPosition / diffTime);
+						snapPoint = snapPoints[currentIndex];
+						if (snapPoint) {
+							moveToPosition = -getScrollPositionByIndex(currentIndex);
+						}
+					} else if (snapSize) {
 						moveToPosition = snapSize * round(moveToPosition / snapSize);
 					}
 					if (abs(lastScrollPosition / diffTime) > 1) {
@@ -38234,7 +38833,14 @@ function pathToRegexp (path, keys, options) {
 					requestAnimationFrame(moveTo);
 				} else {
 					// touch move was slow
-					if (snapSize) {
+					if (snapPoints) {
+						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition);
+						snapPoint = snapPoints[currentIndex];
+						if (snapPoint) {
+							moveToPosition = -getScrollPositionByIndex(currentIndex);
+							requestAnimationFrame(moveTo);
+						}
+					} else if (snapSize) {
 						moveToPosition = snapSize * round(scrollPosition / snapSize);
 						requestAnimationFrame(moveTo);
 					}
@@ -38308,6 +38914,14 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
+			function getSnapSize(index) {
+				if (snapPoints) {
+					return Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
+				} else {
+					return snapSize;
+				}
+			}
+
 			/**
 			 * Handler for rotary event
 			 * @param {Event} event
@@ -38315,13 +38929,27 @@ function pathToRegexp (path, keys, options) {
 			function rotary(event) {
 				var eventDirection = event.detail && event.detail.direction;
 
+				previousIndex = currentIndex;
+
 				// update position by snapSize
 				if (eventDirection === "CW") {
-					moveToPosition -= snapSize || 50;
+					currentIndex++;
+					if (snapPoints && currentIndex >= snapPoints.length) {
+						currentIndex = snapPoints.length - 1;
+					}
+					snapSize = -1 * getSnapSize(currentIndex);
+
 				} else {
-					moveToPosition += snapSize || 50;
+					currentIndex--;
+					if (snapPoints && currentIndex < 0) {
+						currentIndex = 0;
+					}
+					snapSize = getSnapSize(currentIndex);
 				}
-				if (snapSize) {
+
+				moveToPosition += snapSize;
+
+				if (!snapPoints && snapSize) {
 					moveToPosition = snapSize * round(moveToPosition / snapSize);
 				}
 				if (moveToPosition < -maxScrollPosition) {
@@ -38330,6 +38958,7 @@ function pathToRegexp (path, keys, options) {
 				if (moveToPosition > 0) {
 					moveToPosition = 0;
 				}
+
 				requestAnimationFrame(moveTo);
 				requestAnimationFrame(render);
 				eventUtil.trigger(scrollingElement, EVENTS.SCROLL_START, {
@@ -38337,7 +38966,6 @@ function pathToRegexp (path, keys, options) {
 					scrollTop: direction ? 0 : -(moveToPosition),
 					fromAPI: false
 				});
-				event.stopImmediatePropagation();
 			}
 
 			function moveToCalculatePosition() {
@@ -38692,6 +39320,104 @@ function pathToRegexp (path, keys, options) {
 				return maxScrollPosition;
 			}
 
+			function scrollToIndex(index) {
+				var previousIndex = currentIndex;
+
+				currentIndex = index;
+
+				if (snapPoints) {
+					moveToPosition = snapPoints[index].position;
+					snapSize = Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
+				} else {
+					moveToPosition = snapSize * index;
+				}
+			}
+
+			/**
+			 * Update max scrolling position
+			 * @method setMaxScroll
+			 * @param {number} maxValue
+			 * @member ns.util.scrolling
+			 */
+			function setMaxScroll(maxValue) {
+				var boundingRect = scrollingElement.getBoundingClientRect(),
+					directionDimension = direction ? "width" : "height",
+					directionSize = boundingRect[directionDimension],
+					tempMaxPosition = max(maxValue - directionSize, 0);
+
+				// Change size of thumb only when necessary
+				if (tempMaxPosition !== maxScrollPosition) {
+					maxScrollPosition = tempMaxPosition || Number.POSITIVE_INFINITY;
+					if (scrollBar) {
+						if (circularScrollBar) {
+							// Calculate new thumb size based on max scrollbar size
+							circularScrollThumbSize = max((directionSize / (maxScrollPosition + directionSize)) *
+								CIRCULAR_SCROLL_BAR_SIZE, CIRCULAR_SCROLL_MIN_THUMB_SIZE);
+							maxScrollBarPosition = CIRCULAR_SCROLL_BAR_SIZE - circularScrollThumbSize;
+							polarUtil.updatePosition(svgScrollBar, "." + classes.thumb, {
+								arcStart: scrollBarPosition,
+								arcEnd: scrollBarPosition + circularScrollThumbSize,
+								r: RADIUS
+							});
+						} else {
+							directionSize -= 2 * SCROLL_MARGIN;
+							scrollThumb.style[directionDimension] =
+								(directionSize / (maxScrollPosition + directionSize) * directionSize) + "px";
+							// Cannot use direct value from style here because CSS may override the minimum
+							// size of thumb here
+							maxScrollBarPosition = directionSize -
+								scrollThumb.getBoundingClientRect()[directionDimension];
+						}
+					}
+				}
+			}
+
+			/**
+			 * Method sets snap points for scroll
+			 * @param {Array} _snapPoints
+			 * @method setSnapSize
+			 * @member ns.util.scrolling
+			 */
+			function setSnapPoints(_snapPoints) {
+				snapPoints = _snapPoints;
+				snapSize = null;
+				maxScrollPosition = (snapPoints.length) ? snapPoints.reduce(function (previousValue, value) {
+					return previousValue + value.length;
+				}, snapPoints[0].position) : 0;
+			}
+
+			/**
+			 * Method sets snap size for scroll or array of snap points
+			 * @param {number|Array} _snapSize
+			 * @method setSnapSize
+			 * @member ns.util.scrolling
+			 */
+			function setSnapSize(_snapSize) {
+				containerSize = (direction) ? scrollingElement.getBoundingClientRect().height :
+					scrollingElement.getBoundingClientRect().width;
+
+				if (Array.isArray(_snapSize)) {
+					setSnapPoints(_snapSize);
+				} else {
+					snapPoints = null;
+					snapSize = _snapSize;
+					if (snapSize) {
+						maxScrollPosition = snapSize * round(maxScrollPosition / snapSize);
+					}
+				}
+			}
+
+			/**
+			 * Return true is given element is current scrolling element
+			 * @method isElement
+			 * @param {HTMLElement} element element to check
+			 * @return {boolean}
+			 * @member ns.util.scrolling
+			 */
+			function isElement(element) {
+				return scrollingElement === element;
+			}
+
 			ns.util.scrolling = {
 				getScrollPosition: getScrollPosition,
 				enable: enable,
@@ -38699,62 +39425,11 @@ function pathToRegexp (path, keys, options) {
 				enableScrollBar: enableScrollBar,
 				disableScrollBar: disableScrollBar,
 				scrollTo: scrollTo,
-				/**
-				 * Return true is given element is current scrolling element
-				 * @method isElement
-				 * @param {HTMLElement} element element to check
-				 * @return {boolean}
-				 * @member ns.util.scrolling
-				 */
-				isElement: function (element) {
-					return scrollingElement === element;
-				},
-
-				/**
-				 * Update max scrolling position
-				 * @method setMaxScroll
-				 * @param {number} maxValue
-				 * @member ns.util.scrolling
-				 */
-				setMaxScroll: function (maxValue) {
-					var boundingRect = scrollingElement.getBoundingClientRect(),
-						directionDimension = direction ? "width" : "height",
-						directionSize = boundingRect[directionDimension],
-						tempMaxPosition = max(maxValue - directionSize, 0);
-
-					// Change size of thumb only when necessary
-					if (tempMaxPosition !== maxScrollPosition) {
-						maxScrollPosition = tempMaxPosition || Number.POSITIVE_INFINITY;
-						if (scrollBar) {
-							if (circularScrollBar) {
-								// Calculate new thumb size based on max scrollbar size
-								circularScrollThumbSize = max((directionSize / (maxScrollPosition + directionSize)) *
-									CIRCULAR_SCROLL_BAR_SIZE, CIRCULAR_SCROLL_MIN_THUMB_SIZE);
-								maxScrollBarPosition = CIRCULAR_SCROLL_BAR_SIZE - circularScrollThumbSize;
-								polarUtil.updatePosition(svgScrollBar, "." + classes.thumb, {
-									arcStart: scrollBarPosition,
-									arcEnd: scrollBarPosition + circularScrollThumbSize,
-									r: RADIUS
-								});
-							} else {
-								directionSize -= 2 * SCROLL_MARGIN;
-								scrollThumb.style[directionDimension] =
-									(directionSize / (maxScrollPosition + directionSize) * directionSize) + "px";
-								// Cannot use direct value from style here because CSS may override the minimum
-								// size of thumb here
-								maxScrollBarPosition = directionSize -
-									scrollThumb.getBoundingClientRect()[directionDimension];
-							}
-						}
-					}
-				},
+				setMaxScroll: setMaxScroll,
 				getMaxScroll: getMaxScroll,
-				setSnapSize: function (setSnapSize) {
-					snapSize = setSnapSize;
-					if (snapSize) {
-						maxScrollPosition = snapSize * round(maxScrollPosition / snapSize);
-					}
-				},
+				setSnapSize: setSnapSize,
+				scrollToIndex: scrollToIndex,
+				isElement: isElement,
 				setBounceBack: function (setBounceBack) {
 					bounceBack = setBounceBack;
 				}
@@ -39073,7 +39748,17 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.VirtualListview
 			 */
 			VirtualListview.classes = {
+				/**
+				* Container for virtual list widget
+				* @style ui-virtual-list-container
+				* @member ns.widget.core.VirtualListview
+				*/
 				uiVirtualListContainer: "ui-virtual-list-container",
+				/**
+				* Prepare spacer - element which makes scrollBar proper size
+				* @style ui-virtual-list-spacer
+				* @member ns.widget.core.VirtualListview
+				*/
 				spacer: "ui-virtual-list-spacer"
 			};
 
@@ -41591,6 +42276,7 @@ function pathToRegexp (path, keys, options) {
  * documentation of profiles
  *
  * @class ns.widget.core.Drawer
+ * @component-selector .ui-drawer, [data-role]="drawer"
  * @extends ns.widget.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -41692,11 +42378,41 @@ function pathToRegexp (path, keys, options) {
 				 */
 				classes = {
 					page: Page.classes.uiPage,
+					/**
+					 * Standard drawer
+					 * @style ui-drawer
+					 * @member ns.widget.core.Drawer
+					 */
 					drawer: "ui-drawer",
+					/**
+					 * Drawer appears from the left side.
+					 * @style ui-drawer-left
+					 * @member ns.widget.core.Drawer
+					 */
 					left: "ui-drawer-left",
+					/**
+					 * Drawer appears from the right side.
+					 * @style ui-drawer-right
+					 * @member ns.widget.core.Drawer
+					 */
 					right: "ui-drawer-right",
+					/**
+					 * Set the drawer overlay when the drawer is opened.
+					 * @style ui-drawer-overlay
+					 * @member ns.widget.core.Drawer
+					 */
 					overlay: "ui-drawer-overlay",
+					/**
+					 * Opens the drawer.
+					 * @style ui-drawer-open
+					 * @member ns.widget.core.Drawer
+					 */
 					open: "ui-drawer-open",
+					/**
+					 * Closes the drawer.
+					 * @style ui-drawer-close
+					 * @member ns.widget.core.Drawer
+					 */
 					close: "ui-drawer-close"
 				},
 				/**
@@ -42421,6 +43137,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.3
  * @class ns.widget.mobile.Drawer
+ * @component-selector .ui-drawer, [data-role]="drawer"
  * @extends ns.widget.core.Drawer
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -42542,6 +43259,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.0
  * @class ns.widget.mobile.ToggleSwitch
+ * @component-selector .ui-toggleswitch, [data-role]="toggleswitch"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -42556,8 +43274,23 @@ function pathToRegexp (path, keys, options) {
 				events = ns.event,
 
 				classes = {
+					/**
+					 * Set container for toggle switch widget
+					 * @style ui-toggle-container
+					 * @member ns.widget.mobile.ToggleSwitch
+					 */
 					toggleContainer: "ui-toggle-container",
+					/**
+					 * Standard toggle switch widget
+					 * @style ui-toggle-switch
+					 * @member ns.widget.mobile.ToggleSwitch
+					 */
 					toggle: "ui-toggle-switch",
+					/**
+					 * Set handler for toggle switch widget
+					 * @style ui-switch-handler
+					 * @member ns.widget.mobile.ToggleSwitch
+					 */
 					toggleHandler: "ui-switch-handler"
 				},
 				keyCode = {
@@ -42936,6 +43669,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.3
  * @class ns.widget.mobile.Navigation
+ * @component-selector .ui-navigation, [data-role]="navigation"
  * @extends ns.widget.BaseWidget
  * @author Junhyeon Lee <juneh.lee@samsung.com>
  * @author Maciej Moczulski <m.moczulsku@samsung.com>
@@ -42971,13 +43705,53 @@ function pathToRegexp (path, keys, options) {
 				 * @member ns.widget.mobile.Navigation
 				 */
 				classes = {
+					/**
+					 * Standard navigation widget
+					 * @style ui-navigation
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION: "ui-navigation",
+					/**
+					 * Set a container with navigation widget
+					 * @style ui-navigation-container
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_CONTAINER: "ui-navigation-container",
+					/**
+					 * Set an item of navigation widget
+					 * @style ui-navigation-item
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_ITEM: "ui-navigation-item",
+					/**
+					 * Set navigation widget as active
+					 * @style ui-navigation-active
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_ACTIVE: "ui-navigation-active",
+					/**
+					 * Hide navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_HIDE: "ui-navigator-hide",
+					/**
+					 * Set item to back in navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_BACK: "ui-navigator-back",
+					/**
+					 * Hide item back in navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_BACK_HIDE: "ui-navigator-back-hide",
+					/**
+					 * Set active animation in navigation widget
+					 * @style ui-navigation-hide
+					 * @member ns.widget.mobile.Navigation
+					 */
 					NAVIGATION_ACTIVE_ANIMATION: "ui-navigator-active-animation"
 				},
 				prototype = new BaseWidget();
@@ -44227,6 +45001,7 @@ function pathToRegexp (path, keys, options) {
 						self._extended(false);
 					}
 
+					self._setIndex(self.element, self.options.index);
 					self._updateLayout();
 					self.indexBar1.options.index = self.options.index;
 					self.indexBar1.refresh();
@@ -45211,6 +45986,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.4
  * @class ns.widget.mobile.FloatingActions
+ * @component-selector .ui-floatingactions, [data-role]="floatingactions"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -45237,10 +46013,35 @@ function pathToRegexp (path, keys, options) {
 				},
 				WIDGET_CLASS = "ui-floatingactions",
 				classes = {
+					/**
+					 * Standard floating actions widget
+					 * @style ui-floatingactions
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					WIDGET: WIDGET_CLASS,
+					/**
+					 * Enable transition for floating actions widget
+					 * @style ui-floatingactions-transitions
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					TRANSITIONS: WIDGET_CLASS + "-transitions",
+					/**
+					 * Expand floating actions to the left
+					 * @style ui-floatingactions-expand-to-left
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					EXPAND_TO_LEFT: WIDGET_CLASS + "-expand-to-left",
+					/**
+					 * Expand floating actions to the right
+					 * @style ui-floatingactions-expand-to-right
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					EXPAND_TO_RIGHT: WIDGET_CLASS + "-expand-to-right",
+					/**
+					 * Set page to implement floating actions
+					 * @style ui-page-floatingactions
+					 * @member ns.widget.mobile.FloatingActions
+					 */
 					PAGE_WITH_FLOATING_ACTIONS: "ui-page-floatingactions"
 				};
 
@@ -46738,6 +47539,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.4
  * @class ns.widget.core.Tabs
+ * @component-selector .ui-tabs, [data-role]="tabs"
  * @extends ns.widget.core.BaseWidget
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  */
@@ -46758,7 +47560,17 @@ function pathToRegexp (path, keys, options) {
 					};
 				},
 				classes = {
+					/**
+					 * Standard tabs widget
+					 * @style ui-tabs-with-title
+					 * @member ns.widget.core.Tabs
+					 */
 					TABS: "ui-tabs",
+					/**
+					* Set tabs component with title
+					* @style ui-tabs-with-title
+					* @member ns.widget.core.Tabs
+					*/
 					WITH_TITLE: "ui-tabs-with-title",
 					TITLE: "ui-title",
 					PAGE: Page.classes.uiPage
@@ -47075,6 +47887,7 @@ function pathToRegexp (path, keys, options) {
  *
  * @since 2.4
  * @class ns.widget.mobile.GridView
+ * @component-selector .ui-gridview, [data-role]="gridview"
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -47102,14 +47915,59 @@ function pathToRegexp (path, keys, options) {
 					NONE: "none"
 				},
 				classes = {
+					/**
+					 * Standard gridview widget
+					 * @style ui-gridview
+					 * @member ns.widget.mobile.GridView
+					 */
 					GRIDLIST: "ui-gridview",
+					/**
+					 * Set element as item of gridview items list
+					 * @style ui-gridview-item
+					 * @member ns.widget.mobile.GridView
+					 */
 					ITEM: "ui-gridview-item",
+					/**
+					 * Set item of gridview as active
+					 * @style ui-gridview-item-active
+					 * @member ns.widget.mobile.GridView
+					 */
 					ITEM_ACTIVE: "ui-gridview-item-active",
+					/**
+					 * Set helper for gridview items list
+					 * @style ui-gridview-helper
+					 * @member ns.widget.mobile.GridView
+					 */
 					HELPER: "ui-gridview-helper",
+					/**
+					 * Create holder element to help reordering
+					 * @style ui-gridview-holder
+					 * @member ns.widget.mobile.GridView
+					 */
 					HOLDER: "ui-gridview-holder",
+					/**
+					 * Set label-type as label in gridview
+					 * @style ui-gridview-label
+					 * @member ns.widget.mobile.GridView
+					 */
 					LABEL: "ui-gridview-label",
+					/**
+					 * Set label-type as label-in in gridview
+					 * @style ui-gridview-label-in
+					 * @member ns.widget.mobile.GridView
+					 */
 					LABEL_IN: "ui-gridview-label-in",
+					/**
+					 * Set label-type as label-out in gridview
+					 * @style ui-gridview-label-out
+					 * @member ns.widget.mobile.GridView
+					 */
 					LABEL_OUT: "ui-gridview-label-out",
+					/**
+					 * Set handler for gridview items list
+					 * @style ui-gridview-handler
+					 * @member ns.widget.mobile.GridView
+					 */
 					HANDLER: "ui-gridview-handler"
 				},
 				GridView = function () {
