@@ -129,9 +129,9 @@ module.exports = function (grunt) {
 			},
 			{
 				expand: true,
-				cwd: path.join(buildFrameworkPath, "common"),
+				cwd: path.join(buildFrameworkPath, "libs"),
 				src: "**",
-				dest: path.join("tests", "libs", "dist", "common")
+				dest: path.join("tests", "libs", "dist", "libs")
 			}
 		]
 	};
@@ -151,9 +151,9 @@ module.exports = function (grunt) {
 			},
 			{
 				expand: true,
-				cwd: path.join(buildFrameworkPath, "common"),
+				cwd: path.join(buildFrameworkPath, "libs"),
 				src: "**",
-				dest: path.join("tests", "libs", "dist", "common")
+				dest: path.join("tests", "libs", "dist", "libs")
 			}
 		]
 	};
