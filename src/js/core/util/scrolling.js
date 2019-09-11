@@ -77,6 +77,7 @@
 				// that's why normal css values cannot be applied
 				// margin needs to be subtracted from position
 				SCROLL_MARGIN = 11,
+				OVERSCROLL_SIZE = 0,
 
 				// ScrollBar variables
 				scrollBar = null,
@@ -161,6 +162,7 @@
 				fromAPI = false;
 				// calculate difference between touch start and current position
 				lastScrollPosition = clientPosition - startPosition;
+
 				if (!bounceBack) {
 					// normalize value to be in bound [0, maxScroll]
 					if (scrollPosition + lastScrollPosition > 0) {
@@ -249,7 +251,10 @@
 
 				if (snapPoints) {
 					position -= containerSize / 2; // half of screen
-					position = Math.abs(position);
+					position = -position;
+					if (snapPoints[0].position > position) { // before first position
+						return 0;
+					}
 					for (i = 0, len = snapPoints.length; i < len; i++) {
 						current = snapPoints[i];
 						next = snapPoints[i + 1];
@@ -270,6 +275,7 @@
 					// if it was fast move, we start animation of scrolling after touch end
 					moveToPosition = max(min(round(scrollPosition + 1000 * lastScrollPosition / diffTime),
 						0), -maxScrollPosition);
+
 					if (snapPoints) {
 						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition + 1000 * lastScrollPosition / diffTime);
 						snapPoint = snapPoints[currentIndex];
@@ -469,6 +475,7 @@
 					} else {
 						scrollTop = -scrollPosition;
 					}
+
 					// trigger event scroll
 					eventUtil.trigger(scrollingElement, EVENTS.SCROLL, {
 						scrollLeft: scrollLeft,
@@ -593,6 +600,7 @@
 					}
 					// setting scrolling element
 					scrollingElement = element;
+
 					// calculate maxScroll
 					parentRectangle = element.getBoundingClientRect();
 					contentRectangle = childElement.getBoundingClientRect();
@@ -835,11 +843,14 @@
 			 * @member ns.util.scrolling
 			 */
 			function setSnapPoints(_snapPoints) {
+				var numberOfSnapPoints = _snapPoints.length;
+
 				snapPoints = _snapPoints;
 				snapSize = null;
-				maxScrollPosition = (snapPoints.length) ? snapPoints.reduce(function (previousValue, value) {
-					return previousValue + value.length;
-				}, snapPoints[0].position) : 0;
+				if (numberOfSnapPoints) {
+					maxScrollPosition = snapPoints[numberOfSnapPoints - 1].position	- snapPoints[0].position +
+						OVERSCROLL_SIZE;
+				}
 			}
 
 			/**
