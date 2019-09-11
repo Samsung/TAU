@@ -113,8 +113,8 @@ TAU version comply with [Semantic Versioning specification - 2.0](https://semver
 
 ## TAU vs Tizen compatibility
 TAU library dedicated Tizen platform version.
-If you use Tizen 4.0/Tizen 5.0, we recommend you use the TAU 1.0.x
-If you use Tizen 5.5, we recommend you use the TAU 1.1.x .
+- If you use Tizen 4.0/Tizen 5.0, we recommend you use the TAU 1.0.x
+- If you use Tizen 5.5, we recommend you use the TAU 1.1.x .
 
 
 ## Releases
@@ -122,8 +122,8 @@ You can find releases in the releases [tab](https://github.com/Samsung/TAU/relea
 
 **Tizen_version_number.TAU_version_for_given_Tizen_release.**
 
-E.g. in case of TAU for Tizen 4.0: TAU 1.0.1 , TAU 1.0.2, TAU 1.0.3 ...
-     in case of TAU for Tizen 5.0: TAU 1.1.1 , TAU 1.1.2, TAU 1.1.3 ...
+-  In case of TAU for Tizen 4.0: TAU 1.0.1 , TAU 1.0.2, TAU 1.0.3 ...
+-  In case of TAU for Tizen 5.0: TAU 1.1.1 , TAU 1.1.2, TAU 1.1.3 ...
 
 ## Authors
 
