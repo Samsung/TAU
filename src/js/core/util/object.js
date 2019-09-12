@@ -57,11 +57,17 @@
 				 * @member ns.util.object
 				 */
 				fastMerge: function (newObject, orgObject) {
-					var key;
+					var key,
+						propertyDescriptor;
 
 					for (key in orgObject) {
 						if (orgObject.hasOwnProperty(key)) {
-							newObject[key] = orgObject[key];
+							propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+							if (!propertyDescriptor || propertyDescriptor.writable === true || propertyDescriptor.set != undefined) {
+								newObject[key] = orgObject[key];
+							} else {
+								console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+							}
 						}
 					}
 					return newObject;
@@ -81,7 +87,8 @@
 						key,
 						args = [].slice.call(arguments),
 						argsLength = args.length,
-						i;
+						i,
+						propertyDescriptor;
 
 					newObject = args.shift();
 					override = true;
@@ -93,8 +100,14 @@
 						orgObject = args.shift();
 						if (orgObject !== null) {
 							for (key in orgObject) {
-								if (orgObject.hasOwnProperty(key) && (override || newObject[key] === undefined)) {
-									newObject[key] = orgObject[key];
+								if (orgObject.hasOwnProperty(key)) {
+									propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+									if (!propertyDescriptor ||
+										(override && (propertyDescriptor.writable === true || propertyDescriptor.set != undefined))) {
+										newObject[key] = orgObject[key];
+									} else if (override) {
+										console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+									}
 								}
 							}
 						}
