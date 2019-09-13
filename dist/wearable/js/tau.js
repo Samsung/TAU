@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.7';
+ns.version = '1.0.8';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2184,11 +2184,17 @@ ns.version = '1.0.7';
 				 * @member ns.util.object
 				 */
 				fastMerge: function (newObject, orgObject) {
-					var key;
+					var key,
+						propertyDescriptor;
 
 					for (key in orgObject) {
 						if (orgObject.hasOwnProperty(key)) {
-							newObject[key] = orgObject[key];
+							propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+							if (!propertyDescriptor || propertyDescriptor.writable === true || propertyDescriptor.set != undefined) {
+								newObject[key] = orgObject[key];
+							} else {
+								console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+							}
 						}
 					}
 					return newObject;
@@ -2208,7 +2214,8 @@ ns.version = '1.0.7';
 						key,
 						args = [].slice.call(arguments),
 						argsLength = args.length,
-						i;
+						i,
+						propertyDescriptor;
 
 					newObject = args.shift();
 					override = true;
@@ -2220,8 +2227,14 @@ ns.version = '1.0.7';
 						orgObject = args.shift();
 						if (orgObject !== null) {
 							for (key in orgObject) {
-								if (orgObject.hasOwnProperty(key) && (override || newObject[key] === undefined)) {
-									newObject[key] = orgObject[key];
+								if (orgObject.hasOwnProperty(key)) {
+									propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+									if (!propertyDescriptor ||
+										(override && (propertyDescriptor.writable === true || propertyDescriptor.set != undefined))) {
+										newObject[key] = orgObject[key];
+									} else if (override) {
+										console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+									}
 								}
 							}
 						}
@@ -15868,6 +15881,7 @@ function pathToRegexp (path, keys, options) {
 				// that's why normal css values cannot be applied
 				// margin needs to be subtracted from position
 				SCROLL_MARGIN = 11,
+				OVERSCROLL_SIZE = 0,
 
 				// ScrollBar variables
 				scrollBar = null,
@@ -15952,6 +15966,7 @@ function pathToRegexp (path, keys, options) {
 				fromAPI = false;
 				// calculate difference between touch start and current position
 				lastScrollPosition = clientPosition - startPosition;
+
 				if (!bounceBack) {
 					// normalize value to be in bound [0, maxScroll]
 					if (scrollPosition + lastScrollPosition > 0) {
@@ -16040,7 +16055,10 @@ function pathToRegexp (path, keys, options) {
 
 				if (snapPoints) {
 					position -= containerSize / 2; // half of screen
-					position = Math.abs(position);
+					position = -position;
+					if (snapPoints[0].position > position) { // before first position
+						return 0;
+					}
 					for (i = 0, len = snapPoints.length; i < len; i++) {
 						current = snapPoints[i];
 						next = snapPoints[i + 1];
@@ -16061,6 +16079,7 @@ function pathToRegexp (path, keys, options) {
 					// if it was fast move, we start animation of scrolling after touch end
 					moveToPosition = max(min(round(scrollPosition + 1000 * lastScrollPosition / diffTime),
 						0), -maxScrollPosition);
+
 					if (snapPoints) {
 						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition + 1000 * lastScrollPosition / diffTime);
 						snapPoint = snapPoints[currentIndex];
@@ -16260,6 +16279,7 @@ function pathToRegexp (path, keys, options) {
 					} else {
 						scrollTop = -scrollPosition;
 					}
+
 					// trigger event scroll
 					eventUtil.trigger(scrollingElement, EVENTS.SCROLL, {
 						scrollLeft: scrollLeft,
@@ -16384,6 +16404,7 @@ function pathToRegexp (path, keys, options) {
 					}
 					// setting scrolling element
 					scrollingElement = element;
+
 					// calculate maxScroll
 					parentRectangle = element.getBoundingClientRect();
 					contentRectangle = childElement.getBoundingClientRect();
@@ -16626,11 +16647,14 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.util.scrolling
 			 */
 			function setSnapPoints(_snapPoints) {
+				var numberOfSnapPoints = _snapPoints.length;
+
 				snapPoints = _snapPoints;
 				snapSize = null;
-				maxScrollPosition = (snapPoints.length) ? snapPoints.reduce(function (previousValue, value) {
-					return previousValue + value.length;
-				}, snapPoints[0].position) : 0;
+				if (numberOfSnapPoints) {
+					maxScrollPosition = snapPoints[numberOfSnapPoints - 1].position	- snapPoints[0].position +
+						OVERSCROLL_SIZE;
+				}
 			}
 
 			/**
@@ -37414,6 +37438,7 @@ function pathToRegexp (path, keys, options) {
 					self._enabled = true;
 					self._isTouched = false;
 					self._scrollEventCount = 0;
+					self._marginTop = 0;
 				},
 
 				prototype = new BaseWidget(),
@@ -37541,14 +37566,7 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			function getScrollPosition(scrollableParentElement) {
-				var contentElement = scrollableParentElement.querySelector(".ui-content"),
-					marginTop = 0;
-
-				if (contentElement) {
-					marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
-				}
-
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top + marginTop;
+				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
 			}
 
 			function setSelection(self) {
@@ -37557,7 +37575,9 @@ function pathToRegexp (path, keys, options) {
 					scrollableParent = ui.scrollableParent,
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
 					scrollableParentElement = scrollableParent.element || ui.page,
-					scrollCenter = getScrollPosition(scrollableParentElement) + scrollableParentHeight / 2,
+					scrollCenter = getScrollPosition(scrollableParentElement) +
+						scrollableParentHeight / 2 +
+						self._marginTop,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -37600,7 +37620,7 @@ function pathToRegexp (path, keys, options) {
 			 * @protected
 			 * @member ns.widget.wearable.SnapListview
 			 */
-			prototype._listItemAnimate = function () {
+			prototype._listItemAnimate = function (scrollValue) {
 				var self = this,
 					anim = self.options.animate,
 					animateCallback = self._callbacks[anim],
@@ -37608,7 +37628,9 @@ function pathToRegexp (path, keys, options) {
 					scrollableParentElement = self._ui.scrollableParent.element || self._ui.page;
 
 				if (animateCallback) {
-					scrollPosition = getScrollPosition(scrollableParentElement);
+					scrollPosition = scrollValue ||
+						(getScrollPosition(scrollableParentElement) + self._marginTop);
+
 					utilArray.forEach(self._listItems, function (item) {
 						item.animate(scrollPosition, animateCallback);
 					});
@@ -37625,7 +37647,7 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
-			function scrollHandler(self) {
+			function scrollHandler(self, event) {
 				var callbacks = self._callbacks,
 					scrollEndCallback = callbacks.scrollEnd;
 
@@ -37641,7 +37663,7 @@ function pathToRegexp (path, keys, options) {
 					removeSelectedClass(self);
 				}
 
-				self._listItemAnimate();
+				self._listItemAnimate(event && event.detail && event.detail.scrollTop);
 
 				// scrollend handler can be run only when all touches are released.
 				if (self._isTouched === false) {
@@ -37722,6 +37744,7 @@ function pathToRegexp (path, keys, options) {
 					visibleOffset = scroller.clientHeight;
 					ui.scrollableParent.height = visibleOffset;
 				}
+				return scroller;
 			};
 
 			prototype._refreshSnapListview = function (listview) {
@@ -37730,12 +37753,18 @@ function pathToRegexp (path, keys, options) {
 					options = self.options,
 					listItems = [],
 					scroller = ui.scrollableParent.element,
-					visibleOffset;
+					visibleOffset,
+					contentElement;
 
 				if (!scroller) {
-					self._initSnapListview(listview);
+					scroller = self._initSnapListview(listview);
 				}
 				visibleOffset = ui.scrollableParent.height || ui.page.offsetHeight;
+
+				contentElement = scroller.querySelector(".ui-content");
+				if (contentElement) {
+					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
+				}
 
 				// init information about widget
 				self._selectedIndex = null;
