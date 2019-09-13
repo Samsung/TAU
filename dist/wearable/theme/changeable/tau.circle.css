@@ -54,6 +54,7 @@
                   Listview
 ***************************************************************************/
 /* rgba(0, 0, 0, 1) */
+/* rgba(250, 250, 250, 0.65) */
 /****************************************************************************
                Listview with Marquee
 ****************************************************************************/
@@ -223,7 +224,7 @@ body {
   padding-left: 1.5rem;
 }
 .ui-page .ui-header.ui-header-big {
-  height: 5.875rem;
+  height: 7.1875rem;
 }
 .ui-page .ui-header.ui-header-big .ui-title {
   font-size: 2rem;
@@ -1190,7 +1191,6 @@ a {
 }
 .ui-page .ui-scroller.ui-snap-container .ui-header {
   margin: 0;
-  height: 7.1875rem;
 }
 .ui-page .ui-scroller.ui-snap-container .ui-listview.ui-snap-listview {
   margin-top: 0.6875rem;
@@ -1386,7 +1386,7 @@ a {
           mask-image: url("images/List/b_list_focus_bg.png");
   -webkit-mask-size: 100% 100%;
           mask-size: 100% 100%;
-  background-color: rgba(250, 250, 250, 0.65);
+  background-color: rgba(81, 81, 81, 0.5);
   pointer-events: none;
 }
 .ui-listview.ui-snap-listview li,
@@ -1545,7 +1545,7 @@ a {
 .ui-listview.ui-arc-listview-carousel-item li.ui-snap-listview-selected.ui-li-active::before,
 .ui-listview.ui-snap-listview li.ui-arc-listview-selected.ui-li-active::before,
 .ui-listview.ui-arc-listview-carousel-item li.ui-arc-listview-selected.ui-li-active::before {
-  background-color: rgba(250, 250, 250, 0.65);
+  background-color: rgba(81, 81, 81, 0.5);
 }
 .ui-listview.ui-snap-listview li.ui-snap-listview-selected.ui-li-active .ui-action-text:active,
 .ui-listview.ui-arc-listview-carousel-item li.ui-snap-listview-selected.ui-li-active .ui-action-text:active,

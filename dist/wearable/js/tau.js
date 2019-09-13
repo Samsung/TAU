@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.4';
+ns.version = '1.1.5';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2192,11 +2192,17 @@ ns.version = '1.1.4';
 				 * @member ns.util.object
 				 */
 				fastMerge: function (newObject, orgObject) {
-					var key;
+					var key,
+						propertyDescriptor;
 
 					for (key in orgObject) {
 						if (orgObject.hasOwnProperty(key)) {
-							newObject[key] = orgObject[key];
+							propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+							if (!propertyDescriptor || propertyDescriptor.writable === true || propertyDescriptor.set != undefined) {
+								newObject[key] = orgObject[key];
+							} else {
+								console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+							}
 						}
 					}
 					return newObject;
@@ -2216,7 +2222,8 @@ ns.version = '1.1.4';
 						key,
 						args = [].slice.call(arguments),
 						argsLength = args.length,
-						i;
+						i,
+						propertyDescriptor;
 
 					newObject = args.shift();
 					override = true;
@@ -2228,8 +2235,14 @@ ns.version = '1.1.4';
 						orgObject = args.shift();
 						if (orgObject !== null) {
 							for (key in orgObject) {
-								if (orgObject.hasOwnProperty(key) && (override || newObject[key] === undefined)) {
-									newObject[key] = orgObject[key];
+								if (orgObject.hasOwnProperty(key)) {
+									propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+									if (!propertyDescriptor ||
+										(override && (propertyDescriptor.writable === true || propertyDescriptor.set != undefined))) {
+										newObject[key] = orgObject[key];
+									} else if (override) {
+										console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+									}
 								}
 							}
 						}
@@ -17609,6 +17622,7 @@ function pathToRegexp (path, keys, options) {
 				// that's why normal css values cannot be applied
 				// margin needs to be subtracted from position
 				SCROLL_MARGIN = 11,
+				OVERSCROLL_SIZE = 0,
 
 				// ScrollBar variables
 				scrollBar = null,
@@ -17622,6 +17636,10 @@ function pathToRegexp (path, keys, options) {
 				fromAPI = false,
 				virtualMode = false,
 				snapSize = null,
+				snapPoints = null,
+				currentIndex = 0,
+				previousIndex = 0,
+				containerSize = 0,
 				requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 			/**
@@ -17689,6 +17707,7 @@ function pathToRegexp (path, keys, options) {
 				fromAPI = false;
 				// calculate difference between touch start and current position
 				lastScrollPosition = clientPosition - startPosition;
+
 				if (!bounceBack) {
 					// normalize value to be in bound [0, maxScroll]
 					if (scrollPosition + lastScrollPosition > 0) {
@@ -17747,14 +17766,68 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
+			/**
+			 * Get position of scroll for indicated index
+			 * @method getScrollPositionByIndex
+			 * @param {number} index
+			 * @member ns.util.scrolling
+			 * @return {number}
+			 */
+			function getScrollPositionByIndex(index) {
+				if (snapPoints) {
+					index = max(min(snapPoints.length - 1, index), 0); // validate index value
+					return snapPoints[index].position - snapPoints[0].position;
+				}
+				return 0;
+			}
+
+			/**
+			 * Find index of snap point by given scroll position
+			 * @method getSnapPointIndexByScrollPosition
+			 * @param {number} position scroll position (usually negative value)
+			 * @member ns.util.scrolling
+			 * @return {number}
+			 */
+			function getSnapPointIndexByScrollPosition(position) {
+				var current = null,
+					next = null,
+					len,
+					i;
+
+				if (snapPoints) {
+					position -= containerSize / 2; // half of screen
+					position = -position;
+					if (snapPoints[0].position > position) { // before first position
+						return 0;
+					}
+					for (i = 0, len = snapPoints.length; i < len; i++) {
+						current = snapPoints[i];
+						next = snapPoints[i + 1];
+						if (!next || // this is last snap point
+							current.position < position && next.position > position) {
+							return i;
+						}
+					}
+				}
+				return -1;
+			}
+
 			function touchEndCalculateSpeed(inBounds) {
-				var diffTime = Date.now() - lastTime;
+				var diffTime = Date.now() - lastTime,
+					snapPoint = null;
 
 				if (inBounds && abs(lastScrollPosition / diffTime) > 1) {
 					// if it was fast move, we start animation of scrolling after touch end
 					moveToPosition = max(min(round(scrollPosition + 1000 * lastScrollPosition / diffTime),
 						0), -maxScrollPosition);
-					if (snapSize) {
+
+					if (snapPoints) {
+						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition + 1000 * lastScrollPosition / diffTime);
+						snapPoint = snapPoints[currentIndex];
+						if (snapPoint) {
+							moveToPosition = -getScrollPositionByIndex(currentIndex);
+						}
+					} else if (snapSize) {
 						moveToPosition = snapSize * round(moveToPosition / snapSize);
 					}
 					if (abs(lastScrollPosition / diffTime) > 1) {
@@ -17767,7 +17840,14 @@ function pathToRegexp (path, keys, options) {
 					requestAnimationFrame(moveTo);
 				} else {
 					// touch move was slow
-					if (snapSize) {
+					if (snapPoints) {
+						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition);
+						snapPoint = snapPoints[currentIndex];
+						if (snapPoint) {
+							moveToPosition = -getScrollPositionByIndex(currentIndex);
+							requestAnimationFrame(moveTo);
+						}
+					} else if (snapSize) {
 						moveToPosition = snapSize * round(scrollPosition / snapSize);
 						requestAnimationFrame(moveTo);
 					}
@@ -17841,6 +17921,14 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
+			function getSnapSize(index) {
+				if (snapPoints) {
+					return Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
+				} else {
+					return snapSize;
+				}
+			}
+
 			/**
 			 * Handler for rotary event
 			 * @param {Event} event
@@ -17848,13 +17936,27 @@ function pathToRegexp (path, keys, options) {
 			function rotary(event) {
 				var eventDirection = event.detail && event.detail.direction;
 
+				previousIndex = currentIndex;
+
 				// update position by snapSize
 				if (eventDirection === "CW") {
-					moveToPosition -= snapSize || 50;
+					currentIndex++;
+					if (snapPoints && currentIndex >= snapPoints.length) {
+						currentIndex = snapPoints.length - 1;
+					}
+					snapSize = -1 * getSnapSize(currentIndex);
+
 				} else {
-					moveToPosition += snapSize || 50;
+					currentIndex--;
+					if (snapPoints && currentIndex < 0) {
+						currentIndex = 0;
+					}
+					snapSize = getSnapSize(currentIndex);
 				}
-				if (snapSize) {
+
+				moveToPosition += snapSize;
+
+				if (!snapPoints && snapSize) {
 					moveToPosition = snapSize * round(moveToPosition / snapSize);
 				}
 				if (moveToPosition < -maxScrollPosition) {
@@ -17863,6 +17965,7 @@ function pathToRegexp (path, keys, options) {
 				if (moveToPosition > 0) {
 					moveToPosition = 0;
 				}
+
 				requestAnimationFrame(moveTo);
 				requestAnimationFrame(render);
 				eventUtil.trigger(scrollingElement, EVENTS.SCROLL_START, {
@@ -17917,6 +18020,7 @@ function pathToRegexp (path, keys, options) {
 					} else {
 						scrollTop = -scrollPosition;
 					}
+
 					// trigger event scroll
 					eventUtil.trigger(scrollingElement, EVENTS.SCROLL, {
 						scrollLeft: scrollLeft,
@@ -18041,6 +18145,7 @@ function pathToRegexp (path, keys, options) {
 					}
 					// setting scrolling element
 					scrollingElement = element;
+
 					// calculate maxScroll
 					parentRectangle = element.getBoundingClientRect();
 					contentRectangle = childElement.getBoundingClientRect();
@@ -18224,6 +18329,107 @@ function pathToRegexp (path, keys, options) {
 				return maxScrollPosition;
 			}
 
+			function scrollToIndex(index) {
+				var previousIndex = currentIndex;
+
+				currentIndex = index;
+
+				if (snapPoints) {
+					moveToPosition = snapPoints[index].position;
+					snapSize = Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
+				} else {
+					moveToPosition = snapSize * index;
+				}
+			}
+
+			/**
+			 * Update max scrolling position
+			 * @method setMaxScroll
+			 * @param {number} maxValue
+			 * @member ns.util.scrolling
+			 */
+			function setMaxScroll(maxValue) {
+				var boundingRect = scrollingElement.getBoundingClientRect(),
+					directionDimension = direction ? "width" : "height",
+					directionSize = boundingRect[directionDimension],
+					tempMaxPosition = max(maxValue - directionSize, 0);
+
+				// Change size of thumb only when necessary
+				if (tempMaxPosition !== maxScrollPosition) {
+					maxScrollPosition = tempMaxPosition || Number.POSITIVE_INFINITY;
+					if (scrollBar) {
+						if (circularScrollBar) {
+							// Calculate new thumb size based on max scrollbar size
+							circularScrollThumbSize = max((directionSize / (maxScrollPosition + directionSize)) *
+								CIRCULAR_SCROLL_BAR_SIZE, CIRCULAR_SCROLL_MIN_THUMB_SIZE);
+							maxScrollBarPosition = CIRCULAR_SCROLL_BAR_SIZE - circularScrollThumbSize;
+							polarUtil.updatePosition(svgScrollBar, "." + classes.thumb, {
+								arcStart: scrollBarPosition,
+								arcEnd: scrollBarPosition + circularScrollThumbSize,
+								r: RADIUS
+							});
+						} else {
+							directionSize -= 2 * SCROLL_MARGIN;
+							scrollThumb.style[directionDimension] =
+								(directionSize / (maxScrollPosition + directionSize) * directionSize) + "px";
+							// Cannot use direct value from style here because CSS may override the minimum
+							// size of thumb here
+							maxScrollBarPosition = directionSize -
+								scrollThumb.getBoundingClientRect()[directionDimension];
+						}
+					}
+				}
+			}
+
+			/**
+			 * Method sets snap points for scroll
+			 * @param {Array} _snapPoints
+			 * @method setSnapSize
+			 * @member ns.util.scrolling
+			 */
+			function setSnapPoints(_snapPoints) {
+				var numberOfSnapPoints = _snapPoints.length;
+
+				snapPoints = _snapPoints;
+				snapSize = null;
+				if (numberOfSnapPoints) {
+					maxScrollPosition = snapPoints[numberOfSnapPoints - 1].position	- snapPoints[0].position +
+						OVERSCROLL_SIZE;
+				}
+			}
+
+			/**
+			 * Method sets snap size for scroll or array of snap points
+			 * @param {number|Array} _snapSize
+			 * @method setSnapSize
+			 * @member ns.util.scrolling
+			 */
+			function setSnapSize(_snapSize) {
+				containerSize = (direction) ? scrollingElement.getBoundingClientRect().height :
+					scrollingElement.getBoundingClientRect().width;
+
+				if (Array.isArray(_snapSize)) {
+					setSnapPoints(_snapSize);
+				} else {
+					snapPoints = null;
+					snapSize = _snapSize;
+					if (snapSize) {
+						maxScrollPosition = snapSize * round(maxScrollPosition / snapSize);
+					}
+				}
+			}
+
+			/**
+			 * Return true is given element is current scrolling element
+			 * @method isElement
+			 * @param {HTMLElement} element element to check
+			 * @return {boolean}
+			 * @member ns.util.scrolling
+			 */
+			function isElement(element) {
+				return scrollingElement === element;
+			}
+
 			ns.util.scrolling = {
 				getScrollPosition: getScrollPosition,
 				enable: enable,
@@ -18231,62 +18437,11 @@ function pathToRegexp (path, keys, options) {
 				enableScrollBar: enableScrollBar,
 				disableScrollBar: disableScrollBar,
 				scrollTo: scrollTo,
-				/**
-				 * Return true is given element is current scrolling element
-				 * @method isElement
-				 * @param {HTMLElement} element element to check
-				 * @return {boolean}
-				 * @member ns.util.scrolling
-				 */
-				isElement: function (element) {
-					return scrollingElement === element;
-				},
-
-				/**
-				 * Update max scrolling position
-				 * @method setMaxScroll
-				 * @param {number} maxValue
-				 * @member ns.util.scrolling
-				 */
-				setMaxScroll: function (maxValue) {
-					var boundingRect = scrollingElement.getBoundingClientRect(),
-						directionDimension = direction ? "width" : "height",
-						directionSize = boundingRect[directionDimension],
-						tempMaxPosition = max(maxValue - directionSize, 0);
-
-					// Change size of thumb only when necessary
-					if (tempMaxPosition !== maxScrollPosition) {
-						maxScrollPosition = tempMaxPosition || Number.POSITIVE_INFINITY;
-						if (scrollBar) {
-							if (circularScrollBar) {
-								// Calculate new thumb size based on max scrollbar size
-								circularScrollThumbSize = max((directionSize / (maxScrollPosition + directionSize)) *
-									CIRCULAR_SCROLL_BAR_SIZE, CIRCULAR_SCROLL_MIN_THUMB_SIZE);
-								maxScrollBarPosition = CIRCULAR_SCROLL_BAR_SIZE - circularScrollThumbSize;
-								polarUtil.updatePosition(svgScrollBar, "." + classes.thumb, {
-									arcStart: scrollBarPosition,
-									arcEnd: scrollBarPosition + circularScrollThumbSize,
-									r: RADIUS
-								});
-							} else {
-								directionSize -= 2 * SCROLL_MARGIN;
-								scrollThumb.style[directionDimension] =
-									(directionSize / (maxScrollPosition + directionSize) * directionSize) + "px";
-								// Cannot use direct value from style here because CSS may override the minimum
-								// size of thumb here
-								maxScrollBarPosition = directionSize -
-									scrollThumb.getBoundingClientRect()[directionDimension];
-							}
-						}
-					}
-				},
+				setMaxScroll: setMaxScroll,
 				getMaxScroll: getMaxScroll,
-				setSnapSize: function (setSnapSize) {
-					snapSize = setSnapSize;
-					if (snapSize) {
-						maxScrollPosition = snapSize * round(maxScrollPosition / snapSize);
-					}
-				},
+				setSnapSize: setSnapSize,
+				scrollToIndex: scrollToIndex,
+				isElement: isElement,
 				setBounceBack: function (setBounceBack) {
 					bounceBack = setBounceBack;
 				}
@@ -41112,6 +41267,7 @@ function pathToRegexp (path, keys, options) {
 					self._enabled = true;
 					self._isTouched = false;
 					self._scrollEventCount = 0;
+					self._marginTop = 0;
 				},
 
 				prototype = new BaseWidget(),
@@ -41239,14 +41395,7 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			function getScrollPosition(scrollableParentElement) {
-				var contentElement = scrollableParentElement.querySelector(".ui-content"),
-					marginTop = 0;
-
-				if (contentElement) {
-					marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
-				}
-
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top + marginTop;
+				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
 			}
 
 			function setSelection(self) {
@@ -41255,7 +41404,9 @@ function pathToRegexp (path, keys, options) {
 					scrollableParent = ui.scrollableParent,
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
 					scrollableParentElement = scrollableParent.element || ui.page,
-					scrollCenter = getScrollPosition(scrollableParentElement) + scrollableParentHeight / 2,
+					scrollCenter = getScrollPosition(scrollableParentElement) +
+						scrollableParentHeight / 2 +
+						self._marginTop,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -41298,7 +41449,7 @@ function pathToRegexp (path, keys, options) {
 			 * @protected
 			 * @member ns.widget.wearable.SnapListview
 			 */
-			prototype._listItemAnimate = function () {
+			prototype._listItemAnimate = function (scrollValue) {
 				var self = this,
 					anim = self.options.animate,
 					animateCallback = self._callbacks[anim],
@@ -41306,7 +41457,9 @@ function pathToRegexp (path, keys, options) {
 					scrollableParentElement = self._ui.scrollableParent.element || self._ui.page;
 
 				if (animateCallback) {
-					scrollPosition = getScrollPosition(scrollableParentElement);
+					scrollPosition = scrollValue ||
+						(getScrollPosition(scrollableParentElement) + self._marginTop);
+
 					utilArray.forEach(self._listItems, function (item) {
 						item.animate(scrollPosition, animateCallback);
 					});
@@ -41323,7 +41476,7 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
-			function scrollHandler(self) {
+			function scrollHandler(self, event) {
 				var callbacks = self._callbacks,
 					scrollEndCallback = callbacks.scrollEnd;
 
@@ -41339,7 +41492,7 @@ function pathToRegexp (path, keys, options) {
 					removeSelectedClass(self);
 				}
 
-				self._listItemAnimate();
+				self._listItemAnimate(event && event.detail && event.detail.scrollTop);
 
 				// scrollend handler can be run only when all touches are released.
 				if (self._isTouched === false) {
@@ -41387,7 +41540,8 @@ function pathToRegexp (path, keys, options) {
 					scroller,
 					visibleOffset,
 					elementHeight,
-					scrollMargin;
+					scrollMargin,
+					listItem;
 
 				// finding page  and scroller
 				ui.page = utilSelector.getClosestByClass(listview, "ui-page") || document.body;
@@ -41398,14 +41552,20 @@ function pathToRegexp (path, keys, options) {
 						scrolling.enable(scroller, "y");
 					}
 
-					elementHeight = (listview.firstElementChild) ? listview.firstElementChild.getBoundingClientRect().height : 0;
+					listItem = listview.querySelector(self.options.selector);
+					elementHeight = (listItem) ? listItem.getBoundingClientRect().height : 0;
 
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
 
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
-					scrolling.setSnapSize(elementHeight);
+					scrolling.setSnapSize(self._listItems.map(function (item) {
+						return {
+							position: item.coord.top,
+							length: item.coord.height
+						};
+					}));
 
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
@@ -41413,6 +41573,7 @@ function pathToRegexp (path, keys, options) {
 					visibleOffset = scroller.clientHeight;
 					ui.scrollableParent.height = visibleOffset;
 				}
+				return scroller;
 			};
 
 			prototype._refreshSnapListview = function (listview) {
@@ -41421,12 +41582,18 @@ function pathToRegexp (path, keys, options) {
 					options = self.options,
 					listItems = [],
 					scroller = ui.scrollableParent.element,
-					visibleOffset;
+					visibleOffset,
+					contentElement;
 
 				if (!scroller) {
-					self._initSnapListview(listview);
+					scroller = self._initSnapListview(listview);
 				}
 				visibleOffset = ui.scrollableParent.height || ui.page.offsetHeight;
+
+				contentElement = scroller.querySelector(".ui-content");
+				if (contentElement) {
+					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
+				}
 
 				// init information about widget
 				self._selectedIndex = null;
@@ -41440,6 +41607,12 @@ function pathToRegexp (path, keys, options) {
 						self._currentIndex = index;
 					}
 				});
+				scrolling.setSnapSize(listItems.map(function (item) {
+					return {
+						position: item.coord.top,
+						length: item.coord.height
+					};
+				}));
 
 				self._listItems = listItems;
 				self._listItemAnimate();
