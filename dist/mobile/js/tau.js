@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.7';
+ns.version = '1.0.8';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -2451,11 +2451,17 @@ ns.version = '1.0.7';
 				 * @member ns.util.object
 				 */
 				fastMerge: function (newObject, orgObject) {
-					var key;
+					var key,
+						propertyDescriptor;
 
 					for (key in orgObject) {
 						if (orgObject.hasOwnProperty(key)) {
-							newObject[key] = orgObject[key];
+							propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+							if (!propertyDescriptor || propertyDescriptor.writable === true || propertyDescriptor.set != undefined) {
+								newObject[key] = orgObject[key];
+							} else {
+								console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+							}
 						}
 					}
 					return newObject;
@@ -2475,7 +2481,8 @@ ns.version = '1.0.7';
 						key,
 						args = [].slice.call(arguments),
 						argsLength = args.length,
-						i;
+						i,
+						propertyDescriptor;
 
 					newObject = args.shift();
 					override = true;
@@ -2487,8 +2494,14 @@ ns.version = '1.0.7';
 						orgObject = args.shift();
 						if (orgObject !== null) {
 							for (key in orgObject) {
-								if (orgObject.hasOwnProperty(key) && (override || newObject[key] === undefined)) {
-									newObject[key] = orgObject[key];
+								if (orgObject.hasOwnProperty(key)) {
+									propertyDescriptor = Object.getOwnPropertyDescriptor(newObject, key);
+									if (!propertyDescriptor ||
+										(override && (propertyDescriptor.writable === true || propertyDescriptor.set != undefined))) {
+										newObject[key] = orgObject[key];
+									} else if (override) {
+										console.warn("Attempt to override object readonly property (" + key + ") during merge.")
+									}
 								}
 							}
 						}
@@ -38621,6 +38634,7 @@ function pathToRegexp (path, keys, options) {
 				// that's why normal css values cannot be applied
 				// margin needs to be subtracted from position
 				SCROLL_MARGIN = 11,
+				OVERSCROLL_SIZE = 0,
 
 				// ScrollBar variables
 				scrollBar = null,
@@ -38705,6 +38719,7 @@ function pathToRegexp (path, keys, options) {
 				fromAPI = false;
 				// calculate difference between touch start and current position
 				lastScrollPosition = clientPosition - startPosition;
+
 				if (!bounceBack) {
 					// normalize value to be in bound [0, maxScroll]
 					if (scrollPosition + lastScrollPosition > 0) {
@@ -38793,7 +38808,10 @@ function pathToRegexp (path, keys, options) {
 
 				if (snapPoints) {
 					position -= containerSize / 2; // half of screen
-					position = Math.abs(position);
+					position = -position;
+					if (snapPoints[0].position > position) { // before first position
+						return 0;
+					}
 					for (i = 0, len = snapPoints.length; i < len; i++) {
 						current = snapPoints[i];
 						next = snapPoints[i + 1];
@@ -38814,6 +38832,7 @@ function pathToRegexp (path, keys, options) {
 					// if it was fast move, we start animation of scrolling after touch end
 					moveToPosition = max(min(round(scrollPosition + 1000 * lastScrollPosition / diffTime),
 						0), -maxScrollPosition);
+
 					if (snapPoints) {
 						currentIndex = getSnapPointIndexByScrollPosition(scrollPosition + 1000 * lastScrollPosition / diffTime);
 						snapPoint = snapPoints[currentIndex];
@@ -39013,6 +39032,7 @@ function pathToRegexp (path, keys, options) {
 					} else {
 						scrollTop = -scrollPosition;
 					}
+
 					// trigger event scroll
 					eventUtil.trigger(scrollingElement, EVENTS.SCROLL, {
 						scrollLeft: scrollLeft,
@@ -39137,6 +39157,7 @@ function pathToRegexp (path, keys, options) {
 					}
 					// setting scrolling element
 					scrollingElement = element;
+
 					// calculate maxScroll
 					parentRectangle = element.getBoundingClientRect();
 					contentRectangle = childElement.getBoundingClientRect();
@@ -39379,11 +39400,14 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.util.scrolling
 			 */
 			function setSnapPoints(_snapPoints) {
+				var numberOfSnapPoints = _snapPoints.length;
+
 				snapPoints = _snapPoints;
 				snapSize = null;
-				maxScrollPosition = (snapPoints.length) ? snapPoints.reduce(function (previousValue, value) {
-					return previousValue + value.length;
-				}, snapPoints[0].position) : 0;
+				if (numberOfSnapPoints) {
+					maxScrollPosition = snapPoints[numberOfSnapPoints - 1].position	- snapPoints[0].position +
+						OVERSCROLL_SIZE;
+				}
 			}
 
 			/**
