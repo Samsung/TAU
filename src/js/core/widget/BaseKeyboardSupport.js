@@ -361,7 +361,7 @@
 			 * @private
 			 * @member ns.widget.tv.BaseKeyboardSupport
 			 * @param {number} angle
-			 * @param tolerance [0.0 .. 45.0]
+			 * @param {number} tolerance [0.0 .. 45.0]
 			 * @return {string}
 			 */
 			function getDirectionFromAngle(angle, tolerance) {

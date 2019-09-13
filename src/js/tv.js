@@ -44,7 +44,7 @@
 			"./tools/performance",
 			//>>excludeEnd("tauPerformance")
 			//>>excludeStart("tauUI", pragmas.tauUI);
-            "./core/core",
+			"./core/core",
 			"./core/config",
 			"./profile/tv/config",
 			"./core/defaults",

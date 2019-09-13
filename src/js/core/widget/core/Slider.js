@@ -82,7 +82,6 @@
 				utilDOM = ns.util.DOM,
 				events = ns.event,
 				Gesture = ns.event.gesture,
-				utilSelector = ns.util.selectors,
 				COLORS = {
 					BACKGROUND: "rgba(145, 145, 145, 0.7)",
 					ACTIVE: "rgba(61, 185, 204, 1)",

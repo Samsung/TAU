@@ -34,14 +34,14 @@
  */
 (function (window, document, ns) {
 	"use strict";
-	//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude); 
+	//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 	define(
 		[
 			"../../engine",
 			"../BaseWidget"
 		],
 		function () {
-			//>>excludeEnd("tauBuildExclude"); 
+			//>>excludeEnd("tauBuildExclude");
 			var utilsObject = ns.util.object,
 
 				CoverFlow = function () {
@@ -81,6 +81,7 @@
 
 			prototype._refresh = function () {
 				var self = this;
+
 				self._setValue(self.options.value);
 			}
 
@@ -120,9 +121,9 @@
 				CoverFlow,
 				"core"
 			);
-			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude); 
+			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.widget.core.CoverFlow;
 		}
 	);
-	//>>excludeEnd("tauBuildExclude"); 
+	//>>excludeEnd("tauBuildExclude");
 }(window, window.document, ns));
