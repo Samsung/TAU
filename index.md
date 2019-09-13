@@ -63,8 +63,8 @@ Note: Currently Tizen/TAU specific extensions are under development.
 ## Documentation
 
 * [TAU API Reference](https://developer.tizen.org/dev-guide/5.0.0/org.tizen.web.apireference/html/ui_fw_api/ui_fw_api_cover.htm)
-* [Examples of TAU UIComponents - mobile](examples/mobile/UIComponents/index.html)
-* [Examples of TAU UIComponents - wearable](examples/wearable/UIComponents/index.html)
+* [Examples of TAU UIComponents - mobile](https://code.tizen.org/TAU/1.0/examples/mobile/UIComponents/)
+* [Examples of TAU UIComponents - wearable](https://code.tizen.org/TAU/1.0/examples/wearable/UIComponents/)
 
 If you are new to the whole standalone web application concept please checkout [Application visual layout](application_visual_layout.html) part.
 
