@@ -164,6 +164,7 @@
 					self._enabled = true;
 					self._isTouched = false;
 					self._scrollEventCount = 0;
+					self._marginTop = 0;
 				},
 
 				prototype = new BaseWidget(),
@@ -291,14 +292,7 @@
 			}
 
 			function getScrollPosition(scrollableParentElement) {
-				var contentElement = scrollableParentElement.querySelector(".ui-content"),
-					marginTop = 0;
-
-				if (contentElement) {
-					marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
-				}
-
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top + marginTop;
+				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
 			}
 
 			function setSelection(self) {
@@ -307,7 +301,9 @@
 					scrollableParent = ui.scrollableParent,
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
 					scrollableParentElement = scrollableParent.element || ui.page,
-					scrollCenter = getScrollPosition(scrollableParentElement) + scrollableParentHeight / 2,
+					scrollCenter = getScrollPosition(scrollableParentElement) +
+						scrollableParentHeight / 2 +
+						self._marginTop,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -350,7 +346,7 @@
 			 * @protected
 			 * @member ns.widget.wearable.SnapListview
 			 */
-			prototype._listItemAnimate = function () {
+			prototype._listItemAnimate = function (scrollValue) {
 				var self = this,
 					anim = self.options.animate,
 					animateCallback = self._callbacks[anim],
@@ -358,7 +354,9 @@
 					scrollableParentElement = self._ui.scrollableParent.element || self._ui.page;
 
 				if (animateCallback) {
-					scrollPosition = getScrollPosition(scrollableParentElement);
+					scrollPosition = scrollValue ||
+						(getScrollPosition(scrollableParentElement) + self._marginTop);
+
 					utilArray.forEach(self._listItems, function (item) {
 						item.animate(scrollPosition, animateCallback);
 					});
@@ -375,7 +373,7 @@
 				}
 			}
 
-			function scrollHandler(self) {
+			function scrollHandler(self, event) {
 				var callbacks = self._callbacks,
 					scrollEndCallback = callbacks.scrollEnd;
 
@@ -391,7 +389,7 @@
 					removeSelectedClass(self);
 				}
 
-				self._listItemAnimate();
+				self._listItemAnimate(event && event.detail && event.detail.scrollTop);
 
 				// scrollend handler can be run only when all touches are released.
 				if (self._isTouched === false) {
@@ -472,6 +470,7 @@
 					visibleOffset = scroller.clientHeight;
 					ui.scrollableParent.height = visibleOffset;
 				}
+				return scroller;
 			};
 
 			prototype._refreshSnapListview = function (listview) {
@@ -480,12 +479,18 @@
 					options = self.options,
 					listItems = [],
 					scroller = ui.scrollableParent.element,
-					visibleOffset;
+					visibleOffset,
+					contentElement;
 
 				if (!scroller) {
-					self._initSnapListview(listview);
+					scroller = self._initSnapListview(listview);
 				}
 				visibleOffset = ui.scrollableParent.height || ui.page.offsetHeight;
+
+				contentElement = scroller.querySelector(".ui-content");
+				if (contentElement) {
+					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
+				}
 
 				// init information about widget
 				self._selectedIndex = null;

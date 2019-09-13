@@ -31653,12 +31653,6 @@ function pathToRegexp (path, keys, options) {
 					 */
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
-					BTN_TEXT: "ui-btn-text",
-					/**
-					 * Creates a button widget with light text
-					 * @style ui-btn-text-light
-					 * @member ns.widget.core.Button
-					 */
 					BTN_TEXT_LIGHT: "ui-btn-text-light",
 					/**
 					 * Creates a button widget with dark text
@@ -31931,10 +31925,7 @@ function pathToRegexp (path, keys, options) {
 			prototype._setIconpos = function (element, iconpos) {
 				var options = this.options,
 					style = options.style,
-					innerTextLength = element.textContent.trim().length || (element.value ? element.value.length : 0);
-
-				element.classList.remove(classes.BTN_ICON_POSITION_PREFIX + options.iconpos);
-				element.classList.remove(classes.BTN_ICON_ONLY);
+					innerTextLength = element.textContent.length || (element.value ? element.value.length : 0);
 
 				iconpos = iconpos || options.iconpos;
 
