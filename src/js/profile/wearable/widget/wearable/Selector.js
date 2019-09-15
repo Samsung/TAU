@@ -945,14 +945,14 @@
 
 				if (active) {
 					active.style.transform =
-						active.style.transform.replace(DEFAULT.ITEM_ACTIVE_SCALE,
-							DEFAULT.ITEM_NORMAL_SCALE).replace("scale(0,", "scale(0.");
+						active.style.transform.replace("scale(0,", "scale(0.").replace(DEFAULT.ITEM_ACTIVE_SCALE,
+							DEFAULT.ITEM_NORMAL_SCALE);
 					active.classList.remove(classes.ITEM_ACTIVE);
 				}
 				if (items.length) {
 					items[index].classList.add(classes.ITEM_ACTIVE);
-					newTransformStyle = transform.replace(DEFAULT.ITEM_NORMAL_SCALE,
-						DEFAULT.ITEM_ACTIVE_SCALE).replace("scale(0,", "scale(0.");
+					newTransformStyle = transform.replace("scale(0,", "scale(0.").replace(DEFAULT.ITEM_NORMAL_SCALE,
+						DEFAULT.ITEM_ACTIVE_SCALE);
 					items[index].style.transform = newTransformStyle;
 					items[index].style.webkitTransform = newTransformStyle;
 					if (self.options.indicatorAutoControl) {
