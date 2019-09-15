@@ -334,7 +334,7 @@
 					ITEM_RADIUS: -1,
 					ITEM_START_DEGREE: 30,
 					ITEM_END_DEGREE: 330,
-					ITEM_NORMAL_SCALE: "scale(" + STATIC.SCALE_FACTOR + ")",
+					ITEM_NORMAL_SCALE: "scale(" + (STATIC.SCALE_FACTOR).toString().replace(",", ".") + ")",
 					ITEM_ACTIVE_SCALE: "scale(1)",
 					ITEM_MOVED_SCALE: "scale(0.92)",
 					EMPTY_STATE_TEXT: "Selector is empty"
