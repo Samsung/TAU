@@ -126,6 +126,15 @@
 					label: null,
 					footer: null
 				};
+
+				// property contains information which DOM elements
+				// was built during widget build process.
+				// These data are needed in destroy method
+				self._wasBuilt = {
+					footer: false,
+					buttonSet: false
+				}
+
 			}
 			NumberPicker.classes = classes;
 
@@ -182,6 +191,7 @@
 					if (!footer) {
 						footer = document.createElement("footer");
 						parent.appendChild(footer);
+						this._wasBuilt.footer = true;
 					}
 
 					// add standard footer class for footer with button
@@ -422,6 +432,7 @@
 				buttonSet.classList.add(classes.BUTTON_SET);
 				// add "set" button to the footer
 				footer.appendChild(buttonSet);
+				this._wasBuilt.buttonSet = true;
 
 				// build DOM structure
 				container.appendChild(number);
@@ -472,6 +483,14 @@
 				footer.classList.remove("ui-bottom-button");
 
 				// recovery DOM structure
+				if (self._wasBuilt.buttonSet) {
+					ui.footer.removeChild(ui.buttonSet);
+					self._wasBuilt.buttonSet = false;
+				}
+				if (self._wasBuilt.footer) {
+					ui.footer.parentElement.removeChild(ui.footer);
+					self._wasBuilt.footer = false;
+				}
 				if (container.parentElement) {
 					container.parentElement.replaceChild(self.element, container);
 				}

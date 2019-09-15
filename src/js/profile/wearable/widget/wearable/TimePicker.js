@@ -730,8 +730,13 @@
 
 				ui.footer.classList.remove("ui-bottom-button");
 
-				if (ui.footer.children.length) {
+				if (self._wasBuilt.buttonSet) {
 					ui.footer.removeChild(ui.buttonSet);
+					self._wasBuilt.buttonSet = false;
+				}
+				if (self._wasBuilt.footer) {
+					ui.footer.parentElement.removeChild(ui.footer);
+					self._wasBuilt.footer = false;
 				}
 
 				self._unbindEvents();
