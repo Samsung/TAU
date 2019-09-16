@@ -197,7 +197,7 @@
 			});
 
 			assert.equal(snaplistWidget._scrollEventCount, 0, "not event one scrollHandler was generated");
-			snaplistWidget._callbacks.scroll(snaplistWidget);
+			snaplistWidget._callbacks.scroll({detail: {scrollTop: 1}});
 			assert.equal(snaplistWidget._scrollEventCount, 1, "scrollHandler was generated");
 
 			helpers.restoreStub(snaplistWidget, "_listItemAnimate");

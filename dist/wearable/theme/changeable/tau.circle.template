@@ -1013,10 +1013,11 @@ a {
   margin: 0;
 }
 .ui-page .ui-scroller.ui-snap-container .ui-listview.ui-snap-listview {
-  margin-top: 0.6875rem;
+  margin-top: 0;
 }
 .ui-page .ui-scroller.ui-snap-container .ui-content {
   padding-bottom: 7.875rem;
+  margin-top: 0;
 }
 .ui-listview.ui-arc-listview {
   padding-bottom: 0;
