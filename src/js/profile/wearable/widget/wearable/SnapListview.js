@@ -292,7 +292,9 @@
 			}
 
 			function getScrollPosition(scrollableParentElement) {
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
+				var scrollPosition = -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
+				console.log("getScrollPosition", scrollPosition);
+				return scrollPosition;
 			}
 
 			function setSelection(self) {
@@ -302,8 +304,7 @@
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
 					scrollableParentElement = scrollableParent.element || ui.page,
 					scrollCenter = getScrollPosition(scrollableParentElement) +
-						scrollableParentHeight / 2 +
-						self._marginTop,
+						scrollableParentHeight / 2,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -311,6 +312,7 @@
 					previousSelectedIndex = self._selectedIndex,
 					selectedIndex;
 
+				console.log("setSelection:scrollCenter", scrollCenter);
 				for (i = 0; i < listItemLength; i++) {
 					tempListItem = listItems[i];
 					tempListItemCoord = tempListItem.coord;
@@ -355,7 +357,7 @@
 
 				if (animateCallback) {
 					scrollPosition = scrollValue ||
-						(getScrollPosition(scrollableParentElement) + self._marginTop);
+						getScrollPosition(scrollableParentElement);
 
 					utilArray.forEach(self._listItems, function (item) {
 						item.animate(scrollPosition, animateCallback);
@@ -480,7 +482,13 @@
 					listItems = [],
 					scroller = ui.scrollableParent.element,
 					visibleOffset,
-					contentElement;
+					contentElement,
+					snapPoints,
+					firstItem,
+					firstItemRect,
+					currentScrollingPosition,
+					paddingTop,
+					diff;
 
 				if (!scroller) {
 					scroller = self._initSnapListview(listview);
@@ -490,6 +498,23 @@
 				contentElement = scroller.querySelector(".ui-content");
 				if (contentElement) {
 					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
+					paddingTop = parseInt(window.getComputedStyle(contentElement).paddingTop, 10);
+
+				}
+
+				currentScrollingPosition = scrolling.getScrollPosition();
+				console.log("scroll position:", currentScrollingPosition);
+
+				// Check position of first item and add margin if the first item is too high
+				// and cannot be cetenered at screen
+				firstItem = listview.querySelector(options.selector);
+				firstItemRect = firstItem.getBoundingClientRect();
+
+				diff = parseFloat(visibleOffset / 2 - firstItemRect.top - firstItemRect.height / 2 - currentScrollingPosition);
+				//self._marginTop += diff;
+
+				if (contentElement) {
+					contentElement.style.paddingTop = paddingTop + diff + "px";
 				}
 
 				// init information about widget
@@ -504,12 +529,18 @@
 						self._currentIndex = index;
 					}
 				});
-				scrolling.setSnapSize(listItems.map(function (item) {
+
+				// preapre snap points for listview
+				snapPoints = listItems.map(function (item) {
 					return {
 						position: item.coord.top,
 						length: item.coord.height
 					};
-				}));
+				});
+
+				// set snap points for listview
+				scrolling.setSnapSize(snapPoints);
+
 
 				self._listItems = listItems;
 				self._listItemAnimate();

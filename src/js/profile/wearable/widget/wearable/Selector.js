@@ -334,7 +334,7 @@
 					ITEM_RADIUS: -1,
 					ITEM_START_DEGREE: 30,
 					ITEM_END_DEGREE: 330,
-					ITEM_NORMAL_SCALE: "scale(" + (STATIC.SCALE_FACTOR).toString().replace(",", ".") + ")",
+					ITEM_NORMAL_SCALE: "scale(" + STATIC.SCALE_FACTOR.toString() + ")",
 					ITEM_ACTIVE_SCALE: "scale(1)",
 					ITEM_MOVED_SCALE: "scale(0.92)",
 					EMPTY_STATE_TEXT: "Selector is empty"
@@ -505,6 +505,7 @@
 					"translate3d(0, " + -radius + "px, 0) " +
 					"rotate(" + selfDegree + "deg) " +
 					scale;
+				console.log("setItemTransform", element.style.transform);
 			}
 
 			function setIndicatorTransform(element, selfDegree) {
@@ -754,7 +755,7 @@
 				iconBgElement.classList.add(classes.ITEM_ICON_REMOVE_BG);
 
 				iconElement.classList.add(classes.ITEM_ICON_REMOVE + "-" + removeIconPosition);
-				iconElement.style.transform = "scale(" + iconScaleFactor + ")";
+				iconElement.style.transform = "scale(" + iconScaleFactor.toString() + ")";
 				iconElement.appendChild(iconBgElement);
 
 				item.classList.add(classes.ITEM_REMOVABLE);

@@ -39135,6 +39135,10 @@ function pathToRegexp (path, keys, options) {
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
 
+					// reset previous index
+					previousIndex = 0;
+					currentIndex = 0;
+
 					existingContainerElement = element.querySelector("div." + classes.container);
 					if (existingContainerElement) {
 						childElement = existingContainerElement;

@@ -16382,6 +16382,10 @@ function pathToRegexp (path, keys, options) {
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
 
+					// reset previous index
+					previousIndex = 0;
+					currentIndex = 0;
+
 					existingContainerElement = element.querySelector("div." + classes.container);
 					if (existingContainerElement) {
 						childElement = existingContainerElement;
@@ -37566,7 +37570,9 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			function getScrollPosition(scrollableParentElement) {
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
+				var scrollPosition = -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
+				console.log("getScrollPosition", scrollPosition);
+				return scrollPosition;
 			}
 
 			function setSelection(self) {
@@ -37576,8 +37582,7 @@ function pathToRegexp (path, keys, options) {
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
 					scrollableParentElement = scrollableParent.element || ui.page,
 					scrollCenter = getScrollPosition(scrollableParentElement) +
-						scrollableParentHeight / 2 +
-						self._marginTop,
+						scrollableParentHeight / 2,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -37585,6 +37590,7 @@ function pathToRegexp (path, keys, options) {
 					previousSelectedIndex = self._selectedIndex,
 					selectedIndex;
 
+				console.log("setSelection:scrollCenter", scrollCenter);
 				for (i = 0; i < listItemLength; i++) {
 					tempListItem = listItems[i];
 					tempListItemCoord = tempListItem.coord;
@@ -37629,7 +37635,7 @@ function pathToRegexp (path, keys, options) {
 
 				if (animateCallback) {
 					scrollPosition = scrollValue ||
-						(getScrollPosition(scrollableParentElement) + self._marginTop);
+						getScrollPosition(scrollableParentElement);
 
 					utilArray.forEach(self._listItems, function (item) {
 						item.animate(scrollPosition, animateCallback);
@@ -37754,7 +37760,13 @@ function pathToRegexp (path, keys, options) {
 					listItems = [],
 					scroller = ui.scrollableParent.element,
 					visibleOffset,
-					contentElement;
+					contentElement,
+					snapPoints,
+					firstItem,
+					firstItemRect,
+					currentScrollingPosition,
+					paddingTop,
+					diff;
 
 				if (!scroller) {
 					scroller = self._initSnapListview(listview);
@@ -37764,6 +37776,23 @@ function pathToRegexp (path, keys, options) {
 				contentElement = scroller.querySelector(".ui-content");
 				if (contentElement) {
 					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
+					paddingTop = parseInt(window.getComputedStyle(contentElement).paddingTop, 10);
+
+				}
+
+				currentScrollingPosition = scrolling.getScrollPosition();
+				console.log("scroll position:", currentScrollingPosition);
+
+				// Check position of first item and add margin if the first item is too high
+				// and cannot be cetenered at screen
+				firstItem = listview.querySelector(options.selector);
+				firstItemRect = firstItem.getBoundingClientRect();
+
+				diff = parseFloat(visibleOffset / 2 - firstItemRect.top - firstItemRect.height / 2 - currentScrollingPosition);
+				//self._marginTop += diff;
+
+				if (contentElement) {
+					contentElement.style.paddingTop = paddingTop + diff + "px";
 				}
 
 				// init information about widget
@@ -37778,12 +37807,18 @@ function pathToRegexp (path, keys, options) {
 						self._currentIndex = index;
 					}
 				});
-				scrolling.setSnapSize(listItems.map(function (item) {
+
+				// preapre snap points for listview
+				snapPoints = listItems.map(function (item) {
 					return {
 						position: item.coord.top,
 						length: item.coord.height
 					};
-				}));
+				});
+
+				// set snap points for listview
+				scrolling.setSnapSize(snapPoints);
+
 
 				self._listItems = listItems;
 				self._listItemAnimate();
@@ -39275,7 +39310,7 @@ function pathToRegexp (path, keys, options) {
 					ITEM_RADIUS: -1,
 					ITEM_START_DEGREE: 30,
 					ITEM_END_DEGREE: 330,
-					ITEM_NORMAL_SCALE: "scale(" + STATIC.SCALE_FACTOR + ")",
+					ITEM_NORMAL_SCALE: "scale(" + STATIC.SCALE_FACTOR.toString() + ")",
 					ITEM_ACTIVE_SCALE: "scale(1)",
 					ITEM_MOVED_SCALE: "scale(0.92)",
 					EMPTY_STATE_TEXT: "Selector is empty"
@@ -39446,6 +39481,7 @@ function pathToRegexp (path, keys, options) {
 					"translate3d(0, " + -radius + "px, 0) " +
 					"rotate(" + selfDegree + "deg) " +
 					scale;
+				console.log("setItemTransform", element.style.transform);
 			}
 
 			function setIndicatorTransform(element, selfDegree) {
@@ -39695,7 +39731,7 @@ function pathToRegexp (path, keys, options) {
 				iconBgElement.classList.add(classes.ITEM_ICON_REMOVE_BG);
 
 				iconElement.classList.add(classes.ITEM_ICON_REMOVE + "-" + removeIconPosition);
-				iconElement.style.transform = "scale(" + iconScaleFactor + ")";
+				iconElement.style.transform = "scale(" + iconScaleFactor.toString() + ")";
 				iconElement.appendChild(iconBgElement);
 
 				item.classList.add(classes.ITEM_REMOVABLE);
