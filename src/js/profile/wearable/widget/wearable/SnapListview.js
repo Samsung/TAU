@@ -455,6 +455,7 @@
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
 
+					scrolling.setCurrentIndex(0);
 					scrolling.setMaxScroll(scroller.firstElementChild.getBoundingClientRect()
 						.height + scrollMargin);
 					scrolling.setSnapSize(self._listItems.map(function (item) {

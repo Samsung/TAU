@@ -885,6 +885,16 @@
 				return scrollingElement === element;
 			}
 
+			/**
+			 * Update current index position
+			 * @method setCurrentIndex
+			 * @param {number} _setCurrentIndex
+			 * @member ns.util.scrolling
+			 */
+			function setCurrentIndex(_setCurrentIndex) {
+				currentIndex = _setCurrentIndex;
+			}
+
 			ns.util.scrolling = {
 				getScrollPosition: getScrollPosition,
 				enable: enable,
@@ -899,7 +909,8 @@
 				isElement: isElement,
 				setBounceBack: function (setBounceBack) {
 					bounceBack = setBounceBack;
-				}
+				},
+				setCurrentIndex: setCurrentIndex
 			};
 
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
