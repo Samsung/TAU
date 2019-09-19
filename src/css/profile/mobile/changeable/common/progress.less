@@ -97,9 +97,10 @@ tau-progress {
 .ui-progress-circle {
 	position: relative;
 	display: inline-block;
-	pointer-events: none;
 	box-sizing: border-box;
-
+	* {
+		pointer-events: none;
+	}
 	.ui-progress-circle-value.ui-progress-circle-half {
 		box-sizing: border-box;
 		clip: rect(auto, auto, auto, auto);
