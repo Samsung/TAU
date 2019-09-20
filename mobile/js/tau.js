@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.8';
+ns.version = '1.0.9';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -38950,6 +38950,11 @@ function pathToRegexp (path, keys, options) {
 
 				previousIndex = currentIndex;
 
+				if (isTouch) {
+					lastScrollPosition = 0;
+					isTouch = false;
+				}
+
 				// update position by snapSize
 				if (eventDirection === "CW") {
 					currentIndex++;
@@ -39134,6 +39139,9 @@ function pathToRegexp (path, keys, options) {
 				} else {
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
+
+					// reset current index for new list element
+					currentIndex = 0;
 
 					existingContainerElement = element.querySelector("div." + classes.container);
 					if (existingContainerElement) {

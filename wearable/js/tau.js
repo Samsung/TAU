@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.8';
+ns.version = '1.0.9';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -16197,6 +16197,11 @@ function pathToRegexp (path, keys, options) {
 
 				previousIndex = currentIndex;
 
+				if (isTouch) {
+					lastScrollPosition = 0;
+					isTouch = false;
+				}
+
 				// update position by snapSize
 				if (eventDirection === "CW") {
 					currentIndex++;
@@ -16381,6 +16386,9 @@ function pathToRegexp (path, keys, options) {
 				} else {
 					// detect direction
 					direction = (setDirection === "x") ? 1 : 0;
+
+					// reset current index for new list element
+					currentIndex = 0;
 
 					existingContainerElement = element.querySelector("div." + classes.container);
 					if (existingContainerElement) {
@@ -37681,6 +37689,10 @@ function pathToRegexp (path, keys, options) {
 				setSelection(self);
 			}
 
+			function onRotary(self) {
+				self._isTouched = false;
+			}
+
 			function getScrollableParent(element) {
 				var overflow;
 
@@ -37893,6 +37905,7 @@ function pathToRegexp (path, keys, options) {
 				self._callbacks.touchstart = onTouchStart.bind(null, self);
 				self._callbacks.touchend = onTouchEnd.bind(null, self);
 				self._callbacks.vclick = vClickHandler.bind(null, self);
+				self._callbacks.rotary = onRotary.bind(null, self);
 
 				if (scrollableElement) {
 					utilEvent.on(scrollableElement, "scroll", this._callbacks.scroll, false);
@@ -37900,6 +37913,7 @@ function pathToRegexp (path, keys, options) {
 				element.addEventListener("touchstart", self._callbacks.touchstart, false);
 				element.addEventListener("touchend", self._callbacks.touchend, false);
 				element.addEventListener("vclick", self._callbacks.vclick, false);
+				window.addEventListener("rotarydetent", self._callbacks.rotary, false);
 			};
 
 			/**
@@ -37919,6 +37933,7 @@ function pathToRegexp (path, keys, options) {
 				element.removeEventListener("touchstart", self._callbacks.touchstart, false);
 				element.removeEventListener("touchend", self._callbacks.touchend, false);
 				element.removeEventListener("vclick", self._callbacks.vclick, false);
+				window.removeEventListener("rotarydetent", self._callbacks.rotary, false);
 			};
 
 			/**
