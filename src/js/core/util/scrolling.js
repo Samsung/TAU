@@ -393,6 +393,11 @@
 
 				previousIndex = currentIndex;
 
+				if (isTouch) {
+					lastScrollPosition = 0;
+					isTouch = false;
+				}
+
 				// update position by snapSize
 				if (eventDirection === "CW") {
 					currentIndex++;
