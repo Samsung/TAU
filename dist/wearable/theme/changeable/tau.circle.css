@@ -1384,9 +1384,9 @@ a {
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 .ui-listview.ui-snap-listview li a,
 .ui-listview.ui-arc-listview-carousel-item li a {
@@ -1572,6 +1572,11 @@ a {
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+.ui-listview.ui-arc-listview-carousel-item:not(.ui-snap-listview) li {
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
 }
 .ui-listview.ui-arc-listview-carousel-item-separator {
   height: auto;
