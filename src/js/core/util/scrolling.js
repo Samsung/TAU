@@ -385,11 +385,25 @@
 			}
 
 			/**
+			 * Check visible state of the element
+			 * @param {Element} elm
+			 */
+			function _isVisible(elm) {
+				var rect = elm.getBoundingClientRect();
+
+				return direction ? rect.width : rect.height;
+			}
+
+			/**
 			 * Handler for rotary event
 			 * @param {Event} event
 			 */
 			function rotary(event) {
 				var eventDirection = event.detail && event.detail.direction;
+
+				if (scrollingElement && !_isVisible(scrollingElement)) {
+					return;
+				}
 
 				previousIndex = currentIndex;
 
