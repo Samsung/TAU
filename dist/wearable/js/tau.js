@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.9';
+ns.version = '1.0.10';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -16189,11 +16189,25 @@ function pathToRegexp (path, keys, options) {
 			}
 
 			/**
+			 * Check visible state of the element
+			 * @param {Element} elm
+			 */
+			function _isVisible(elm) {
+				var rect = elm.getBoundingClientRect();
+
+				return direction ? rect.width : rect.height;
+			}
+
+			/**
 			 * Handler for rotary event
 			 * @param {Event} event
 			 */
 			function rotary(event) {
 				var eventDirection = event.detail && event.detail.direction;
+
+				if (scrollingElement && !_isVisible(scrollingElement)) {
+					return;
+				}
 
 				previousIndex = currentIndex;
 
