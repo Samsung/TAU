@@ -106,6 +106,12 @@ module.exports = function (grunt) {
 			}
 		}
 
+		bundleConfigAll = {
+			components: ["jquery.min.js", "jquery.flipster.min.js", "d3.min.js", "tauCharts.min.js", "tauCharts.min.css", "r-type.min.js"],
+			outputFileName: "tau.bundle.js",
+			outputDir: "js"
+		}
+
 		files = {
 			js: {
 				minifiedFiles: [],
@@ -1521,10 +1527,58 @@ module.exports = function (grunt) {
 		});
 	}
 
+	function createBundledFilesAll(config, profile, callback) {
+		const distJs = path.join(__dirname, dist, profile, "js"),
+			components = [].concat(config.components
+				.map((lib) => "./" + path.join("libs", lib)),
+					path.join(distJs, "tau.min.js"))
+
+		webpack({
+			mode: "production",
+			entry: components
+				.map((src) => {
+					if (src.endsWith(".js")) {
+						return `script-loader!${src}`;
+					} else {
+						return src;
+					}
+				}),
+			output: {
+				path: distJs,
+				filename: config.outputFileName
+			},
+			module: {
+				rules: [
+					{
+						test: /\.css$/,
+						use: ["style-loader", "css-loader"]
+					}
+				]
+			},
+			performance: {
+				hints: false
+			}
+		}, (err, stats) => {
+			if (err) {
+				return callback(err);
+			}
+			if (stats.hasErrors() || stats.hasWarnings()) {
+				return callback(new Error(stats.toString()));
+			}
+			callback(null, true);
+		});
+	}
+
 	function createBundle() {
 		const done = this.async();
 
 		async.parallel(Object.keys(bundleConfig).map((b) => createBundledFiles.bind(null, b)), done);
+	}
+
+	function createBundleAll() {
+		const done = this.async();
+
+		async.parallel(["mobile", "wearable", "tv"].map((p) => createBundledFilesAll.bind(null, bundleConfigAll, p)), done);
 	}
 
 	grunt.initConfig(initConfig);
@@ -1642,7 +1696,9 @@ module.exports = function (grunt) {
 		"postcss"
 	]);
 
-	grunt.registerTask("bundle", "Create bundle file", createBundle);
+	grunt.registerTask("bundle", "Create TAU extensions bundled files", createBundle);
+
+	grunt.registerTask("bundle-all", "Create tau.bundle.js file for each profile including all external resources", createBundleAll);
 
 	grunt.registerTask("js", "Prepare JS", [
 		"clean:js",
@@ -1656,13 +1712,14 @@ module.exports = function (grunt) {
 		"copy:wearableJquery",
 		"copy:tvJquery",
 		"copy:animation",
-		"bundle"
+		"bundle",
+		"bundle-all"
 	]);
 
-	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJquery"]); //"bundle:mobile"
+	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJquery"]);
 	grunt.registerTask("js-mobile_support", "Prepare JS for mobile 2.3", ["clean:js", "requirejs:mobile", "requirejs:mobile_support", "jsmin", "themesjs:mobile", "copy:mobileJquery"]);
-	grunt.registerTask("js-wearable", "Prepare JS wearable", ["clean:js", "requirejs:wearable", "jsmin", "themesjs:wearable", "copy:wearableJquery"]); //"bundle:wearable"
-	grunt.registerTask("js-tv", "Prepare JS tv", ["clean:js", "requirejs:tv", "jsmin", "themesjs:tv", "copy:tvJquery"]); //"bundle:tv"
+	grunt.registerTask("js-wearable", "Prepare JS wearable", ["clean:js", "requirejs:wearable", "jsmin", "themesjs:wearable", "copy:wearableJquery"]);
+	grunt.registerTask("js-tv", "Prepare JS tv", ["clean:js", "requirejs:tv", "jsmin", "themesjs:tv", "copy:tvJquery"]);
 	grunt.registerTask("license", "Add licence information to files", ["concat:licenseJs", "concat:licenseDefaultCss", "concat:licenseChangeableCss", "concat:licenseWearableCss", "copy:license"]);
 
 	grunt.registerTask("docs-mobile", ["js-mobile", "analize-docs:mobile", "copy:sdk-docs"]);
