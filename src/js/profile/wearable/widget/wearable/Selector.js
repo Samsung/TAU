@@ -336,7 +336,6 @@
 					ITEM_END_DEGREE: 330,
 					ITEM_NORMAL_SCALE: "scale(" + STATIC.SCALE_FACTOR + ")",
 					ITEM_ACTIVE_SCALE: "scale(1)",
-					ITEM_MOVED_SCALE: "scale(0.92)",
 					EMPTY_STATE_TEXT: "Selector is empty"
 				},
 				EVENT_TYPE = {
@@ -941,17 +940,18 @@
 
 				index = index !== undefined ? index : 0;
 
-				transform = items[index].style.transform || items[index].style.webkitTransform;
-
 				if (active) {
-					active.style.transform =
-						active.style.transform.replace(DEFAULT.ITEM_ACTIVE_SCALE,
+					transform = active.style.transform || active.style.webkitTransform;
+					newTransformStyle = transform.replace(/scale[(][^)]+[)]/,
 							DEFAULT.ITEM_NORMAL_SCALE);
+					active.style.transform = newTransformStyle;
+					active.style.webkitTransform = newTransformStyle;
 					active.classList.remove(classes.ITEM_ACTIVE);
 				}
 				if (items.length) {
 					items[index].classList.add(classes.ITEM_ACTIVE);
-					newTransformStyle = transform.replace(DEFAULT.ITEM_NORMAL_SCALE,
+					transform = items[index].style.transform || items[index].style.webkitTransform;
+					newTransformStyle = transform.replace(/scale[(][^)]+[)]/,
 						DEFAULT.ITEM_ACTIVE_SCALE);
 					items[index].style.transform = newTransformStyle;
 					items[index].style.webkitTransform = newTransformStyle;
