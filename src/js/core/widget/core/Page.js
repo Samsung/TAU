@@ -300,6 +300,7 @@
 
 					self._contentFillAfterResizeCallback = null;
 					self._initialContentStyle = {};
+					self._lastScrollPosition = 0;
 					/**
 					 * Options for widget.
 					 * It is empty object, because widget Page does not have any options.
@@ -882,7 +883,13 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeShow = function () {
-				this.trigger(EventType.BEFORE_SHOW);
+				var self = this,
+					scroller = self.getScroller();
+
+				if (scroller) {
+					scroller.scrollTop = self._lastScrollPosition || 0;
+				}
+				self.trigger(EventType.BEFORE_SHOW);
 			};
 
 			/**
@@ -907,7 +914,13 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeHide = function () {
-				this.trigger(EventType.BEFORE_HIDE);
+				var self = this,
+					scroller = self.getScroller();
+
+				if (scroller) {
+					self._lastScrollPosition = scroller.scrollTop;
+				}
+				self.trigger(EventType.BEFORE_HIDE);
 			};
 
 			/**
