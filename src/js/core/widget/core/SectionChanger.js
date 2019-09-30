@@ -160,8 +160,7 @@
 			utilsObject.inherit(SectionChanger, Scroller, {
 				_build: function (element) {
 					var self = this,
-						options = self.options,
-						offsetHeight;
+						options = self.options;
 
 					self.tabIndicatorElement = null;
 					self.tabIndicator = null;
@@ -177,17 +176,6 @@
 					element.classList.add(classes.uiSectionChanger);
 
 					self.scroller.style.position = "absolute";
-					offsetHeight = element.offsetHeight;
-
-					if (offsetHeight === 0) {
-						offsetHeight = element.parentNode.offsetHeight;
-						element.style.height = offsetHeight + "px";
-					}
-
-					self._sectionChangerWidth = element.offsetWidth;
-					self._sectionChangerHeight = offsetHeight;
-					self._sectionChangerHalfWidth = self._sectionChangerWidth / 2;
-					self._sectionChangerHalfHeight = self._sectionChangerHeight / 2;
 					self.orientation = options.orientation === "horizontal" ? Orientation.HORIZONTAL : Orientation.VERTICAL;
 
 					return element;
@@ -270,27 +258,35 @@
 				_prepareLayout: function () {
 					var o = this.options,
 						sectionLength = this.sections.length,
-						width = this._sectionChangerWidth,
-						height = this._sectionChangerHeight,
 						orientation = this.orientation,
 						scrollerStyle = this.scroller.style,
+						offsetHeight = this.element.offsetHeight,
 						tabHeight;
+
+					if (offsetHeight === 0) {
+						offsetHeight = this.element.parentNode.offsetHeight;
+						this.element.style.height = offsetHeight + "px";
+					}
+
+					this._sectionChangerWidth = this.element.offsetWidth;
+					this._sectionChangerHeight = offsetHeight;
+					this._sectionChangerHalfWidth = this._sectionChangerWidth / 2;
+					this._sectionChangerHalfHeight = this._sectionChangerHeight / 2;
 
 					if (o.useTab) {
 						this._initTabIndicator();
 						tabHeight = this.tabIndicatorElement.offsetHeight;
-						height -= tabHeight;
-						this._sectionChangerHalfHeight = height / 2;
-						this.element.style.height = height + "px";
-						this._sectionChangerHeight = height;
+						this._sectionChangerHeight -= tabHeight;
+						this._sectionChangerHalfHeight = this._sectionChangerHeight / 2;
+						this.element.style.height = this._sectionChangerHeight + "px";
 					}
 
 					if (orientation === Orientation.HORIZONTAL) {
-						scrollerStyle.width = (o.fillContent ? width * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
-						scrollerStyle.height = height + "px"; //set Scroller width
+						scrollerStyle.width = (o.fillContent ? this._sectionChangerWidth * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
+						scrollerStyle.height = this._sectionChangerHeight + "px";
 					} else {
-						scrollerStyle.width = width + "px"; //set Scroller width
-						scrollerStyle.height = (o.fillContent ? height * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
+						scrollerStyle.width = this._sectionChangerWidth + "px";
+						scrollerStyle.height = (o.fillContent ? this._sectionChangerHeight * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
 					}
 
 				},
