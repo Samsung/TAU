@@ -2,13 +2,14 @@
 	/**
 	 * page - Index scroll bar page element
 	 * isbElement - Index scroll bar element
-	 * dividers - NodeList object for group index elements
+	 * dividers - array for group index elements
 	 * isb - TAU index scroll bar instance
 	 * scroller - Scrollable element
 	 */
-	var page = document.getElementById("indexscrollbarPage"),
+	var GROUP_INDEX_CLASS = "ui-group-index",
+		page = document.getElementById("indexscrollbarPage"),
 		isbElement = document.getElementById("indexscrollbar"),
-		dividers = page.getElementsByClassName("ui-group-index"),
+		dividers = [].slice.call(page.querySelectorAll("." + GROUP_INDEX_CLASS)),
 		searchButton = page.querySelector("#searchButton"),
 		searchInput = page.querySelector("#indexscrollbar-search-input"),
 		header = page.querySelector(".ui-header"),
@@ -106,7 +107,10 @@
 
 	function onClearClick() {
 		listItemsArray.forEach(function (item) {
-			item.classList.toggle("li-search-hidden", false);
+			item.classList.remove("li-search-hidden");
+		});
+		dividers.forEach(function (item) {
+			item.classList.remove("li-search-hidden");
 		});
 
 		listview.refresh();
@@ -117,10 +121,40 @@
 	 * keyup event handler
 	 */
 	function onSearchInputKeyup() {
+		var nextItem,
+			hide;
+
+		// hide items
 		listItemsArray.forEach(function (item) {
 			var itemText = item.getAttribute("data-filtertext");
 
 			if (itemText.toString().toLowerCase().indexOf(searchInput.value.toLowerCase()) === -1) {
+				item.classList.add("li-search-hidden");
+			} else {
+				item.classList.remove("li-search-hidden");
+			}
+		});
+		// hide empty dividers
+		dividers.forEach(function (item) {
+			hide = false;
+			nextItem = item.nextElementSibling;
+			if (!nextItem) {
+				hide = true;
+			} else {
+				while (nextItem) {
+					if (!nextItem.classList.contains(GROUP_INDEX_CLASS) &&
+						nextItem.getBoundingClientRect().height > 0) {
+						hide = false;
+						break;
+					}
+					if (nextItem.classList.contains(GROUP_INDEX_CLASS)) {
+						hide = true;
+						break;
+					}
+					nextItem = nextItem.nextElementSibling;
+				}
+			}
+			if (hide) {
 				item.classList.add("li-search-hidden");
 			} else {
 				item.classList.remove("li-search-hidden");
