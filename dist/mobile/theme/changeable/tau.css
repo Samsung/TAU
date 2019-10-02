@@ -964,7 +964,6 @@ textarea.ui-text-input {
 }
 .ui-group-index + .ui-li-static input.ui-text-input ~ .ui-text-input-clear,
 .ui-group-index + .ui-li-static textarea.ui-text-input ~ .ui-text-input-clear {
-  margin-right: 0;
   right: 0;
 }
 .ui-group-index + .ui-li-static input.ui-text-input:focus.ui-text-input-clear-active,
@@ -980,10 +979,6 @@ textarea.ui-text-input {
   margin: 5.5px 0 10px 0;
   position: absolute;
   width: calc(100% -  32px);
-}
-.ui-li-static input.ui-text-input ~ .ui-text-input-clear,
-.ui-li-static textarea.ui-text-input ~ .ui-text-input-clear {
-  right: -18px;
 }
 .ui-li-flex input.ui-text-input,
 .ui-li-flex textarea.ui-text-input {
@@ -5611,7 +5606,7 @@ span.ui-tokentextarea-invisible {
 }
 .ui-drawer {
   position: absolute;
-  background-color: rgba(61, 185, 204, 1);
+  background-image: url("images/page/core_theme_bg_01.png");
   z-index: 1201;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -5628,6 +5623,7 @@ span.ui-tokentextarea-invisible {
   position: absolute;
   z-index: 2000;
   width: 100%;
+  height: 100%;
 }
 .ui-drawer .ui-listview .ui-li.ui-li-last > .ui-btn-inner {
   border-bottom-color: rgba(204, 204, 204, 1);
@@ -5637,7 +5633,7 @@ span.ui-tokentextarea-invisible {
 }
 .ui-drawer-overlay {
   position: absolute;
-  background-color: B016;
+  background-color: rgba(61, 185, 204, 0.04);
   z-index: 1200;
 }
 .ui-header .ui-btn.ui-drawer-button.ui-btn-icon-only {
@@ -7310,8 +7306,12 @@ tau-expandable {
 .ui-listview tau-expandable .ui-link-inherit {
   color: rgba(0, 0, 0, 1);
 }
-.ui-listview li.ui-li-active,
-.ui-listview tau-expandable.ui-li-active {
+.ui-listview li:not(.ui-expandable).ui-li-active,
+.ui-listview tau-expandable:not(.ui-expandable).ui-li-active {
+  background-color: rgba(61, 185, 204, 0.3);
+}
+.ui-listview li.ui-li-active.ui-expandable .ui-expandable-heading,
+.ui-listview tau-expandable.ui-li-active.ui-expandable .ui-expandable-heading {
   background-color: rgba(61, 185, 204, 0.3);
 }
 .ui-listview li > a:not(.ui-btn),
@@ -7986,8 +7986,10 @@ tau-progress {
 .ui-progress-circle {
   position: relative;
   display: inline-block;
-  pointer-events: none;
   box-sizing: border-box;
+}
+.ui-progress-circle * {
+  pointer-events: none;
 }
 .ui-progress-circle .ui-progress-circle-value.ui-progress-circle-half {
   box-sizing: border-box;
