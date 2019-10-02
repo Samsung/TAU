@@ -407,6 +407,10 @@
 				setSelection(self);
 			}
 
+			function onRotary(self) {
+				self._isTouched = false;
+			}
+
 			function getScrollableParent(element) {
 				var overflow;
 
@@ -619,6 +623,7 @@
 				self._callbacks.touchstart = onTouchStart.bind(null, self);
 				self._callbacks.touchend = onTouchEnd.bind(null, self);
 				self._callbacks.vclick = vClickHandler.bind(null, self);
+				self._callbacks.rotary = onRotary.bind(null, self);
 
 				if (scrollableElement) {
 					utilEvent.on(scrollableElement, "scroll", this._callbacks.scroll, false);
@@ -626,6 +631,7 @@
 				element.addEventListener("touchstart", self._callbacks.touchstart, false);
 				element.addEventListener("touchend", self._callbacks.touchend, false);
 				element.addEventListener("vclick", self._callbacks.vclick, false);
+				window.addEventListener("rotarydetent", self._callbacks.rotary, false);
 			};
 
 			/**
@@ -645,6 +651,7 @@
 				element.removeEventListener("touchstart", self._callbacks.touchstart, false);
 				element.removeEventListener("touchend", self._callbacks.touchend, false);
 				element.removeEventListener("vclick", self._callbacks.vclick, false);
+				window.removeEventListener("rotarydetent", self._callbacks.rotary, false);
 			};
 
 			/**

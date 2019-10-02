@@ -536,8 +536,10 @@
 			 * @protected
 			 */
 			prototype._destroy = function () {
-				this._unbindEvents();
-				this.element.innerHTML = "";
+				var self = this;
+
+				self._unbindEvents();
+				self.element.innerHTML = "";
 			};
 
 			/**

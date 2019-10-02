@@ -47,8 +47,14 @@ tau-expandable {
 			color: @color_list_main_text_normal;
 		}
 
-		&.ui-li-active {
+		&:not(.ui-expandable).ui-li-active{
 			background-color: @color_list_press;
+		}
+
+		&.ui-li-active.ui-expandable {
+			.ui-expandable-heading {
+				background-color: @color_list_press;
+			}
 		}
 
 		& > a:not(.ui-btn) {
