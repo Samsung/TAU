@@ -3720,7 +3720,7 @@ tau-listview {
   position: absolute;
 }
 .ui-swipelist-left .ui-swipelist-icon {
-  margin-left: 2%;
+  left: 2%;
   background-color: rgba(250, 250, 250, 1);
   -webkit-mask-image: url('images/Swipelist/b_logs_icon_body_btn_call_nor.png');
           mask-image: url('images/Swipelist/b_logs_icon_body_btn_call_nor.png');
@@ -3731,10 +3731,10 @@ tau-listview {
   mask-repeat: no-repeat;
 }
 .ui-swipelist-left .ui-swipelist-text {
-  margin-left: 40%;
+  left: 40%;
 }
 .ui-swipelist-right .ui-swipelist-icon {
-  margin-left: 80%;
+  left: 80%;
   background-color: rgba(250, 250, 250, 1);
   -webkit-mask-image: url('images/Swipelist/b_logs_icon_actionbar_btn_msg_nor.png');
           mask-image: url('images/Swipelist/b_logs_icon_actionbar_btn_msg_nor.png');
@@ -3745,7 +3745,7 @@ tau-listview {
   mask-repeat: no-repeat;
 }
 .ui-swipelist-right .ui-swipelist-text {
-  margin-left: 20%;
+  left: 20%;
 }
 .ui-tab-indicator {
   position: relative;

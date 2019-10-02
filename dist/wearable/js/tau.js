@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.10';
+ns.version = '1.0.11';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -8627,6 +8627,7 @@ function pathToRegexp (path, keys, options) {
 
 					self._contentFillAfterResizeCallback = null;
 					self._initialContentStyle = {};
+					self._lastScrollPosition = 0;
 					/**
 					 * Options for widget.
 					 * It is empty object, because widget Page does not have any options.
@@ -9206,7 +9207,13 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeShow = function () {
-				this.trigger(EventType.BEFORE_SHOW);
+				var self = this,
+					scroller = self.getScroller();
+
+				if (scroller) {
+					scroller.scrollTop = self._lastScrollPosition || 0;
+				}
+				self.trigger(EventType.BEFORE_SHOW);
 			};
 
 			/**
@@ -9226,7 +9233,13 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeHide = function () {
-				this.trigger(EventType.BEFORE_HIDE);
+				var self = this,
+					scroller = self.getScroller();
+
+				if (scroller) {
+					self._lastScrollPosition = scroller.scrollTop;
+				}
+				self.trigger(EventType.BEFORE_HIDE);
 			};
 
 			/**
@@ -15124,7 +15137,7 @@ function pathToRegexp (path, keys, options) {
 
 			/**
 			 * Get closest button element
-			 * @method detectLiElement
+			 * @method detectBtnElement
 			 * @param {HTMLElement} target
 			 * @return {HTMLElement}
 			 * @member ns.util.anchorHighlight
@@ -15238,12 +15251,14 @@ function pathToRegexp (path, keys, options) {
 						anchorHighlight._target = detectHighlightTarget(anchorHighlight._target);
 						if (!anchorHighlight._didScroll) {
 							anchorHighlight._liTarget = anchorHighlight._detectLiElement(anchorHighlight._target);
-							if (anchorHighlight._liTarget) {
-								anchorHighlight._liTarget.classList.add(classes.ACTIVE_LI);
-								eventUtil.trigger(anchorHighlight._liTarget, events.ACTIVE_LI, {});
-							}
-							anchorHighlight._liTarget = null;
-							if (anchorHighlight._buttonTarget) {
+							if (!anchorHighlight._buttonTarget) {
+								// add press effect to LI element
+								if (anchorHighlight._liTarget) {
+									anchorHighlight._liTarget.classList.add(classes.ACTIVE_LI);
+									eventUtil.trigger(anchorHighlight._liTarget, events.ACTIVE_LI, {});
+								}
+							} else {
+								// add press effect to button
 								btnTargetClassList = anchorHighlight._buttonTarget.classList;
 								btnTargetClassList.remove(classes.ACTIVE_BTN);
 								btnTargetClassList.remove(classes.INACTIVE_BTN);
@@ -24713,8 +24728,7 @@ function pathToRegexp (path, keys, options) {
 			utilsObject.inherit(SectionChanger, Scroller, {
 				_build: function (element) {
 					var self = this,
-						options = self.options,
-						offsetHeight;
+						options = self.options;
 
 					self.tabIndicatorElement = null;
 					self.tabIndicator = null;
@@ -24730,17 +24744,6 @@ function pathToRegexp (path, keys, options) {
 					element.classList.add(classes.uiSectionChanger);
 
 					self.scroller.style.position = "absolute";
-					offsetHeight = element.offsetHeight;
-
-					if (offsetHeight === 0) {
-						offsetHeight = element.parentNode.offsetHeight;
-						element.style.height = offsetHeight + "px";
-					}
-
-					self._sectionChangerWidth = element.offsetWidth;
-					self._sectionChangerHeight = offsetHeight;
-					self._sectionChangerHalfWidth = self._sectionChangerWidth / 2;
-					self._sectionChangerHalfHeight = self._sectionChangerHeight / 2;
 					self.orientation = options.orientation === "horizontal" ? Orientation.HORIZONTAL : Orientation.VERTICAL;
 
 					return element;
@@ -24823,27 +24826,35 @@ function pathToRegexp (path, keys, options) {
 				_prepareLayout: function () {
 					var o = this.options,
 						sectionLength = this.sections.length,
-						width = this._sectionChangerWidth,
-						height = this._sectionChangerHeight,
 						orientation = this.orientation,
 						scrollerStyle = this.scroller.style,
+						offsetHeight = this.element.offsetHeight,
 						tabHeight;
+
+					if (offsetHeight === 0) {
+						offsetHeight = this.element.parentNode.offsetHeight;
+						this.element.style.height = offsetHeight + "px";
+					}
+
+					this._sectionChangerWidth = this.element.offsetWidth;
+					this._sectionChangerHeight = offsetHeight;
+					this._sectionChangerHalfWidth = this._sectionChangerWidth / 2;
+					this._sectionChangerHalfHeight = this._sectionChangerHeight / 2;
 
 					if (o.useTab) {
 						this._initTabIndicator();
 						tabHeight = this.tabIndicatorElement.offsetHeight;
-						height -= tabHeight;
-						this._sectionChangerHalfHeight = height / 2;
-						this.element.style.height = height + "px";
-						this._sectionChangerHeight = height;
+						this._sectionChangerHeight -= tabHeight;
+						this._sectionChangerHalfHeight = this._sectionChangerHeight / 2;
+						this.element.style.height = this._sectionChangerHeight + "px";
 					}
 
 					if (orientation === Orientation.HORIZONTAL) {
-						scrollerStyle.width = (o.fillContent ? width * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
-						scrollerStyle.height = height + "px"; //set Scroller width
+						scrollerStyle.width = (o.fillContent ? this._sectionChangerWidth * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
+						scrollerStyle.height = this._sectionChangerHeight + "px";
 					} else {
-						scrollerStyle.width = width + "px"; //set Scroller width
-						scrollerStyle.height = (o.fillContent ? height * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
+						scrollerStyle.width = this._sectionChangerWidth + "px";
+						scrollerStyle.height = (o.fillContent ? this._sectionChangerHeight * sectionLength : calculateCustomLayout(orientation, this.sections)) + "px";
 					}
 
 				},
@@ -39306,7 +39317,6 @@ function pathToRegexp (path, keys, options) {
 					ITEM_END_DEGREE: 330,
 					ITEM_NORMAL_SCALE: "scale(" + STATIC.SCALE_FACTOR + ")",
 					ITEM_ACTIVE_SCALE: "scale(1)",
-					ITEM_MOVED_SCALE: "scale(0.92)",
 					EMPTY_STATE_TEXT: "Selector is empty"
 				},
 				EVENT_TYPE = {
@@ -39911,17 +39921,18 @@ function pathToRegexp (path, keys, options) {
 
 				index = index !== undefined ? index : 0;
 
-				transform = items[index].style.transform || items[index].style.webkitTransform;
-
 				if (active) {
-					active.style.transform =
-						active.style.transform.replace(DEFAULT.ITEM_ACTIVE_SCALE,
+					transform = active.style.transform || active.style.webkitTransform;
+					newTransformStyle = transform.replace(/scale[(][^)]+[)]/,
 							DEFAULT.ITEM_NORMAL_SCALE);
+					active.style.transform = newTransformStyle;
+					active.style.webkitTransform = newTransformStyle;
 					active.classList.remove(classes.ITEM_ACTIVE);
 				}
 				if (items.length) {
 					items[index].classList.add(classes.ITEM_ACTIVE);
-					newTransformStyle = transform.replace(DEFAULT.ITEM_NORMAL_SCALE,
+					transform = items[index].style.transform || items[index].style.webkitTransform;
+					newTransformStyle = transform.replace(/scale[(][^)]+[)]/,
 						DEFAULT.ITEM_ACTIVE_SCALE);
 					items[index].style.transform = newTransformStyle;
 					items[index].style.webkitTransform = newTransformStyle;
@@ -43756,6 +43767,15 @@ function pathToRegexp (path, keys, options) {
 					label: null,
 					footer: null
 				};
+
+				// property contains information which DOM elements
+				// was built during widget build process.
+				// These data are needed in destroy method
+				self._wasBuilt = {
+					footer: false,
+					buttonSet: false
+				}
+
 			}
 			NumberPicker.classes = classes;
 
@@ -43812,6 +43832,7 @@ function pathToRegexp (path, keys, options) {
 					if (!footer) {
 						footer = document.createElement("footer");
 						parent.appendChild(footer);
+						this._wasBuilt.footer = true;
 					}
 
 					// add standard footer class for footer with button
@@ -44052,6 +44073,7 @@ function pathToRegexp (path, keys, options) {
 				buttonSet.classList.add(classes.BUTTON_SET);
 				// add "set" button to the footer
 				footer.appendChild(buttonSet);
+				this._wasBuilt.buttonSet = true;
 
 				// build DOM structure
 				container.appendChild(number);
@@ -44102,6 +44124,14 @@ function pathToRegexp (path, keys, options) {
 				footer.classList.remove("ui-bottom-button");
 
 				// recovery DOM structure
+				if (self._wasBuilt.buttonSet) {
+					ui.footer.removeChild(ui.buttonSet);
+					self._wasBuilt.buttonSet = false;
+				}
+				if (self._wasBuilt.footer) {
+					ui.footer.parentElement.removeChild(ui.footer);
+					self._wasBuilt.footer = false;
+				}
 				if (container.parentElement) {
 					container.parentElement.replaceChild(self.element, container);
 				}
@@ -44935,8 +44965,13 @@ function pathToRegexp (path, keys, options) {
 
 				ui.footer.classList.remove("ui-bottom-button");
 
-				if (ui.footer.children.length) {
+				if (self._wasBuilt.buttonSet) {
 					ui.footer.removeChild(ui.buttonSet);
+					self._wasBuilt.buttonSet = false;
+				}
+				if (self._wasBuilt.footer) {
+					ui.footer.parentElement.removeChild(ui.footer);
+					self._wasBuilt.footer = false;
 				}
 
 				self._unbindEvents();
@@ -45715,8 +45750,10 @@ function pathToRegexp (path, keys, options) {
 			 * @protected
 			 */
 			prototype._destroy = function () {
-				this._unbindEvents();
-				this.element.innerHTML = "";
+				var self = this;
+
+				self._unbindEvents();
+				self.element.innerHTML = "";
 			};
 
 			/**
