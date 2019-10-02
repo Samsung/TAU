@@ -3,8 +3,10 @@
 	var page = document.getElementById("dynamic-graph-page"),
 		garphEl = document.getElementById("graph"),
 		buttonEl = document.getElementById("button"),
+		titleMarquee = page.querySelector("header .ui-marquee"),
 		graphWidget,
 		buttonWidget,
+		marquee,
 		generatingData = false,
 		intervalId;
 
@@ -28,11 +30,22 @@
 		});
 	});
 
+	page.addEventListener("pageshow", function () {
+		marquee = tau.widget.Marquee(titleMarquee, {
+			iteration: "infinite",
+			marqueeStyle: "scroll",
+			ellipsisEffect: "none",
+			speed: 40,
+			delay: 1000
+		});
+	});
+
 	page.addEventListener("pagebeforehide", function () {
 		if (generatingData) {
 			window.clearInterval(intervalId);
 		}
 		graphWidget.destroy();
 		buttonWidget.destroy();
+		marquee.destroy();
 	});
 })();
