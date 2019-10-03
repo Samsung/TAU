@@ -904,7 +904,7 @@
 			 */
 			prototype.onBeforeShow = function () {
 				var self = this,
-					scroller = self.getScroller();;
+					scroller = self.getScroller();
 
 				if (scroller) {
 					scroller.scrollTop = self._lastScrollPosition || 0;
