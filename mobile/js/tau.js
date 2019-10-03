@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.11';
+ns.version = '1.0.12';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -7422,10 +7422,12 @@ ns.version = '1.0.11';
 				if (!cache[path]) {
 					loadJSON(path).then(function (info) {
 						cache[path] = info;
+						info.fromCache = false;
 						deferred.resolve(info);
 					},
 						deferred.reject);
 				} else {
+					cache[path].fromCache = true;
 					deferred.resolve(cache[path]);
 				}
 				return deferred;
@@ -7632,7 +7634,9 @@ ns.version = '1.0.11';
 							.done(function (locale) {
 								loadCustomData(locale)
 									.then(function (info) {
-										Globalize.loadMessages(info.data);
+										if (!info.fromCache) { // data
+											Globalize.loadMessages(info.data);
+										}
 										globalizeInstance = new Globalize(locale);
 										deferred.resolve(globalizeInstance);
 									}, function () {
