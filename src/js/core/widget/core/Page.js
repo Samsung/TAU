@@ -304,6 +304,7 @@
 					 */
 					self._contentFillAfterResizeCallback = null;
 					self._initialContentStyle = {};
+					self._lastScrollPosition = 0;
 					/**
 					 * Options for widget.
 					 * @property {Object} options
@@ -902,7 +903,12 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeShow = function () {
-				var self = this;
+				var self = this,
+					scroller = self.getScroller();
+
+				if (scroller) {
+					scroller.scrollTop = self._lastScrollPosition || 0;
+				}
 
 				if (typeof self.enableKeyboardSupport === "function") {
 					self.enableKeyboardSupport();
@@ -934,7 +940,12 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype.onBeforeHide = function () {
-				var self = this;
+				var self = this,
+					scroller = self.getScroller();
+
+				if (scroller) {
+					self._lastScrollPosition = scroller.scrollTop;
+				}
 
 				if (typeof self.disableKeyboardSupport === "function") {
 					self.disableKeyboardSupport();

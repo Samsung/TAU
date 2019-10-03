@@ -228,7 +228,7 @@
 
 			/**
 			 * Get closest button element
-			 * @method detectLiElement
+			 * @method detectBtnElement
 			 * @param {HTMLElement} target
 			 * @return {HTMLElement}
 			 * @member ns.util.anchorHighlight
@@ -342,12 +342,14 @@
 						anchorHighlight._target = detectHighlightTarget(anchorHighlight._target);
 						if (!anchorHighlight._didScroll) {
 							anchorHighlight._liTarget = anchorHighlight._detectLiElement(anchorHighlight._target);
-							if (anchorHighlight._liTarget) {
-								anchorHighlight._liTarget.classList.add(classes.ACTIVE_LI);
-								eventUtil.trigger(anchorHighlight._liTarget, events.ACTIVE_LI, {});
-							}
-							anchorHighlight._liTarget = null;
-							if (anchorHighlight._buttonTarget) {
+							if (!anchorHighlight._buttonTarget) {
+								// add press effect to LI element
+								if (anchorHighlight._liTarget) {
+									anchorHighlight._liTarget.classList.add(classes.ACTIVE_LI);
+									eventUtil.trigger(anchorHighlight._liTarget, events.ACTIVE_LI, {});
+								}
+							} else {
+								// add press effect to button
 								btnTargetClassList = anchorHighlight._buttonTarget.classList;
 								btnTargetClassList.remove(classes.ACTIVE_BTN);
 								btnTargetClassList.remove(classes.INACTIVE_BTN);
