@@ -278,10 +278,12 @@
 				if (!cache[path]) {
 					loadJSON(path).then(function (info) {
 						cache[path] = info;
+						info.fromCache = false;
 						deferred.resolve(info);
 					},
 						deferred.reject);
 				} else {
+					cache[path].fromCache = true;
 					deferred.resolve(cache[path]);
 				}
 				return deferred;
@@ -488,7 +490,9 @@
 							.done(function (locale) {
 								loadCustomData(locale)
 									.then(function (info) {
-										Globalize.loadMessages(info.data);
+										if (!info.fromCache) { // data
+											Globalize.loadMessages(info.data);
+										}
 										globalizeInstance = new Globalize(locale);
 										deferred.resolve(globalizeInstance);
 									}, function () {
