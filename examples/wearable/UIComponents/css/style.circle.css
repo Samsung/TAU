@@ -1096,4 +1096,9 @@ input[type="checkbox"]#checkboxControl {
 
 #page_webkitui input {
 	max-width: 300px;
+	color: initial;
+}
+#input_webkitui_hiddentime {
+	position: absolute;
+	visibility: hidden;
 }
