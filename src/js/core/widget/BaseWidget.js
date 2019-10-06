@@ -353,6 +353,9 @@
 							prefixedValue = getNSData(element, attributeName);
 
 						if (prefixedValue !== null) {
+							if (typeof options[option] === "number") {
+								prefixedValue = parseFloat(prefixedValue);
+							}
 							options[option] = prefixedValue;
 						} else {
 							if (typeof options[option] === "boolean") {
