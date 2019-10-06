@@ -227,7 +227,6 @@
 				var self = this,
 					initDate = new Date(),
 					ui = self._ui,
-					uiNumberHours = ui.numberHours,
 					uiInputHours = ui.numberPickerHoursInput;
 
 				//set the initial hours value, based on time stamp
@@ -238,8 +237,6 @@
 				} else {
 					self._maxHour = 12;
 				}
-				uiNumberHours.classList.add(classes.ACTIVE_LABEL);
-				uiNumberHours.classList.add(classes.ACTIVE_LABEL_ANIMATION);
 				self._actualMax = parseInt(uiInputHours.max, 10);
 				self._toggleCircleIndicator();
 				// move indicator to the selected hours value
