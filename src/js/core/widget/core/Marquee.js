@@ -86,6 +86,9 @@
 					this.options = objectUtils.copy(Marquee.defaults);
 					// event callbacks
 					this._callbacks = {};
+					this._ui = {
+						content: null
+					};
 				},
 
 				prototype = new BaseWidget(),
@@ -175,7 +178,7 @@
 				/**
 				 * Options for widget
 				 * @property {Object} options
-				 * @property {string|"slide"|"scroll"|"alternate"} [options.marqueeStyle="slide"] Sets the
+				 * @property {string|"slide"|"scroll"|"alternate|"endToEnd""} [options.marqueeStyle="slide"] Sets the
 				 * default style for the marquee
 				 * @property {number} [options.speed=60] Sets the speed(px/sec) for the marquee
 				 * @property {number|"infinite"} [options.iteration=1] Sets the iteration count number for
@@ -218,7 +221,7 @@
 					var value = from + state * diff,
 						returnValue;
 
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -232,7 +235,7 @@
 						returnValue;
 
 					value = state * (textWidth - containerWidth);
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -251,26 +254,17 @@
 						value *= 2;
 					}
 					value = value / textWidth * (textWidth - containerWidth);
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
 					return returnValue;
 				},
 				endToEnd: function (self, state, diff, from, current) {
-					var stateDOM = self._stateDOM,
-						textWidth = stateDOM.children[0].offsetWidth,
-						containerWidth = stateDOM.offsetWidth,
-						value,
+					var value = from + state * diff,
 						returnValue;
 
-					value = state * (textWidth + containerWidth);
-					if (value > textWidth) {
-						value = containerWidth - value + textWidth;
-					} else {
-						value = -value;
-					}
-					returnValue = "translateX(" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -282,14 +276,16 @@
 				var self = this,
 					stateDOM = self._stateDOM,
 					textWidth = stateDOM.children[0].offsetWidth,
-					containerWidth = stateDOM.offsetWidth,
-					returnTimeFrame = (textWidth / (textWidth + containerWidth)),
+					returnTimeFrame = ((textWidth - 50) / textWidth),
 					returnValue;
 
 				if (self.options.ellipsisEffect === "none") {
 					return null;
 				}
-				if (state > returnTimeFrame) {
+				if (state > 0 && self.options.currentIteration < self.options.iteration) {
+					// don't change gradient between iterations only for lastpass
+					returnValue = GRADIENTS.BOTH;
+				} else if (state > returnTimeFrame) {
 					returnValue = GRADIENTS.RIGHT;
 				} else if (state > 0) {
 					returnValue = GRADIENTS.BOTH;
@@ -344,6 +340,9 @@
 					marqueeInnerElement.classList.add(classes.MARQUEE_CONTENT);
 					element.appendChild(marqueeInnerElement);
 				}
+
+				this._ui.content = marqueeInnerElement;
+
 				return element;
 			};
 
@@ -369,7 +368,8 @@
 				var self = this,
 					stateDOM = self._stateDOM,
 					stateDOMfirstChild = stateDOM.children[0],
-					width = stateDOMfirstChild.offsetWidth,
+					width = stateDOMfirstChild.offsetWidth +
+						((self.options.marqueeStyle === style.ENDTOEND) ? 100 : 0),
 					animation = new Animation({}),
 					state = {
 						hasEllipsisText: (width > 0),
@@ -454,6 +454,10 @@
 					animation.stop();
 					animation.start();
 				} else {
+					if (self.options.marqueeStyle === style.ENDTOEND) {
+						self._ui.content.classList.remove("ui-visible");
+					}
+					self.reset();
 					self.options.animation = states.STOPPED;
 					self.trigger(eventType.MARQUEE_END);
 				}
@@ -521,16 +525,24 @@
 
 				if (value !== options.animation) {
 					if (value === states.RUNNING) {
-						if ((runOnlyOnEllipsisText && width) || (!runOnlyOnEllipsisText)) {
-							self.options.currentIteration = 1;
+						if ((runOnlyOnEllipsisText && width > 0) || (!runOnlyOnEllipsisText)) {
+							// copy of text content to title and after pseudo element
+							self._ui.content.setAttribute("title", self._ui.content.textContent.trim());
+							if (self.options.marqueeStyle === style.ENDTOEND) {
+								self._ui.content.classList.add("ui-visible");
+							}
 							animation.start();
+							options.animation = value;
 							self.trigger(eventType.MARQUEE_START);
 						}
 					} else {
+						if (self.options.marqueeStyle === style.ENDTOEND) {
+							self._ui.content.classList.remove("ui-visible");
+						}
 						animation.pause();
+						options.animation = value;
 						self.trigger(eventType.MARQUEE_STOPPED);
 					}
-					options.animation = value;
 				}
 				return false;
 			};
@@ -571,7 +583,9 @@
 						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
 					}
 					self._stateDOM.children = [];
-					self.element.removeChild(marqueeInnerElement);
+					if (marqueeInnerElement.parentElement === self.element) {
+						self.element.removeChild(marqueeInnerElement);
+					}
 				}
 				self._stateDOM = null;
 			};
