@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.13';
+ns.version = '1.0.14';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -5515,6 +5515,9 @@ ns.version = '1.0.13';
 							prefixedValue = getNSData(element, attributeName);
 
 						if (prefixedValue !== null) {
+							if (typeof options[option] === "number") {
+								prefixedValue = parseFloat(prefixedValue);
+							}
 							options[option] = prefixedValue;
 						} else {
 							if (typeof options[option] === "boolean") {
