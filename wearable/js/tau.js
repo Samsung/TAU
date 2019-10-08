@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.13';
+ns.version = '1.0.14';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -7452,6 +7452,9 @@ function pathToRegexp (path, keys, options) {
 							prefixedValue = getNSData(element, attributeName);
 
 						if (prefixedValue !== null) {
+							if (typeof options[option] === "number") {
+								prefixedValue = parseFloat(prefixedValue);
+							}
 							options[option] = prefixedValue;
 						} else {
 							if (typeof options[option] === "boolean") {
@@ -44462,7 +44465,6 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					initDate = new Date(),
 					ui = self._ui,
-					uiNumberHours = ui.numberHours,
 					uiInputHours = ui.numberPickerHoursInput;
 
 				//set the initial hours value, based on time stamp
@@ -44473,8 +44475,6 @@ function pathToRegexp (path, keys, options) {
 				} else {
 					self._maxHour = 12;
 				}
-				uiNumberHours.classList.add(classes.ACTIVE_LABEL);
-				uiNumberHours.classList.add(classes.ACTIVE_LABEL_ANIMATION);
 				self._actualMax = parseInt(uiInputHours.max, 10);
 				self._toggleCircleIndicator();
 				// move indicator to the selected hours value
