@@ -10,7 +10,7 @@
 	pageBeforeShowHandler = function () {
 		slider = tau.widget.Slider(elSlider);
 		dimmer = tau.widget.Dimmer(elDimmer);
-		elSlider.addEventListener("change", onInput, false);
+		elSlider.addEventListener("input", onInput, false);
 	};
 
 	function onInput(event) {
