@@ -25,7 +25,7 @@
 	 */
 	pageBeforeShowHandler = function () {
 		slider = tau.widget.Slider(elSlider);
-		elSlider.addEventListener("change", changeOpacity, false);
+		elSlider.addEventListener("input", changeOpacity, false);
 	};
 
 	/**
@@ -34,7 +34,7 @@
 	 */
 	pageHideHandler = function () {
 		slider.destroy();
-		elSlider.removeEventListener("change", changeOpacity, false);
+		elSlider.removeEventListener("input", changeOpacity, false);
 	};
 
 	page.addEventListener("pagebeforeshow", pageBeforeShowHandler, false);

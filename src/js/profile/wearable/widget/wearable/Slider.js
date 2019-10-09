@@ -65,11 +65,11 @@
 				prototype = new CoreSlider(),
 				eventType = {
 					/**
-					 * Triggered when the section is changed.
-					 * @event change
+					 * Triggered when the slider value is changed.
+					 * @event input
 					 * @member ns.widget.wearable.Slider
 					 */
-					CHANGE: "change"
+					INPUT: "input"
 				},
 				/**
 				* Standard slider widget
@@ -520,7 +520,7 @@
 						self._ui.valueField.textContent = value;
 					}
 					if (value !== currentValue) {
-						self.trigger(eventType.CHANGE);
+						self.trigger(eventType.INPUT);
 					}
 				} else {
 					return CoreSliderPrototype._setValue.call(self, value);
