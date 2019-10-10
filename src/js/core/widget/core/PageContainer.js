@@ -173,6 +173,7 @@
 
 					toPageElement.classList.add(classes.uiBuild);
 
+					delete options.url;
 					toPageWidget = engine.instanceWidget(toPageElement, calculatedOptions.widget, options);
 
 					// set sizes of page for correct display
