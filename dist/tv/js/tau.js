@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.7';
+ns.version = '1.1.8';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -14597,6 +14597,7 @@ function pathToRegexp (path, keys, options) {
 
 					toPageElement.classList.add(classes.uiBuild);
 
+					delete options.url;
 					toPageWidget = engine.instanceWidget(toPageElement, calculatedOptions.widget, options);
 
 					// set sizes of page for correct display
