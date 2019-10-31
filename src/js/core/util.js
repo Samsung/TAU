@@ -72,7 +72,7 @@
 				waitingFrames = [];
 
 				while (currentFrameFunction) {
-					currentFrameFunction();
+					currentFrameFunction(loopTime);
 					if (performance.now() - loopTime < 15) {
 						currentFrameFunction = loopWaitingFrames.shift();
 					} else {
