@@ -499,7 +499,9 @@
 					contentStyle = content ? content.style : {};
 
 				contentStyleAttributes.forEach(function (name) {
-					contentStyle[name] = initialContentStyle[name];
+					if (initialContentStyle[name]) {
+						contentStyle[name] = initialContentStyle[name];
+					}
 				});
 			};
 
