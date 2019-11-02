@@ -30405,6 +30405,20 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			/**
+			 * remove buttons for slider
+			 * @method _removeButtons
+			 * @protected
+			 * @param {HTMLElement} element
+			 * @member ns.widget.wearable.Slider
+			 */
+			prototype._removeButtons = function (element) {
+				var buttonsContainer = document.querySelector("div .ui-slider-buttons");
+				if (buttonsContainer != undefined){
+					buttonsContainer.remove();					
+				}
+			};			
+
+			/**
 			 * Build Slider widget
 			 * @method _build
 			 * @protected
@@ -30781,7 +30795,8 @@ function pathToRegexp (path, keys, options) {
 					self.element.style.display = "inline-block";
 
 					CircleProgressBarPrototype._destroy.call(self);
-
+					
+					self._removeButtons();
 					self._ui = null;
 					self.options = null;
 
