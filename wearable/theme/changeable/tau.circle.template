@@ -384,20 +384,12 @@ body {
 .ui-page .ui-footer.ui-bottom-button .ui-btn.ui-btn-active {
   color: T041P;
   background-color: #002f4d;
-  height: 4.5rem;
-  width: 13.125rem;
-  border-radius: 4.0625rem;
-  font-size: 1.875rem;
 }
 .ui-page .ui-footer.ui-bottom-button .ui-btn.ui-btn-active::after {
   animation: btn-footer-opacity-press linear 565ms;
 }
 .ui-page .ui-footer.ui-bottom-button .ui-btn.ui-btn-inactive {
   background-color: #000000;
-  height: 4.5rem;
-  width: 13.125rem;
-  border-radius: 4.0625rem;
-  font-size: 1.75rem;
 }
 .ui-page .ui-footer.ui-bottom-button .ui-btn.ui-btn-inactive::after {
   animation: btn-footer-opacity-press linear 565ms;
