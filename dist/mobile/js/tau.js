@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.15';
+ns.version = '1.0.16';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -806,7 +806,7 @@ ns.version = '1.0.15';
 				waitingFrames = [];
 
 				while (currentFrameFunction) {
-					currentFrameFunction();
+					currentFrameFunction(loopTime);
 					if (performance.now() - loopTime < 15) {
 						currentFrameFunction = loopWaitingFrames.shift();
 					} else {
@@ -12115,7 +12115,9 @@ function pathToRegexp (path, keys, options) {
 					contentStyle = content ? content.style : {};
 
 				contentStyleAttributes.forEach(function (name) {
-					contentStyle[name] = initialContentStyle[name];
+					if (initialContentStyle[name]) {
+						contentStyle[name] = initialContentStyle[name];
+					}
 				});
 			};
 
@@ -32494,7 +32496,7 @@ function pathToRegexp (path, keys, options) {
 				waitingFrames = [];
 
 				while (currentFrameFunction) {
-					currentFrameFunction();
+					currentFrameFunction(loopTime);
 					if (performance.now() - loopTime < 15) {
 						currentFrameFunction = loopWaitingFrames.shift();
 					} else {
