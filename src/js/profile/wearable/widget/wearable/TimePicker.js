@@ -691,6 +691,28 @@
 			};
 
 			/**
+			 * Get value of number picker
+			 * @protected
+			 * @method _getValue
+			 * @member ns.widget.core.TimePicker
+			 * @return {Date}
+			 */
+			prototype._getValue = function () {
+				var time = new Date(0),
+					self = this,
+					ui = self._ui,
+					hours = parseInt(ui.numberPickerHoursInput.value, 10);
+
+				if (self.options.format === "h" && self.options.amOrPm === "PM") {
+					hours += 12;
+				}
+				time.setHours(hours);
+				time.setMinutes(parseInt(ui.numberPickerMinutesInput.value, 10));
+
+				return time;
+			}
+
+			/**
 			 * Toggle circle indicator
 			 * @protected
 			 * @method _toggleCircleIndicator
