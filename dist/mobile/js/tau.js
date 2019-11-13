@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.8';
+ns.version = '1.1.9';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -807,7 +807,7 @@ ns.version = '1.1.8';
 				waitingFrames = [];
 
 				while (currentFrameFunction) {
-					currentFrameFunction();
+					currentFrameFunction(loopTime);
 					if (performance.now() - loopTime < 15) {
 						currentFrameFunction = loopWaitingFrames.shift();
 					} else {
@@ -5412,6 +5412,7 @@ ns.version = '1.1.8';
 				 */
 				TYPE_FUNCTION = "function",
 				TYPE_STRING = "string",
+				DEFAULT_STRING_DELIMITER = ",",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
 				commonClasses = {
@@ -5557,7 +5558,8 @@ ns.version = '1.1.8';
 			prototype._getCreateOptions = function (element) {
 				var self = this,
 					options = self.options,
-					tag = element.localName.toLowerCase();
+					tag = element.localName.toLowerCase(),
+					delimiter;
 
 				if (options) {
 					Object.keys(options).forEach(function (option) {
@@ -5568,6 +5570,11 @@ ns.version = '1.1.8';
 						if (prefixedValue !== null) {
 							if (typeof options[option] === "number") {
 								prefixedValue = parseFloat(prefixedValue);
+							} else if (typeof options[option] === "object" &&
+										typeof prefixedValue === "string" &&
+										Array.isArray(options[option])) {
+								delimiter = element.dataset.delimiter || DEFAULT_STRING_DELIMITER;
+								prefixedValue = prefixedValue.split(delimiter);
 							}
 							options[option] = prefixedValue;
 						} else {
@@ -13838,7 +13845,9 @@ function pathToRegexp (path, keys, options) {
 					contentStyle = content ? content.style : {};
 
 				contentStyleAttributes.forEach(function (name) {
-					contentStyle[name] = initialContentStyle[name];
+					if (initialContentStyle[name]) {
+						contentStyle[name] = initialContentStyle[name];
+					}
 				});
 			};
 
@@ -22486,7 +22495,7 @@ function pathToRegexp (path, keys, options) {
 				var self = this;
 
 				self._clear();
-				self._init();
+				self._init(self.element);
 				self.translate(self.lastScrollPosition);
 			};
 
@@ -35969,7 +35978,7 @@ function pathToRegexp (path, keys, options) {
 				waitingFrames = [];
 
 				while (currentFrameFunction) {
-					currentFrameFunction();
+					currentFrameFunction(loopTime);
 					if (performance.now() - loopTime < 15) {
 						currentFrameFunction = loopWaitingFrames.shift();
 					} else {
