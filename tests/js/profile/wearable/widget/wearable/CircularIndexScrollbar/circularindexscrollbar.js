@@ -1,9 +1,10 @@
+/* global equal, test, ok, tau */
 (function (window, document) {
 	"use strict";
 
 	module("profile/wearable/widget/wearable/CircularIndexScrollbar");
 
-	test("circularindexscrollbar class check", 3, function() {
+	test("circularindexscrollbar class check", 3, function () {
 		var el = document.getElementById("widget4"),
 			widget = tau.widget.CircularIndexScrollbar(el);
 
@@ -13,7 +14,7 @@
 		widget.destroy();
 	});
 
-	test("basic attributes test", 6, function() {
+	test("basic attributes test", 6, function () {
 		var el1 = document.getElementById("widget1"),
 			el2 = document.getElementById("widget2"),
 			widget1 = tau.widget.CircularIndexScrollbar(el1),
@@ -24,12 +25,12 @@
 		equal(widget1.options.index[1], "B", "Second index is 'B'");
 		equal(widget1.options.index[2], "C", "Third index is 'C'");
 		equal(widget1.options.index[3], "D", "Forth index is 'D'");
-		equal(widget2.options.index.length, 6, "Indices was seperated by data-delimeter");
+		equal(widget2.options.index.length, 6, "Indices was seperated by data-delimiter");
 		widget1.destroy();
 		widget2.destroy();
 	});
 
-	test("change option test", 1, function() {
+	test("change option test", 1, function () {
 		var el = document.getElementById("widget3"),
 			widget = tau.widget.CircularIndexScrollbar(el);
 
@@ -39,7 +40,7 @@
 		widget.destroy();
 	});
 
-	test("set/get value test", 1, function() {
+	test("set/get value test", 1, function () {
 		var el = document.getElementById("widget4"),
 			widget = tau.widget.CircularIndexScrollbar(el);
 

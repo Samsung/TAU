@@ -148,7 +148,7 @@
 				var self = this;
 
 				self._clear();
-				self._init();
+				self._init(self.element);
 				self.translate(self.lastScrollPosition);
 			};
 
