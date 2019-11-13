@@ -213,6 +213,7 @@
 				 */
 				TYPE_FUNCTION = "function",
 				TYPE_STRING = "string",
+				DEFAULT_STRING_DELIMITER = ",",
 				disableClass = "ui-state-disabled",
 				ariaDisabled = "aria-disabled",
 				commonClasses = {
@@ -358,7 +359,8 @@
 			prototype._getCreateOptions = function (element) {
 				var self = this,
 					options = self.options,
-					tag = element.localName.toLowerCase();
+					tag = element.localName.toLowerCase(),
+					delimiter;
 
 				if (options) {
 					Object.keys(options).forEach(function (option) {
@@ -369,6 +371,11 @@
 						if (prefixedValue !== null) {
 							if (typeof options[option] === "number") {
 								prefixedValue = parseFloat(prefixedValue);
+							} else if (typeof options[option] === "object" &&
+										typeof prefixedValue === "string" &&
+										Array.isArray(options[option])) {
+								delimiter = element.dataset.delimiter || DEFAULT_STRING_DELIMITER;
+								prefixedValue = prefixedValue.split(delimiter);
 							}
 							options[option] = prefixedValue;
 						} else {

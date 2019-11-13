@@ -71,8 +71,27 @@
 					/**
 					 * Object with default options
 					 * @property {Object} options
-					 * @property {Object} [options.type] Spin type
-					 * @property {number} [options.orientation] orientation
+					 * @property {number} options.min minimum value of spin
+					 * @property {number} options.max maximum value of spin
+					 * @property {number} options.step step of decrease / increase value
+					 * @property {string} [options.moduloValue="enabled"] value will be show as modulo
+					 *  // if enabled then value above max will be show as modulo eg. 102
+					 *  // with range 0-9 will be show as 2 (12 % 10)
+					 * @property {string} [options.shortPath="enabled"] spin rotate with short path
+					 *  // eg. when value will be 1 and then will change to 8
+					 *  // the spin will rotate by 1 -> 0 -> 9 -> 0
+					 * @property {number} [options.duration=ROLL_DURATION] time of rotate to indicated value
+					 * @property {string} [options.direction="up"] direction of spin rotation
+					 * @property {string} [options.rollHeight="container"] size of frame to rotate one item
+					 * @property {number} [options.itemHeight=38] size of frame for "custom" rollHeight
+					 * @property {number} [options.momentumLevel=0] define moementum level on drag
+					 * @property {number} [options.scaleFactor=0.4] second / next items scale factor
+					 * @property {number} [options.moveFactor=0.4] second / next items move factor from center
+					 * @property {number} [options.loop="enabled"] when the spin reaches max value then loops to min value
+					 * @property {string} [options.labels=""] defines labels for values likes days of week separated by ","
+					 * // eg. "Monday,Tuesday,Wednesday"
+					 * @property {string} [options.digits=0] value filling with zeros, eg. 002 for digits=3;
+					 * // eg. "Monday,Tuesday,Wednesday"
 					 * @member ns.widget.wearable.Spin
 					 */
 					this.options = {
@@ -90,7 +109,8 @@
 						moveFactor: 0.4,
 						loop: "enabled",
 						labels: [],
-						digits: 0 // 0 - doesn't complete by zeros
+						digits: 0, // 0 - doesn't complete by zeros
+						value: 0
 					};
 					this._ui = {};
 					this.length = this.options.max - this.options.min + 1;
@@ -419,6 +439,9 @@
 							}
 						}
 						self.options.value = value;
+						// set data-value on element
+						self.element.dataset.value = value;
+
 						// stop previous animation
 						animation = self.state.animation[0];
 						if (animation !== null && animation.to !== animation.current) {
