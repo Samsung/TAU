@@ -381,8 +381,11 @@
 				var self = this,
 					element = self.element;
 
-				return self._type === "input" ?
-					parseFloat(element.value) : element.selectedIndex;
+				if (["checkbox", "radio"].indexOf(element.type) > -1) {
+					return (element.checked) ? 1 : 0;
+				}
+
+				return element.selectedIndex;
 			};
 
 			/**
