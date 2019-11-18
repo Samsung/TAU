@@ -1238,9 +1238,8 @@
 					marqueeDiv.classList.add("ui-marquee");
 				}
 				widget = ns.widget.Marquee(marqueeDiv, {
-					marqueeStyle: "scroll",
-					ellipsisEffect: "gradient",
-					iteration: "infinite",
+					marqueeStyle: "endToEnd",
+					iteration: 1,
 					delay: "300"
 				});
 				widget.start();
