@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.16';
+ns.version = '1.0.17';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -6289,14 +6289,8 @@ ns.version = '1.0.16';
 				}
 			}
 
-			function render(stateObject, element, isChild, options) {
-				var recalculate = false,
-					animation = (options) ? options.animation : null;
-
-				if (animation && !animation.active) {
-					// Animation has stopped before render
-					return false;
-				}
+			function render(stateObject, element, isChild) {
+				var recalculate = false;
 
 				if (stateObject.classList !== undefined) {
 					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
@@ -6333,10 +6327,10 @@ ns.version = '1.0.16';
 					element = self.element,
 					animation = self._animation;
 
-				if (now) {
-					render(stateDOM, element, false, {animation: animation});
+				if (now === true) {
+					render(stateDOM, element, false);
 				} else {
-					util.requestAnimationFrame(render.bind(null, stateDOM, element, false, {animation: animation}));
+					util.requestAnimationFrame(render.bind(null, stateDOM, element, false));
 				}
 			};
 
@@ -34133,7 +34127,7 @@ function pathToRegexp (path, keys, options) {
 				this.option("animation", "stopped");
 				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
 				stateDOM.children[0].style.webkitTransform = "translateX(0)";
-				self._render();
+				self._render(true);
 			};
 
 			Marquee.prototype = prototype;
@@ -43572,8 +43566,11 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					element = self.element;
 
-				return self._type === "input" ?
-					parseFloat(element.value) : element.selectedIndex;
+				if (["checkbox", "radio"].indexOf(element.type) > -1) {
+					return (element.checked) ? 1 : 0;
+				}
+
+				return element.selectedIndex;
 			};
 
 			/**
