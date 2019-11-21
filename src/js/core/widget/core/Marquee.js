@@ -647,7 +647,7 @@
 				this.option("animation", "stopped");
 				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
 				stateDOM.children[0].style.webkitTransform = "translateX(0)";
-				self._render();
+				self._render(true);
 			};
 
 			Marquee.prototype = prototype;

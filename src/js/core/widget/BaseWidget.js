@@ -1258,14 +1258,8 @@
 				}
 			}
 
-			function render(stateObject, element, isChild, options) {
-				var recalculate = false,
-					animation = (options) ? options.animation : null;
-
-				if (animation && !animation.active) {
-					// Animation has stopped before render
-					return false;
-				}
+			function render(stateObject, element, isChild) {
+				var recalculate = false;
 
 				if (stateObject.classList !== undefined) {
 					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
@@ -1302,10 +1296,10 @@
 					element = self.element,
 					animation = self._animation;
 
-				if (now) {
-					render(stateDOM, element, false, {animation: animation});
+				if (now === true) {
+					render(stateDOM, element, false);
 				} else {
-					util.requestAnimationFrame(render.bind(null, stateDOM, element, false, {animation: animation}));
+					util.requestAnimationFrame(render.bind(null, stateDOM, element, false));
 				}
 			};
 
