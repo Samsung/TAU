@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.9';
+ns.version = '1.1.10';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -8399,14 +8399,8 @@ function pathToRegexp (path, keys, options) {
 				}
 			}
 
-			function render(stateObject, element, isChild, options) {
-				var recalculate = false,
-					animation = (options) ? options.animation : null;
-
-				if (animation && !animation.active) {
-					// Animation has stopped before render
-					return false;
-				}
+			function render(stateObject, element, isChild) {
+				var recalculate = false;
 
 				if (stateObject.classList !== undefined) {
 					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
@@ -8443,10 +8437,10 @@ function pathToRegexp (path, keys, options) {
 					element = self.element,
 					animation = self._animation;
 
-				if (now) {
-					render(stateDOM, element, false, {animation: animation});
+				if (now === true) {
+					render(stateDOM, element, false);
 				} else {
-					util.requestAnimationFrame(render.bind(null, stateDOM, element, false, {animation: animation}));
+					util.requestAnimationFrame(render.bind(null, stateDOM, element, false));
 				}
 			};
 
@@ -22143,7 +22137,7 @@ function pathToRegexp (path, keys, options) {
 				this.option("animation", "stopped");
 				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
 				stateDOM.children[0].style.webkitTransform = "translateX(0)";
-				self._render();
+				self._render(true);
 			};
 
 			Marquee.prototype = prototype;
@@ -36158,9 +36152,8 @@ function pathToRegexp (path, keys, options) {
 					marqueeDiv.classList.add("ui-marquee");
 				}
 				widget = ns.widget.Marquee(marqueeDiv, {
-					marqueeStyle: "scroll",
-					ellipsisEffect: "gradient",
-					iteration: "infinite",
+					marqueeStyle: "endToEnd",
+					iteration: 1,
 					delay: "300"
 				});
 				widget.start();
