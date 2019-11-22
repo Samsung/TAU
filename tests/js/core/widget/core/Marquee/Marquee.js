@@ -388,6 +388,23 @@
 					}
 				]
 			};
+
+			marquee.element = {
+				style: {
+					webkitMaskImage: ""
+				},
+
+				children: [
+					{
+						style: {
+							webkitTransform: ""
+						}
+					}
+				],
+
+				setAttribute: function () {}
+			}
+
 			marquee.stop = function () {
 				assert.ok(true, "stop was called");
 			};
