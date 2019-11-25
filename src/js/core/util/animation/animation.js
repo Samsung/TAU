@@ -253,6 +253,8 @@
 				} else {
 					self._animationTimeout = self._calculateAnimate.bind(self, callback);
 				}
+				self._animationId = Math.random() + Date.now();
+				self._animationTimeout.animationId = self._animationId;
 				self._calculateAnimate(callback);
 				return self;
 			};
@@ -268,7 +270,9 @@
 				self._animate.chainIndex = 0;
 				// reset current animation config
 				self._animateConfig = null;
-			// clear timeout
+
+				ns.util.cancelAnimationFrames(self._animationId);
+				// clear timeout
 				self._animationTimeout = null;
 				return self;
 			};
@@ -283,11 +287,51 @@
 				}
 			};
 
+			/**
+			 * Method resets startTime for each animations to current time
+			 * @private
+			 * @param {*} animateConfig
+			 */
+			function resetStartTimeForAnimateConfig(animateConfig) {
+				var i,
+					len;
+
+				if (animateConfig) {
+					len = animateConfig.length;
+					for (i = 0; i < len; i++) {
+						animateConfig[i].startTime = Date.now();
+					}
+				}
+			}
+
+			/**
+			 * Reset animations to initial position
+			 */
+			prototype.reset = function () {
+				var self = this,
+					restart = self.active;
+
+				if (restart) {
+					self.stop();
+				}
+
+				self._initAnimate();
+				resetStartTimeForAnimateConfig(self._animateConfig);
+				self._pausedTimeDiff = 0;
+				self._animate.chainIndex = 0;
+
+				self._calculateAnimate();
+
+				if (restart) {
+					self.start();
+				}
+			}
+
 			function calculateOption(option, time) {
 				var timeDiff,
 					current = null;
 
-				if (option && option.startTime < time) {
+				if (option && option.startTime <= time) {
 				// if option is not delayed
 					timeDiff = time - option.startTime;
 
@@ -374,7 +418,7 @@
 						self._tickFunction(self._object);
 					}
 					if (notFinishedAnimationsCount) {
-					// setting next loop state
+						// setting next loop state
 						if (self._animationTimeout) {
 							requestAnimationFrame(self._animationTimeout);
 						}

@@ -131,6 +131,39 @@
 				window.clearTimeout(currentFrame);
 			};
 
+			/**
+			 * Remove animation callbacks added by requestAnimationFrame
+			 * @method cancelAnimationFrames
+			 * @static
+			 * @member ns.util
+			 * @param {*} animationId value for identify animation in queue
+			 */
+			util.cancelAnimationFrames = function (animationId) {
+				var found = 0,
+					len = waitingFrames.length,
+					i = 0;
+
+				if (animationId) {
+					// remove selected requests
+					while (len > 0 && found > -1) {
+						found = -1;
+						for (; i < len; i++) {
+							if (waitingFrames[i].animationId === animationId) {
+								found = i;
+								break;
+							}
+						}
+
+						if (found > -1) {
+							waitingFrames.splice(found, 1);
+							len--;
+						}
+					}
+				} else {
+					ns.warn("cancelAnimationFrames() require one parameter for request identify");
+				}
+			};
+
 			util._getCancelAnimationFrame = function () {
 				return (window.cancelAnimationFrame ||
 					window.webkitCancelAnimationFrame ||

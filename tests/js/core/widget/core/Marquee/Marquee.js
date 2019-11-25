@@ -403,22 +403,20 @@
 				],
 
 				setAttribute: function () {}
-			}
-
-			marquee.stop = function () {
-				assert.ok(true, "stop was called");
 			};
+
+			marquee._animation = {
+				reset: function () {
+					assert.ok(true, "stop was called");
+				}
+			};
+
 			marquee.reset();
 
 			assert.equal(
-				marquee._stateDOM.style.webkitMaskImage,
-				"-webkit-linear-gradient(left, rgb(255, 255, 255) 0, rgb(255," +
-				" 255, 255) 85%, transparent 100%)",
-				"_stateDOM.style.webkitMaskImage is correctly set");
-			assert.equal(
-				marquee._stateDOM.children[0].style.webkitTransform,
-				"translateX(0)",
-				"_stateDOM.children[0].style.webkitTransform is correctly set");
+				marquee.element.style.webkitMaskImage,
+				"-webkit-linear-gradient(left, rgb(255, 255, 255) 0, rgb(255, 255, 255) 85%, transparent 100%)",
+				"marquee.element.style.webkitMaskImage is correctly set");
 		});
 	}
 

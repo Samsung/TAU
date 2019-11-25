@@ -1162,8 +1162,7 @@
 			prototype._render = function (now) {
 				var self = this,
 					stateDOM = self._stateDOM,
-					element = self.element,
-					animation = self._animation;
+					element = self.element;
 
 				if (now === true) {
 					render(stateDOM, element, false);

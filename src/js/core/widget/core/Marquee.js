@@ -337,6 +337,8 @@
 			prototype._build = function (element) {
 				var marqueeInnerElement = element.querySelector("." + classes.MARQUEE_CONTENT);
 
+				element.classList.add(CLASSES_PREFIX);
+
 				if (!marqueeInnerElement) {
 					marqueeInnerElement = document.createElement("div");
 
@@ -565,7 +567,6 @@
 				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
-				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 				self.element.style.webkitMaskImage = "";
 
 				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
@@ -617,10 +618,6 @@
 			 * @member ns.widget.core.Marquee
 			 */
 			prototype.stop = function () {
-				var self = this,
-					animation = self._animation;
-
-				animation.pause();
 				this.option("animation", "stopped");
 			};
 
@@ -642,12 +639,12 @@
 			 */
 			prototype.reset = function () {
 				var self = this,
-					stateDOM = self._stateDOM;
+					animation = self._animation;
 
-				this.option("animation", "stopped");
-				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
-				stateDOM.children[0].style.webkitTransform = "translateX(0)";
-				self._render(true);
+				animation.reset();
+
+				self.element.style.webkitMaskImage = (self.options.ellipsisEffect === "none") ?
+					"" : GRADIENTS.RIGHT;
 			};
 
 			Marquee.prototype = prototype;
