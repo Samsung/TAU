@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.17';
+ns.version = '1.0.18';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -596,6 +596,39 @@ ns.version = '1.0.17';
 				// probably wont work if there is any more than 1
 				// active animationFrame but we are trying anyway
 				window.clearTimeout(currentFrame);
+			};
+
+			/**
+			 * Remove animation callbacks added by requestAnimationFrame
+			 * @method cancelAnimationFrames
+			 * @static
+			 * @member ns.util
+			 * @param {*} animationId value for identify animation in queue
+			 */
+			util.cancelAnimationFrames = function (animationId) {
+				var found = 0,
+					len = waitingFrames.length,
+					i = 0;
+
+				if (animationId) {
+					// remove selected requests
+					while (len > 0 && found > -1) {
+						found = -1;
+						for (; i < len; i++) {
+							if (waitingFrames[i].animationId === animationId) {
+								found = i;
+								break;
+							}
+						}
+
+						if (found > -1) {
+							waitingFrames.splice(found, 1);
+							len--;
+						}
+					}
+				} else {
+					ns.warn("cancelAnimationFrames() require one parameter for request identify");
+				}
 			};
 
 			util._getCancelAnimationFrame = function () {
@@ -8261,8 +8294,7 @@ function pathToRegexp (path, keys, options) {
 			prototype._render = function (now) {
 				var self = this,
 					stateDOM = self._stateDOM,
-					element = self.element,
-					animation = self._animation;
+					element = self.element;
 
 				if (now === true) {
 					render(stateDOM, element, false);
@@ -18099,6 +18131,39 @@ function pathToRegexp (path, keys, options) {
 				window.clearTimeout(currentFrame);
 			};
 
+			/**
+			 * Remove animation callbacks added by requestAnimationFrame
+			 * @method cancelAnimationFrames
+			 * @static
+			 * @member ns.util
+			 * @param {*} animationId value for identify animation in queue
+			 */
+			util.cancelAnimationFrames = function (animationId) {
+				var found = 0,
+					len = waitingFrames.length,
+					i = 0;
+
+				if (animationId) {
+					// remove selected requests
+					while (len > 0 && found > -1) {
+						found = -1;
+						for (; i < len; i++) {
+							if (waitingFrames[i].animationId === animationId) {
+								found = i;
+								break;
+							}
+						}
+
+						if (found > -1) {
+							waitingFrames.splice(found, 1);
+							len--;
+						}
+					}
+				} else {
+					ns.warn("cancelAnimationFrames() require one parameter for request identify");
+				}
+			};
+
 			util._getCancelAnimationFrame = function () {
 				return (window.cancelAnimationFrame ||
 					window.webkitCancelAnimationFrame ||
@@ -18881,6 +18946,8 @@ function pathToRegexp (path, keys, options) {
 				} else {
 					self._animationTimeout = self._calculateAnimate.bind(self, callback);
 				}
+				self._animationId = Math.random() + Date.now();
+				self._animationTimeout.animationId = self._animationId;
 				self._calculateAnimate(callback);
 				return self;
 			};
@@ -18896,7 +18963,9 @@ function pathToRegexp (path, keys, options) {
 				self._animate.chainIndex = 0;
 				// reset current animation config
 				self._animateConfig = null;
-			// clear timeout
+
+				ns.util.cancelAnimationFrames(self._animationId);
+				// clear timeout
 				self._animationTimeout = null;
 				return self;
 			};
@@ -18911,11 +18980,51 @@ function pathToRegexp (path, keys, options) {
 				}
 			};
 
+			/**
+			 * Method resets startTime for each animations to current time
+			 * @private
+			 * @param {*} animateConfig
+			 */
+			function resetStartTimeForAnimateConfig(animateConfig) {
+				var i,
+					len;
+
+				if (animateConfig) {
+					len = animateConfig.length;
+					for (i = 0; i < len; i++) {
+						animateConfig[i].startTime = Date.now();
+					}
+				}
+			}
+
+			/**
+			 * Reset animations to initial position
+			 */
+			prototype.reset = function () {
+				var self = this,
+					restart = self.active;
+
+				if (restart) {
+					self.stop();
+				}
+
+				self._initAnimate();
+				resetStartTimeForAnimateConfig(self._animateConfig);
+				self._pausedTimeDiff = 0;
+				self._animate.chainIndex = 0;
+
+				self._calculateAnimate();
+
+				if (restart) {
+					self.start();
+				}
+			}
+
 			function calculateOption(option, time) {
 				var timeDiff,
 					current = null;
 
-				if (option && option.startTime < time) {
+				if (option && option.startTime <= time) {
 				// if option is not delayed
 					timeDiff = time - option.startTime;
 
@@ -19002,7 +19111,7 @@ function pathToRegexp (path, keys, options) {
 						self._tickFunction(self._object);
 					}
 					if (notFinishedAnimationsCount) {
-					// setting next loop state
+						// setting next loop state
 						if (self._animationTimeout) {
 							requestAnimationFrame(self._animationTimeout);
 						}
@@ -19367,6 +19476,8 @@ function pathToRegexp (path, keys, options) {
 			prototype._build = function (element) {
 				var marqueeInnerElement = element.querySelector("." + classes.MARQUEE_CONTENT);
 
+				element.classList.add(CLASSES_PREFIX);
+
 				if (!marqueeInnerElement) {
 					marqueeInnerElement = document.createElement("div");
 
@@ -19595,7 +19706,6 @@ function pathToRegexp (path, keys, options) {
 				self._animation.stop();
 				self._animation.destroy();
 				self._animation = null;
-				self.element.classList.remove(classes.MARQUEE_GRADIENT);
 				self.element.style.webkitMaskImage = "";
 
 				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
@@ -19647,10 +19757,6 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.core.Marquee
 			 */
 			prototype.stop = function () {
-				var self = this,
-					animation = self._animation;
-
-				animation.pause();
 				this.option("animation", "stopped");
 			};
 
@@ -19672,12 +19778,12 @@ function pathToRegexp (path, keys, options) {
 			 */
 			prototype.reset = function () {
 				var self = this,
-					stateDOM = self._stateDOM;
+					animation = self._animation;
 
-				this.option("animation", "stopped");
-				stateDOM.style.webkitMaskImage = (this.options.ellipsisEffect === "none") ? "" : GRADIENTS.RIGHT;
-				stateDOM.children[0].style.webkitTransform = "translateX(0)";
-				self._render(true);
+				animation.reset();
+
+				self.element.style.webkitMaskImage = (self.options.ellipsisEffect === "none") ?
+					"" : GRADIENTS.RIGHT;
 			};
 
 			Marquee.prototype = prototype;
