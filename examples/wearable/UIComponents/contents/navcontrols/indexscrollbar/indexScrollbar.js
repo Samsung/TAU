@@ -13,7 +13,7 @@
 	 */
 	page.addEventListener("pageshow", function () {
 		var indexScrollbarElement = document.getElementById("indexscrollbar"),
-			listDividers = listviewElement.getElementsByClassName("ui-listview-divider"),	// list dividers
+			listDividers = tau.engine.getBinding(listviewElement).getDividers(),	// list dividers
 			dividers = {},	// collection of list dividers
 			indices = [],	// index list
 			divider,
