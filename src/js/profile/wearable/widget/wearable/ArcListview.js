@@ -1455,6 +1455,17 @@
 				});
 			}
 
+			/**
+			 * Return all dividers (category names in items' list)
+			 * @method getDividers
+			 * @memberof ns.widget.wearable.ArcListview
+			 */
+			prototype.getDividers = function () {
+				return this._items
+					.filter(function (elem) {
+						return elem.classList.contains(classes.DIVIDER);
+					});
+			}
 
 			/**
 			 * Widget init method

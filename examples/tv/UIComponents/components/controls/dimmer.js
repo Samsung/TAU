@@ -1,3 +1,4 @@
+/* global tau */
 (function () {
 	var page = document.getElementById("dimmer-page"),
 		dimmer = document.getElementById("dimmer"),

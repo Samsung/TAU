@@ -943,7 +943,7 @@
 				if (active) {
 					transform = active.style.transform || active.style.webkitTransform;
 					newTransformStyle = transform.replace(/scale[(][^)]+[)]/,
-							DEFAULT.ITEM_NORMAL_SCALE);
+						DEFAULT.ITEM_NORMAL_SCALE);
 					active.style.transform = newTransformStyle;
 					active.style.webkitTransform = newTransformStyle;
 					active.classList.remove(classes.ITEM_ACTIVE);

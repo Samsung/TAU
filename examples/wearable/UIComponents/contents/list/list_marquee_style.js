@@ -19,7 +19,7 @@
 
 		if (elScroller && list || !window.tau.support.shape.circle) {
 			listHelper = tau.helper.SnapListMarqueeStyle.create(list, {
-				marqueeDelay: 1000,
+				marqueeDelay: 600,
 				marqueeStyle: "endToEnd",
 				animate: "scale"
 			});
