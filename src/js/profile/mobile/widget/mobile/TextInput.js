@@ -586,7 +586,7 @@
 				utilEvent.on(element, "focus", onFocusCallback);
 				utilEvent.on(element, "blur", onBlurCallback);
 				if (clearBtn) {
-					utilEvent.on(clearBtn, "click", onClearBtnClickCallback);
+					utilEvent.on(clearBtn, "mousedown", onClearBtnClickCallback);
 					utilEvent.on(clearBtn, eventName.ANIMATIONEND, onClearBtnAnimationEndCallback);
 				}
 
@@ -607,7 +607,7 @@
 				utilEvent.off(element, "focus", callbacks.onFocusCallback);
 				utilEvent.off(element, "blur", callbacks.onBlurCallback);
 				if (clearBtn) {
-					utilEvent.off(clearBtn, "click", callbacks.onClearBtnClickCallback);
+					utilEvent.off(clearBtn, "mousedown", callbacks.onClearBtnClickCallback);
 					utilEvent.off(clearBtn, eventName.ANIMATIONEND, callbacks.onClearBtnAnimationEndCallback);
 				}
 			};
