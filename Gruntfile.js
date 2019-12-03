@@ -104,7 +104,7 @@ module.exports = function (grunt) {
 				outputFileName: "tau.i3d.js",
 				outputDir: "libs"
 			}
-		}
+		},
 
 		files = {
 			js: {
