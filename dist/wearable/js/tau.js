@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.18';
+ns.version = '1.0.19';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -32658,6 +32658,17 @@ function pathToRegexp (path, keys, options) {
 				});
 			}
 
+			/**
+			 * Return all dividers (category names in items' list)
+			 * @method getDividers
+			 * @memberof ns.widget.wearable.ArcListview
+			 */
+			prototype.getDividers = function () {
+				return this._items
+					.filter(function (elem) {
+						return elem.classList.contains(classes.DIVIDER);
+					});
+			}
 
 			/**
 			 * Widget init method
@@ -40035,7 +40046,7 @@ function pathToRegexp (path, keys, options) {
 				if (active) {
 					transform = active.style.transform || active.style.webkitTransform;
 					newTransformStyle = transform.replace(/scale[(][^)]+[)]/,
-							DEFAULT.ITEM_NORMAL_SCALE);
+						DEFAULT.ITEM_NORMAL_SCALE);
 					active.style.transform = newTransformStyle;
 					active.style.webkitTransform = newTransformStyle;
 					active.classList.remove(classes.ITEM_ACTIVE);
