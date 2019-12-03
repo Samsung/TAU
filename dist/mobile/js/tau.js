@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.18';
+ns.version = '1.0.19';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -35991,7 +35991,7 @@ function pathToRegexp (path, keys, options) {
 				utilEvent.on(element, "focus", onFocusCallback);
 				utilEvent.on(element, "blur", onBlurCallback);
 				if (clearBtn) {
-					utilEvent.on(clearBtn, "click", onClearBtnClickCallback);
+					utilEvent.on(clearBtn, "mousedown", onClearBtnClickCallback);
 					utilEvent.on(clearBtn, eventName.ANIMATIONEND, onClearBtnAnimationEndCallback);
 				}
 
@@ -36012,7 +36012,7 @@ function pathToRegexp (path, keys, options) {
 				utilEvent.off(element, "focus", callbacks.onFocusCallback);
 				utilEvent.off(element, "blur", callbacks.onBlurCallback);
 				if (clearBtn) {
-					utilEvent.off(clearBtn, "click", callbacks.onClearBtnClickCallback);
+					utilEvent.off(clearBtn, "mousedown", callbacks.onClearBtnClickCallback);
 					utilEvent.off(clearBtn, eventName.ANIMATIONEND, callbacks.onClearBtnAnimationEndCallback);
 				}
 			};
