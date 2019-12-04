@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.1.11';
+ns.version = '1.1.12';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -865,6 +865,39 @@ ns.version = '1.1.11';
 				// probably wont work if there is any more than 1
 				// active animationFrame but we are trying anyway
 				window.clearTimeout(currentFrame);
+			};
+
+			/**
+			 * Remove animation callbacks added by requestAnimationFrame
+			 * @method cancelAnimationFrames
+			 * @static
+			 * @member ns.util
+			 * @param {*} animationId value for identify animation in queue
+			 */
+			util.cancelAnimationFrames = function (animationId) {
+				var found = 0,
+					len = waitingFrames.length,
+					i = 0;
+
+				if (animationId) {
+					// remove selected requests
+					while (len > 0 && found > -1) {
+						found = -1;
+						for (; i < len; i++) {
+							if (waitingFrames[i].animationId === animationId) {
+								found = i;
+								break;
+							}
+						}
+
+						if (found > -1) {
+							waitingFrames.splice(found, 1);
+							len--;
+						}
+					}
+				} else {
+					ns.warn("cancelAnimationFrames() require one parameter for request identify");
+				}
 			};
 
 			util._getCancelAnimationFrame = function () {
@@ -6493,8 +6526,7 @@ ns.version = '1.1.11';
 			prototype._render = function (now) {
 				var self = this,
 					stateDOM = self._stateDOM,
-					element = self.element,
-					animation = self._animation;
+					element = self.element;
 
 				if (now === true) {
 					render(stateDOM, element, false);
@@ -37509,7 +37541,7 @@ function pathToRegexp (path, keys, options) {
 				utilEvent.on(element, "focus", onFocusCallback);
 				utilEvent.on(element, "blur", onBlurCallback);
 				if (clearBtn) {
-					utilEvent.on(clearBtn, "click", onClearBtnClickCallback);
+					utilEvent.on(clearBtn, "mousedown", onClearBtnClickCallback);
 					utilEvent.on(clearBtn, eventName.ANIMATIONEND, onClearBtnAnimationEndCallback);
 				}
 
@@ -37530,7 +37562,7 @@ function pathToRegexp (path, keys, options) {
 				utilEvent.off(element, "focus", callbacks.onFocusCallback);
 				utilEvent.off(element, "blur", callbacks.onBlurCallback);
 				if (clearBtn) {
-					utilEvent.off(clearBtn, "click", callbacks.onClearBtnClickCallback);
+					utilEvent.off(clearBtn, "mousedown", callbacks.onClearBtnClickCallback);
 					utilEvent.off(clearBtn, eventName.ANIMATIONEND, callbacks.onClearBtnAnimationEndCallback);
 				}
 			};
