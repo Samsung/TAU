@@ -393,6 +393,7 @@ body {
   transition: opacity 200ms;
   opacity: 0;
   z-index: -1;
+  border-radius: 3.75rem;
 }
 .ui-page .ui-footer.ui-bottom-button .ui-btn.ui-btn-active {
   color: rgba(250, 250, 250, 1);
