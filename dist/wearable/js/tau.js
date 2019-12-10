@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.19';
+ns.version = '1.0.20';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -37634,7 +37634,7 @@ function pathToRegexp (path, keys, options) {
 				},
 
 				// time threshold for detect scroll end
-				SCROLL_END_TIME_THRESHOLD = 0;
+				SCROLL_END_TIME_THRESHOLD = 150;
 
 			SnapListview.classes = classes;
 			SnapListview.animationTimer = null;
