@@ -205,7 +205,7 @@
 				},
 
 				// time threshold for detect scroll end
-				SCROLL_END_TIME_THRESHOLD = 0;
+				SCROLL_END_TIME_THRESHOLD = 150;
 
 			SnapListview.classes = classes;
 			SnapListview.animationTimer = null;
