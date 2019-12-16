@@ -784,23 +784,25 @@
 			 * Scroll SnapList by index
 			 * @method scrollToPosition
 			 * @param {number} index
+			 * @param {boolean} skipAnimation
 			 * @public
 			 * @return {boolean} True if the list was scrolled, false - otherwise.
 			 * @member ns.widget.wearable.SnapListview
 			 */
-			prototype.scrollToPosition = function (index) {
-				return this._scrollToPosition(index);
+			prototype.scrollToPosition = function (index, skipAnimation) {
+				return this._scrollToPosition(index, skipAnimation);
 			};
 
 			/**
 			 * Scroll SnapList by index
 			 * @method _scrollToPosition
 			 * @param {number} index
+			 * @param {boolean} skipAnimation
 			 * @param {Function} callback
 			 * @protected
 			 * @member ns.widget.wearable.SnapListview
 			 */
-			prototype._scrollToPosition = function (index, callback) {
+			prototype._scrollToPosition = function (index, skipAnimation, callback) {
 				var self = this,
 					ui = self._ui,
 					enabled = self._enabled,
@@ -825,7 +827,14 @@
 				listItemIndex = listItems[index].coord;
 				dest = listItemIndex.top - scrollableParent.height / 2 + listItemIndex.height / 2;
 
-				scrollAnimation(scrollableParent.element, -scrollableParent.element.firstElementChild.getBoundingClientRect().top, dest, 450, callback);
+				if (skipAnimation) {
+					scrollableParent.element.scrollTop = dest;
+				} else {
+					scrollAnimation(scrollableParent.element, -scrollableParent.element.firstElementChild.getBoundingClientRect().top, dest, 450, callback);
+				}
+
+				// sync scroll position and index with scroller
+				scrolling.scrollToIndex(index, dest);
 
 				return true;
 			};
@@ -850,7 +859,6 @@
 					progress = 0,
 					easeProgress = 0,
 					distance = to - from,
-					scrollTop = element.scrollTop,
 					animationTimer = SnapListview.animationTimer;
 
 				startTime = window.performance.now();
@@ -864,7 +872,7 @@
 					progress = (currentTime - startTime) / duration;
 					easeProgress = easeOut(progress);
 					gap = distance * easeProgress;
-					element.scrollTop = scrollTop + gap;
+					element.scrollTop = from + gap;
 					if (progress <= 1 && progress >= 0) {
 						animationTimer = window.requestAnimationFrame(animation);
 					} else {
