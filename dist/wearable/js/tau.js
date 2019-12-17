@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.20';
+ns.version = '1.0.21';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -15903,6 +15903,7 @@ function pathToRegexp (path, keys, options) {
 				// current state of scroll position
 				scrollPosition = 0,
 				lastScrollPosition = 0,
+				baseScrollPosition = 0,
 				moveToPosition = 0,
 				lastRenderedPosition = 0,
 				lastTime = Date.now(),
@@ -16393,7 +16394,7 @@ function pathToRegexp (path, keys, options) {
 			 */
 			function render() {
 				// calculate ne position of scrolling as sum of last scrolling state + move
-				var newRenderedPosition = scrollPosition + lastScrollPosition;
+				var newRenderedPosition = scrollPosition + lastScrollPosition + baseScrollPosition;
 				// is position was changed
 
 				if (newRenderedPosition !== lastRenderedPosition) {
@@ -16663,17 +16664,16 @@ function pathToRegexp (path, keys, options) {
 				return maxScrollPosition;
 			}
 
-			function scrollToIndex(index) {
-				var previousIndex = currentIndex;
-
+			function scrollToIndex(index, from) {
 				currentIndex = index;
 
-				if (snapPoints) {
-					moveToPosition = snapPoints[index].position;
-					snapSize = Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
-				} else {
-					moveToPosition = snapSize * index;
-				}
+				// Set the scroll position by index
+				baseScrollPosition = from;
+				scrollPosition = -getScrollPositionByIndex(index);
+				moveToPosition = scrollPosition;
+
+				// Enforce redraw to apply selected effect
+				render();
 			}
 
 			/**
@@ -38213,23 +38213,25 @@ function pathToRegexp (path, keys, options) {
 			 * Scroll SnapList by index
 			 * @method scrollToPosition
 			 * @param {number} index
+			 * @param {boolean} skipAnimation
 			 * @public
 			 * @return {boolean} True if the list was scrolled, false - otherwise.
 			 * @member ns.widget.wearable.SnapListview
 			 */
-			prototype.scrollToPosition = function (index) {
-				return this._scrollToPosition(index);
+			prototype.scrollToPosition = function (index, skipAnimation) {
+				return this._scrollToPosition(index, skipAnimation);
 			};
 
 			/**
 			 * Scroll SnapList by index
 			 * @method _scrollToPosition
 			 * @param {number} index
+			 * @param {boolean} skipAnimation
 			 * @param {Function} callback
 			 * @protected
 			 * @member ns.widget.wearable.SnapListview
 			 */
-			prototype._scrollToPosition = function (index, callback) {
+			prototype._scrollToPosition = function (index, skipAnimation, callback) {
 				var self = this,
 					ui = self._ui,
 					enabled = self._enabled,
@@ -38254,7 +38256,14 @@ function pathToRegexp (path, keys, options) {
 				listItemIndex = listItems[index].coord;
 				dest = listItemIndex.top - scrollableParent.height / 2 + listItemIndex.height / 2;
 
-				scrollAnimation(scrollableParent.element, -scrollableParent.element.firstElementChild.getBoundingClientRect().top, dest, 450, callback);
+				if (skipAnimation) {
+					scrollableParent.element.scrollTop = dest;
+				} else {
+					scrollAnimation(scrollableParent.element, -scrollableParent.element.firstElementChild.getBoundingClientRect().top, dest, 450, callback);
+				}
+
+				// sync scroll position and index with scroller
+				scrolling.scrollToIndex(index, dest);
 
 				return true;
 			};
@@ -38279,7 +38288,6 @@ function pathToRegexp (path, keys, options) {
 					progress = 0,
 					easeProgress = 0,
 					distance = to - from,
-					scrollTop = element.scrollTop,
 					animationTimer = SnapListview.animationTimer;
 
 				startTime = window.performance.now();
@@ -38293,7 +38301,7 @@ function pathToRegexp (path, keys, options) {
 					progress = (currentTime - startTime) / duration;
 					easeProgress = easeOut(progress);
 					gap = distance * easeProgress;
-					element.scrollTop = scrollTop + gap;
+					element.scrollTop = from + gap;
 					if (progress <= 1 && progress >= 0) {
 						animationTimer = window.requestAnimationFrame(animation);
 					} else {
