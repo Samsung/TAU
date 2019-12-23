@@ -278,7 +278,7 @@
 				}
 			};
 
-			prototype._calculateEndToEndGradient = function (state, diff, from, current) {
+			prototype._calculateEndToEndGradient = function (state) {
 				var self = this,
 					stateDOM = self._stateDOM,
 					textWidth = stateDOM.children[0].offsetWidth,
@@ -295,10 +295,6 @@
 					returnValue = GRADIENTS.BOTH;
 				} else {
 					returnValue = GRADIENTS.LEFT;
-				}
-
-				if (current === returnValue) {
-					return null;
 				}
 				return returnValue;
 			};

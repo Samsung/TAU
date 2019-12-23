@@ -149,7 +149,7 @@
 
 	.ui-popup-footer.ui-bottom-button {
 		position: fixed;
-		bottom: 0;
+		bottom: 6 * @unit_base;
 		z-index: 1000;
 		max-height: 100 * @unit_base;
 		display: flex;
@@ -171,7 +171,7 @@
 			color: @color_button_bottom_text;
 			padding: 8 * @unit_base 18 * @unit_base 0 23 * @unit_base 0;
 			margin: 8 * @unit_base 0;
-			height: 60 * @unit_base;
+			height: 72 * @unit_base;
 			width: 210 * @unit_base;
 			background-color: @bg_color_button_bottom;
 			border: 3 * @unit_base solid @border_color_button_bottom;
@@ -188,15 +188,12 @@
 				transition: opacity 200ms;
 				opacity: 0;
 				z-index: -1;
+				border-radius: 60 * @unit_base;
 			}
 
 			&.ui-btn-active {
 				color: @color_button_bottom_text_pressed;
 				background-color: @bg_color_button_bottom_pressed;
-				height: 60 * @unit_base;
-				width: 210 * @unit_base;
-				border-radius: 65 * @unit_base;
-				font-size: 30 * @unit_base;
 				&::after {
 					animation: btn-footer-opacity-press linear 565ms;
 				}
@@ -204,10 +201,6 @@
 
 			&.ui-btn-inactive {
 				background-color: @bg_color_button_bottom;
-				height: 60 * @unit_base;
-				width: 210 * @unit_base;
-				border-radius: 65 * @unit_base;
-				font-size: 28 * @unit_base;
 				&::after {
 					animation: btn-footer-opacity-press linear 565ms;
 				}
