@@ -228,7 +228,7 @@
 				null, "1, 10, 0, translateX(0px)");
 		});
 
-		test("_calculateEndToEndGradient", 4, function (assert) {
+		test("_calculateEndToEndGradient", 3, function (assert) {
 			var marquee = new Marquee();
 
 			marquee._stateDOM = {
@@ -252,11 +252,6 @@
 				"-webkit-linear-gradient(left, rgb(255, 255, 255) 0, rgb(255, 255, 255) 85%," +
 				" transparent 100%)",
 				"1, 10, 0, ''");
-			assert.equal(
-				marquee._calculateEndToEndGradient(1, 10, 0, "-webkit-linear-gradient(left," +
-				" rgb(255, 255, 255) 0, rgb(255, 255, 255) 85%, transparent 100%)"),
-				null, "1, 10, 0, -webkit-linear-gradient(left, rgb(255, 255, 255) 0," +
-				" rgb(255, 255, 255) 85%, transparent 100%)");
 		});
 
 		test("_calculateStandardGradient", 4, function (assert) {

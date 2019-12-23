@@ -40466,6 +40466,7 @@ function pathToRegexp (path, keys, options) {
 				// current state of scroll position
 				scrollPosition = 0,
 				lastScrollPosition = 0,
+				baseScrollPosition = 0,
 				moveToPosition = 0,
 				lastRenderedPosition = 0,
 				lastTime = Date.now(),
@@ -40956,7 +40957,7 @@ function pathToRegexp (path, keys, options) {
 			 */
 			function render() {
 				// calculate ne position of scrolling as sum of last scrolling state + move
-				var newRenderedPosition = scrollPosition + lastScrollPosition;
+				var newRenderedPosition = scrollPosition + lastScrollPosition + baseScrollPosition;
 				// is position was changed
 
 				if (newRenderedPosition !== lastRenderedPosition) {
@@ -41226,17 +41227,16 @@ function pathToRegexp (path, keys, options) {
 				return maxScrollPosition;
 			}
 
-			function scrollToIndex(index) {
-				var previousIndex = currentIndex;
-
+			function scrollToIndex(index, from) {
 				currentIndex = index;
 
-				if (snapPoints) {
-					moveToPosition = snapPoints[index].position;
-					snapSize = Math.abs(snapPoints[previousIndex].position - snapPoints[index].position);
-				} else {
-					moveToPosition = snapSize * index;
-				}
+				// Set the scroll position by index
+				baseScrollPosition = from;
+				scrollPosition = -getScrollPositionByIndex(index);
+				moveToPosition = scrollPosition;
+
+				// Enforce redraw to apply selected effect
+				render();
 			}
 
 			/**
