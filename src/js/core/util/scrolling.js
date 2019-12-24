@@ -571,6 +571,7 @@
 				lastScrollPosition = 0;
 				moveToPosition = 0;
 				lastRenderedPosition = 0;
+				baseScrollPosition = 0;
 				lastTime = Date.now();
 			}
 

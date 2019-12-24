@@ -163,6 +163,7 @@
 					self._currentIndex = null;
 					self._enabled = true;
 					self._isTouched = false;
+					self._isScrollToPosition = false;
 					self._scrollEventCount = 0;
 					self._marginTop = 0;
 				},
@@ -667,7 +668,7 @@
 				self._unbindEvents();
 
 				scroller = getScrollableParent(self.element);
-				if (scroller) {
+				if (scroller && !self._isScrollToPosition) {
 					scroller.scrollTop = 0;
 				}
 
@@ -675,6 +676,7 @@
 				self._callbacks = null;
 				self._listItems = null;
 				self._isScrollStarted = null;
+				self._isScrollToPosition = null;
 
 				if (self._scrollEndTimeoutId) {
 					window.clearTimeout(self._scrollEndTimeoutId);
@@ -821,6 +823,7 @@
 				}
 
 				self._currentIndex = index;
+				self._isScrollToPosition = true;
 
 				removeSelectedClass(self);
 
