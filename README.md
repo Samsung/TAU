@@ -2,8 +2,6 @@
 
 The TAU library contains components which allows you to create Web Application UI. Each components represents UI element, such as a button or slider, which gives you interaction and manipulation features.
 
-This is replacement and clone of previously existing https://review.tizen.org/gerrit/#/admin/projects/platform/framework/web/tau
-
 ## Getting Started
 
 - Clone a copy of the master branch in the TAU Git repository:
