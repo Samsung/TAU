@@ -2,7 +2,6 @@
 
 The TAU library contains components which allows you to create Web Application UI. Each components represents UI element, such as a button or slider, which gives you interaction and manipulation features.
 
-This is replacement and clone of previously existing https://review.tizen.org/gerrit/#/admin/projects/platform/framework/web/tau
 
 ## Getting Started
 
@@ -57,8 +56,8 @@ UIComponents sample web application demonstrating how to implement UI Components
 
 Demo application is available on https://samsung.github.io/TAU: 
 
-- https://samsung.github.io/TAU/examples/mobile/UIComponents/ (Mobile)
-- https://samsung.github.io/TAU/examples/wearable/UIComponents/ (Wearable)
+- https://code.tizen.org/TAU/1.1/examples/mobile/UIComponents/ (Mobile)
+- https://code.tizen.org/TAU/1.1/examples/wearable/UIComponents/ (Wearable)
 
 If you want to test your own version of demo app run:
 
