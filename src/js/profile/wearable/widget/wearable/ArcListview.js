@@ -1544,6 +1544,8 @@
 
 				if (event.type === "pageinit") {
 					self._onPageInit(event);
+				} else if (event.type === "pageshow") {
+					self._selectItem(self._state.currentIndex);
 				} else if (page && page.classList.contains("ui-page-active")) {
 					// disable events on non active page
 					switch (event.type) {
@@ -1597,6 +1599,7 @@
 				page.addEventListener("touchmove", self, true);
 				page.addEventListener("touchend", self, true);
 				page.addEventListener("pageinit", self, true);
+				page.addEventListener("pageshow", self, true);
 				page.addEventListener("popupbeforeshow", self, true);
 				page.addEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
@@ -1660,6 +1663,7 @@
 				page.removeEventListener("touchmove", self, true);
 				page.removeEventListener("touchend", self, true);
 				page.removeEventListener("pageinit", self, true);
+				page.removeEventListener("pageshow", self, true);
 				page.removeEventListener("popupbeforeshow", self, true);
 				page.removeEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
