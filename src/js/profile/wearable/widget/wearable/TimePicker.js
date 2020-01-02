@@ -470,9 +470,12 @@
 			 */
 			prototype._onSpinChange = function (event) {
 				var self = this,
+					spin = null,
 					parentElement = getClosestByClass(event.target, classes.CONTAINER);
 
-				if (parentElement) {
+				spin = ns.engine.getBinding(event.target);
+
+				if (spin && spin.option("enabled") && parentElement) {
 					self.value(event.detail.value);
 				}
 			};
