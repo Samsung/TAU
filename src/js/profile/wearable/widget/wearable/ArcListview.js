@@ -1190,6 +1190,12 @@
 				arcListviewSelection.classList.add(classes.SELECTION_SHOW);
 			}
 
+			prototype._removeHighlight = function () {
+				var selection =	this._ui.arcListviewSelection;
+
+				selection.classList.remove(classes.SELECTION_SHOW);
+			}
+
 			prototype._wrapTextContent = function (element) {
 				var child = element.firstChild,
 					TEXT_NODE_TYPE = document.TEXT_NODE,
@@ -1546,6 +1552,8 @@
 					self._onPageInit(event);
 				} else if (event.type === "pageshow") {
 					self._selectItem(self._state.currentIndex);
+				} else if (event.type === "pagehide") {
+					self._removeHighlight();
 				} else if (page && page.classList.contains("ui-page-active")) {
 					// disable events on non active page
 					switch (event.type) {
@@ -1600,6 +1608,7 @@
 				page.addEventListener("touchend", self, true);
 				page.addEventListener("pageinit", self, true);
 				page.addEventListener("pageshow", self, true);
+				page.addEventListener("pagehide", self, true);
 				page.addEventListener("popupbeforeshow", self, true);
 				page.addEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
@@ -1664,6 +1673,7 @@
 				page.removeEventListener("touchend", self, true);
 				page.removeEventListener("pageinit", self, true);
 				page.removeEventListener("pageshow", self, true);
+				page.removeEventListener("pagehide", self, true);
 				page.removeEventListener("popupbeforeshow", self, true);
 				page.removeEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
