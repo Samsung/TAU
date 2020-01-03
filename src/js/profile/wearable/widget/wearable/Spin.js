@@ -55,7 +55,7 @@
 				ENABLING_DURATION = 300, // [ms]
 				ROLL_DURATION = 600,
 				DELTA_Y = 100,
-				DRAG_STEP_TO_VALUE = 30,
+				DRAG_STEP_TO_VALUE = 60,
 				VIBRATION_DURATION = 10,
 				lastDragValueChange = 0,
 				dragGestureInstance = null,
