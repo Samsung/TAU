@@ -599,7 +599,7 @@
 			prototype._unbindEvents = function () {
 				var self = this;
 
-				utilsEvents.off(self.element, "drag dragend", self);
+				utilsEvents.off(document, "drag dragend", self);
 				utilsEvents.off(self.element, "click", self);
 			};
 
