@@ -513,6 +513,8 @@
 					}, ENABLING_DURATION);
 					element.classList.remove(classes.ENABLED);
 					utilsEvents.off(document, "drag dragend", self);
+					// disable animation
+					self._animation.stop();
 				}
 				// reset previous value;
 				this._prevValue = null;
