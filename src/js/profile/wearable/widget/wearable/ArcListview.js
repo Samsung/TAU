@@ -487,7 +487,8 @@
 					currentTime = Date.now(),
 					startTime = state.startTime,
 					deltaTime = currentTime - startTime,
-					scroll = state.scroll;
+					scroll = state.scroll,
+					pageWidget = null;
 
 				if (deltaTime >= state.duration) {
 					self._scrollAnimationEnd = true;
@@ -510,6 +511,10 @@
 						});
 						eventUtils.trigger(state.items[state.currentIndex].element, "selected");
 						state.toIndex = state.currentIndex;
+
+						// set last scroll position when current page is hidden
+						pageWidget = ns.engine.getBinding(self._ui.page, "Page");
+						pageWidget.setLastScrollPosition(-1 * scroll.current || 0);
 
 						scroll.to = null;
 						scroll.from = null;
