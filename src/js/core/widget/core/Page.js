@@ -970,6 +970,17 @@
 				return scroller || element.querySelector("." + classes.uiContent) || element;
 			};
 
+			/**
+			 * This method sets scroll position when page is hidden.
+			 * New page scroll position will be restored on "pagebeforeshow"
+			 * @param {number} scrollPosition last scroll position to set
+			 * @method setLastScrollPosition
+			 * @member ns.widget.core.Page
+			 */
+			prototype.setLastScrollPosition = function (scrollPosition) {
+				this._lastScrollPosition = scrollPosition;
+			}
+
 			Page.prototype = prototype;
 
 			Page.createEmptyElement = function () {
