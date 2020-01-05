@@ -744,7 +744,9 @@
 
 				targetIndex = getIndexOfSnapListItem(targetListItem, listItems);
 
-				utilEvent.preventDefault(e);
+				if (e.target.tagName === "LABEL") { // prevents duplicate events on input inside label;
+					utilEvent.preventDefault(e);
+				}
 				utilEvent.stopPropagation(e);
 
 				if (targetIndex > -1 && selectedIndex !== null) {
