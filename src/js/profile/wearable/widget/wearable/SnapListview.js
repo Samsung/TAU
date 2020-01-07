@@ -736,18 +736,13 @@
 					targetListItem,
 					targetIndex;
 
+				// prevents duplicate the list item change when LABEL and INPUT receive click event;
+				if (e.target.tagName === "LABEL" && e.target.querySelector("input")) {
+					return false;
+				}
+
 				targetListItem = getSnapListItem(e.target, self.element);
-
-				if (targetListItem && targetListItem.classList.contains(classes.SNAP_LISTVIEW_SELECTED)) {
-					return;
-				}
-
 				targetIndex = getIndexOfSnapListItem(targetListItem, listItems);
-
-				if (e.target.tagName === "LABEL") { // prevents duplicate events on input inside label;
-					utilEvent.preventDefault(e);
-				}
-				utilEvent.stopPropagation(e);
 
 				if (targetIndex > -1 && selectedIndex !== null) {
 					if (targetIndex < selectedIndex) {
