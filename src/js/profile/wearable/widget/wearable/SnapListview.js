@@ -160,6 +160,7 @@
 					self._scrollEndTimeoutId = null;
 					self._isScrollStarted = false;
 					self._selectedIndex = null;
+					self._previousSelectedIndex = null;
 					self._currentIndex = null;
 					self._enabled = true;
 					self._isTouched = false;
@@ -308,8 +309,11 @@
 					tempListItem,
 					tempListItemCoord,
 					i,
-					previousSelectedIndex = self._selectedIndex,
-					selectedIndex;
+					selectedIndex = null;
+
+				if (self._selectedIndex !== null) {
+					self._previousSelectedIndex = self._selectedIndex;
+				}
 
 				for (i = 0; i < listItemLength; i++) {
 					tempListItem = listItems[i];
@@ -323,7 +327,7 @@
 						break;
 					}
 				}
-				if (selectedIndex !== previousSelectedIndex && selectedIndex !== undefined) {
+				if (selectedIndex !== self._previousSelectedIndex && selectedIndex !== null) {
 					removeSelectedClass(self);
 					if (self._selectTimeout) {
 						clearTimeout(self._selectTimeout);
@@ -732,7 +736,7 @@
 
 			function vClickHandler(self, e) {
 				var listItems = self._listItems,
-					selectedIndex = self._selectedIndex,
+					selectedIndex = self._selectedIndex || self._previousSelectedIndex,
 					targetListItem,
 					targetIndex;
 
