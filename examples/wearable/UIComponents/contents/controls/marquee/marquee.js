@@ -1,16 +1,18 @@
 /*global tau */
 (function () {
 	var page = document.getElementById("marqueeTest"),
-		marqueeEl = document.getElementById("marquee"),
+		marqueeEl1 = document.getElementById("marquee1"),
 		marqueeEl2 = document.getElementById("marquee2"),
 		marqueeEl3 = document.getElementById("marquee3"),
 		marqueeEl4 = document.getElementById("marquee4"),
+		marqueeEl5 = document.getElementById("marquee5"),
 		startBtn = document.getElementById("start"),
 		startFlag = true,
-		marqueeWidget,
+		marqueeWidget1,
 		marqueeWidget2,
 		marqueeWidget3,
 		marqueeWidget4,
+		marqueeWidget5,
 		pageShowHandler,
 		pageHideHandler;
 
@@ -19,9 +21,17 @@
 	 */
 	function clearVariables() {
 		page = null;
-		marqueeEl = null;
+		marqueeEl1 = null;
+		marqueeEl2 = null;
+		marqueeEl3 = null;
+		marqueeEl4 = null;
+		marqueeEl5 = null;
 		startBtn = null;
-		marqueeWidget = null;
+		marqueeWidget1 = null;
+		marqueeWidget2 = null;
+		marqueeWidget3 = null;
+		marqueeWidget4 = null;
+		marqueeWidget5 = null;
 	}
 
 	/**
@@ -30,16 +40,18 @@
 	function marqueeStartandStop() {
 		if (startFlag) {
 			startBtn.textContent = "START";
-			marqueeWidget.stop();
+			marqueeWidget1.stop();
 			marqueeWidget2.stop();
 			marqueeWidget3.stop();
 			marqueeWidget4.stop();
+			marqueeWidget5.stop();
 		} else {
 			startBtn.textContent = "STOP";
-			marqueeWidget.start();
+			marqueeWidget1.start();
 			marqueeWidget2.start();
 			marqueeWidget3.start();
 			marqueeWidget4.start();
+			marqueeWidget5.start();
 		}
 		startFlag = !startFlag;
 	}
@@ -66,15 +78,17 @@
 	 */
 	pageShowHandler = function () {
 		bindEvents();
-		marqueeWidget = new tau.widget.Marquee(marqueeEl);
+		marqueeWidget1 = new tau.widget.Marquee(marqueeEl1);
 		marqueeWidget2 = new tau.widget.Marquee(marqueeEl2);
 		marqueeWidget3 = new tau.widget.Marquee(marqueeEl3);
 		marqueeWidget4 = new tau.widget.Marquee(marqueeEl4);
+		marqueeWidget5 = new tau.widget.Marquee(marqueeEl5);
 
-		marqueeWidget.start();
+		marqueeWidget1.start();
 		marqueeWidget2.start();
 		marqueeWidget3.start();
 		marqueeWidget4.start();
+		marqueeWidget5.start();
 	};
 
 	/**
@@ -82,7 +96,11 @@
 	 * Destroys and removes event listeners
 	 */
 	pageHideHandler = function () {
-		marqueeWidget.destroy();
+		marqueeWidget1.destroy();
+		marqueeWidget2.destroy();
+		marqueeWidget3.destroy();
+		marqueeWidget4.destroy();
+		marqueeWidget5.destroy();
 		unbindEvents();
 		clearVariables();
 	};

@@ -5,3 +5,17 @@
 .ui-arc-listview-text-content {
     margin-left: 0;
 }
+.ui-marquee-content {
+    &::after {
+        content: attr(title);
+        text-indent: 100 * @unit_base;
+        position: absolute;
+        display: none;
+    }
+    &.ui-visible {
+        padding-right: 100 * @unit_base;
+        &::after {
+            display: inline;
+        }
+    }    
+}
