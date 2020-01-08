@@ -2633,6 +2633,18 @@ a.ui-hyperlink:hover {
 .ui-arc-listview-text-content {
   margin-left: 0;
 }
+.ui-marquee-content::after {
+  content: attr(title);
+  text-indent: 6.25rem;
+  position: absolute;
+  display: none;
+}
+.ui-marquee-content.ui-visible {
+  padding-right: 6.25rem;
+}
+.ui-marquee-content.ui-visible::after {
+  display: inline;
+}
 .ui-number-picker-container {
   display: flex;
   width: 100%;

@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.21';
+ns.version = '1.0.22';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -12603,6 +12603,17 @@ function pathToRegexp (path, keys, options) {
 
 				return scroller || element.querySelector("." + classes.uiContent) || element;
 			};
+
+			/**
+			 * This method sets scroll position when page is hidden.
+			 * New page scroll position will be restored on "pagebeforeshow"
+			 * @param {number} scrollPosition last scroll position to set
+			 * @method setLastScrollPosition
+			 * @member ns.widget.core.Page
+			 */
+			prototype.setLastScrollPosition = function (scrollPosition) {
+				this._lastScrollPosition = scrollPosition;
+			}
 
 			Page.prototype = prototype;
 
@@ -33675,6 +33686,9 @@ function pathToRegexp (path, keys, options) {
 					this.options = objectUtils.copy(Marquee.defaults);
 					// event callbacks
 					this._callbacks = {};
+					this._ui = {
+						content: null
+					};
 				},
 
 				prototype = new BaseWidget(),
@@ -33764,7 +33778,7 @@ function pathToRegexp (path, keys, options) {
 				/**
 				 * Options for widget
 				 * @property {Object} options
-				 * @property {string|"slide"|"scroll"|"alternate"} [options.marqueeStyle="slide"] Sets the
+				 * @property {string|"slide"|"scroll"|"alternate|"endToEnd""} [options.marqueeStyle="slide"] Sets the
 				 * default style for the marquee
 				 * @property {number} [options.speed=60] Sets the speed(px/sec) for the marquee
 				 * @property {number|"infinite"} [options.iteration=1] Sets the iteration count number for
@@ -33807,7 +33821,7 @@ function pathToRegexp (path, keys, options) {
 					var value = from + state * diff,
 						returnValue;
 
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -33821,7 +33835,7 @@ function pathToRegexp (path, keys, options) {
 						returnValue;
 
 					value = state * (textWidth - containerWidth);
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -33840,26 +33854,17 @@ function pathToRegexp (path, keys, options) {
 						value *= 2;
 					}
 					value = value / textWidth * (textWidth - containerWidth);
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
 					return returnValue;
 				},
 				endToEnd: function (self, state, diff, from, current) {
-					var stateDOM = self._stateDOM,
-						textWidth = stateDOM.children[0].offsetWidth,
-						containerWidth = stateDOM.offsetWidth,
-						value,
+					var value = from + state * diff,
 						returnValue;
 
-					value = state * (textWidth + containerWidth);
-					if (value > textWidth) {
-						value = containerWidth - value + textWidth;
-					} else {
-						value = -value;
-					}
-					returnValue = "translateX(" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -33867,27 +33872,25 @@ function pathToRegexp (path, keys, options) {
 				}
 			};
 
-			prototype._calculateEndToEndGradient = function (state, diff, from, current) {
+			prototype._calculateEndToEndGradient = function (state) {
 				var self = this,
 					stateDOM = self._stateDOM,
 					textWidth = stateDOM.children[0].offsetWidth,
-					containerWidth = stateDOM.offsetWidth,
-					returnTimeFrame = (textWidth / (textWidth + containerWidth)),
+					returnTimeFrame = ((textWidth - 50) / textWidth),
 					returnValue;
 
 				if (self.options.ellipsisEffect === "none") {
 					return null;
 				}
-				if (state > returnTimeFrame) {
+				if (state > 0 && self.options.currentIteration < self.options.iteration) {
+					// don't change gradient between iterations only for lastpass
+					returnValue = GRADIENTS.BOTH;
+				} else if (state > returnTimeFrame) {
 					returnValue = GRADIENTS.RIGHT;
 				} else if (state > 0) {
 					returnValue = GRADIENTS.BOTH;
 				} else {
 					returnValue = GRADIENTS.LEFT;
-				}
-
-				if (current === returnValue) {
-					return null;
 				}
 				return returnValue;
 			};
@@ -33937,6 +33940,9 @@ function pathToRegexp (path, keys, options) {
 					marqueeInnerElement.classList.add(classes.MARQUEE_CONTENT);
 					element.appendChild(marqueeInnerElement);
 				}
+
+				this._ui.content = marqueeInnerElement;
+
 				return element;
 			};
 
@@ -33962,7 +33968,8 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					stateDOM = self._stateDOM,
 					stateDOMfirstChild = stateDOM.children[0],
-					width = stateDOMfirstChild.offsetWidth,
+					width = stateDOMfirstChild.offsetWidth +
+						((self.options.marqueeStyle === style.ENDTOEND) ? 100 : 0),
 					animation = new Animation({}),
 					state = {
 						hasEllipsisText: (width > 0),
@@ -34047,6 +34054,10 @@ function pathToRegexp (path, keys, options) {
 					animation.stop();
 					animation.start();
 				} else {
+					if (self.options.marqueeStyle === style.ENDTOEND) {
+						self._ui.content.classList.remove("ui-visible");
+					}
+					self.reset();
 					self.options.animation = states.STOPPED;
 					self.trigger(eventType.MARQUEE_END);
 				}
@@ -34114,16 +34125,24 @@ function pathToRegexp (path, keys, options) {
 
 				if (value !== options.animation) {
 					if (value === states.RUNNING) {
-						if ((runOnlyOnEllipsisText && width) || (!runOnlyOnEllipsisText)) {
-							self.options.currentIteration = 1;
+						if ((runOnlyOnEllipsisText && width > 0) || (!runOnlyOnEllipsisText)) {
+							// copy of text content to title and after pseudo element
+							self._ui.content.setAttribute("title", self._ui.content.textContent.trim());
+							if (self.options.marqueeStyle === style.ENDTOEND) {
+								self._ui.content.classList.add("ui-visible");
+							}
 							animation.start();
+							options.animation = value;
 							self.trigger(eventType.MARQUEE_START);
 						}
 					} else {
+						if (self.options.marqueeStyle === style.ENDTOEND) {
+							self._ui.content.classList.remove("ui-visible");
+						}
 						animation.pause();
+						options.animation = value;
 						self.trigger(eventType.MARQUEE_STOPPED);
 					}
-					options.animation = value;
 				}
 				return false;
 			};
@@ -34164,7 +34183,9 @@ function pathToRegexp (path, keys, options) {
 						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
 					}
 					self._stateDOM.children = [];
-					self.element.removeChild(marqueeInnerElement);
+					if (marqueeInnerElement.parentElement === self.element) {
+						self.element.removeChild(marqueeInnerElement);
+					}
 				}
 				self._stateDOM = null;
 			};
@@ -39255,6 +39276,7 @@ function pathToRegexp (path, keys, options) {
 				lastScrollPosition = 0;
 				moveToPosition = 0;
 				lastRenderedPosition = 0;
+				baseScrollPosition = 0;
 				lastTime = Date.now();
 			}
 

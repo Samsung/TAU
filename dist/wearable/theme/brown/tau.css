@@ -3977,6 +3977,7 @@ input[type="checkbox"]:not(.ui-switch-input):active:checked::before {
 }
 .ui-marquee.ui-marquee-gradient::after {
   background: linear-gradient(left, transparent 0%, rgba(36, 27, 19, 1) 100%);
+  margin-left: 6.25rem;
 }
 /****************************************************
 		Page Indicator

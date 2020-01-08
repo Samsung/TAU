@@ -7802,6 +7802,13 @@ tau-expandable {
   animation: none;
   margin-right: 0;
 }
+.ui-listview[data-colored-background='false'] {
+  background-color: #ffffff;
+}
+.ui-listview[data-colored-background='false'] li:not(.ui-group-index) {
+  border-bottom: 1px solid #e6e6e6;
+  box-sizing: border-box;
+}
 @-webkit-keyframes button-handler-activate {
   0% {
     margin-right: -40px;
