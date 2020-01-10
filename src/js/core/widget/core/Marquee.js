@@ -232,9 +232,12 @@
 						containerWidth = stateDOM.offsetWidth,
 						textWidth = stateDOM.children[0].offsetWidth,
 						value,
+						excludeValue,
 						returnValue;
 
-					value = state * (textWidth - containerWidth);
+					// RIGHT gradient is 85% spec.
+					excludeValue = (containerWidth * 15 / 100) / 2;
+					value = state * (textWidth - containerWidth + excludeValue);
 					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
@@ -310,10 +313,6 @@
 					returnValue = GRADIENTS.BOTH;
 				} else {
 					returnValue = GRADIENTS.RIGHT;
-				}
-
-				if (current === returnValue) {
-					return null;
 				}
 				return returnValue;
 			};
