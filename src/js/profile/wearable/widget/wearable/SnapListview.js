@@ -729,7 +729,7 @@
 			 * @member ns.widget.wearable.SnapListview
 			 */
 			prototype.getSelectedIndex = function () {
-				return this._currentIndex || this._selectedIndex;
+				return this._selectedIndex;
 			};
 
 			function vClickHandler(self, e) {
