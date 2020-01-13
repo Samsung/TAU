@@ -17,15 +17,12 @@ document.addEventListener("tauinit", function () {
 				pageId = page.id,
 				list;
 
-			tau.util.rotaryScrolling.enable(event.target.firstElementChild);
-
 			if (!page.classList.contains("page-snaplistview") &&
 				pageId !== "page-snaplistview" &&
 				pageId !== "page-swipelist" &&
 				pageId !== "page-marquee-list" &&
 				pageId !== "page-multiline-list") {
 				list = page.querySelector(".ui-listview");
-
 				if (list) {
 					tau.widget.Listview(list);
 				}
