@@ -170,13 +170,13 @@
 				"translateX(0px)", "0, 10, 0, ''");
 			assert.equal(
 				marquee._calculateTranslateFunctions.slide(marquee, 0.5, 10, 0, ""),
-				"translateX(-10px)", "0.5, 10, 0, ''");
+				"translateX(-10.38px)", "0.5, 10, 0, ''");
 			assert.equal(
 				marquee._calculateTranslateFunctions.slide(marquee, 1, 10, 0, ""),
-				"translateX(-20px)", ", 10, 0, ''");
+				"translateX(-20.75px)", ", 10, 0, ''");
 			assert.equal(
-				marquee._calculateTranslateFunctions.slide(marquee, 1, 10, 0, "translateX(-20px)"),
-				null, "1, 10, 0, translateX(-20px)");
+				marquee._calculateTranslateFunctions.slide(marquee, 1, 10, 0, "translateX(-20.75px)"),
+				null, "1, 10, 0, translateX(-20.75px)");
 		});
 
 		test("_calculateTranslateFunctions.alternate", 5, function (assert) {
@@ -254,7 +254,7 @@
 				"state: 1 - end of animation");
 		});
 
-		test("_calculateStandardGradient", 4, function (assert) {
+		test("_calculateStandardGradient", 3, function (assert) {
 			var marquee = new Marquee();
 
 			marquee._stateDOM = {
@@ -278,11 +278,6 @@
 				"-webkit-linear-gradient(left, transparent 0, rgb(255, 255, 255) 15%," +
 				" rgb(255, 255, 255) 100%)",
 				"1, 10, 0, ''");
-			assert.equal(
-				marquee._calculateStandardGradient(1, 10, 0, "-webkit-linear-gradient(left," +
-					" transparent 0, rgb(255, 255, 255) 15%, rgb(255, 255, 255) 100%)"),
-				null, "1, 10, 0, -webkit-linear-gradient(left, transparent 0," +
-				" rgb(255, 255, 255) 15%, rgb(255, 255, 255) 100%)");
 		});
 
 
