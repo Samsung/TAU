@@ -292,19 +292,12 @@
 				return listItem.element.style.display !== "none";
 			}
 
-			function getScrollPosition(scrollableParentElement) {
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
-			}
-
 			function setSelection(self) {
 				var ui = self._ui,
 					listItems = self._listItems,
 					scrollableParent = ui.scrollableParent,
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
-					scrollableParentElement = scrollableParent.element || ui.page,
-					scrollCenter = getScrollPosition(scrollableParentElement) +
-						scrollableParentHeight / 2 +
-						self._marginTop,
+					scrollCenter = scrolling.getScrollPosition() + scrollableParentHeight / 2,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -351,12 +344,10 @@
 				var self = this,
 					anim = self.options.animate,
 					animateCallback = self._callbacks[anim],
-					scrollPosition,
-					scrollableParentElement = self._ui.scrollableParent.element || self._ui.page;
+					scrollPosition;
 
 				if (animateCallback) {
-					scrollPosition = scrollValue ||
-						(getScrollPosition(scrollableParentElement) + self._marginTop);
+					scrollPosition = scrollValue || scrolling.getScrollPosition();
 
 					utilArray.forEach(self._listItems, function (item) {
 						item.animate(scrollPosition, animateCallback);
@@ -365,13 +356,11 @@
 			};
 
 			function scrollEndCallback(self) {
-				if (self._isTouched === false) {
-					self._isScrollStarted = false;
-					// trigger "scrollend" event
-					utilEvent.trigger(self.element, eventType.SCROLL_END);
+				self._isScrollStarted = false;
+				// trigger "scrollend" event
+				utilEvent.trigger(self.element, eventType.SCROLL_END);
 
-					setSelection(self);
-				}
+				setSelection(self);
 			}
 
 			function scrollHandler(self, event) {
@@ -405,7 +394,6 @@
 
 			function onTouchEnd(self) {
 				self._isTouched = false;
-				setSelection(self);
 			}
 
 			function onRotary(self) {
@@ -812,7 +800,6 @@
 					scrollableParent = ui.scrollableParent,
 					listItemLength = listItems.length,
 					listItem = listItems[index],
-					listItemIndex,
 					dest;
 
 				// if list is disabled or selected index is out of range, or item on selected index
@@ -827,9 +814,7 @@
 
 				removeSelectedClass(self);
 
-				listItemIndex = listItems[index].coord;
-				dest = listItemIndex.top - scrollableParent.height / 2 + listItemIndex.height / 2;
-
+				dest = scrolling.getScrollPositionByIndex(index);
 				if (skipAnimation) {
 					scrollableParent.element.scrollTop = dest;
 				} else {
