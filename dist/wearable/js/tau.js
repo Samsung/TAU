@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.22';
+ns.version = '1.0.23';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -16685,6 +16685,7 @@ function pathToRegexp (path, keys, options) {
 				moveToPosition = scrollPosition;
 
 				// Enforce redraw to apply selected effect
+				requestAnimationFrame(moveTo);
 				render();
 			}
 
@@ -16778,6 +16779,7 @@ function pathToRegexp (path, keys, options) {
 
 			ns.util.scrolling = {
 				getScrollPosition: getScrollPosition,
+				getScrollPositionByIndex: getScrollPositionByIndex,
 				enable: enable,
 				disable: disable,
 				enableScrollBar: enableScrollBar,
@@ -19383,9 +19385,12 @@ function pathToRegexp (path, keys, options) {
 						containerWidth = stateDOM.offsetWidth,
 						textWidth = stateDOM.children[0].offsetWidth,
 						value,
+						excludeValue,
 						returnValue;
 
-					value = state * (textWidth - containerWidth);
+					// RIGHT gradient is 85% spec.
+					excludeValue = (containerWidth * 15 / 100) / 2;
+					value = state * (textWidth - containerWidth + excludeValue);
 					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
@@ -19461,10 +19466,6 @@ function pathToRegexp (path, keys, options) {
 					returnValue = GRADIENTS.BOTH;
 				} else {
 					returnValue = GRADIENTS.RIGHT;
-				}
-
-				if (current === returnValue) {
-					return null;
 				}
 				return returnValue;
 			};
@@ -37762,19 +37763,12 @@ function pathToRegexp (path, keys, options) {
 				return listItem.element.style.display !== "none";
 			}
 
-			function getScrollPosition(scrollableParentElement) {
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
-			}
-
 			function setSelection(self) {
 				var ui = self._ui,
 					listItems = self._listItems,
 					scrollableParent = ui.scrollableParent,
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
-					scrollableParentElement = scrollableParent.element || ui.page,
-					scrollCenter = getScrollPosition(scrollableParentElement) +
-						scrollableParentHeight / 2 +
-						self._marginTop,
+					scrollCenter = scrolling.getScrollPosition() + scrollableParentHeight / 2,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -37821,12 +37815,10 @@ function pathToRegexp (path, keys, options) {
 				var self = this,
 					anim = self.options.animate,
 					animateCallback = self._callbacks[anim],
-					scrollPosition,
-					scrollableParentElement = self._ui.scrollableParent.element || self._ui.page;
+					scrollPosition;
 
 				if (animateCallback) {
-					scrollPosition = scrollValue ||
-						(getScrollPosition(scrollableParentElement) + self._marginTop);
+					scrollPosition = scrollValue || scrolling.getScrollPosition();
 
 					utilArray.forEach(self._listItems, function (item) {
 						item.animate(scrollPosition, animateCallback);
@@ -37835,13 +37827,11 @@ function pathToRegexp (path, keys, options) {
 			};
 
 			function scrollEndCallback(self) {
-				if (self._isTouched === false) {
-					self._isScrollStarted = false;
-					// trigger "scrollend" event
-					utilEvent.trigger(self.element, eventType.SCROLL_END);
+				self._isScrollStarted = false;
+				// trigger "scrollend" event
+				utilEvent.trigger(self.element, eventType.SCROLL_END);
 
-					setSelection(self);
-				}
+				setSelection(self);
 			}
 
 			function scrollHandler(self, event) {
@@ -37875,7 +37865,6 @@ function pathToRegexp (path, keys, options) {
 
 			function onTouchEnd(self) {
 				self._isTouched = false;
-				setSelection(self);
 			}
 
 			function onRotary(self) {
@@ -38199,7 +38188,7 @@ function pathToRegexp (path, keys, options) {
 			 * @member ns.widget.wearable.SnapListview
 			 */
 			prototype.getSelectedIndex = function () {
-				return this._currentIndex || this._selectedIndex;
+				return this._selectedIndex;
 			};
 
 			function vClickHandler(self, e) {
@@ -38282,7 +38271,6 @@ function pathToRegexp (path, keys, options) {
 					scrollableParent = ui.scrollableParent,
 					listItemLength = listItems.length,
 					listItem = listItems[index],
-					listItemIndex,
 					dest;
 
 				// if list is disabled or selected index is out of range, or item on selected index
@@ -38297,9 +38285,7 @@ function pathToRegexp (path, keys, options) {
 
 				removeSelectedClass(self);
 
-				listItemIndex = listItems[index].coord;
-				dest = listItemIndex.top - scrollableParent.height / 2 + listItemIndex.height / 2;
-
+				dest = scrolling.getScrollPositionByIndex(index);
 				if (skipAnimation) {
 					scrollableParent.element.scrollTop = dest;
 				} else {

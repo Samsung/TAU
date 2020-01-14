@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.22';
+ns.version = '1.0.23';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -33832,9 +33832,12 @@ function pathToRegexp (path, keys, options) {
 						containerWidth = stateDOM.offsetWidth,
 						textWidth = stateDOM.children[0].offsetWidth,
 						value,
+						excludeValue,
 						returnValue;
 
-					value = state * (textWidth - containerWidth);
+					// RIGHT gradient is 85% spec.
+					excludeValue = (containerWidth * 15 / 100) / 2;
+					value = state * (textWidth - containerWidth + excludeValue);
 					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
@@ -33910,10 +33913,6 @@ function pathToRegexp (path, keys, options) {
 					returnValue = GRADIENTS.BOTH;
 				} else {
 					returnValue = GRADIENTS.RIGHT;
-				}
-
-				if (current === returnValue) {
-					return null;
 				}
 				return returnValue;
 			};
@@ -39522,6 +39521,7 @@ function pathToRegexp (path, keys, options) {
 				moveToPosition = scrollPosition;
 
 				// Enforce redraw to apply selected effect
+				requestAnimationFrame(moveTo);
 				render();
 			}
 
@@ -39615,6 +39615,7 @@ function pathToRegexp (path, keys, options) {
 
 			ns.util.scrolling = {
 				getScrollPosition: getScrollPosition,
+				getScrollPositionByIndex: getScrollPositionByIndex,
 				enable: enable,
 				disable: disable,
 				enableScrollBar: enableScrollBar,
