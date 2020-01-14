@@ -195,7 +195,7 @@
 				defaults = {
 					marqueeStyle: style.SLIDE,
 					speed: 60,
-					iteration: 1,
+					iteration: "1",
 					currentIteration: 1,
 					delay: 0,
 					timingFunction: "linear",
