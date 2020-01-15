@@ -133,14 +133,13 @@
 			}
 
 			/**
-			 * Initialize widget state, set current date and init month indicator
+			 * Initialize widget state, set current date
 			 * @method _init
 			 * @memberof ns.widget.wearable.DatePicker
 			 * @protected
 			 */
 			prototype._init = function () {
 				this._setValue(new Date());
-				this._setActiveSelector("month");
 			};
 
 			/**
