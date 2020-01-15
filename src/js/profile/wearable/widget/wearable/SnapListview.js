@@ -343,14 +343,11 @@
 			prototype._listItemAnimate = function (scrollValue) {
 				var self = this,
 					anim = self.options.animate,
-					animateCallback = self._callbacks[anim],
-					scrollPosition;
+					animateCallback = self._callbacks[anim];
 
 				if (animateCallback) {
-					scrollPosition = scrollValue || scrolling.getScrollPosition();
-
 					utilArray.forEach(self._listItems, function (item) {
-						item.animate(scrollPosition, animateCallback);
+						item.animate(scrollValue, animateCallback);
 					});
 				}
 			};
@@ -379,7 +376,9 @@
 					removeSelectedClass(self);
 				}
 
-				self._listItemAnimate(event && event.detail && event.detail.scrollTop);
+				if (event && event.detail) {
+					self._listItemAnimate(event.detail.scrollTop);
+				}
 
 				// scrollend handler can be run only when all touches are released.
 				if (self._isTouched === false) {
@@ -505,7 +504,7 @@
 				}));
 
 				self._listItems = listItems;
-				self._listItemAnimate();
+				self._listItemAnimate(scrolling.getScrollPosition());
 			};
 
 			/**
