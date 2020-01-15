@@ -1,11 +1,15 @@
+/* global equal, test */
 (function (ns) {
-    "use strict";
-    module("core/widget/core/Marquee/api/marquee");test ( "API of core Marquee Widget" , function () {
-        var widget, Marquee;
-        equal(typeof ns, "object", "Class ns exists");
-        equal(typeof ns.widget, "object", "Class ns.widget exists");
-        equal(typeof ns.widget.core, "object", "Class ns.widget.core exists");
-        equal(typeof ns.widget.core.Marquee, "function", "Class ns.widget.mobile.Marquee exists");
+	"use strict";
+	module("core/widget/core/Marquee/api/marquee");
+	test("API of core Marquee Widget", function () {
+		var widget,
+			Marquee;
+
+		equal(typeof ns, "object", "Class ns exists");
+		equal(typeof ns.widget, "object", "Class ns.widget exists");
+		equal(typeof ns.widget.core, "object", "Class ns.widget.core exists");
+		equal(typeof ns.widget.core.Marquee, "function", "Class ns.widget.mobile.Marquee exists");
 
 		widget = ns.engine.instanceWidget(document.getElementById("marquee"), "Marquee");
 		Marquee = ns.widget.core.Marquee;
