@@ -166,6 +166,7 @@
 					self._isScrollToPosition = false;
 					self._scrollEventCount = 0;
 					self._marginTop = 0;
+					self._headerHeight = 0;
 				},
 
 				prototype = new BaseWidget(),
@@ -472,7 +473,8 @@
 					listItems = [],
 					scroller = ui.scrollableParent.element,
 					visibleOffset,
-					contentElement;
+					contentElement,
+					header;
 
 				if (!scroller) {
 					scroller = self._initSnapListview(listview);
@@ -483,6 +485,9 @@
 				if (contentElement) {
 					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
 				}
+
+				header = ui.page.querySelector(".ui-header");
+				self._headerHeight = (header) ? header.offsetHeight : 0;
 
 				// init information about widget
 				self._selectedIndex = null;
@@ -671,6 +676,7 @@
 				self._scrollEndTimeoutId = null;
 				self._selectedIndex = null;
 				self._currentIndex = null;
+				self._headerHeight = null;
 
 				scrolling.disable();
 
@@ -814,6 +820,14 @@
 				removeSelectedClass(self);
 
 				dest = scrolling.getScrollPositionByIndex(index);
+
+				// FIXME: If you scroll to the last index, the position
+				// may be slightly affected by the height of header. We
+				// need to find the correct solution.
+				if (index == listItemLength - 1) {
+					dest -= self._headerHeight;
+				}
+
 				if (skipAnimation) {
 					scrollableParent.element.scrollTop = dest;
 				} else {
