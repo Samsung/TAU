@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.23';
+ns.version = '1.0.24';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
