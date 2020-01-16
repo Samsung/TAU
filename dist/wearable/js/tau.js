@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.0.23';
+ns.version = '1.0.24';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -37637,6 +37637,7 @@ function pathToRegexp (path, keys, options) {
 					self._isScrollToPosition = false;
 					self._scrollEventCount = 0;
 					self._marginTop = 0;
+					self._headerHeight = 0;
 				},
 
 				prototype = new BaseWidget(),
@@ -37814,14 +37815,11 @@ function pathToRegexp (path, keys, options) {
 			prototype._listItemAnimate = function (scrollValue) {
 				var self = this,
 					anim = self.options.animate,
-					animateCallback = self._callbacks[anim],
-					scrollPosition;
+					animateCallback = self._callbacks[anim];
 
 				if (animateCallback) {
-					scrollPosition = scrollValue || scrolling.getScrollPosition();
-
 					utilArray.forEach(self._listItems, function (item) {
-						item.animate(scrollPosition, animateCallback);
+						item.animate(scrollValue, animateCallback);
 					});
 				}
 			};
@@ -37850,7 +37848,9 @@ function pathToRegexp (path, keys, options) {
 					removeSelectedClass(self);
 				}
 
-				self._listItemAnimate(event && event.detail && event.detail.scrollTop);
+				if (event && event.detail) {
+					self._listItemAnimate(event.detail.scrollTop);
+				}
 
 				// scrollend handler can be run only when all touches are released.
 				if (self._isTouched === false) {
@@ -37944,7 +37944,8 @@ function pathToRegexp (path, keys, options) {
 					listItems = [],
 					scroller = ui.scrollableParent.element,
 					visibleOffset,
-					contentElement;
+					contentElement,
+					header;
 
 				if (!scroller) {
 					scroller = self._initSnapListview(listview);
@@ -37955,6 +37956,9 @@ function pathToRegexp (path, keys, options) {
 				if (contentElement) {
 					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
 				}
+
+				header = ui.page.querySelector(".ui-header");
+				self._headerHeight = (header) ? header.offsetHeight : 0;
 
 				// init information about widget
 				self._selectedIndex = null;
@@ -37976,7 +37980,7 @@ function pathToRegexp (path, keys, options) {
 				}));
 
 				self._listItems = listItems;
-				self._listItemAnimate();
+				self._listItemAnimate(scrolling.getScrollPosition());
 			};
 
 			/**
@@ -38143,6 +38147,7 @@ function pathToRegexp (path, keys, options) {
 				self._scrollEndTimeoutId = null;
 				self._selectedIndex = null;
 				self._currentIndex = null;
+				self._headerHeight = null;
 
 				scrolling.disable();
 
@@ -38286,6 +38291,14 @@ function pathToRegexp (path, keys, options) {
 				removeSelectedClass(self);
 
 				dest = scrolling.getScrollPositionByIndex(index);
+
+				// FIXME: If you scroll to the last index, the position
+				// may be slightly affected by the height of header. We
+				// need to find the correct solution.
+				if (index == listItemLength - 1) {
+					dest -= self._headerHeight;
+				}
+
 				if (skipAnimation) {
 					scrollableParent.element.scrollTop = dest;
 				} else {
