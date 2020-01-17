@@ -281,7 +281,7 @@
 		});
 
 
-		test("_setIteration", 18, function (assert) {
+		test("_setIteration", 28, function (assert) {
 			var marquee = new Marquee(),
 				marqueeElement = document.getElementById("marquee"),
 				animationObject = {
@@ -295,6 +295,9 @@
 				},
 				start: function () {
 					assert.ok(true, "animation start was called");
+				},
+				stop: function () {
+					assert.ok(true, "animation stop was called");
 				},
 				reset: function () {
 					assert.ok(true, "animation reset was called");
@@ -319,7 +322,7 @@
 			assert.equal(
 				marquee._setIteration(null, "2"),
 				false,
-				"null, '2'");
+				"null, 2");
 			assert.equal(typeof configObject.callback, "function", "callback is set");
 			configObject.callback();
 			configObject.callback();
@@ -327,6 +330,12 @@
 				marquee._setIteration(null, 3),
 				false,
 				"null, 3");
+			assert.equal(typeof configObject.callback, "function", "callback is set");
+			configObject.callback();
+			assert.equal(
+				marquee._setIteration(null, "foo"),
+				false,
+				"null, NaN");
 			assert.equal(typeof configObject.callback, "function", "callback is set");
 			configObject.callback();
 		});
