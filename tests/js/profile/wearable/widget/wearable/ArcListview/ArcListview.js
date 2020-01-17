@@ -31,7 +31,10 @@
 
 			assert.deepEqual(arclistWidget._ui, {
 				scroller: null,
-				selection: null
+				selection: null,
+				arcListviewCarousel: null,
+				arcListviewSelection: null,
+				dummyElement: null
 			}, "_ui was correct initialized");
 
 			assert.deepEqual(arclistWidget.options, {
@@ -230,8 +233,8 @@
 		QUnit.test("_drawItem", function (assert) {
 			var listWidget = new ArcListview(),
 				element = document.getElementById("arc-list"),
-				removeChild = function () {
-					assert.ok("remove child was called");
+				appendChild = function () {
+					assert.ok("append child was called");
 				},
 				querySelector = function () {
 					assert.ok("find text content");
@@ -239,9 +242,6 @@
 				item = {
 					element: {
 						style: {},
-						parentNode: {
-							removeChild: removeChild
-						},
 						querySelector: querySelector
 					},
 					current: {
@@ -253,12 +253,13 @@
 			expect(5);
 			listWidget.element = element;
 			listWidget._state.currentIndex = 2;
+			listWidget._ui.dummyElement = {
+				appendChild: appendChild
+			};
 			listWidget._carousel = {
 				items: [{
 					carouselElement: {
-						appendChild: function () {
-							assert.ok("append child was called");
-						}
+						appendChild: appendChild
 					},
 					carouselSeparator: {
 						style: {},
@@ -278,9 +279,6 @@
 							"opacity": 1.15,
 							"transform": "translateY(-50%) scale3d(1,1,1)"
 						},
-						"parentNode": {
-							"removeChild": removeChild
-						},
 						"querySelector": querySelector
 					},
 					"repaint": false
@@ -296,9 +294,6 @@
 						"scale": 0
 					},
 					"element": {
-						"parentNode": {
-							"removeChild": removeChild
-						},
 						"style": {
 							"opacity": 1.15,
 							"transform": "translateY(-50%) scale3d(1,1,1)"

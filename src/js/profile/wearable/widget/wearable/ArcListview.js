@@ -202,7 +202,12 @@
 					 */
 					self._ui = {
 						selection: null,
-						scroller: null
+						scroller: null,
+						arcListviewCarousel: null,
+						arcListviewSelection: null,
+						// ensures correct behaviour of radio buttons once
+						// item goes out of the screen (is removed from carousel)
+						dummyElement: null
 					};
 				},
 
@@ -223,7 +228,8 @@
 					FORCE_RELATIVE: "ui-force-relative-li-children",
 					LISTVIEW: "ui-listview",
 					SELECTED: "ui-arc-listview-selected",
-					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden"
+					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden",
+					DUMMY_ELEMENT: WIDGET_CLASS + "-dummy-element"
 				},
 				events = {
 					CHANGE: "change"
@@ -233,7 +239,6 @@
 					POPUP: ".ui-popup",
 					SCROLLER: ".ui-scroller",
 					ITEMS: "." + WIDGET_CLASS + " > li",
-					SELECTION: "." + WIDGET_CLASS + "-selection",
 					TEXT_INPUT: "input[type='text']" +
 								", input[type='number']" +
 								", input[type='password']" +
@@ -606,7 +611,7 @@
 						item.repaint = false;
 					} else {
 						if (itemElement.parentNode !== null && item.current.scale < 0.01) {
-							itemElement.parentNode.removeChild(itemElement);
+							self._ui.dummyElement.appendChild(itemElement);
 						}
 					}
 				}
@@ -1383,16 +1388,16 @@
 				}
 			}
 
-			prototype._buildArcListviewSelection = function (page) {
-				// find or add selection for current list element
-				var arcListviewSelection = page.querySelector(selectors.SELECTION);
+			prototype._buildArcListviewElement = function (page, cssClass) {
+				// find or add element for current list element
+				var arcListviewElement = page.querySelector(cssClass);
 
-				if (!arcListviewSelection) {
-					arcListviewSelection = document.createElement("div");
-					arcListviewSelection.classList.add(classes.SELECTION);
-					page.appendChild(arcListviewSelection);
+				if (!arcListviewElement) {
+					arcListviewElement = document.createElement("div");
+					arcListviewElement.classList.add(cssClass);
+					page.appendChild(arcListviewElement);
 				}
-				return arcListviewSelection;
+				return arcListviewElement;
 			};
 
 			function buildArcListviewCarousel(carousel, count) {
@@ -1488,7 +1493,6 @@
 				var self = this,
 					element = self.element,
 					options = self.options,
-					arcListviewCarousel,
 					page,
 					scroller,
 					ui = self._ui,
@@ -1507,13 +1511,13 @@
 					self._getItemsFromElement();
 					self._createTextInputs();
 
-					ui.arcListviewSelection = self._buildArcListviewSelection(page);
-					arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
-					ui.arcListviewCarousel = arcListviewCarousel;
+					ui.arcListviewSelection = self._buildArcListviewElement(page, classes.SELECTION);
+					ui.arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
+					ui.dummyElement = self._buildArcListviewElement(page, classes.DUMMY_ELEMENT);
 
 					// append carousel outside scroller element
-					scroller.parentElement.appendChild(arcListviewCarousel);
-					self._ui.arcListviewCarousel.addEventListener("vclick", self, true);
+					scroller.parentElement.appendChild(ui.arcListviewCarousel);
+					ui.arcListviewCarousel.addEventListener("vclick", self, true);
 
 					// cache HTML elements
 					ui.scroller = scroller;
@@ -1734,7 +1738,8 @@
 				var self = this,
 					ui = self._ui,
 					arcListviewSelection = ui.arcListviewSelection,
-					arcListviewCarousel = ui.arcListviewCarousel;
+					arcListviewCarousel = ui.arcListviewCarousel,
+					dummyElement = ui.dummyElement;
 
 				self._unbindEvents();
 
@@ -1750,6 +1755,9 @@
 				}
 				if (arcListviewCarousel && arcListviewCarousel.parentElement) {
 					arcListviewCarousel.parentElement.removeChild(arcListviewCarousel);
+				}
+				if (dummyElement && dummyElement.parentElement) {
+					dummyElement.parentElement.removeChild(dummyElement);
 				}
 			};
 
