@@ -448,7 +448,7 @@
 				var animation = self._animation,
 					state = self.state;
 
-				if (self.options.currentIteration++ < self.options.iteration) {
+				if (self.options.currentIteration++ < self.options.iteration || self.options.iteration === "infinite") {
 					animation.set(state.animation, state.animationConfig);
 					animation.stop();
 					animation.start();
@@ -480,7 +480,7 @@
 					animationConfig.callback = animationIterationCallback.bind(null, self);
 				}
 				self._animation.set(state.animation, animationConfig);
-				self.options.loop = value;
+				self.options.iteration = value;
 				return false;
 			};
 
