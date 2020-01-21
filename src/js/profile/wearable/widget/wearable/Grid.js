@@ -863,6 +863,9 @@
 
 				// set proper grid look
 				self.mode(options.mode);
+
+				// disable tau rotaryScroller the widget has own support for rotary event
+				ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
 			};
 
 			function findChildIndex(self, target) {

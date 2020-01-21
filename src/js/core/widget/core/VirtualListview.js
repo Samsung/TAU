@@ -962,6 +962,9 @@
 					utilScrolling.enable(scrollview, options.orientation);
 					utilScrolling.enableScrollBar();
 				}
+
+				// disable tau rotaryScroller the widget has own support for rotary event
+				ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
 			};
 
 			/**

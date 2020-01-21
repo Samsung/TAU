@@ -14,8 +14,13 @@ document.addEventListener("tauinit", function () {
 			 * list - NodeList object for lists in the page
 			 */
 			var page = event.target,
+				pageWidget = tau.widget.Page(page),
 				pageId = page.id,
 				list;
+
+			if (pageWidget.option("enablePageScroll")) {
+				tau.util.rotaryScrolling.enable(page.querySelector(".ui-scroller"));
+			}
 
 			if (!page.classList.contains("page-snaplistview") &&
 				pageId !== "page-snaplistview" &&
@@ -26,6 +31,14 @@ document.addEventListener("tauinit", function () {
 				if (list) {
 					tau.widget.Listview(list);
 				}
+			}
+		});
+		document.addEventListener("pagebeforehide", function (event) {
+			var page = event.target,
+				pageWidget = tau.widget.Page(page);
+
+			if (pageWidget.option("enablePageScroll")) {
+				tau.util.rotaryScrolling.disable(page.querySelector(".ui-scroller"));
 			}
 		});
 	}
