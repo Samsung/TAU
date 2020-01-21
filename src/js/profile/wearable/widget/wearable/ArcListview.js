@@ -1509,7 +1509,11 @@
 
 				scroller = selectorsUtil.getClosestBySelector(element, selectors.SCROLLER);
 
+
 				if (scroller) {
+					// disable tau rotaryScroller the widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
+
 					element.classList.add(WIDGET_CLASS, classes.PREFIX + visibleItemsCount);
 
 					self._getItemsFromElement();

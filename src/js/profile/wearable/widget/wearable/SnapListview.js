@@ -440,6 +440,9 @@
 					ui.page.querySelector(".ui-scroller") ||
 					ui.page;
 				if (scroller) {
+					// disable tau rotaryScroller the snaplistview has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
+
 					scroller.classList.add(classes.SNAP_CONTAINER);
 					ui.scrollableParent.element = scroller;
 

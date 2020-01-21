@@ -310,6 +310,8 @@
 
 				if (options.type === "circle") {
 					events.on(document, "rotarydetent touchstart touchmove touchend click mousedown mousemove mouseup", self, false);
+					// disable tau rotaryScroller the widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
 				} else {
 					CoreSliderPrototype._bindEvents.call(self);
 				}
@@ -582,6 +584,8 @@
 					self._ui = null;
 					self.options = null;
 
+					// enable tau rotaryScroller the widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.unlock();
 				} else {
 					CoreSliderPrototype._destroy.call(self);
 				}
