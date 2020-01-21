@@ -41,5 +41,13 @@ document.addEventListener("tauinit", function () {
 				tau.util.rotaryScrolling.disable(page.querySelector(".ui-scroller"));
 			}
 		});
+		document.addEventListener("popupshow", function (event) {
+			var popup = event.target;
+
+			tau.util.rotaryScrolling.enable(popup.querySelector(".ui-popup-wrapper"));
+		});
+		document.addEventListener("popuphide", function () {
+			tau.util.rotaryScrolling.disable();
+		});
 	}
 });
