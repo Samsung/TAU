@@ -436,13 +436,25 @@
 				// finding page  and scroller
 				ui.page = utilSelector.getClosestByClass(listview, "ui-page") || document.body;
 
-				scroller = getScrollableParent(listview);
+				scroller = getScrollableParent(listview) ||
+					ui.page.querySelector(".ui-scroller") ||
+					ui.page;
 				if (scroller) {
+					scroller.classList.add(classes.SNAP_CONTAINER);
+					ui.scrollableParent.element = scroller;
+
+					visibleOffset = scroller.clientHeight;
+					ui.scrollableParent.height = visibleOffset;
+
+					listItem = listview.querySelector(self.options.selector);
+					if (!listItem) {
+						return scroller;
+					}
+
 					if (!scrolling.isElement(scroller)) {
 						scrolling.enable(scroller, "y");
 					}
 
-					listItem = listview.querySelector(self.options.selector);
 					elementHeight = (listItem) ? listItem.getBoundingClientRect().height : 0;
 
 					scrollMargin = listview.getBoundingClientRect().top -
@@ -456,12 +468,6 @@
 							length: item.coord.height
 						};
 					}));
-
-					scroller.classList.add(classes.SNAP_CONTAINER);
-					ui.scrollableParent.element = scroller;
-
-					visibleOffset = scroller.clientHeight;
-					ui.scrollableParent.height = visibleOffset;
 				}
 				return scroller;
 			};
@@ -501,6 +507,11 @@
 						self._currentIndex = index;
 					}
 				});
+
+				if (listItems.length == 0) {
+					return;
+				}
+
 				scrolling.setSnapSize(listItems.map(function (item) {
 					return {
 						position: item.coord.top,
