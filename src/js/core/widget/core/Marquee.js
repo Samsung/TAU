@@ -571,9 +571,11 @@
 					marqueeInnerElement;
 
 				self.state = null;
-				self._animation.stop();
-				self._animation.destroy();
-				self._animation = null;
+				if (self._animation) {
+					self._animation.stop();
+					self._animation.destroy();
+					self._animation = null;
+				}
 				self.element.style.webkitMaskImage = "";
 
 				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
