@@ -1245,21 +1245,24 @@
 				var ui = this._ui,
 					state = this._state,
 					selectedElement = state.items[selectedIndex].element,
-					marqueeDiv,
-					widget;
+					marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content"),
+					marqueeWidget = null;
 
-				marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+				// Start marquee.
 				if (marqueeDiv) {
 					marqueeDiv.style.width = "100%";
 					marqueeDiv.classList.add("ui-marquee");
+					marqueeWidget = ns.engine.getBinding(marqueeDiv);
+					if (!marqueeWidget) {
+						marqueeWidget = ns.widget.Marquee(marqueeDiv, {
+							marqueeStyle: "endToEnd",
+							iteration: 1,
+							delay: "300"
+						});
+					} else {
+						marqueeWidget.reset();
+					}
 				}
-				widget = ns.widget.Marquee(marqueeDiv, {
-					marqueeStyle: "endToEnd",
-					iteration: 1,
-					delay: "300"
-				});
-				widget.start();
-
 
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
@@ -1281,9 +1284,9 @@
 				var selectedIndex = event.detail.selected,
 					unselectedIndex = event.detail.unselected,
 					classList = this._ui.arcListviewSelection.classList,
-					selectedElement,
-					marqueeDiv,
-					widget;
+					selectedElement = null,
+					marqueeDiv = null,
+					marqueeWidget = null;
 
 				if (!event.defaultPrevented && this._state.items.length > 0) {
 					if (selectedIndex !== undefined) {
@@ -1294,13 +1297,14 @@
 						selectedElement.removeEventListener("transitionend", this, true);
 						selectedElement.removeEventListener("webkitTransitionEnd", this, true);
 						selectedElement.classList.remove(classes.SELECTED);
-						// stop marque;
+
+						// Stop marquee.
 						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
 						if (marqueeDiv) {
-							widget = ns.widget.Marquee(marqueeDiv);
-							if (widget) {
-								widget.reset();
-								widget.destroy();
+							marqueeWidget = ns.engine.getBinding(marqueeDiv);
+							if (marqueeWidget) {
+								marqueeWidget.stop();
+								marqueeWidget.reset();
 							}
 						}
 					}
@@ -1739,7 +1743,9 @@
 					ui = self._ui,
 					arcListviewSelection = ui.arcListviewSelection,
 					arcListviewCarousel = ui.arcListviewCarousel,
-					dummyElement = ui.dummyElement;
+					dummyElement = ui.dummyElement,
+					marqueeDiv = null,
+					marqueeWidget = null;
 
 				self._unbindEvents();
 
@@ -1748,6 +1754,18 @@
 					li.setAttribute("style", "");
 				});
 				self._items = [];
+
+				// Destroy marquee.
+				self._state.items.forEach(function (item) {
+					marqueeDiv = item.element.querySelector(".ui-arc-listview-text-content");
+					if (marqueeDiv) {
+						marqueeWidget = ns.engine.getBinding(marqueeDiv);
+						if (marqueeWidget) {
+							marqueeWidget.destroy();
+						}
+					}
+				});
+				self._state.items = [];
 
 				// remove added elements
 				if (arcListviewSelection && arcListviewSelection.parentElement) {
