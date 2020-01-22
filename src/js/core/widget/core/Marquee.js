@@ -167,7 +167,7 @@
 
 				ellipsisEffect = {
 					GRADIENT: "gradient",
-					ELLIPSIS: "ellipsis",
+					ELLIPSIS: "ellipsis", // deprecated effect
 					NONE: "none"
 				},
 
@@ -186,7 +186,7 @@
 				 * @property {number} [options.delay=2000] Sets the delay(ms) for marquee
 				 * @property {"linear"|"ease"|"ease-in"|"ease-out"|"cubic-bezier(n,n,n,n)"}
 				 * [options.timingFunction="linear"] Sets the timing function for marquee
-				 * @property {"gradient"|"ellipsis"|"none"} [options.ellipsisEffect="gradient"] Sets the
+				 * @property {"gradient"|"none"} [options.ellipsisEffect="gradient"] Sets the
 				 * end-effect(gradient) of marquee
 				 * @property {boolean} [options.autoRun=true] Sets the status of autoRun
 				 * @member ns.widget.core.Marquee
@@ -298,7 +298,7 @@
 				return returnValue;
 			};
 
-			prototype._calculateStandardGradient = function (state, diff, from, current) {
+			prototype._calculateStandardGradient = function (state) {
 				var returnValue;
 
 				if (isNaN(state)) {
@@ -329,6 +329,13 @@
 				var marqueeInnerElement = element.querySelector("." + classes.MARQUEE_CONTENT);
 
 				element.classList.add(CLASSES_PREFIX);
+
+				// check deprecated class
+				if (element.classList.contains(classes.MARQUEE_ELLIPSIS)) {
+					ns.warn("Class '" + classes.MARQUEE_ELLIPSIS +
+						"' for option 'ellipsisEffect' in Marquee widget has been deprecated. " +
+						"Allowed values: none, '" + classes.MARQUEE_GRADIENT + "' (default)");
+				}
 
 				if (!marqueeInnerElement) {
 					marqueeInnerElement = document.createElement("div");
@@ -418,6 +425,9 @@
 			};
 
 			prototype._setEllipsisEffect = function (element, value) {
+				if (value === "ellipsis") {
+					ns.warn("Marquee: option value 'ellipsis' for 'ellipsisEffect' is deprecated. Allowed values: 'none', 'gradient' (default)");
+				}
 				return this._togglePrefixedClass(this._stateDOM, CLASSES_PREFIX + "-", value);
 			};
 
