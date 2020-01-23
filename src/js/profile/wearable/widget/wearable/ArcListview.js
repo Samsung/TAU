@@ -1392,14 +1392,18 @@
 				}
 			}
 
-			prototype._buildArcListviewElement = function (page, cssClass) {
+			prototype._buildArcListviewElement = function (parentElement, cssClass, options) {
 				// find or add element for current list element
-				var arcListviewElement = page.querySelector(cssClass);
+				var arcListviewElement = parentElement.querySelector(cssClass);
 
 				if (!arcListviewElement) {
 					arcListviewElement = document.createElement("div");
 					arcListviewElement.classList.add(cssClass);
-					page.appendChild(arcListviewElement);
+					if (options && options.insertBefore) {
+						parentElement.insertBefore(arcListviewElement, parentElement.firstElementChild);
+					} else {
+						parentElement.appendChild(arcListviewElement);
+					}
 				}
 				return arcListviewElement;
 			};
@@ -1519,7 +1523,10 @@
 					self._getItemsFromElement();
 					self._createTextInputs();
 
-					ui.arcListviewSelection = self._buildArcListviewElement(page, classes.SELECTION);
+					ui.arcListviewSelection = self._buildArcListviewElement(
+						scroller, classes.SELECTION, {
+							insertBefore: true
+						});
 					ui.arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
 					ui.dummyElement = self._buildArcListviewElement(page, classes.DUMMY_ELEMENT);
 
