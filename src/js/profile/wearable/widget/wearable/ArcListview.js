@@ -1351,9 +1351,10 @@
 					if (toIndex < state.items.length) {
 						state.toIndex = toIndex;
 					}
-
-					self._roll();
 				}
+				// Do scroll regardless of 'toIndex' value. This will center content relative
+				// to clicked position.
+				self._roll();
 			};
 
 			prototype._onPageInit = function () {
