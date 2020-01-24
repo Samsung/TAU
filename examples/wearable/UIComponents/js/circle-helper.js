@@ -32,7 +32,7 @@ document.addEventListener("tauinit", function () {
 					tau.widget.Listview(list);
 				}
 			}
-		});
+		}, true);
 		document.addEventListener("pagebeforehide", function (event) {
 			var page = event.target,
 				pageWidget = tau.widget.Page(page);
