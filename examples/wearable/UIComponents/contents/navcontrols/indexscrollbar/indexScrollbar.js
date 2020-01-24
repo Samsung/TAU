@@ -5,7 +5,8 @@
 		listviewElement = document.getElementById("list1"),
 		isCircle = tau.support.shape.circle,
 		scroller,
-		indexScrollbar;
+		indexScrollbar,
+		listview;
 
 	/**
 	 * pageshow event handler
@@ -24,7 +25,7 @@
 		for (i = 0; i < listDividers.length; i++) {
 			// Add the list divider elements to the collection
 			divider = listDividers[i];
-			idx = divider.innerText;
+			idx = divider.innerText.trim();
 			dividers[idx] = divider;
 
 			// Add the index to the index list
@@ -46,17 +47,43 @@
 			});
 		}
 
+		listview = tau.engine.getBinding(listviewElement);
+
 		// Add IndexScrollbar index "select" event handler.
 		indexScrollbarElement.addEventListener("select", function (ev) {
 			var divider,
-				idx = ev.detail.index;
+				idx = ev.detail.index.trim(),
+				index;
 
 			divider = dividers[idx];
-			if (divider && scroller) {
-				// Scroll to the ui-listview-divider element
-				scroller.scrollTop = divider.offsetTop - scroller.offsetTop;
+
+			if (!isCircle) {
+				if (divider && scroller) {
+					// Scroll to the ui-listview-divider element
+					scroller.scrollTop = divider.offsetTop - scroller.offsetTop;
+				}
+			} else {
+				index = listview.findItemIndexByDivider(divider);
+				if (index > -1) {
+					listview.scrollToPosition(index);
+				}
 			}
 		});
+
+		indexScrollbarElement.addEventListener("show", function () {
+			if (isCircle) {
+				// lock rotary event on list
+				listview.disableList();
+			}
+		});
+
+		indexScrollbarElement.addEventListener("hide", function () {
+			if (isCircle) {
+				// unlock rotary event on list
+				listview.enableList();
+			}
+		});
+
 	});
 
 	/**

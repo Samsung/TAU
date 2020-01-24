@@ -726,6 +726,20 @@
 				}
 			};
 
+			/**
+			 * Methods return index of item after divider
+			 * @method findItemIndexByDivider
+			 * @param {HTMLElement} dividerElement
+			 * @memberof ns.widget.wearable.ArcListview
+			 */
+			prototype.findItemIndexByDivider = function (dividerElement) {
+				var result = this._state.separators.filter(function (item) {
+					return item.itemElement.element === dividerElement;
+				});
+
+				return result.length ? result[0].insertBefore : -1;
+			}
+
 			prototype._requestRender = function () {
 				var self = this;
 
