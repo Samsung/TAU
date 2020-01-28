@@ -511,10 +511,14 @@
 						1
 					);
 					if (self._scrollAnimationEnd) {
-						self.trigger(events.CHANGE, {
-							"selected": state.currentIndex
-						});
-						eventUtils.trigger(state.items[state.currentIndex].element, "selected");
+						// _scrollAnimationEnd can be set by TouchStart event to stop scroll.
+						// Show selection if scroll finishes.
+						if (deltaTime >= state.duration) {
+							self.trigger(events.CHANGE, {
+								"selected": state.currentIndex
+							});
+							eventUtils.trigger(state.items[state.currentIndex].element, "selected");
+						}
 						state.toIndex = state.currentIndex;
 
 						// set last scroll position when current page is hidden
@@ -1192,6 +1196,8 @@
 					if (bouncingEffect) {
 						bouncingEffect.dragEnd();
 					}
+				} else {
+					self._roll();
 				}
 			};
 
