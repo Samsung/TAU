@@ -26,6 +26,26 @@
             color: rgba(255, 255, 255, 1);
         }
     }
+    &-carousel-item {
+        background-color: blue;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 30 * @unit_base;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: rgba(77, 207, 255, 1);
+
+        /*
+        &-selected {
+            font-size: 30 * @unit_base;
+            height: 30 * @unit_base;
+            color: rgba(255, 255, 255, 1);
+        }
+        */
+    }
     &-enabling {
         height: 100%;
         .ui-spin-item {
@@ -35,5 +55,8 @@
     &-placeholder {
         opacity: 0;
         pointer-events: none;
+    }
+    &-dummy {
+        display: none;
     }
 }

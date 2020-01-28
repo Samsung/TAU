@@ -71,10 +71,7 @@
 			var tau = window.tau;
 
 			// create range indicator widget
-			spin = tau.widget.Spin(element, {
-				min: 0,
-				max: 9
-			});
+			spin = tau.widget.Spin(element);
 
 			// enable spin on click
 			content.addEventListener("vclick", onClick);

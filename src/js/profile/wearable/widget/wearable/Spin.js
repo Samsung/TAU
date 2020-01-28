@@ -56,6 +56,7 @@
 				ROLL_DURATION = 600,
 				DELTA_Y = 100,
 				DRAG_STEP_TO_VALUE = 60,
+				NUMBER_OF_CAROUSEL_ITMES = 7,
 				VIBRATION_DURATION = 10,
 				lastDragValueChange = 0,
 				dragGestureInstance = null,
@@ -79,19 +80,18 @@
 					 *  // with range 0-9 will be show as 2 (12 % 10)
 					 * @property {string} [options.shortPath="enabled"] spin rotate with short path
 					 *  // eg. when value will be 1 and then will change to 8
-					 *  // the spin will rotate by 1 -> 0 -> 9 -> 0
+					 *  // the spin will rotate by 1 -> 0 -> 9 -> 8
 					 * @property {number} [options.duration=ROLL_DURATION] time of rotate to indicated value
 					 * @property {string} [options.direction="up"] direction of spin rotation
 					 * @property {string} [options.rollHeight="container"] size of frame to rotate one item
 					 * @property {number} [options.itemHeight=38] size of frame for "custom" rollHeight
-					 * @property {number} [options.momentumLevel=0] define moementum level on drag
+					 * @property {number} [options.momentumLevel=0] define momentum level on drag
 					 * @property {number} [options.scaleFactor=0.4] second / next items scale factor
 					 * @property {number} [options.moveFactor=0.4] second / next items move factor from center
 					 * @property {number} [options.loop="enabled"] when the spin reaches max value then loops to min value
 					 * @property {string} [options.labels=""] defines labels for values likes days of week separated by ","
 					 * // eg. "Monday,Tuesday,Wednesday"
 					 * @property {string} [options.digits=0] value filling with zeros, eg. 002 for digits=3;
-					 * // eg. "Monday,Tuesday,Wednesday"
 					 * @member ns.widget.wearable.Spin
 					 */
 					this.options = {
@@ -113,8 +113,11 @@
 						value: 0
 					};
 					this._ui = {};
-					this.length = this.options.max - this.options.min + 1;
+					this._carouselItems = [];
+					this._numberOfCarouselItems = 0;
+					this.length = this.options.max - this.options.min + this.options.step;
 					this._prevValue = null; // this property has to be "null" on start
+					this._lastCurrentIndex = null;
 
 					// enabled drag gesture for document
 					if (dragGestureInstance === null) {
@@ -129,13 +132,17 @@
 
 				classes = {
 					SPIN: WIDGET_CLASS,
+					PREFIX: WIDGET_CLASS + "-",
 					ITEM: WIDGET_CLASS + "-item",
 					SELECTED: WIDGET_CLASS + "-item-selected",
 					NEXT: WIDGET_CLASS + "-item-next",
 					PREV: WIDGET_CLASS + "-item-prev",
 					ENABLED: "enabled",
 					ENABLING: WIDGET_CLASS + "-enabling",
-					PLACEHOLDER: WIDGET_CLASS + "-placeholder"
+					PLACEHOLDER: WIDGET_CLASS + "-placeholder",
+					CAROUSEL: WIDGET_CLASS + "-carousel",
+					CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item",
+					DUMMY: WIDGET_CLASS + "-dummy"
 				},
 
 				prototype = new BaseWidget();
@@ -143,35 +150,88 @@
 			Spin.classes = classes;
 			Spin.timing = Animation.timing;
 
-			function transform(value, index, centerY, options) {
+			prototype._rollItems = function (direction, currentIndex) {
+				var carouselItems = this._carouselItems,
+					corouselElement,
+					borderIndex,
+					itemIndex,
+					contentItem;
+
+				if (currentIndex < 0) {
+					currentIndex += this._ui.items.length - 1;
+					currentIndex = currentIndex || 0;
+				}
+				borderIndex = currentIndex - direction;
+				itemIndex = currentIndex + direction * 3;
+
+				console.log("rollitems", currentIndex, borderIndex, itemIndex);
+
+				while (borderIndex < 0) {
+					borderIndex += carouselItems.length;
+				}
+				while (borderIndex >= carouselItems.length) {
+					borderIndex -= carouselItems.length;
+				}
+
+				// remove content from border item
+				corouselElement = carouselItems[borderIndex].element;
+				contentItem = corouselElement.firstElementChild;
+				if (contentItem) {
+					corouselElement.removeChild(corouselElement.firstElementChild);
+				}
+
+				if (direction < 0) {
+					itemIndex = itemIndex + 1;
+				}
+				while (itemIndex < 0) {
+					itemIndex += this._ui.items.length;
+				}
+				while (itemIndex >= this._ui.items.length) {
+					itemIndex -= this._ui.items.length;
+				}
+				corouselElement.appendChild(this._ui.items[itemIndex]);
+			}
+
+			function transform(value, index, centerY, options, self) {
 				var diff,
 					direction,
 					diffAbs,
 					scale,
 					moveY,
 					opacity,
-					delta = options.max - options.min + options.step,
-					numberOfItems = delta / options.step,
-					currentIndex = Math.round((value - options.min) / options.step);
+					numberOfItems = self._numberOfCarouselItems,
+					currentIndex = (value - options.min) / options.step,
+					centerIndex = Math.floor(numberOfItems / 2),
+					renderIndex,
+					valueOfDiff;
 
-				if (options.loop === "enabled") {
-					if (value >= options.max - 2 * options.step) {
-						if (numberOfItems - currentIndex < 3) {
-							if (index < 3) {
-								index = index + numberOfItems;
-							}
+				// change carousel items content on change current index
+				if (self._lastCurrentIndex !== Math.round(currentIndex)) {
+					console.log("currentIndexChange", self._lastCurrentIndex, Math.round(currentIndex));
+					if (self._lastCurrentIndex !== null) {
+						// loop of items eg. change 0 -> 1000, or 1000 -> 0
+						if (self._lastCurrentIndex === self.options.min && value > self.options.max) {
+							valueOfDiff = -options.step;
+						} else if (self._lastCurrentIndex === self.options.max && value < self.options.min) {
+							valueOfDiff = options.step;
+						} else {
+							valueOfDiff = (Math.round(currentIndex) - self._lastCurrentIndex) * options.step;
 						}
-					} else if (value <= options.min + 2 * options.step) {
-						if (currentIndex < 3) {
-							if (index > numberOfItems - 3) {
-								index = index - numberOfItems;
-							}
-						}
+						self._rollItems(valueOfDiff, Math.round(currentIndex));
 					}
+					self._lastCurrentIndex = Math.round(currentIndex);
 				}
 
-				diff = value - options.min - index * options.step;
-				direction = diff < 0 ? 1 : -1;
+				renderIndex = currentIndex % numberOfItems - index + centerIndex;
+
+				if (renderIndex < -centerIndex) {
+					renderIndex += numberOfItems;
+				} else if (renderIndex > centerIndex) {
+					renderIndex -= numberOfItems;
+				}
+				diff = value - options.min - (currentIndex + renderIndex) * options.step;
+
+				direction = diff < 0 ? -1 : 1;
 				diffAbs = Math.abs(diff);
 				scale = 1 - options.scaleFactor * diffAbs;
 				moveY = 1 - options.moveFactor * diffAbs;
@@ -189,23 +249,24 @@
 			}
 
 			function showAnimationTick(self) {
-				var items = self._ui.items,
+				var carouselItems = self._carouselItems,
 					options = self.options,
 					itemHeight = self._itemHeight,
 					state = self._objectValue,
 					centerY = (self._containerRect.height - itemHeight) / 2;
 
-				items.forEach(function (item, index) {
-					var change = transform(state.value, index, centerY, options);
+				carouselItems.forEach(function (carouselItem, index) {
+					var change = transform(state.value, index, centerY, options, self);
 
-					// set item position
+					// set carouselItem position
 					if (change.opacity > 0) {
-						item.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
+						carouselItem.element.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
 					} else {
-						item.style.transform = "translateY(-1000px)"; // move item from active area
+						carouselItem.element.style.transform = "translateY(-1000px)"; // move carouselItem from active area
 					}
-					item.style.opacity = change.opacity;
+					carouselItem.element.style.opacity = change.opacity;
 				});
+
 				ns.event.trigger(self.element, "spinstep", parseInt(state.value, 10));
 			}
 
@@ -307,9 +368,10 @@
 				var self = this,
 					options = self.options,
 					element = self.element,
+					dummyElement = self._ui.dummyElement,
 					itemHeight = 0,
 					items = [].slice.call(element.querySelectorAll("." + classes.ITEM)),
-					len = options.max - options.min + 1,
+					len = options.max - options.min + options.step,
 					diff = len - items.length,
 					centerY,
 					item = null,
@@ -320,13 +382,13 @@
 					for (; i < diff; i++) {
 						item = document.createElement("div");
 						item.classList.add(classes.ITEM);
-						element.appendChild(item);
+						dummyElement.appendChild(item);
 						items.push(item);
 					}
 				} else if (diff < 0) {
 					diff = -diff;
 					for (; i < diff; i++) {
-						element.removeChild(items.pop());
+						dummyElement.removeChild(items.pop());
 					}
 				}
 
@@ -361,13 +423,13 @@
 				self._itemHeight = itemHeight;
 				centerY = (self._containerRect.height - itemHeight) / 2,
 
-				// set position;
-				items.forEach(function (item, index) {
-					var change = transform(self.value, index, centerY, options);
+				// set position of carousel items;
+				self._carouselItems.forEach(function (carouselItem, index) {
+					var change = transform(options.value, index, centerY, options, self);
 
-					// set item position
-					item.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
-					item.style.opacity = change.opacity;
+					// set carouselItem position
+					carouselItem.element.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
+					carouselItem.element.style.opacity = change.opacity;
 				});
 
 				self._ui.items = items;
@@ -383,6 +445,7 @@
 
 				self._containerRect = self.element.getBoundingClientRect();
 				self._modifyItems();
+				self._fillCarousel();
 				self._show();
 			};
 
@@ -399,29 +462,96 @@
 				// convert options
 				options.min = (options.min !== undefined) ? parseInt(options.min, 10) : 0;
 				options.max = (options.max !== undefined) ? parseInt(options.max, 10) : 0;
+				options.step = (options.step !== undefined) ? parseInt(options.step, 10) : 1;
 				options.value = (options.value !== undefined) ? parseInt(options.value, 10) : 0;
 				options.duration = (options.duration !== undefined) ? parseInt(options.duration, 10) : 0;
 				options.labels = (Array.isArray(options.labels)) ? options.labels : options.labels.split(",");
 
-				self.length = options.max - options.min + 1;
+				self.length = options.max - options.min + options.step;
+				console.log("_init", options);
 
 				self._refresh();
 			};
 
+			prototype._fillCarousel = function () {
+				var numberOfItems = this._numberOfCarouselItems,
+					options = this.options,
+					value = options.value,
+					centerIndex = Math.floor(numberOfItems / 2),
+					currentIndex = Math.round((value - options.min) / options.step),
+					index = 0,
+					carouselItems = this._carouselItems,
+					items = this._ui.items,
+					indexOfItemToAppend = 0;
+
+				for (index = 0; index < numberOfItems; index++) {
+					indexOfItemToAppend = currentIndex + index - centerIndex;
+					if (indexOfItemToAppend < 0) {
+						indexOfItemToAppend += items.length;
+					}
+					// check if carousel content should be changed
+					if (carouselItems[index].element.firstElementChild !== items[indexOfItemToAppend]) {
+						// remove previous element from carousel by append to dummy element
+						if (carouselItems[index].element.firstElementChild) {
+							this._ui.dummyElement.appendChild(carouselItems[index].element.firstElementChild);
+						}
+						// append new child element
+						carouselItems[index].element.appendChild(items[indexOfItemToAppend]);
+					}
+				}
+			};
+
+			prototype._buildCarousel = function (count) {
+				// create carousel
+				var self = this,
+					carousel = document.createElement("div"),
+					carouselElement,
+					fragment = document.createDocumentFragment(),
+					i = 0;
+
+				self._carouselItems = [];
+				self._numberOfCarouselItems = count;
+
+				carousel.classList.add(classes.CAROUSEL, classes.PREFIX + count);
+				for (; i < count; i++) {
+					carouselElement = document.createElement("div");
+					carouselElement.id = "cel-" + i;
+					carouselElement.classList.add(classes.CAROUSEL_ITEM);
+					self._carouselItems[i] = {
+						element: carouselElement
+					};
+					fragment.appendChild(carouselElement);
+				}
+				carousel.appendChild(fragment);
+				return carousel;
+			};
+
 			prototype._build = function (element) {
-				var placeholder = document.createElement("div");
+				var placeholder = document.createElement("div"),
+					dummyElement = document.createElement("div"),
+					carousel = null;
 
 				element.classList.add(classes.SPIN);
+
+				dummyElement.classList.add(classes.DUMMY);
+				element.appendChild(dummyElement);
+
 				placeholder.classList.add(classes.PLACEHOLDER);
 				element.appendChild(placeholder);
 
+				carousel = this._buildCarousel(NUMBER_OF_CAROUSEL_ITMES);
+				element.appendChild(carousel);
+
+				this._ui.dummyElement = dummyElement;
+				this._ui.carousel = carousel;
 				this._ui.placeholder = placeholder;
 				return element;
 			};
 
 			prototype._setValue = function (value, enableChangeEvent) {
 				var self = this,
-					animation;
+					animation,
+					valueRange;
 
 				value = window.parseInt(value, 10);
 				self._ui.placeholder.textContent = value;
@@ -432,10 +562,12 @@
 					if (value >= self.options.min && value <= self.options.max || self.options.loop === "enabled") {
 						self._prevValue = self.options.value;
 						if (self.options.loop === "enabled") {
-							if (value > self.options.max) {
-								value = self.options.min;
-							} else if (value < self.options.min) {
-								value = self.options.max;
+							valueRange = self.options.max - self.options.min + self.options.step;
+							while (value > self.options.max) {
+								value = value - valueRange;
+							}
+							while (value < self.options.min) {
+								value = value + valueRange;
 							}
 						}
 						self.options.value = value;
@@ -461,14 +593,16 @@
 				var options = this.options;
 
 				options.max = (max !== undefined) ? parseInt(max, 10) : 0;
-				this.length = options.max - options.min + 1;
+				this.length = options.max - options.min + options.step;
+				console.log("_setMax:", options.max, "length:", this.length);
 			};
 
 			prototype._setMin = function (element, min) {
 				var options = this.options;
 
 				options.min = (min !== undefined) ? parseInt(min, 10) : 0;
-				this.length = options.max - options.min + 1;
+				this.length = options.max - options.min + options.step;
+				console.log("_setMin:", options.min, "length:", this.length);
 			};
 
 			prototype._setLabels = function (element, value) {
@@ -621,6 +755,8 @@
 					ui = self._ui;
 
 				self._unbindEvents();
+				// @todo remove carousel
+
 				ui.items.forEach(function (item) {
 					item.parentNode.removeChild(item);
 				});
