@@ -23,6 +23,22 @@
 	});
 
 	/**
+	 * Drawer open event handler.
+	 * Enables drawer rotary scrolling
+	 */
+	page.addEventListener("draweropen", function () {
+		tau.util.rotaryScrolling.enable(page.querySelector(".ui-drawer"));
+	});
+
+	/**
+	 * Drawer close event handler
+	 * Enables scroller for drawer page
+	 */
+	page.addEventListener("drawerclose", function () {
+		tau.util.rotaryScrolling.enable(page.querySelector(".ui-scroller"));
+	});
+
+	/**
 	 * Click button event handler
 	 * Opens drawer
 	 */
