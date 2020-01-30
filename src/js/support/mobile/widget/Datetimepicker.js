@@ -427,6 +427,8 @@
 							case 4:
 								values = getCalendar().months.names.slice();
 								break;
+							default:
+								values = [];
 						}
 						if (values.length === 13) { // @TODO Lunar calendar support
 							if (values[12] === "") { // to remove lunar calendar reserved space
