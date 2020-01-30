@@ -101,32 +101,6 @@
 
 				POPUP_SELECTOR = "[data-role='popup'], .ui-popup",
 
-				Popup = function () {
-					var self = this,
-						ui = {};
-
-					self.selectors = selectors;
-					self.options = objectUtils.merge({}, Popup.defaults);
-					self.storedOptions = null;
-					/**
-					 * Popup state flag
-					 * @property {0|1|2|3} [state=null]
-					 * @member ns.widget.core.Popup
-					 * @private
-					 */
-					self.state = states.CLOSED;
-
-					ui.overlay = null;
-					ui.header = null;
-					ui.footer = null;
-					ui.content = null;
-					ui.container = null;
-					ui.wrapper = null;
-					self._ui = ui;
-
-					// event callbacks
-					self._callbacks = {};
-				},
 				/**
 				 * Object with default options
 				 * @property {Object} defaults
@@ -293,6 +267,33 @@
 					 */
 					before_hide: EVENTS_PREFIX + "beforehide"
 					/* eslint-enable camelcase */
+				},
+
+				Popup = function () {
+					var self = this,
+						ui = {};
+
+					self.selectors = selectors;
+					self.options = objectUtils.merge({}, Popup.defaults);
+					self.storedOptions = null;
+					/**
+					 * Popup state flag
+					 * @property {0|1|2|3} [state=null]
+					 * @member ns.widget.core.Popup
+					 * @private
+					 */
+					self.state = states.CLOSED;
+
+					ui.overlay = null;
+					ui.header = null;
+					ui.footer = null;
+					ui.content = null;
+					ui.container = null;
+					ui.wrapper = null;
+					self._ui = ui;
+
+					// event callbacks
+					self._callbacks = {};
 				},
 
 				prototype = new BaseWidget();
