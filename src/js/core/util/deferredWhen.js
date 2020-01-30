@@ -32,6 +32,9 @@
 				var i = 0,
 					resolveValues = [].slice.call(arguments),
 					length = resolveValues.length,
+					progressValues,
+					progressContexts,
+					resolveContexts,
 
 					/**
 					 * The count of uncompleted subordinates
@@ -72,11 +75,7 @@
 								deferred.resolveWith(contexts, values);
 							}
 						};
-					},
-
-					progressValues,
-					progressContexts,
-					resolveContexts;
+					};
 
 				// add listeners to Deferred subordinates; treat others as resolved
 				if (length > 1) {
