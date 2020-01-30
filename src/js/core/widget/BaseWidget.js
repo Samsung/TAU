@@ -194,7 +194,7 @@
 				 * @static
 				 */
 				objectUtils = util.object,
-				Set = util.Set,
+				setUtils = util.Set,
 				BaseWidget = function () {
 					this.flowState = "created";
 					return this;
@@ -1100,10 +1100,10 @@
 				var classList = stateObject.classList;
 
 				if (classList !== undefined) {
-					if (classList instanceof Set) {
+					if (classList instanceof setUtils) {
 						classList.clear();
 					} else {
-						classList = new Set();
+						classList = new setUtils();
 						stateObject.classList = classList;
 					}
 					if (element.classList.length) {

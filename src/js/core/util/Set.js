@@ -31,11 +31,11 @@
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
-			var Set = function () {
+			var set = function () {
 				this._data = [];
 			};
 
-			Set.prototype = {
+			set.prototype = {
 				/**
 				 * Add one or many arguments to set
 				 * @method add
@@ -93,11 +93,11 @@
 			};
 
 			// for tests
-			ns.util._Set = Set;
-			ns.util.Set = window.Set || Set;
+			ns.util._Set = set;
+			ns.util.Set = window.Set || set;
 
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
-			return Set;
+			return ns.util.Set;
 		}
 	);
 	//>>excludeEnd("tauBuildExclude");
