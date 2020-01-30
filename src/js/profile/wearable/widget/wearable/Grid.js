@@ -147,7 +147,7 @@
 				 * @param {Function} onEnd
 				 * @return {Object}
 				 */
-				anim = function anim(items, duration, timingFn, drawFn, onEnd) {
+				anim = function (items, duration, timingFn, drawFn, onEnd) {
 					// item (or items) should has properties: from, to
 
 					var state = {
@@ -1336,7 +1336,7 @@
 				updateItemsFrom(items);
 				self._assembleItemsTo3x3(items);
 
-				anim(items, TRANSFORM_DURATION, changeItems, transformItem, function onTransitionEnd() {
+				anim(items, TRANSFORM_DURATION, changeItems, transformItem, function () {
 					element.style[self._scrollSize] = getGridSize(self, "3x3") + "px";
 					self._updateSnapPointPositions();
 				});
