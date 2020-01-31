@@ -268,9 +268,9 @@
 
 				if (embed) {
 					// Load and replace old styles or append new styles
-					cssSync(path, function onSuccess(styleElement) {
+					cssSync(path, function (styleElement) {
 						addNodeAsTheme(styleElement, themeName, previousElement);
-					}, function onFailure(xhrObj, xhrStatus) {
+					}, function (xhrObj, xhrStatus) {
 						ns.warn("There was a problem when loading '" + themeName + "', status: " + xhrStatus);
 					});
 				} else {
