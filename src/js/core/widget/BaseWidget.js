@@ -1054,7 +1054,7 @@
 					func();
 				}
 				if (func !== undefined) {
-					util.requestAnimationFrame(function frameFlowCallback() {
+					util.requestAnimationFrame(function () {
 						self._framesFlow.apply(self, args);
 					});
 				}
@@ -1131,13 +1131,13 @@
 				var recalculate = false;
 
 				if (stateObject.classList !== undefined) {
-					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
+					slice.call(element.classList).forEach(function (className) {
 						if (!stateObject.classList.has(className)) {
 							element.classList.remove(className);
 							recalculate = true;
 						}
 					});
-					stateObject.classList.forEach(function renderAddClassList(className) {
+					stateObject.classList.forEach(function (className) {
 						if (!element.classList.contains(className)) {
 							element.classList.add(className);
 							recalculate = true;
@@ -1145,12 +1145,12 @@
 					});
 				}
 				if (stateObject.style !== undefined) {
-					Object.keys(stateObject.style).forEach(function renderUpdateStyle(styleName) {
+					Object.keys(stateObject.style).forEach(function (styleName) {
 						element.style[styleName] = stateObject.style[styleName];
 					});
 				}
 				if (stateObject.children !== undefined) {
-					stateObject.children.forEach(function renderChildren(child, index) {
+					stateObject.children.forEach(function (child, index) {
 						render(child, element.children[index], true);
 					});
 				}
