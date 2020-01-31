@@ -504,11 +504,9 @@
 			anchorHighlight._clearActiveClass = clearActiveClass;
 			anchorHighlight._detectHighlightTarget = detectHighlightTarget;
 			anchorHighlight._detectBtnElement = detectBtnElement;
-			anchorHighlight._clearBtnActiveClass = clearBtnActiveClass;
 			anchorHighlight._removeActiveClassLoop = removeActiveClassLoop;
 			anchorHighlight._addButtonInactiveClass = addButtonInactiveClass;
 			anchorHighlight._addButtonActiveClass = addButtonActiveClass;
-			anchorHighlight._hideClear = hideClear;
 			anchorHighlight._addActiveClass = addActiveClass;
 			anchorHighlight._detectLiElement = detectLiElement;
 			anchorHighlight._touchmoveHandler = touchmoveHandler;
