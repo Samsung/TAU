@@ -135,7 +135,7 @@
 						if (prototype.hasOwnProperty(property)) {
 							value = prototype[property];
 							if (typeof value === "function") {
-								basePrototype[property] = (function createFunctionWithSuper(Base, property, value) {
+								basePrototype[property] = (function (Base, property, value) {
 									var _super = function () {
 										var superFunction = Base.prototype[property];
 
