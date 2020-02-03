@@ -337,7 +337,7 @@
 						return getInstanceByElement(binding, element, type);
 					} else {
 						// Check if widget has wrapper and find base element
-						if (element && typeof element.hasAttribute === TYPE_FUNCTION &&
+						if (typeof element.hasAttribute === TYPE_FUNCTION &&
 								element.hasAttribute(DATA_WIDGET_WRAPPER)) {
 							baseElement = slice.call(element.children).filter(filterBuiltWidget)[0];
 							if (baseElement) {
