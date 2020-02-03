@@ -137,6 +137,7 @@ module.exports = function (grunt) {
 							};
 						}
 					}
+					return null;
 				},
 
 				getLicenseFiles: function (version) {
@@ -1243,6 +1244,7 @@ module.exports = function (grunt) {
 				);
 			}
 			callback(error);
+			return null;
 		});
 
 		jsduck.stdout.pipe(process.stdout);
