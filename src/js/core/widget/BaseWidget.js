@@ -1019,6 +1019,7 @@
 				if (this.element) {
 					return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
 				}
+				return false;
 			};
 
 			/**
