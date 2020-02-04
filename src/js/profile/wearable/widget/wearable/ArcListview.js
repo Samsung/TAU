@@ -1280,7 +1280,7 @@
 							delay: "300"
 						});
 					} else {
-						marqueeWidget.reset();
+						marqueeWidget.start();
 					}
 				}
 
