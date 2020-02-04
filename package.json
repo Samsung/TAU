@@ -75,7 +75,7 @@
     "cheerio": "^1.0.0-rc.2",
     "easyimage": "2.1.0",
     "escomplex": "^2.0.0-alpha",
-    "eslint": "^3.11.1",
+    "eslint": "^6.8.0",
     "eslint-plugin-html": "^1.7.0",
     "eslint-plugin-jsdoc": "^2.4.0",
     "grunt-karma": "^2.0.0",
