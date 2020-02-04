@@ -218,9 +218,6 @@
 				var elementStyle = this.element.style,
 					scrollerStyle = this.scrollerStyle;
 
-				elementStyle.overflow = "";
-				elementStyle.position = "";
-
 				elementStyle.overflow = "hidden";
 				elementStyle.position = "relative";
 
