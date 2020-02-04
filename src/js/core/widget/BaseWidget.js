@@ -1107,7 +1107,9 @@
 						stateObject.classList = classList;
 					}
 					if (element.classList.length) {
-						classList.add.apply(classList, slice.call(element.classList));
+						slice.call(element.classList).forEach(function (className) {
+							classList.add(className);
+						});
 					}
 				}
 			}
