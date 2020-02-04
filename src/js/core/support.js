@@ -209,7 +209,6 @@
 					return false;
 				}
 
-				elementStyle.pointerEvents = "auto";
 				elementStyle.pointerEvents = "x";
 				documentElement.appendChild(element);
 				supports = getComputedStyle && getComputedStyle(element, "").pointerEvents === "auto";
