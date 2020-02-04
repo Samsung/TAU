@@ -222,27 +222,28 @@
 
 			prototype._animate = function (duration, progressCallback, finishCallback) {
 				var self = this,
-					startTime = null;
+					startTime = null,
+					step = function (timeStamp) {
+						var currentTimeGap = 0;
+
+						if (startTime === null) {
+							startTime = timeStamp;
+						}
+						currentTimeGap = timeStamp - startTime;
+
+						progressCallback(currentTimeGap);
+
+						if (self._isAnimating && duration > currentTimeGap) {
+							util.requestAnimationFrame(step);
+						} else {
+							self._isAnimating = false;
+							finishCallback();
+						}
+					};
 
 				self._isAnimating = true;
 
-				util.requestAnimationFrame(function step(timeStamp) {
-					var currentTimeGap = 0;
-
-					if (startTime === null) {
-						startTime = timeStamp;
-					}
-					currentTimeGap = timeStamp - startTime;
-
-					progressCallback(currentTimeGap);
-
-					if (self._isAnimating && duration > currentTimeGap) {
-						util.requestAnimationFrame(step);
-					} else {
-						self._isAnimating = false;
-						finishCallback();
-					}
-				});
+				util.requestAnimationFrame(step);
 			};
 
 			/**
