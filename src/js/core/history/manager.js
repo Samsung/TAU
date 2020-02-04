@@ -126,7 +126,7 @@
 						if (href && !options.href) {
 							options.href = href;
 						}
-						if (rel === "popup" && link && !options.link) {
+						if (rel === "popup" && !options.link) {
 							options.link = link;
 						}
 						history.disableVolatileMode();
