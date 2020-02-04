@@ -190,7 +190,7 @@
 				var self = this,
 					items = element.children,
 					numberOfDots = items.length,
-					intervalAngle = self.options.intervalAngle - "0",
+					intervalAngle = parseFloat(self.options.intervalAngle),
 					translatePixel,
 					style,
 					i;
