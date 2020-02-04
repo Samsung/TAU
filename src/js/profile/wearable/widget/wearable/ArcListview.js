@@ -480,6 +480,8 @@
 						return null;
 					}
 				}
+
+				return null;
 			}
 
 			/**
@@ -893,7 +895,7 @@
 					scroll = state.scroll;
 
 				if (state.items.length === 0) {
-					return false;
+					return;
 				}
 
 				// increase scroll duration according to length of items
@@ -1128,7 +1130,7 @@
 					bouncingEffect = self._bouncingEffect;
 
 				if (self._items.length === 0) {
-					return false;
+					return;
 				}
 
 				// time
