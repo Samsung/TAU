@@ -272,6 +272,7 @@
 				if (!x && !y) {
 					return preparePositionForEvent(event);
 				}
+				return null;
 			}
 
 			/**
