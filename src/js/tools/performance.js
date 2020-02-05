@@ -86,6 +86,7 @@
 
 						return text;
 					}
+					return null;
 				},
 				finish: function () {
 					var self = this;
