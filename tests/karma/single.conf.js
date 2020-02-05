@@ -84,7 +84,6 @@ module.exports = function (config) {
 				flags: ["--window-size=800,800"]
 			}
 		},
-
 		browsers: ["bigScreen"],
 
 		// Continuous Integration mode

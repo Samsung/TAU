@@ -5,7 +5,7 @@ exports.scanObject = (obj) => {
 			for (const key of Object.keys(currentObj)) {
 				const value = currentObj[key];
 
-				if (key.startsWith('_') || !value) {
+				if (key.startsWith("_") || !value) {
 					continue;
 				}
 
@@ -38,8 +38,9 @@ exports.scanObject = (obj) => {
 exports.generateCSV = (data) => {
 	const csvContent = "name,type,location\n";
 
-	return csvContent + data.map((elem) => {
-		return [elem.name, elem.type, elem.location.join(".")].join(",")
-	}
-	).join("\n");
+	return csvContent +
+		data
+			.map((elem) =>
+				[elem.name, elem.type, elem.location.join(".")].join(","))
+			.join("\n");
 }
