@@ -869,34 +869,35 @@
 
 			function scrollAnimation(element, from, to, duration, callback) {
 				var easeOut = cubicBezier(0.25, 0.46, 0.45, 1),
-					startTime = 0,
 					currentTime = 0,
 					progress = 0,
 					easeProgress = 0,
 					distance = to - from,
-					animationTimer = SnapListview.animationTimer;
+					animationTimer = SnapListview.animationTimer,
+					startTime = window.performance.now(),
+					animation = function () {
+						var gap;
 
-				startTime = window.performance.now();
+						currentTime = window.performance.now();
+						progress = (currentTime - startTime) / duration;
+						easeProgress = easeOut(progress);
+						gap = distance * easeProgress;
+						element.scrollTop = from + gap;
+						if (progress <= 1 && progress >= 0) {
+							animationTimer = window.requestAnimationFrame(animation);
+						} else {
+							animationTimer = null;
+							if (callback && typeof callback === "function") {
+								callback();
+							}
+						}
+					};
+
 				if (animationTimer !== null) {
 					window.cancelAnimationFrame(animationTimer);
 				}
-				animationTimer = window.requestAnimationFrame(function animation() {
-					var gap;
 
-					currentTime = window.performance.now();
-					progress = (currentTime - startTime) / duration;
-					easeProgress = easeOut(progress);
-					gap = distance * easeProgress;
-					element.scrollTop = from + gap;
-					if (progress <= 1 && progress >= 0) {
-						animationTimer = window.requestAnimationFrame(animation);
-					} else {
-						animationTimer = null;
-						if (callback && typeof callback === "function") {
-							callback();
-						}
-					}
-				});
+				animationTimer = window.requestAnimationFrame(animation);
 			}
 
 			SnapListview.prototype = prototype;
