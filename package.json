@@ -5,6 +5,7 @@
   "version": "1.0.25",
   "scripts": {
     "test": "grunt test",
+    "test:karma": "karma start tests/karma/all.conf.js",
     "lint-check": "lint-diff $TRAVIS_COMMIT_RANGE",
     "spellcheck": "cspell 'src/**/*.js'"
   },
@@ -47,6 +48,7 @@
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
+    "karma-html-reporter": "^0.2.7",
     "karma-junit-reporter": "^1.2.0",
     "karma-qunit": "^1.2.1",
     "karma-requirejs": "^1.1.0",
@@ -73,6 +75,7 @@
     "grunt-run": "^0.6.0",
     "jenkins": "^0.20.0",
     "jira-connector": "^2.6.0",
+    "karma-console-reporter": "file:tools/karma-plugins/console-reporter",
     "moment": "^2.18.1",
     "node-resemble-js": "^0.2.0",
     "sloc": "^0.2.0",

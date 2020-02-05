@@ -38,16 +38,17 @@ module.exports = function (config) {
             {pattern: "tests/libs/require.js", included: false, served: true},
 
             {pattern: "examples/wearable/UIComponents/**/*", included: false, served: true},
-            {pattern: "examples/wearable/UIComponentsCE/**/*", included: false, served: true},
+            // // {pattern: "examples/wearable/UIComponentsCE/**/*", included: false, served: true},
 
             {pattern: "tests/karma/tests/helpers.js", included: false, served: true, watch: true},
             {pattern: "tests/karma/tests/compare-helper.js", included: false, served: true, watch: true},
             {pattern: "tests/karma/tests/compare-helper-excludes.js", included: false, served: true, watch: true},
             {pattern: "tests/karma/tests/properties-typeof-compare.js", included: false, served: true, watch: true},
 
-            // here put path to tests
-            {pattern: "tests/karma/tests/**/wearable-test.js", included: false, served: true, watch: true},
+			// here put path to tests
 
+            {pattern: "tests/karma/tests/**/wearable-test.js", included: false, served: true, watch: true},
+			"tests/karma/testPaths.js",
 			"tests/karma/runner.js"
 		],
 
@@ -75,6 +76,7 @@ module.exports = function (config) {
 		},
 
 		browsers: ["bigScreen"],
+		// browsers: ["ChromeHeadless"],
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
