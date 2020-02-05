@@ -527,6 +527,7 @@
 				} else {
 					return CoreSliderPrototype._setValue.call(self, value);
 				}
+				return null;
 			};
 
 			/**
