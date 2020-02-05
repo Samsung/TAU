@@ -458,7 +458,7 @@
 						scrolling.enable(scroller, "y");
 					}
 
-					elementHeight = (listItem) ? listItem.getBoundingClientRect().height : 0;
+					elementHeight = listItem.getBoundingClientRect().height;
 
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
