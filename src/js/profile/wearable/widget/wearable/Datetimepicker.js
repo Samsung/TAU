@@ -118,7 +118,6 @@
 			 *
 			 * @param {ns.widget.wearable.Datetimepicker} self
 			 * @param {Event} event
-			 * @return {null}
 			 */
 			function handleWheelButtons(self, event) {
 				var button = event.target,
@@ -135,7 +134,7 @@
 					direction = -1;
 					// Everything else than minus / plus button should be ignored
 				} else if (!buttonClassList.contains(classes.uiDatetimeWheelPlus)) {
-					return null;
+					return;
 				}
 
 				switch (activeField.dataset.fieldName) {
@@ -176,7 +175,6 @@
 				}
 
 				self._setDateFields(currentDate);
-				return null;
 			}
 
 			function handlePeriodButtons(self, event) {
