@@ -447,7 +447,6 @@
 					searchBox,
 					clearButton,
 					cancelButton,
-					labelDiv,
 					frontIcon,
 					label = findLabel(element),
 					searchBoxClasses,
@@ -554,10 +553,6 @@
 				if (cancelButton) {
 					ui.cancelButton = cancelButton;
 				}
-				if (labelDiv) {
-					ui.labelDiv = labelDiv;
-					labelDiv.setAttribute("id", id + "-label-div");
-				}
 				ui.searchBox = searchBox;
 				searchBox.setAttribute("id", id + "-search-box");
 
@@ -646,9 +641,6 @@
 						localClassList.add(classes.uiBtnCancelShow);
 					}
 				}
-				if (ui.labelDiv) {
-					ui.labelDiv.classList.add(classes.uiInputDefaultHidden);
-				}
 			}
 
 			/**
@@ -661,18 +653,9 @@
 			 */
 			function inputBlur(self) {
 				var ui = self._ui,
-					inputtedText = ui.input.value,
-					classes = SearchBar.classes,
-					labelDiv = ui.labelDiv;
+					classes = SearchBar.classes;
 
 				ui.searchBox.classList.remove(classes.uiFocus);
-				if (labelDiv) {
-					if (inputtedText.length > 0) {
-						labelDiv.classList.add(classes.uiInputDefaultHidden);
-					} else {
-						labelDiv.classList.remove(classes.uiInputDefaultHidden);
-					}
-				}
 			}
 
 			/**
@@ -706,7 +689,6 @@
 				ui.input = element;
 				ui.clearButton = document.getElementById(id + "-clear-button");
 				ui.cancelButton = document.getElementById(id + "-cancel-button");
-				ui.labelDiv = document.getElementById(id + "-label-div");
 				ui.searchBox = document.getElementById(id + "-search-box");
 			};
 
@@ -737,9 +719,6 @@
 				}
 				input.addEventListener("focus", handlers.inputFocus, false);
 				input.addEventListener("blur", handlers.inputBlur, false);
-				if (ui.labelDiv) {
-					ui.labelDiv.addEventListener("vclick", handlers.labelClick, false);
-				}
 			};
 
 			/**
@@ -762,9 +741,6 @@
 				}
 				input.removeEventListener("focus", handlers.inputFocus, false);
 				input.removeEventListener("blur", handlers.inputBlur, false);
-				if (ui.labelDiv) {
-					ui.labelDiv.removeEventListener("vclick", handlers.labelClick, false);
-				}
 			};
 
 			/**
