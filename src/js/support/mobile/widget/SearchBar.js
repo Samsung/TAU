@@ -406,7 +406,7 @@
 			function createDecorationLine(element) {
 				var decorationLine = element.nextElementSibling;
 
-				if (!decorationLine || (decorationLine && !decorationLine.classList.contains(classes.textLine))) {
+				if (!decorationLine || !decorationLine.classList.contains(classes.textLine)) {
 
 					decorationLine = document.createElement("span");
 					decorationLine.classList.add(classes.textLine);
