@@ -1,0 +1,89 @@
+.ui-on-off-switch {
+    &-container {
+        position: relative;
+        display: inline-block;
+        width: 43 * @px_base;
+        height: 27 * @px_base;
+        max-width: 43 * @px_base;
+        max-height: 27 * @px_base;
+        min-width: 43 * @px_base;
+        min-height: 27 * @px_base;
+        overflow: hidden;
+    }
+
+    &-input {
+        position: absolute;
+        width: 35 * @px_base;
+        height: 20.5 * @px_base;
+        border-radius: 9.25 * @px_base;
+        -webkit-appearance: none;
+        display: block;
+        margin: 3.25 * @px_base 3 * @px_base;
+        border: 1 * @px_base solid var(--on-off-switch-off-button-border);
+        background-color: var(--on-off-switch-off-track-background);
+        outline: none;
+        box-sizing: border-box;
+
+        &:active {
+            & ~ .ui-on-off-switch-button {
+                &::before {
+                    opacity: 1;
+                }
+            }
+        }
+        &:disabled {
+            border-color: var(--on-off-switch-off-disabled-track-border);
+            & ~ .ui-on-off-switch-button {
+                border-color: var(--on-off-switch-off-disabled-button-border);
+                background-color: var(--on-off-switch-on-disabled-button-background);
+            }
+        }
+    }
+
+    &-button {
+        width: 22 * @px_base;
+        height: 22 * @px_base;
+        border-radius: 100%;
+        margin: 2.5 * @px_base 2 * @px_base;
+        box-sizing: border-box;
+        border: 1 * @px_base solid var(--on-off-switch-off-button-border);
+        background-color: var(--color-white);
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 1;
+        transition: transform ease-in 100ms;
+        transform: translate3d(0, 0, 0);
+        &::before {
+            content: "";
+            width: 24 * @px_base;
+            height: 24 * @px_base;
+            opacity: 0;
+            position: absolute;
+            left: -2px;
+            top: -2px;
+            border-radius: 100%;
+            background-color: var(--ripple-color);
+        }
+    }
+
+    &-input:checked {
+        background-color: var(--primary-color);
+        border-width: 0;
+        width: 35 * @px_base;
+        height: 18.5 * @px_base;
+        margin: 4.25 * @px_base 4 * @px_base;
+        &:disabled {
+            background-color: var(--on-off-switch-on-disabled-track-background);
+            border-width: 0;
+            & ~ .ui-on-off-switch-button {
+                border-color: var(--on-off-switch-on-disabled-button-border);
+            }
+        }
+        & ~ .ui-on-off-switch-button {
+            border-color: var(--primary-color);
+            transform: translate3d(16 * @px_base, 0, 0);
+        }
+    }
+}

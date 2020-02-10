@@ -1,7 +1,0 @@
-{
-  "name": "tau_3.0",
-  "license": "MIT",
-  "devDependencies": {
-    "webcomponentsjs": "~0.7.2"
-  }
-}

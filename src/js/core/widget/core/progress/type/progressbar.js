@@ -42,30 +42,21 @@
 				classes = {
 					uiProgressbar: "ui-progress-bar",
 					uiProgressbarValue: "ui-progress-bar-value",
-					uiProgressbarDecorator: "ui-progress-bar-decorator"
+					uiProgressbarValueBg: "ui-progress-bar-value-bg",
+					uiProgressbarLabelsTop: "ui-progress-bar-labels-top",
+					uiProgressbarLabelsBottom: "ui-progress-bar-labels-bottom",
+					labelCurrentValue: "ui-progress-current-value",
+					labelMinValue: "ui-progress-min-value",
+					labelMaxValue: "ui-progress-max-value"
 				},
 
-				createAnimationFrame = function (duration, call1, call2, call3) {
+				createAnimationFrame = function (duration, call1) {
 					return [
 						{
 							start: 0,
 							end: 800,
 							callback: function (t, end) {
 								call1.call(this, t, end);
-							}
-						},
-						{
-							start: 800,
-							end: 1350,
-							callback: function (t, end) {
-								call2.call(this, t, end);
-							}
-						},
-						{
-							start: 1550,
-							end: 1850,
-							callback: function (t, end) {
-								call3.call(this, t, end);
 							}
 						}
 					];
@@ -81,33 +72,55 @@
 			function paintProgressStyle(progress) {
 				var ui = progress._ui,
 					options = progress.options,
-					element = progress.element,
-					elementHeightPercentValue = (element.offsetHeight * 100) / element.offsetWidth,
 					percentValue = (options.value * 100) / (options.max - options.min);
 
 				ui.progressBarValueElement.style.width = percentValue + "%";
-				ui.progressBarDecoratorElement.style.width = elementHeightPercentValue + "%";
-				ui.progressBarDecoratorElement.style.left = (percentValue - elementHeightPercentValue) + "%";
+			}
+
+			function updateLabels(progress) {
+				var ui = progress._ui,
+					options = progress.options;
+
+				// update labels
+				if (ui.labelCurrentValue) {
+					ui.labelCurrentValue.textContent = options.value;
+				}
+				if (ui.labelMinValue) {
+					ui.labelMinValue.textContent = options.min;
+				}
+				if (ui.labelMaxValue) {
+					ui.labelMaxValue.textContent = options.max;
+				}
 			}
 
 			type.bar = utilsObject.merge({}, typeInterface, {
 				build: function (progress, element) {
 					var ui = {},
 						progressBarValueElement,
-						progressBarDecoratorElement;
+						progressBarValueBg,
+						labelsTop,
+						labelsBottom;
 
 					element.classList.add(classes.uiProgressbar);
 
 					progressBarValueElement = document.createElement("div");
 					progressBarValueElement.classList.add(classes.uiProgressbarValue);
-					progressBarDecoratorElement = document.createElement("div");
-					progressBarDecoratorElement.classList.add(classes.uiProgressbarDecorator);
+					progressBarValueBg = document.createElement("div");
+					progressBarValueBg.classList.add(classes.uiProgressbarValueBg);
+					labelsTop = document.createElement("div");
+					labelsTop.classList.add(classes.uiProgressbarLabelsTop);
+					labelsBottom = document.createElement("div");
+					labelsBottom.classList.add(classes.uiProgressbarLabelsBottom);
 
-					element.appendChild(progressBarValueElement);
-					element.appendChild(progressBarDecoratorElement);
+					progressBarValueBg.appendChild(progressBarValueElement);
+					element.appendChild(labelsTop);
+					element.appendChild(progressBarValueBg);
+					element.appendChild(labelsBottom);
 
 					ui.progressBarValueElement = progressBarValueElement;
-					ui.progressBarDecoratorElement = progressBarDecoratorElement;
+					ui.progressBarValueBg = progressBarValueBg;
+					ui.labelsTop = labelsTop;
+					ui.labelsBottom = labelsBottom;
 
 					progress._ui = ui;
 					return element;
@@ -115,56 +128,57 @@
 
 				init: function (progress, element) {
 					var ui = progress._ui,
-						options = progress.options;
+						options = progress.options,
+						labelsTop = [],
+						labelsBottom = [];
+
+					// find labels and append to widget
+					labelsTop = [].slice.call(
+						element.querySelectorAll(".ui-progress-bar-label-right-top"));
+					labelsBottom = [].slice.call(
+						element.querySelectorAll(".ui-progress-bar-label-left-bottom, .ui-progress-bar-label-right-bottom")
+						);
+					// try to find labels from outside widget (old api)
+					labelsTop = labelsTop.concat([].slice.call(
+						element.parentElement.querySelectorAll(".ui-progress ~ .ui-progress-bar-label-right-top")));
+					labelsBottom = labelsBottom.concat([].slice.call(
+						element.parentElement.querySelectorAll(".ui-progress ~ .ui-progress-bar-label-left-bottom, .ui-progress ~ .ui-progress-bar-label-right-bottom")));
+
+					labelsTop.forEach(function (label) {
+						ui.labelsTop.appendChild(label);
+					});
+					labelsBottom.forEach(function (label) {
+						ui.labelsBottom.appendChild(label);
+					});
 
 					ui.progressBarValueElement = ui.progressBarValueElement || element.querySelector("." + classes.uiProgressbarValue);
-					ui.progressBarDecoratorElement = ui.progressBarDecoratorElement || element.querySelector("." + classes.progressBarDecoratorElement);
 
-					ui.progressBarDecoratorElement.style.left = 0;
+					// labels
+					ui.labelCurrentValue = element.querySelector("." + classes.labelCurrentValue);
+					ui.labelMinValue = element.querySelector("." + classes.labelMinValue);
+					ui.labelMaxValue = element.querySelector("." + classes.labelMaxValue);
 
 					setAriaValues(element, options);
 					paintProgressStyle(progress);
+					updateLabels(progress);
 				},
 
 				refresh: function (progress) {
 					setAriaValues(progress.element, progress.options);
 					paintProgressStyle(progress);
+					updateLabels(progress);
 				},
 
 				changeValue: function (progress, oldValue, newValue) {
 					var duration = 1850,
-						element = progress.element,
 						valueElement = progress._ui.progressBarValueElement,
-						decoElement = progress._ui.progressBarDecoratorElement,
-						decoElementOldLeft = parseFloat(decoElement.style.left),
-						decoElementOldWidth = (decoElement.offsetWidth * 100) / element.offsetWidth,
-						elementHeightPercentValue = (element.offsetHeight * 100) / element.offsetWidth,
 						oldPercentValue = (oldValue * 100) / (progress.options.max - progress.options.min),
 						newPercentValue = (newValue * 100) / (progress.options.max - progress.options.min),
 						animationFrames;
 
 					if (!progress._isAnimating) {
-						decoElement.style.opacity = 1;
 						animationFrames = createAnimationFrame(duration, function (t, end) {
 							valueElement.style.width = oldPercentValue + ((newPercentValue - oldPercentValue) * t / end) + "%";
-							if (newValue > oldValue) {
-								decoElement.style.width = decoElementOldWidth + ((newPercentValue - oldPercentValue) * t / end) + "%";
-							} else {
-								decoElement.style.width = decoElementOldWidth + ((oldPercentValue - newPercentValue) * t / end) + "%";
-								decoElement.style.left = oldPercentValue - parseFloat(decoElement.style.width) + "%";
-								decoElementOldLeft = parseFloat(decoElement.style.left);
-							}
-						}, function (t, end) {
-							if (newValue > oldValue) {
-								decoElement.style.left = decoElementOldLeft + ((newPercentValue - decoElementOldLeft - elementHeightPercentValue) * t / end) + "%";
-								decoElement.style.width = (decoElementOldWidth + newPercentValue - oldPercentValue) - ((decoElementOldWidth + newPercentValue - oldPercentValue - elementHeightPercentValue) * t / end) + "%";
-							} else {
-								decoElement.style.width = (decoElementOldWidth + (oldPercentValue - newPercentValue)) - ((oldPercentValue - newPercentValue) * t / end) + "%";
-							}
-						}, function (t, end) {
-							if (newValue >= progress.options.max) {
-								decoElement.style.opacity = 1 - t / end;
-							}
 						});
 						progress._animate(duration, function (t) {
 							animationFrames.forEach(function (animation) {
@@ -180,6 +194,23 @@
 							}
 						});
 					}
+					updateLabels(progress);
+				},
+
+				destroy: function (self, element) {
+					var ui = self._ui;
+
+					[].slice.call(ui.labelsTop.children).forEach(function (child) {
+						element.appendChild(child);
+					});
+					[].slice.call(ui.labelsBottom.children).forEach(function (child) {
+						element.appendChild(child);
+					});
+
+					ui.progressBarValueBg.parentElement.removeChild(ui.progressBarValueBg);
+					ui.labelsTop.parentElement.removeChild(ui.labelsTop);
+					ui.labelsBottom.parentElement.removeChild(ui.labelsBottom);
+					return true;
 				}
 			});
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);

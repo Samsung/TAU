@@ -686,3 +686,8 @@
 #indexscrollbarPage .ui-header.search-active a  {
 	display: block;
 }
+
+
+#ContainedButtonMediumHighEmphasis1Demo button.ui-btn.ui-btn-contained ~ button.ui-btn.ui-btn-contained {
+	margin-top: 10px;
+}

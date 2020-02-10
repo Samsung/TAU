@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="switch-demo">
+		<header class="ui-appbar">
+			<div class="ui-appbar-left-icons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-back" data-rel="back"></button>
+			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">On/off switch</span>
+			</div>
+		</header>
+
+		<div class="ui-content">
+			<ul class="ui-listview" data-colored-background="false">
+				<li>
+					Switch <span id="switch-result-1">on</span><select class="ui-on-off-switch" id="switch-1">
+						<option value="off"></option>
+						<option value="on" selected></option>
+					</select>
+				</li>
+				<li>
+					Switch <span id="switch-result-2">off</span>
+					<select class="ui-on-off-switch" id="switch-2">
+						<option value="off" selected></option>
+						<option value="on"></option>
+					</select>
+				</li>
+				<li>
+					Switch on disabled
+					<select class="ui-on-off-switch" disabled>
+							<option value="off"></option>
+							<option value="on" selected></option>
+					</select>
+				</li>
+				<li>
+					Switch off disabled
+					<select class="ui-on-off-switch" disabled>
+							<option value="off" selected></option>
+							<option value="on"></option>
+					</select>
+				</li>
+			</ul>
+		</div>
+		<link href="onoffswitch.css" rel="stylesheet" />
+		<script src="onoffswitch.js"></script>
+	</div>
+</body>
+
+</html>

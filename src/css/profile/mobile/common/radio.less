@@ -1,0 +1,49 @@
+input[type="radio"].ui-radio {
+	position: relative;
+	height: 32 * @px_base;
+	width: 32 * @px_base;
+	box-sizing: border-box;
+	outline: none;
+	-webkit-appearance: none;
+	margin: 0 18 * @px_base;
+
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		width: 100%;
+	}
+
+	&::before {
+		height: 100%;
+		opacity: 0.8;
+		background-color: var(--control-inactive-color);
+		mask-image: url("images/3_Controllers/Checkbox/sem_btn_radio_to_on_mtrl_000.svg"); 
+		mask-size: 100%, 0;
+		mask-position: center;
+		mask-repeat: no-repeat;
+	}
+
+	&::after {
+		height: 0;
+		bottom: 0;
+		width: 100%;
+		box-sizing: content-box;
+		background-color: var(--control-active-color);
+		mask-image: url("images/3_Controllers/Checkbox/sem_btn_radio_to_on_mtrl_026.svg");
+		mask-size: 100%;
+		mask-position: center;
+	}
+
+	&:checked::before {
+		mask-size: 100%, 100%;
+	}
+
+	&:checked::after {
+		height: 100%;
+	}
+
+	&:disabled {
+		opacity: 0.4;
+	}
+}

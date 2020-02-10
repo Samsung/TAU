@@ -439,7 +439,6 @@
 				var self = this,
 					ui = self._ui,
 					view = selectors.getChildrenByClass(element, classes.view)[0] || document.createElement("div"),
-					clipStyle = element.style,
 					node,
 					child = element.firstChild,
 					options = self.options,
@@ -469,17 +468,7 @@
 				// Adding ui-content class for the proper styling with CE
 				element.classList.add("ui-content");
 
-				switch (direction) {
-					case "x":
-						clipStyle.overflowX = "scroll";
-						break;
-					case "xy":
-						clipStyle.overflow = "scroll";
-						break;
-					default:
-						clipStyle.overflowY = "auto";
-						break;
-				}
+				self._setClipOverflowStyle(element);
 
 				if (options.scrollJump) {
 					if (direction.indexOf("x") > -1) {
@@ -528,6 +517,60 @@
 
 				return element;
 			};
+
+			/**
+			 * Sets overflow property for clip element accordingly to scrolling direction
+			 * @method _setClipOverflowHidden
+			 * @protected
+			 * @member ns.widget.core.Scrollview
+			 */
+			Scrollview.prototype._setClipOverflowStyle = function (element) {
+				var self = this,
+					direction = self.options.scroll,
+					clipStyle;
+
+				element = element || self.element;
+				clipStyle = element.style;
+
+				switch (direction) {
+					case "x":
+						clipStyle.overflowX = "scroll";
+						break;
+					case "xy":
+						clipStyle.overflow = "scroll";
+						break;
+					default:
+						clipStyle.overflowY = "auto";
+						break;
+				}
+			}
+
+			/**
+			 * Sets overflow hidden style for clip element
+			 * @method _setClipOverflowHidden
+			 * @protected
+			 * @member ns.widget.core.Scrollview
+			 */
+			Scrollview.prototype._setClipOverflowHidden = function (element) {
+				var self = this,
+					direction = self.options.scroll,
+					clipStyle;
+
+				element = element || self.element;
+				clipStyle = element.style;
+
+				switch (direction) {
+					case "x":
+						clipStyle.overflowX = "hidden";
+						break;
+					case "xy":
+						clipStyle.overflow = "hidden";
+						break;
+					default:
+						clipStyle.overflowY = "hidden";
+						break;
+				}
+			}
 
 			/**
 			 * Inits widget
@@ -1002,11 +1045,12 @@
 					repositionJumpsCallback,
 					jumpTopCallback,
 					jumpLeftCallback,
-					callbacks = self._callbacks;
+					callbacks = self._callbacks,
+					scrollDirection = self.options.scroll;
 
 				if (page) {
-					if (this.options.scrollJump) {
-						repositionJumpsCallback = repositionJumps.bind(null, this);
+					if (self.options.scrollJump) {
+						repositionJumpsCallback = repositionJumps.bind(null, self);
 						jumpTopCallback = function () {
 							self.scrollTo(element.scrollLeft, 0, 250);
 						};
@@ -1032,6 +1076,19 @@
 						} else {
 							eventUtils.trigger(element, "scrollstart");
 						}
+
+						if (scrollDirection === "y" &&
+							(element.scrollTop === 0 || element.scrollTop + element.clientHeight === element.scrollHeight)) {
+							eventUtils.trigger(element, "scrollboundary", {
+								direction: (element.scrollTop === 0) ? "top" : "bottom"
+							});
+						} else if (scrollDirection === "x" &&
+							(element.scrollLeft === 0 || element.scrollLeft + element.clientWidth === element.scrollWidth)) {
+							eventUtils.trigger(element, "scrollboundary", {
+								direction: (element.scrollLeft === 0) ? "left" : "right"
+							});
+						}
+
 						scrollTimer = window.setTimeout(notifyScrolled, 100);
 						eventUtils.trigger(element, "scrollupdate");
 					}, false);
@@ -1086,6 +1143,26 @@
 				}
 
 			};
+
+			/**
+			 * Enables scrollview action
+			 * @method enableScrolling
+			 * @public
+			 * @member ns.widget.core.Scrollview
+			 */
+			Scrollview.prototype.enableScrolling = function () {
+				this._setClipOverflowStyle();
+			}
+
+			/**
+			 * Disables scrollview action
+			 * @method disableScrolling
+			 * @public
+			 * @member ns.widget.core.Scrollview
+			 */
+			Scrollview.prototype.disableScrolling = function () {
+				this._setClipOverflowHidden();
+			}
 
 			ns.widget.core.Scrollview = Scrollview;
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);

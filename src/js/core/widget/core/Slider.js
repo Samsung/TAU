@@ -55,11 +55,9 @@
 	//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 	define(
 		[
-			"../../util/selectors",
 			"../../util/DOM/css",
 			"../../event",
-			"../../event/gesture/Instance",
-			"../../event/gesture/Drag",
+			"../../util/object",
 			"../../history/manager",
 			"../core", // fetch namespace
 			"./Page",
@@ -78,56 +76,41 @@
 			var BaseWidget = ns.widget.BaseWidget,
 				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
-				selectors = ns.util.selectors,
-				utilDOM = ns.util.DOM,
+				objectMerge = ns.util.object.merge,
 				events = ns.event,
-				Gesture = ns.event.gesture,
-				COLORS = {
-					BACKGROUND: "rgba(145, 145, 145, 0.7)",
-					ACTIVE: "rgba(61, 185, 204, 1)",
-					WARNING_BG: "rgba(201, 133, 133, 1)",
-					WARNING: "rgba(255, 25, 25, 1)"
+				/**
+			 	 * Widget options
+				 * @property {boolean} [options.type="normal"] Slider type. 'normal', 'center' or 'circle'
+				 * @property {string} [options.orientation="horizontal"] Slider orientation. horizontal or vertical
+				 * @property {boolean} [options.expand=false] Slider expand mode. true or false
+				 **/
+				defaults = {
+					type: "normal",
+					orientation: "horizontal",
+					expand: false,
+					warning: false,
+					warningLevel: 0,
+					disabled: false,
+					toggle: ""
 				},
-				DEFAULT = {
-					HORIZONTAL: "horizontal"
-				},
+				unsupportedOptions = ["type", "orientation", "expand", "warning", "warningLevel", "toggle"],
 				Slider = function () {
 					var self = this;
-					/**
-					 * Widget options
-					 * @property {boolean} [options.type="normal"] Slider type. 'normal', 'center' or 'circle'
-					 * @property {string} [options.orientation="horizontal"] Slider orientation. horizontal or vertical
-					 * @property {boolean} [options.expand=false] Slider expand mode. true or false
-					 **/
 
-					self.options = {
-						type: "normal",
-						orientation: DEFAULT.HORIZONTAL,
-						expand: false,
-						warning: false,
-						warningLevel: 0,
-						disabled: false,
-						toggle: ""
-					};
-
+					self.options = objectMerge({}, defaults);
 					BaseKeyboardSupport.call(self);
 
 					self._ui = {};
 				},
 				classes = {
 					SLIDER: "ui-slider",
-					SLIDER_HORIZONTAL: "ui-slider-horizontal",
-					SLIDER_VERTICAL: "ui-slider-vertical",
 					SLIDER_VALUE: "ui-slider-value",
 					SLIDER_HANDLER: "ui-slider-handler",
-					SLIDER_HANDLER_EXPAND: "ui-slider-handler-expand",
-					SLIDER_CENTER: "ui-slider-center",
-					SLIDER_HANDLER_ACTIVE: "ui-slider-handler-active",
-					SLIDER_WARNING: "ui-slider-warning",
 					SLIDER_DISABLED: "ui-disabled",
 					SLIDER_HANDLER_VALUE: "ui-slider-handler-value",
-					SLIDER_HANDLER_SMALL: "ui-slider-handler-small",
-					SLIDER_FOCUS: "ui-slider-focus"
+					SLIDER_FOCUS: "ui-slider-focus",
+					SLIDER_BAR: "ui-slider-bar",
+					SLIDER_ACTIVE: "ui-slider-active"
 				},
 				prototype = new BaseWidget();
 
@@ -143,26 +126,10 @@
 			 * @static
 			 */
 			function bindEvents(self) {
-				var ui = self._ui,
-					element = ui.barElement,
-					toggle = ui.toggle;
+				events.on(self.element, "input change vmouseup vmousedown", self, false);
 
-				events.enableGesture(
-					element,
-
-					new Gesture.Drag({
-						orientation: self.options.orientation,
-						threshold: 0
-					})
-				);
-				// @todo remove drag handlers
-				//events.on(element, "dragstart drag dragend dragcancel", self, false);
-				events.on(self.element, "input change touchstart touchend", self, false);
-				events.on(self.element, "focus", self, false);
-				events.on(self.element, "blur", self, false);
-				events.on(self.element, "keyup", self, false);
-				if (toggle) {
-					events.on(toggle, "change", self);
+				if (self.isKeyboardSupport) {
+					events.on(self.element, "focus, blur, keyup", self, false);
 				}
 			}
 
@@ -175,16 +142,10 @@
 			 * @static
 			 */
 			function unbindEvents(self) {
-				var ui = self._ui,
-					element = ui.barElement,
-					toggle = ui.toggle;
+				events.off(self.element, "input change vmouseup vmousedown", self, false);
 
-				events.disableGesture(element);
-				// @todo remove drag handlers
-				//events.off(element, "dragstart drag dragend dragcancel", self, false);
-				events.off(self.element, "input change touchstart touchend", self, false);
-				if (toggle) {
-					events.off(toggle, "change", self);
+				if (self.isKeyboardSupport) {
+					events.off(self.element, "focus, blur, keyup", self, false);
 				}
 			}
 
@@ -199,29 +160,34 @@
 			prototype._build = function (element) {
 				var self = this,
 					ui = self._ui,
+					containerElement = document.createElement("div"),
 					barElement = document.createElement("div"),
 					valueElement = document.createElement("div"),
 					handlerElement = document.createElement("div");
 
-				barElement.classList.add(classes.SLIDER);
+				containerElement.classList.add(classes.SLIDER);
+
+				barElement.classList.add(classes.SLIDER_BAR);
 
 				valueElement.classList.add(classes.SLIDER_VALUE);
 				barElement.appendChild(valueElement);
 				handlerElement.classList.add(classes.SLIDER_HANDLER);
-				barElement.appendChild(handlerElement);
+				containerElement.appendChild(handlerElement);
+				containerElement.appendChild(barElement);
 
-				element.parentNode.appendChild(barElement);
+				element.parentNode.appendChild(containerElement);
+				ui.barElement = barElement;
 				ui.valueElement = valueElement;
 				ui.handlerElement = handlerElement;
-				ui.barElement = barElement;
+				ui.containerElement = containerElement;
 
-				element.parentNode.replaceChild(barElement, element);
-				barElement.appendChild(element);
+				element.parentNode.replaceChild(containerElement, element);
+				containerElement.appendChild(element);
 
 				if (self.isKeyboardSupport) {
 					self.preventFocusOnElement(element);
-					barElement.setAttribute("data-focus-lock", "true");
-					barElement.setAttribute("tabindex", "0");
+					containerElement.setAttribute("data-focus-lock", "true");
+					containerElement.setAttribute("tabindex", "0");
 				}
 
 				return element;
@@ -239,9 +205,9 @@
 				var self = this,
 					attrMin = parseFloat(element.getAttribute("min")),
 					attrMax = parseFloat(element.getAttribute("max")),
-					attrValue = parseFloat(element.getAttribute("value")),
-					ui = self._ui,
-					options = self.options;
+					attrValue = parseFloat(element.getAttribute("value"));
+
+				self._warnAboutUnsupportedOptions();
 
 				self._min = attrMin ? attrMin : 0;
 				self._max = attrMax ? attrMax : 100;
@@ -250,35 +216,22 @@
 				self._value = attrValue ? attrValue : parseFloat(self.element.value);
 				self._interval = self._max - self._min;
 				self._previousValue = self._value;
-				self._warningLevel = parseInt(options.warningLevel, 10);
 				self._setDisabled(element);
 				self._locked = false;
-
-				if (!ui.toggle && options.toggle) {
-					ui.toggle = document.querySelector(options.toggle);
-				}
 
 				self._initLayout();
 				return element;
 			};
 
-			prototype._setInputRangeSize = function () {
-				var self = this,
-					input = self.element,
-					barElement = self._ui.barElement,
-					options = self.options,
-					rectBar = barElement.getBoundingClientRect();
+			prototype._warnAboutUnsupportedOptions = function () {
+				var options = this.options;
 
-				if (options.orientation === DEFAULT.HORIZONTAL) {
-					input.style.width = (rectBar.width + 16) + "px";
-					input.style.top = "-12px"; // @todo change this hardcoded size;
-					input.style.left = "-8px";
-				} else {
-					input.style.width = (rectBar.width + 16) + "px";
-					input.style.height = rectBar.height + "px";
-					input.style.left = "-10px";
-				}
-			};
+				unsupportedOptions.forEach(function (option) {
+					if (options[option] !== defaults[option]) {
+						ns.warn("The " + option + " option has no effect on Slider widget");
+					}
+				});
+			}
 
 			/**
 			 * init layout of Slider component
@@ -288,73 +241,11 @@
 			 */
 			prototype._initLayout = function () {
 				var self = this,
-					options = self.options,
-					ui = self._ui,
-					barElement = ui.barElement,
-					handlerElement = ui.handlerElement;
+					ui = self._ui;
 
-				if (options.orientation === DEFAULT.HORIZONTAL) {
-					barElement.classList.remove(classes.SLIDER_VERTICAL);
-					barElement.classList.add(classes.SLIDER_HORIZONTAL);
-				} else {
-					barElement.classList.remove(classes.SLIDER_HORIZONTAL);
-					barElement.classList.add(classes.SLIDER_VERTICAL);
-				}
+				self._containerElementWidth = ui.containerElement.offsetWidth;
 
-				options.type === "center" ? barElement.classList.add(classes.SLIDER_CENTER) : barElement.classList.remove(classes.SLIDER_CENTER);
-
-				options.expand ? handlerElement.classList.add(classes.SLIDER_HANDLER_EXPAND) : handlerElement.classList.remove(classes.SLIDER_HANDLER_EXPAND);
-
-
-				self._barElementWidth = ui.barElement.offsetWidth;
-				if (self.options.orientation !== DEFAULT.HORIZONTAL) {
-					self._barElementHeight = ui.barElement.offsetHeight;
-				}
 				self._setValue(self._value);
-				self._setSliderColors(self._value);
-
-				self._setInputRangeSize();
-			};
-
-			/**
-			 * Set value of Slider center mode
-			 * @method _setCenterValue
-			 * @param {number} value
-			 * @member ns.widget.core.Slider
-			 * @protected
-			 */
-			prototype._setCenterValue = function (value) {
-				var self = this,
-					ui = self._ui,
-					validValue,
-					valueElementValidStyle,
-					barElementLength,
-					center,
-					validStyle,
-					inValidStyle;
-
-				if (self.options.orientation === DEFAULT.HORIZONTAL) {
-					barElementLength = self._barElementWidth;
-					center = barElementLength / 2;
-					validValue = barElementLength * (value - self._min) / self._interval;
-					validStyle = validValue < center ? "right" : "left";
-					inValidStyle = validValue < center ? "left" : "right";
-					valueElementValidStyle = "width";
-					ui.handlerElement.style["left"] = validValue + "px";
-				} else {
-					barElementLength = self._barElementHeight;
-					center = barElementLength / 2;
-					validValue = barElementLength * (value - self._min) / self._interval;
-					validStyle = validValue < center ? "top" : "bottom";
-					inValidStyle = validValue < center ? "bottom" : "top";
-					valueElementValidStyle = "height";
-					ui.handlerElement.style["top"] = (barElementLength - validValue) + "px";
-				}
-
-				ui.valueElement.style[validStyle] = "50%";
-				ui.valueElement.style[inValidStyle] = "initial";
-
-				ui.valueElement.style[valueElementValidStyle] = Math.abs(center - validValue) + "px";
 			};
 
 			/**
@@ -367,21 +258,13 @@
 			prototype._setNormalValue = function (value) {
 				var self = this,
 					ui = self._ui,
-					options = self.options,
-					barElementLength,
+					containerElementLength,
 					validValue;
 
-				if (options.orientation === DEFAULT.HORIZONTAL) {
-					barElementLength = self._barElementWidth;
-					validValue = barElementLength * (value - self._min) / self._interval;
-					ui.valueElement.style["width"] = validValue + "px";
-					ui.handlerElement.style["left"] = validValue + "px";
-				} else {
-					barElementLength = self._barElementHeight;
-					validValue = barElementLength * (value - self._min) / self._interval;
-					ui.valueElement.style["height"] = validValue + "px";
-					ui.handlerElement.style["top"] = (barElementLength - validValue) + "px";
-				}
+				containerElementLength = self._containerElementWidth;
+				validValue = containerElementLength * (value - self._min) / self._interval;
+				ui.valueElement.style["width"] = validValue + "px";
+				ui.handlerElement.style["left"] = validValue + "px";
 			};
 
 			/**
@@ -393,12 +276,8 @@
 			 */
 			prototype._setValue = function (value) {
 				var self = this,
-					ui = self._ui,
-					options = self.options,
 					element = self.element,
-					toggle = ui.toggle,
-					floatValue,
-					expendedClasses;
+					floatValue;
 
 				self._previousValue = self._value;
 
@@ -410,37 +289,12 @@
 
 				floatValue = parseFloat(value);
 
-				if (options.type === "center") {
-					self._setCenterValue(value);
-				} else if (options.type === "normal") {
-					self._setNormalValue(value);
-				}
-
-				self._setHandlerStyle(value);
-				self._updateSliderColors(value);
-
-				if (self.options.expand) {
-					expendedClasses = classes.SLIDER_HANDLER_VALUE;
-					if (floatValue > 99 || floatValue < -10) {
-						expendedClasses += " " + classes.SLIDER_HANDLER_SMALL;
-					}
-					ui.handlerElement.innerHTML = "<span class=" + expendedClasses + ">" + floatValue + "</span>";
-				}
+				self._setNormalValue(value);
 
 				if (self._previousValue !== floatValue) {
 					element.setAttribute("value", floatValue);
 					element.value = floatValue;
 					self._value = floatValue;
-
-					if (toggle) {
-						if (floatValue === 0 && !toggle.checked) {
-							toggle.checked = true;
-						}
-
-						if (floatValue !== 0 && toggle.checked) {
-							toggle.checked = false;
-						}
-					}
 
 					//events.trigger(element, "input");
 				}
@@ -451,97 +305,8 @@
 			};
 
 			prototype._getContainer = function () {
-				return this._ui.barElement;
+				return this._ui.containerElement;
 			}
-
-			/**
-			 * Set background as a gradient
-			 * @param {HTMLElement} element
-			 * @param {string} orientation
-			 * @param {string} reverseOrientation
-			 * @param {string} color1
-			 * @param {string} level1
-			 * @param {string} color2
-			 * @param {string} level2
-			 * @param {string} currentValue This param is added only because gradients do not work in proper way on Tizen
-			 * @private
-			 */
-			function setBackground(element, orientation, reverseOrientation, color1, level1, color2, level2, currentValue) {
-				// gradients on Tizen do not work in proper way, so this condition is workaround
-				// if gradients work properly, this should be removed!
-				if (parseFloat(currentValue) > parseFloat(level1)) {
-					element.style.background = "-webkit-linear-gradient(" + reverseOrientation + "," +
-						color1 + " " + level1 + ", " + color2 + " " + level2 + ")";
-				} else {
-					element.style.background = color1;
-				}
-			}
-
-			/**
-			 * Set warning level for slider
-			 * @param {number} value
-			 * @member ns.widget.core.Slider
-			 * @protected
-			 */
-			prototype._setSliderColors = function (value) {
-				var self = this,
-					ui = self._ui,
-					barElement = ui.barElement,
-					sliderValueElement = ui.valueElement,
-					orientation,
-					reverseOrientation,
-					barLength,
-					warningLevel,
-					level;
-
-				if (self.options.type === "normal" && self.options.warning && value >= self._min && value <= self._max) {
-					if (self.options.orientation === DEFAULT.HORIZONTAL) {
-						orientation = "right";
-						reverseOrientation = "left";
-						barLength = self._barElementWidth;
-					} else {
-						orientation = "top";
-						reverseOrientation = "bottom";
-						barLength = self._barElementHeight;
-					}
-					warningLevel = barLength * self._warningLevel / (self._max - self._min) + "px";
-					level = barLength * value / (self._max - self._min) + "px";
-
-					// set background for value bar and slider bar
-					setBackground(sliderValueElement, orientation, reverseOrientation, COLORS.ACTIVE, warningLevel, COLORS.WARNING, warningLevel, level);
-					setBackground(barElement, orientation, reverseOrientation, COLORS.BACKGROUND, warningLevel, COLORS.WARNING_BG, warningLevel,
-						parseInt(warningLevel, 10) + 2);
-				} else {
-					// gradients on Tizen do not work in proper way, so this is workaround
-					// if gradients work properly, this should be removed!
-					sliderValueElement.style.background = COLORS.ACTIVE;
-					barElement.style.background = COLORS.BACKGROUND;
-				}
-			};
-
-			// gradients on Tizen do not work in proper way, so this is workaround
-			// if gradients work properly, this should be removed!
-			prototype._updateSliderColors = function (value) {
-				this._setSliderColors(value);
-			};
-
-			/**
-			 * Set style for handler
-			 * @param {number} value
-			 * @member ns.widget.core.Slider
-			 * @protected
-			 */
-			prototype._setHandlerStyle = function (value) {
-				var self = this;
-
-				if (self.options.warning) {
-					if (value >= self._warningLevel) {
-						self._ui.handlerElement.classList.add(classes.SLIDER_WARNING);
-					} else {
-						self._ui.handlerElement.classList.remove(classes.SLIDER_WARNING);
-					}
-				}
-			};
 
 			prototype._setDisabled = function (element) {
 				var self = this,
@@ -557,8 +322,8 @@
 			prototype._enable = function (element) {
 				if (element) {
 					this.options.disabled = false;
-					if (this._ui.barElement) {
-						this._ui.barElement.classList.remove(classes.SLIDER_DISABLED);
+					if (this._ui.containerElement) {
+						this._ui.containerElement.classList.remove(classes.SLIDER_DISABLED);
 					}
 				}
 			};
@@ -566,8 +331,8 @@
 			prototype._disable = function (element) {
 				if (element) {
 					this.options.disabled = true;
-					if (this._ui.barElement) {
-						this._ui.barElement.classList.add(classes.SLIDER_DISABLED);
+					if (this._ui.containerElement) {
+						this._ui.containerElement.classList.add(classes.SLIDER_DISABLED);
 					}
 				}
 			};
@@ -591,31 +356,18 @@
 			 */
 			prototype.handleEvent = function (event) {
 				var self = this,
-					toggle = self._ui.toggle,
 					eventType = event.type;
 
-				if (eventType === "change" && toggle && toggle === event.target) {
-					self._handleToggle(event);
-				} else if (!this.options.disabled) {
+				if (!this.options.disabled) {
 					switch (eventType) {
-						case "dragstart":
-							self._onDragstart(event);
-							break;
-						case "dragend":
-						case "dragcancel":
-							self._onDragend(event);
-							break;
-						case "drag":
-							self._onDrag(event);
-							break;
 						case "input" :
 						case "change" :
 							self._setValue(self.element.value);
 							break;
-						case "touchstart":
+						case "vmousedown":
 							self._onTouchStart(event);
 							break;
-						case "touchend":
+						case "vmouseup":
 							self._onTouchEnd(event);
 							break;
 						// case "focus":
@@ -631,113 +383,22 @@
 				}
 			};
 
-			prototype._handleToggle = function (event) {
-				var self = this,
-					options = self.options,
-					element = self.element,
-					target = event.target,
-					mute = target.checked,
-					value;
-
-				if (mute && self.value() > 0) {
-					utilDOM.setNSData(target, "slider-value", self.value());
-					self.value(self._minValue);
-					options.disabled = true;
-					self._setDisabled(element);
-				} else if (self.value() === 0) {
-					value = parseFloat(utilDOM.getNSData(target, "slider-value")) || 0
-					options.disabled = false;
-					self._setDisabled(element);
-					self.value(value);
-				}
-			};
-
-			/**
-			 * Drag event handler
-			 * @method _onDrag
-			 * @param {Event} event
-			 * @member ns.widget.core.Slider
-			 * @protected
-			 */
-			prototype._onDrag = function (event) {
-				var self = this,
-					ui = self._ui,
-					validPosition,
-					value;
-
-				if (self._active) {
-					validPosition = self.options.orientation === DEFAULT.HORIZONTAL ?
-						event.detail.estimatedX - ui.barElement.offsetLeft :
-						self._barElementHeight -
-					(event.detail.estimatedY - utilDOM.getElementOffset(ui.barElement).top + selectors.getScrollableParent(self.element).scrollTop),
-
-					value = self.options.orientation === DEFAULT.HORIZONTAL ?
-						self._interval * validPosition / self._barElementWidth :
-						self._interval * validPosition / self._barElementHeight;
-
-					value += self._min;
-					self._setValue(value);
-				}
-			};
-
-			/**
-			 * DragStart event handler
-			 * @method _onDragstart
-			 * @param {Event} event
-			 * @member ns.widget.core.Slider
-			 * @protected
-			 */
-			prototype._onDragstart = function (event) {
-				var self = this,
-					ui = self._ui,
-					validPosition = self.options.orientation === DEFAULT.HORIZONTAL ?
-						event.detail.estimatedX - ui.barElement.offsetLeft :
-						self._barElementHeight -
-					(event.detail.estimatedY - utilDOM.getElementOffset(ui.barElement).top + selectors.getScrollableParent(self.element).scrollTop),
-					value = self.options.orientation === DEFAULT.HORIZONTAL ?
-						self._interval * validPosition / self._barElementWidth :
-						self._interval * validPosition / self._barElementHeight;
-
-				ui.handlerElement.classList.add(classes.SLIDER_HANDLER_ACTIVE);
-				value += self._min;
-				self._setValue(value);
-				self._active = true;
-			};
-
-			/**
-			 * DragEnd event handler
-			 * @method _onDragend
-			 * @member ns.widget.core.Slider
-			 * @protected
-			 */
-			prototype._onDragend = function () {
-				var self = this,
-					ui = self._ui;
-
-				ui.handlerElement.classList.remove(classes.SLIDER_HANDLER_ACTIVE);
-				self._active = false;
-				if (self._previousValue !== self.element.value) {
-					events.trigger(self.element, "change");
-				}
-				self._previousValue = self.element.value;
-			};
-
 			prototype._onTouchStart = function () {
-				this._ui.handlerElement.classList.add(classes.SLIDER_HANDLER_ACTIVE);
+				this._ui.containerElement.classList.add(classes.SLIDER_ACTIVE);
 			};
 
 			prototype._onTouchEnd = function () {
-				this._ui.handlerElement.classList.remove(classes.SLIDER_HANDLER_ACTIVE);
+				this._ui.containerElement.classList.remove(classes.SLIDER_ACTIVE);
 			};
 
 			// prototype._onFocus = function () {
-			// 	var container = this._ui.barElement.parentElement;
+			// 	var container = this._ui.containerElement.parentElement;
 
 			// 	container && container.classList.add("ui-listview-item-focus");
 			// };
 
 			// prototype._onBlur = function () {
-			// 	var container = this._ui.barElement.parentElement;
+			// 	var container = this._ui.containerElement.parentElement;
 
 			// 	container && container.classList.remove("ui-listview-item-focus");
 			// };
@@ -763,7 +424,7 @@
 			// 	listviewWidget.saveKeyboardSupport();
 			// 	listviewWidget.disableKeyboardSupport();
 			// 	self.enableKeyboardSupport();
-			// 	self._ui.barElement.classList.add(classes.SLIDER_FOCUS);
+			// 	self._ui.containerElement.classList.add(classes.SLIDER_FOCUS);
 			// };
 
 			// prototype._unlockKeyboard = function () {
@@ -775,7 +436,7 @@
 			// 	listviewWidget.restoreKeyboardSupport();
 			// 	listviewWidget.enableKeyboardSupport();
 			// 	self.disableKeyboardSupport();
-			// 	self._ui.barElement.classList.remove(classes.SLIDER_FOCUS);
+			// 	self._ui.containerElement.classList.remove(classes.SLIDER_FOCUS);
 			// };
 
 			prototype._onKeyUp = function (event) {
@@ -823,11 +484,11 @@
 			 */
 			prototype._destroy = function () {
 				var self = this,
-					barElement = self._ui.barElement;
+					containerElement = self._ui.containerElement;
 
 				unbindEvents(self);
-				if (barElement.parentNode) {
-					barElement.parentNode.removeChild(barElement);
+				if (containerElement.parentNode) {
+					containerElement.parentNode.removeChild(containerElement);
 				}
 				self._ui = null;
 				self._options = null;

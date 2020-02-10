@@ -226,8 +226,8 @@
 
 			engine.defineWidget(
 				"Checkbox",
-				"input[type='checkbox']:not(.ui-slider-switch-input):not([data-role='toggleswitch'])" +
-				":not(.ui-toggleswitch):not(.ui-toggle-switch), input.ui-checkbox",
+				"input[type='checkbox']:not(.ui-slider-switch-input):not([data-role='toggleswitch']):not([data-role='on-off-switch'])" +
+				":not(.ui-toggleswitch):not(.ui-toggle-switch):not(.ui-on-off-switch), input.ui-checkbox",
 				[],
 				Checkbox,
 				"core",

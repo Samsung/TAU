@@ -1,0 +1,59 @@
+// base variable definitions for default properties
+// eg. :root variables
+//     (default value) @text-color: #RRGGBB;
+@import "../base.less";
+
+body, body.ui-theme-light, body.ui-theme-default {
+
+    // less variable definitions specific for theme
+    // eg. @primary-color: #RRGGBB;
+    @import "./light.variables.less";
+
+    // css variables from less variables
+    // eg. --primary-color: @primary-color;
+    @import (multiple) "../common/oneui-common.less";
+
+    --text-input-disabled: #bebebe;
+    --text-input-label-inactive: #8c8c8c;
+    --text-input-underline-inactive: #8c8c8c;
+    --text-input-underline-active: var(--primary-color);
+
+    --icon-control-color: var(--color-white); // checkbox
+    --progress-background-color: #cccccc;
+    --on-off-switch-track-off: #8f8f8f;
+
+    --more-options-background-color: var(--popup-background);
+    --more-options-background-stroke: #cccccc;
+    --more-options-pressed-color: fade(@more-options-pressed-color, @more-options-pressed-opacity);
+
+    --button-text-contained-dim-color: fade(@text-color, 40%);
+}
+
+body.ui-theme-dark {
+    // less variable definitions specific for theme
+    // eg. @primary-color: #RRGGBB;
+    @import "./dark.variables.less";
+
+    @surface-color: #3d3d3d; // overwrite default color
+
+    // css variables from less variables
+    // eg. --primary-color: @primary-color;
+    @import (multiple) "../common/oneui-common.less";
+
+    --text-color: @text-color;
+    --surface: @surface-color;
+
+    --text-input-disabled: #454545;
+    --text-input-label-inactive: #737373;
+    --text-input-underline-inactive: #737373;
+    --text-input-underline-active: var(--primary-color);
+
+    --icon-control-color: var(--surface); // checkbox
+    --progress-background-color: #252525;
+
+    --more-options-background-color: #3d3d3d;
+    --more-options-background-stroke: #525252;
+    --more-options-pressed-color: fade(@more-options-pressed-color, @more-options-pressed-opacity);
+
+    --button-text-contained-dim-color: fade(@text-color, 40%);
+}

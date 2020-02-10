@@ -1,0 +1,22 @@
+.core-button-bg() {
+	.mask-box-image-repeat(repeat);
+	.mask-box-image-width(auto);
+	-webkit-mask-box-image-source: url('images/nine-patch/core_button_bg.png');
+	.mask-box-image-slice(37 38 36 38 fill);
+	background-color: var(--button-background);
+}
+
+.core-button-bg-pressed() {
+	.mask-box-image-repeat(repeat);
+	.mask-box-image-width(auto);
+	-webkit-mask-box-image-source: url('images/nine-patch/core_button_bg.png');
+	.mask-box-image-slice(37 38 36 38 fill);
+	background-color: @color_button_bg_press;
+}
+
+.core-floating-button-bg() {
+	.mask-box-image-repeat(repeat);
+	.mask-box-image-width(auto);
+	-webkit-mask-box-image-source: url('images/nine-patch/core_floating_button_bg.png');
+	.mask-box-image-slice(60 64 60 64 fill);
+}
