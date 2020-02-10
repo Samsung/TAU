@@ -133,7 +133,7 @@
 					 */
 					toggleInput: widgetClass + "-input",
 					/**
-					 * Set class for focused state (keyborad support)
+					 * Set class for focused state (keyboard support)
 					 * @member ns.widget.core.OnOffSwitch
 					 */
 					toggleContainerFocus: widgetClass + "-focus"
