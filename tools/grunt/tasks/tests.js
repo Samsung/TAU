@@ -103,10 +103,6 @@ module.exports = function (grunt) {
 		mobile: {
 			"qunit-main": true,
 			default: true
-		},
-		mobile_support: {
-			"qunit-main": true,
-			default: true
 		}
 	};
 	grunt.config("test", testConfig);

@@ -1778,7 +1778,7 @@ module.exports = function (grunt) {
 		"bundle"
 	]);
 
-	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJqery"]); //"bundle:mobile"
+	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJquery"]); //"bundle:mobile"
 	//grunt.registerTask("license", "Add licence information to files", ["concat:licenseJs", "concat:licenseDefaultCss", "copy:license"]);
 	//grunt.registerTask("js-old", "Prepare JS for old", ["clean:js", "requirejs:old", "jsmin", "themesjs:old", "copy:oldJquery"]); //"bundle:old"
 	//grunt.registerTask("js-old_support", "Prepare JS for old 2.3", ["clean:js", "requirejs:old", "requirejs:old_support", "jsmin", "themesjs:old", "copy:oldJquery"]);
