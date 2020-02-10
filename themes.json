@@ -1,15 +1,6 @@
 {
 	"path": "src/css/profile",
 	"device": {
-		"oneui": [
-			{
-				"name": "changeable",
-				"images": "images/",
-				"src": "theme.less",
-				"default": "true",
-				"changeable-path": "oneui/theme-changeable/"
-			}
-		],
 		"mobile": [
 			{
 				"name": "changeable",
