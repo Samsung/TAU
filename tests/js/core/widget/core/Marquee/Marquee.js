@@ -144,7 +144,7 @@
 
 			assert.equal(
 				marquee._calculateTranslateFunctions.scroll(marquee, 0, 10, 0, ""),
-				"translateX(-0px)", "0, 10, 0, ''");
+				"translateX(0px)", "0, 10, 0, ''");
 			assert.equal(
 				marquee._calculateTranslateFunctions.scroll(marquee, 0.5, 10, 0, ""),
 				"translateX(-5px)", "0.5, 10, 0, ''");
@@ -167,16 +167,16 @@
 			};
 			assert.equal(
 				marquee._calculateTranslateFunctions.slide(marquee, 0, 10, 0, ""),
-				"translateX(-0px)", "0, 10, 0, ''");
+				"translateX(0px)", "0, 10, 0, ''");
 			assert.equal(
 				marquee._calculateTranslateFunctions.slide(marquee, 0.5, 10, 0, ""),
-				"translateX(-10px)", "0.5, 10, 0, ''");
+				"translateX(-10.38px)", "0.5, 10, 0, ''");
 			assert.equal(
 				marquee._calculateTranslateFunctions.slide(marquee, 1, 10, 0, ""),
-				"translateX(-20px)", ", 10, 0, ''");
+				"translateX(-20.75px)", ", 10, 0, ''");
 			assert.equal(
-				marquee._calculateTranslateFunctions.slide(marquee, 1, 10, 0, "translateX(-20px)"),
-				null, "1, 10, 0, translateX(-20px)");
+				marquee._calculateTranslateFunctions.slide(marquee, 1, 10, 0, "translateX(-20.75px)"),
+				null, "1, 10, 0, translateX(-20.75px)");
 		});
 
 		test("_calculateTranslateFunctions.alternate", 5, function (assert) {
@@ -190,7 +190,7 @@
 			};
 			assert.equal(
 				marquee._calculateTranslateFunctions.alternate(marquee, 0, 10, 0, ""),
-				"translateX(-0px)", "0, 10, 0, ''");
+				"translateX(0px)", "0, 10, 0, ''");
 			assert.equal(
 				marquee._calculateTranslateFunctions.alternate(marquee, 0.5, 10, 0, ""),
 				"translateX(-6.67px)", "0.5, 10, 0, ''");
@@ -209,52 +209,52 @@
 			var marquee = new Marquee();
 
 			marquee._stateDOM = {
-				offsetWidth: 10,
+				offsetWidth: 100,
 				children: [{
-					offsetWidth: 30
+					offsetWidth: 300
 				}]
 			};
 			assert.equal(
-				marquee._calculateTranslateFunctions.endToEnd(marquee, 0, 10, 0, ""),
-				"translateX(0px)", "0, 10, 0, ''");
+				marquee._calculateTranslateFunctions.endToEnd(marquee, 0, 100, 0, ""),
+				"translateX(0px)", "0, 100, 0, ''");
 			assert.equal(
-				marquee._calculateTranslateFunctions.endToEnd(marquee, 0.5, 10, 0, ""),
-				"translateX(-20px)", "0.5, 10, 0, ''");
+				marquee._calculateTranslateFunctions.endToEnd(marquee, 0.5, 100, 0, ""),
+				"translateX(-50px)", "0.5, 100, 0, ''");
 			assert.equal(
-				marquee._calculateTranslateFunctions.endToEnd(marquee, 1, 10, 0, ""),
-				"translateX(0px)", ", 10, 0, ''");
+				marquee._calculateTranslateFunctions.endToEnd(marquee, 1, 100, 0, ""),
+				"translateX(-100px)", "1, 100, 0, ''");
 			assert.equal(
-				marquee._calculateTranslateFunctions.endToEnd(marquee, 1, 10, 0, "translateX(0px)"),
-				null, "1, 10, 0, translateX(0px)");
+				marquee._calculateTranslateFunctions.endToEnd(marquee, 1, 150, 0, "translateX(-150px)"),
+				null, "1, 150, 0, translateX(-150px)");
 		});
 
 		test("_calculateEndToEndGradient", 3, function (assert) {
 			var marquee = new Marquee();
 
 			marquee._stateDOM = {
-				offsetWidth: 10,
+				offsetWidth: 100,
 				children: [{
-					offsetWidth: 30
+					offsetWidth: 300
 				}]
 			};
 			assert.equal(
-				marquee._calculateEndToEndGradient(0, 10, 0, ""),
+				marquee._calculateEndToEndGradient(0),
 				"-webkit-linear-gradient(left, transparent 0, rgb(255, 255, 255) 15%," +
 				" rgb(255, 255, 255) 100%)",
-				"0, 10, 0, ''");
+				"state: 0 - begining of animation");
 			assert.equal(
-				marquee._calculateEndToEndGradient(0.5, 10, 0, ""),
+				marquee._calculateEndToEndGradient(0.4),
 				"-webkit-linear-gradient(left, transparent 0, rgb(255, 255, 255) 15%," +
 				" rgb(255, 255, 255) 85%, transparent 100%",
-				"0.5, 10, 0, ''");
+				"state: 0.4 during of animation");
 			assert.equal(
-				marquee._calculateEndToEndGradient(1, 10, 0, ""),
+				marquee._calculateEndToEndGradient(1),
 				"-webkit-linear-gradient(left, rgb(255, 255, 255) 0, rgb(255, 255, 255) 85%," +
 				" transparent 100%)",
-				"1, 10, 0, ''");
+				"state: 1 - end of animation");
 		});
 
-		test("_calculateStandardGradient", 4, function (assert) {
+		test("_calculateStandardGradient", 3, function (assert) {
 			var marquee = new Marquee();
 
 			marquee._stateDOM = {
@@ -278,17 +278,14 @@
 				"-webkit-linear-gradient(left, transparent 0, rgb(255, 255, 255) 15%," +
 				" rgb(255, 255, 255) 100%)",
 				"1, 10, 0, ''");
-			assert.equal(
-				marquee._calculateStandardGradient(1, 10, 0, "-webkit-linear-gradient(left," +
-					" transparent 0, rgb(255, 255, 255) 15%, rgb(255, 255, 255) 100%)"),
-				null, "1, 10, 0, -webkit-linear-gradient(left, transparent 0," +
-				" rgb(255, 255, 255) 15%, rgb(255, 255, 255) 100%)");
 		});
 
 
-		test("_setIteration", 15, function (assert) {
+		test("_setIteration", 28, function (assert) {
 			var marquee = new Marquee(),
-				animationObject = {},
+				marqueeElement = document.getElementById("marquee"),
+				animationObject = {
+				},
 				configObject = {};
 
 			marquee._animation = {
@@ -297,7 +294,13 @@
 					assert.equal(_configObject, configObject, "");
 				},
 				start: function () {
-					assert.ok(true, "start was called");
+					assert.ok(true, "animation start was called");
+				},
+				stop: function () {
+					assert.ok(true, "animation stop was called");
+				},
+				reset: function () {
+					assert.ok(true, "animation reset was called");
 				}
 			};
 			marquee.trigger = function (eventName) {
@@ -307,6 +310,9 @@
 				animation: animationObject,
 				animationConfig: configObject
 			};
+			marquee.element = marqueeElement;
+
+			// tests
 			assert.equal(
 				marquee._setIteration(null, "infinite"),
 				false,
@@ -316,7 +322,7 @@
 			assert.equal(
 				marquee._setIteration(null, "2"),
 				false,
-				"null, '2'");
+				"null, 2");
 			assert.equal(typeof configObject.callback, "function", "callback is set");
 			configObject.callback();
 			configObject.callback();
@@ -324,6 +330,12 @@
 				marquee._setIteration(null, 3),
 				false,
 				"null, 3");
+			assert.equal(typeof configObject.callback, "function", "callback is set");
+			configObject.callback();
+			assert.equal(
+				marquee._setIteration(null, "foo"),
+				false,
+				"null, NaN");
 			assert.equal(typeof configObject.callback, "function", "callback is set");
 			configObject.callback();
 		});

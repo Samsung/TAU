@@ -832,6 +832,8 @@
 						if (id && ["input", "textarea", "button"].indexOf(tagName) > -1) {
 							return input.parentNode.querySelector("label[for=" + id + "]");
 						}
+
+						return null;
 					},
 					_true = true;
 

@@ -231,8 +231,7 @@
 			 */
 			prototype._createDividerMap = function (element) {
 				var self = this,
-					primaryCharacterSet = null,
-					secondCharacterSet = null,
+					primaryCharacterSet = "",
 					numberSet = "0123456789",
 					dividers,
 					map = {},
@@ -255,11 +254,8 @@
 					}
 				}
 
-				if (primaryCharacterSet === null) {
-					primaryCharacterSet = "";
-					for (i = 0; i < dividersLength; i++) {
-						primaryCharacterSet = makeCharacterSet(dividers[i], primaryCharacterSet);
-					}
+				for (i = 0; i < dividersLength; i++) {
+					primaryCharacterSet = makeCharacterSet(dividers[i], primaryCharacterSet);
 				}
 
 				for (i = 0, length = primaryCharacterSet.length; i < length; i++) {
@@ -269,17 +265,8 @@
 					}
 				}
 
-				if (secondCharacterSet !== null) {
-					for (i = 0, length = secondCharacterSet.length; i < length; i++) {
-						indexChar = secondCharacterSet.charAt(i);
-						for (j = 0; j < dividersLength; j++) {
-							matchToDivider(dividers[j], indexChar, map);
-						}
-					}
-				}
-
 				self._dividerMap = map;
-				self._charSet = primaryCharacterSet + secondCharacterSet;
+				self._charSet = primaryCharacterSet;
 			};
 
 			prototype._build = function (element) {

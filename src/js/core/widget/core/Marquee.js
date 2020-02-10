@@ -86,6 +86,9 @@
 					this.options = objectUtils.copy(Marquee.defaults);
 					// event callbacks
 					this._callbacks = {};
+					this._ui = {
+						content: null
+					};
 				},
 
 				prototype = new BaseWidget(),
@@ -164,7 +167,7 @@
 
 				ellipsisEffect = {
 					GRADIENT: "gradient",
-					ELLIPSIS: "ellipsis",
+					ELLIPSIS: "ellipsis", // deprecated effect
 					NONE: "none"
 				},
 
@@ -175,7 +178,7 @@
 				/**
 				 * Options for widget
 				 * @property {Object} options
-				 * @property {string|"slide"|"scroll"|"alternate"} [options.marqueeStyle="slide"] Sets the
+				 * @property {string|"slide"|"scroll"|"alternate|"endToEnd""} [options.marqueeStyle="slide"] Sets the
 				 * default style for the marquee
 				 * @property {number} [options.speed=60] Sets the speed(px/sec) for the marquee
 				 * @property {number|"infinite"} [options.iteration=1] Sets the iteration count number for
@@ -183,7 +186,7 @@
 				 * @property {number} [options.delay=2000] Sets the delay(ms) for marquee
 				 * @property {"linear"|"ease"|"ease-in"|"ease-out"|"cubic-bezier(n,n,n,n)"}
 				 * [options.timingFunction="linear"] Sets the timing function for marquee
-				 * @property {"gradient"|"ellipsis"|"none"} [options.ellipsisEffect="gradient"] Sets the
+				 * @property {"gradient"|"none"} [options.ellipsisEffect="gradient"] Sets the
 				 * end-effect(gradient) of marquee
 				 * @property {boolean} [options.autoRun=true] Sets the status of autoRun
 				 * @member ns.widget.core.Marquee
@@ -192,7 +195,7 @@
 				defaults = {
 					marqueeStyle: style.SLIDE,
 					speed: 60,
-					iteration: 1,
+					iteration: "1",
 					currentIteration: 1,
 					delay: 0,
 					timingFunction: "linear",
@@ -218,7 +221,7 @@
 					var value = from + state * diff,
 						returnValue;
 
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -229,10 +232,13 @@
 						containerWidth = stateDOM.offsetWidth,
 						textWidth = stateDOM.children[0].offsetWidth,
 						value,
+						excludeValue,
 						returnValue;
 
-					value = state * (textWidth - containerWidth);
-					returnValue = "translateX(-" + round100(value) + "px)";
+					// RIGHT gradient is 85% spec.
+					excludeValue = (containerWidth * 15 / 100) / 2;
+					value = state * (textWidth - containerWidth + excludeValue);
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -251,26 +257,17 @@
 						value *= 2;
 					}
 					value = value / textWidth * (textWidth - containerWidth);
-					returnValue = "translateX(-" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
 					return returnValue;
 				},
 				endToEnd: function (self, state, diff, from, current) {
-					var stateDOM = self._stateDOM,
-						textWidth = stateDOM.children[0].offsetWidth,
-						containerWidth = stateDOM.offsetWidth,
-						value,
+					var value = from + state * diff,
 						returnValue;
 
-					value = state * (textWidth + containerWidth);
-					if (value > textWidth) {
-						value = containerWidth - value + textWidth;
-					} else {
-						value = -value;
-					}
-					returnValue = "translateX(" + round100(value) + "px)";
+					returnValue = "translateX(" + (-1 * round100(value) || 0) + "px)";
 					if (current === returnValue) {
 						return null;
 					}
@@ -282,14 +279,16 @@
 				var self = this,
 					stateDOM = self._stateDOM,
 					textWidth = stateDOM.children[0].offsetWidth,
-					containerWidth = stateDOM.offsetWidth,
-					returnTimeFrame = (textWidth / (textWidth + containerWidth)),
+					returnTimeFrame = ((textWidth - 50) / textWidth),
 					returnValue;
 
 				if (self.options.ellipsisEffect === "none") {
 					return null;
 				}
-				if (state > returnTimeFrame) {
+				if (state > 0 && self.options.currentIteration < self.options.iteration) {
+					// don't change gradient between iterations only for lastpass
+					returnValue = GRADIENTS.BOTH;
+				} else if (state > returnTimeFrame) {
 					returnValue = GRADIENTS.RIGHT;
 				} else if (state > 0) {
 					returnValue = GRADIENTS.BOTH;
@@ -299,7 +298,7 @@
 				return returnValue;
 			};
 
-			prototype._calculateStandardGradient = function (state, diff, from, current) {
+			prototype._calculateStandardGradient = function (state) {
 				var returnValue;
 
 				if (isNaN(state)) {
@@ -314,10 +313,6 @@
 					returnValue = GRADIENTS.BOTH;
 				} else {
 					returnValue = GRADIENTS.RIGHT;
-				}
-
-				if (current === returnValue) {
-					return null;
 				}
 				return returnValue;
 			};
@@ -335,6 +330,13 @@
 
 				element.classList.add(CLASSES_PREFIX);
 
+				// check deprecated class
+				if (element.classList.contains(classes.MARQUEE_ELLIPSIS)) {
+					ns.warn("Class '" + classes.MARQUEE_ELLIPSIS +
+						"' for option 'ellipsisEffect' in Marquee widget has been deprecated. " +
+						"Allowed values: none, '" + classes.MARQUEE_GRADIENT + "' (default)");
+				}
+
 				if (!marqueeInnerElement) {
 					marqueeInnerElement = document.createElement("div");
 
@@ -344,6 +346,9 @@
 					marqueeInnerElement.classList.add(classes.MARQUEE_CONTENT);
 					element.appendChild(marqueeInnerElement);
 				}
+
+				this._ui.content = marqueeInnerElement;
+
 				return element;
 			};
 
@@ -369,7 +374,8 @@
 				var self = this,
 					stateDOM = self._stateDOM,
 					stateDOMfirstChild = stateDOM.children[0],
-					width = stateDOMfirstChild.offsetWidth,
+					width = stateDOMfirstChild.offsetWidth +
+						((self.options.marqueeStyle === style.ENDTOEND) ? 100 : 0),
 					animation = new Animation({}),
 					state = {
 						hasEllipsisText: (width > 0),
@@ -419,6 +425,9 @@
 			};
 
 			prototype._setEllipsisEffect = function (element, value) {
+				if (value === "ellipsis") {
+					ns.warn("Marquee: option value 'ellipsis' for 'ellipsisEffect' is deprecated. Allowed values: 'none', 'gradient' (default)");
+				}
 				return this._togglePrefixedClass(this._stateDOM, CLASSES_PREFIX + "-", value);
 			};
 
@@ -449,11 +458,15 @@
 				var animation = self._animation,
 					state = self.state;
 
-				if (self.options.currentIteration++ < self.options.iteration) {
+				if (self.options.currentIteration++ < self.options.iteration || self.options.iteration === "infinite") {
 					animation.set(state.animation, state.animationConfig);
 					animation.stop();
 					animation.start();
 				} else {
+					if (self.options.marqueeStyle === style.ENDTOEND) {
+						self._ui.content.classList.remove("ui-visible");
+					}
+					self.reset();
 					self.options.animation = states.STOPPED;
 					self.trigger(eventType.MARQUEE_END);
 				}
@@ -477,7 +490,7 @@
 					animationConfig.callback = animationIterationCallback.bind(null, self);
 				}
 				self._animation.set(state.animation, animationConfig);
-				self.options.loop = value;
+				self.options.iteration = value;
 				return false;
 			};
 
@@ -521,16 +534,24 @@
 
 				if (value !== options.animation) {
 					if (value === states.RUNNING) {
-						if ((runOnlyOnEllipsisText && width) || (!runOnlyOnEllipsisText)) {
-							self.options.currentIteration = 1;
+						if ((runOnlyOnEllipsisText && width > 0) || (!runOnlyOnEllipsisText)) {
+							// copy of text content to title and after pseudo element
+							self._ui.content.setAttribute("title", self._ui.content.textContent.trim());
+							if (self.options.marqueeStyle === style.ENDTOEND) {
+								self._ui.content.classList.add("ui-visible");
+							}
 							animation.start();
+							options.animation = value;
 							self.trigger(eventType.MARQUEE_START);
 						}
 					} else {
+						if (self.options.marqueeStyle === style.ENDTOEND) {
+							self._ui.content.classList.remove("ui-visible");
+						}
 						animation.pause();
+						options.animation = value;
 						self.trigger(eventType.MARQUEE_STOPPED);
 					}
-					options.animation = value;
 				}
 				return false;
 			};
@@ -560,9 +581,11 @@
 					marqueeInnerElement;
 
 				self.state = null;
-				self._animation.stop();
-				self._animation.destroy();
-				self._animation = null;
+				if (self._animation) {
+					self._animation.stop();
+					self._animation.destroy();
+					self._animation = null;
+				}
 				self.element.style.webkitMaskImage = "";
 
 				marqueeInnerElement = self.element.querySelector("." + classes.MARQUEE_CONTENT);
@@ -571,7 +594,9 @@
 						self.element.appendChild(marqueeInnerElement.removeChild(marqueeInnerElement.firstChild));
 					}
 					self._stateDOM.children = [];
-					self.element.removeChild(marqueeInnerElement);
+					if (marqueeInnerElement.parentElement === self.element) {
+						self.element.removeChild(marqueeInnerElement);
+					}
 				}
 				self._stateDOM = null;
 			};

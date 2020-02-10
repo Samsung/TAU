@@ -202,7 +202,12 @@
 					 */
 					self._ui = {
 						selection: null,
-						scroller: null
+						scroller: null,
+						arcListviewCarousel: null,
+						arcListviewSelection: null,
+						// ensures correct behaviour of radio buttons once
+						// item goes out of the screen (is removed from carousel)
+						dummyElement: null
 					};
 				},
 
@@ -223,7 +228,8 @@
 					FORCE_RELATIVE: "ui-force-relative-li-children",
 					LISTVIEW: "ui-listview",
 					SELECTED: "ui-arc-listview-selected",
-					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden"
+					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden",
+					DUMMY_ELEMENT: WIDGET_CLASS + "-dummy-element"
 				},
 				events = {
 					CHANGE: "change"
@@ -233,7 +239,6 @@
 					POPUP: ".ui-popup",
 					SCROLLER: ".ui-scroller",
 					ITEMS: "." + WIDGET_CLASS + " > li",
-					SELECTION: "." + WIDGET_CLASS + "-selection",
 					TEXT_INPUT: "input[type='text']" +
 								", input[type='number']" +
 								", input[type='password']" +
@@ -475,6 +480,8 @@
 						return null;
 					}
 				}
+
+				return null;
 			}
 
 			/**
@@ -487,7 +494,8 @@
 					currentTime = Date.now(),
 					startTime = state.startTime,
 					deltaTime = currentTime - startTime,
-					scroll = state.scroll;
+					scroll = state.scroll,
+					pageWidget = null;
 
 				if (deltaTime >= state.duration) {
 					self._scrollAnimationEnd = true;
@@ -505,11 +513,19 @@
 						1
 					);
 					if (self._scrollAnimationEnd) {
-						self.trigger(events.CHANGE, {
-							"selected": state.currentIndex
-						});
-						eventUtils.trigger(state.items[state.currentIndex].element, "selected");
+						// _scrollAnimationEnd can be set by TouchStart event to stop scroll.
+						// Show selection if scroll finishes.
+						if (deltaTime >= state.duration) {
+							self.trigger(events.CHANGE, {
+								"selected": state.currentIndex
+							});
+							eventUtils.trigger(state.items[state.currentIndex].element, "selected");
+						}
 						state.toIndex = state.currentIndex;
+
+						// set last scroll position when current page is hidden
+						pageWidget = ns.engine.getBinding(self._ui.page, "Page");
+						pageWidget.setLastScrollPosition(-1 * scroll.current || 0);
 
 						scroll.to = null;
 						scroll.from = null;
@@ -601,7 +617,7 @@
 						item.repaint = false;
 					} else {
 						if (itemElement.parentNode !== null && item.current.scale < 0.01) {
-							itemElement.parentNode.removeChild(itemElement);
+							self._ui.dummyElement.appendChild(itemElement);
 						}
 					}
 				}
@@ -711,6 +727,20 @@
 					self._rendering = false;
 				}
 			};
+
+			/**
+			 * Methods return index of item after divider
+			 * @method findItemIndexByDivider
+			 * @param {HTMLElement} dividerElement
+			 * @memberof ns.widget.wearable.ArcListview
+			 */
+			prototype.findItemIndexByDivider = function (dividerElement) {
+				var result = this._state.separators.filter(function (item) {
+					return item.itemElement.element === dividerElement;
+				});
+
+				return result.length ? result[0].insertBefore : -1;
+			}
 
 			prototype._requestRender = function () {
 				var self = this;
@@ -865,7 +895,7 @@
 					scroll = state.scroll;
 
 				if (state.items.length === 0) {
-					return false;
+					return;
 				}
 
 				// increase scroll duration according to length of items
@@ -1100,7 +1130,7 @@
 					bouncingEffect = self._bouncingEffect;
 
 				if (self._items.length === 0) {
-					return false;
+					return;
 				}
 
 				// time
@@ -1182,12 +1212,20 @@
 					if (bouncingEffect) {
 						bouncingEffect.dragEnd();
 					}
+				} else {
+					self._roll();
 				}
 			};
 
 			function showHighlight(arcListviewSelection, selectedElement) {
 				arcListviewSelection.style.height = selectedElement.getBoundingClientRect().height + "px";
 				arcListviewSelection.classList.add(classes.SELECTION_SHOW);
+			}
+
+			prototype._removeHighlight = function () {
+				var selection =	this._ui.arcListviewSelection;
+
+				selection.classList.remove(classes.SELECTION_SHOW);
 			}
 
 			prototype._wrapTextContent = function (element) {
@@ -1229,21 +1267,24 @@
 				var ui = this._ui,
 					state = this._state,
 					selectedElement = state.items[selectedIndex].element,
-					marqueeDiv,
-					widget;
+					marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content"),
+					marqueeWidget = null;
 
-				marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
+				// Start marquee.
 				if (marqueeDiv) {
 					marqueeDiv.style.width = "100%";
 					marqueeDiv.classList.add("ui-marquee");
+					marqueeWidget = ns.engine.getBinding(marqueeDiv);
+					if (!marqueeWidget) {
+						marqueeWidget = ns.widget.Marquee(marqueeDiv, {
+							marqueeStyle: "endToEnd",
+							iteration: 1,
+							delay: "300"
+						});
+					} else {
+						marqueeWidget.start();
+					}
 				}
-				widget = ns.widget.Marquee(marqueeDiv, {
-					marqueeStyle: "endToEnd",
-					iteration: 1,
-					delay: "300"
-				});
-				widget.start();
-
 
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
@@ -1265,9 +1306,9 @@
 				var selectedIndex = event.detail.selected,
 					unselectedIndex = event.detail.unselected,
 					classList = this._ui.arcListviewSelection.classList,
-					selectedElement,
-					marqueeDiv,
-					widget;
+					selectedElement = null,
+					marqueeDiv = null,
+					marqueeWidget = null;
 
 				if (!event.defaultPrevented && this._state.items.length > 0) {
 					if (selectedIndex !== undefined) {
@@ -1278,13 +1319,14 @@
 						selectedElement.removeEventListener("transitionend", this, true);
 						selectedElement.removeEventListener("webkitTransitionEnd", this, true);
 						selectedElement.classList.remove(classes.SELECTED);
-						// stop marque;
+
+						// Stop marquee.
 						marqueeDiv = selectedElement.querySelector(".ui-arc-listview-text-content");
 						if (marqueeDiv) {
-							widget = ns.widget.Marquee(marqueeDiv);
-							if (widget) {
-								widget.reset();
-								widget.destroy();
+							marqueeWidget = ns.engine.getBinding(marqueeDiv);
+							if (marqueeWidget) {
+								marqueeWidget.stop();
+								marqueeWidget.reset();
 							}
 						}
 					}
@@ -1331,9 +1373,10 @@
 					if (toIndex < state.items.length) {
 						state.toIndex = toIndex;
 					}
-
-					self._roll();
 				}
+				// Do scroll regardless of 'toIndex' value. This will center content relative
+				// to clicked position.
+				self._roll();
 			};
 
 			prototype._onPageInit = function () {
@@ -1372,16 +1415,20 @@
 				}
 			}
 
-			prototype._buildArcListviewSelection = function (page) {
-				// find or add selection for current list element
-				var arcListviewSelection = page.querySelector(selectors.SELECTION);
+			prototype._buildArcListviewElement = function (parentElement, cssClass, options) {
+				// find or add element for current list element
+				var arcListviewElement = parentElement.querySelector(cssClass);
 
-				if (!arcListviewSelection) {
-					arcListviewSelection = document.createElement("div");
-					arcListviewSelection.classList.add(classes.SELECTION);
-					page.appendChild(arcListviewSelection);
+				if (!arcListviewElement) {
+					arcListviewElement = document.createElement("div");
+					arcListviewElement.classList.add(cssClass);
+					if (options && options.insertBefore) {
+						parentElement.insertBefore(arcListviewElement, parentElement.firstElementChild);
+					} else {
+						parentElement.appendChild(arcListviewElement);
+					}
 				}
-				return arcListviewSelection;
+				return arcListviewElement;
 			};
 
 			function buildArcListviewCarousel(carousel, count) {
@@ -1477,7 +1524,6 @@
 				var self = this,
 					element = self.element,
 					options = self.options,
-					arcListviewCarousel,
 					page,
 					scroller,
 					ui = self._ui,
@@ -1490,19 +1536,26 @@
 
 				scroller = selectorsUtil.getClosestBySelector(element, selectors.SCROLLER);
 
+
 				if (scroller) {
+					// disable tau rotaryScroller the widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
+
 					element.classList.add(WIDGET_CLASS, classes.PREFIX + visibleItemsCount);
 
 					self._getItemsFromElement();
 					self._createTextInputs();
 
-					ui.arcListviewSelection = self._buildArcListviewSelection(page);
-					arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
-					ui.arcListviewCarousel = arcListviewCarousel;
+					ui.arcListviewSelection = self._buildArcListviewElement(
+						scroller, classes.SELECTION, {
+							insertBefore: true
+						});
+					ui.arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
+					ui.dummyElement = self._buildArcListviewElement(page, classes.DUMMY_ELEMENT);
 
 					// append carousel outside scroller element
-					scroller.parentElement.appendChild(arcListviewCarousel);
-					self._ui.arcListviewCarousel.addEventListener("vclick", self, true);
+					scroller.parentElement.appendChild(ui.arcListviewCarousel);
+					ui.arcListviewCarousel.addEventListener("vclick", self, true);
 
 					// cache HTML elements
 					ui.scroller = scroller;
@@ -1544,6 +1597,10 @@
 
 				if (event.type === "pageinit") {
 					self._onPageInit(event);
+				} else if (event.type === "pageshow") {
+					self._selectItem(self._state.currentIndex);
+				} else if (event.type === "pagehide") {
+					self._removeHighlight();
 				} else if (page && page.classList.contains("ui-page-active")) {
 					// disable events on non active page
 					switch (event.type) {
@@ -1597,6 +1654,8 @@
 				page.addEventListener("touchmove", self, true);
 				page.addEventListener("touchend", self, true);
 				page.addEventListener("pageinit", self, true);
+				page.addEventListener("pageshow", self, true);
+				page.addEventListener("pagehide", self, true);
 				page.addEventListener("popupbeforeshow", self, true);
 				page.addEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
@@ -1660,6 +1719,8 @@
 				page.removeEventListener("touchmove", self, true);
 				page.removeEventListener("touchend", self, true);
 				page.removeEventListener("pageinit", self, true);
+				page.removeEventListener("pageshow", self, true);
+				page.removeEventListener("pagehide", self, true);
 				page.removeEventListener("popupbeforeshow", self, true);
 				page.removeEventListener("popupbeforehide", self, true);
 				if (self._ui.arcListviewCarousel) {
@@ -1715,7 +1776,10 @@
 				var self = this,
 					ui = self._ui,
 					arcListviewSelection = ui.arcListviewSelection,
-					arcListviewCarousel = ui.arcListviewCarousel;
+					arcListviewCarousel = ui.arcListviewCarousel,
+					dummyElement = ui.dummyElement,
+					marqueeDiv = null,
+					marqueeWidget = null;
 
 				self._unbindEvents();
 
@@ -1725,12 +1789,27 @@
 				});
 				self._items = [];
 
+				// Destroy marquee.
+				self._state.items.forEach(function (item) {
+					marqueeDiv = item.element.querySelector(".ui-arc-listview-text-content");
+					if (marqueeDiv) {
+						marqueeWidget = ns.engine.getBinding(marqueeDiv);
+						if (marqueeWidget) {
+							marqueeWidget.destroy();
+						}
+					}
+				});
+				self._state.items = [];
+
 				// remove added elements
 				if (arcListviewSelection && arcListviewSelection.parentElement) {
 					arcListviewSelection.parentElement.removeChild(arcListviewSelection);
 				}
 				if (arcListviewCarousel && arcListviewCarousel.parentElement) {
 					arcListviewCarousel.parentElement.removeChild(arcListviewCarousel);
+				}
+				if (dummyElement && dummyElement.parentElement) {
+					dummyElement.parentElement.removeChild(dummyElement);
 				}
 			};
 

@@ -55,7 +55,7 @@
 				ENABLING_DURATION = 300, // [ms]
 				ROLL_DURATION = 600,
 				DELTA_Y = 100,
-				DRAG_STEP_TO_VALUE = 30,
+				DRAG_STEP_TO_VALUE = 60,
 				VIBRATION_DURATION = 10,
 				lastDragValueChange = 0,
 				dragGestureInstance = null,
@@ -505,6 +505,9 @@
 					}, ENABLING_DURATION);
 					element.classList.add(classes.ENABLED);
 					utilsEvents.on(document, "drag dragend", self);
+
+					// disable tau rotaryScroller the widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
 				} else {
 					element.classList.add(classes.ENABLING);
 					window.setTimeout(function () {
@@ -513,6 +516,10 @@
 					}, ENABLING_DURATION);
 					element.classList.remove(classes.ENABLED);
 					utilsEvents.off(document, "drag dragend", self);
+					// disable animation
+					self._animation.stop();
+					// enable tau rotaryScroller the widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.unlock();
 				}
 				// reset previous value;
 				this._prevValue = null;
@@ -597,7 +604,7 @@
 			prototype._unbindEvents = function () {
 				var self = this;
 
-				utilsEvents.off(self.element, "drag dragend", self);
+				utilsEvents.off(document, "drag dragend", self);
 				utilsEvents.off(self.element, "click", self);
 			};
 

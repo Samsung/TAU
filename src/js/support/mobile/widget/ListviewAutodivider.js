@@ -107,7 +107,7 @@
 				 * @static
 				 * @private
 				 */
-				beforeRefreshListItems = function beforeRefreshListItems(listview, element) {
+				beforeRefreshListItems = function (listview, element) {
 					if (listview.options.autodividers) {
 						listview._addAutodividers(element);
 					}
@@ -142,7 +142,7 @@
 				 * @static
 				 * @private
 				 */
-				removeDividers = function removeDividers(list) {
+				removeDividers = function (list) {
 					var liCollection = selectors.getChildrenBySelector(list, "li[data-role='list-divider']"),
 						i,
 						len = liCollection.length;
@@ -161,7 +161,7 @@
 				 * @static
 				 * @private
 				 */
-				insertAutodividers = function insertAutodividers(self, list) {
+				insertAutodividers = function (self, list) {
 					/*
 					 * @property {NodeList} liCollection collection of HTMLLIElements
 					 */
@@ -216,7 +216,7 @@
 				 * @static
 				 * @private
 				 */
-				replaceDividers = function replaceDividers(self, list) {
+				replaceDividers = function (self, list) {
 					// remove dividers if exists;
 					removeDividers(list);
 					// insert new dividers;
@@ -394,7 +394,7 @@
 			 * @instance
 			 * @protected
 			 */
-			Listview.prototype._destroy = function _destroy() {
+			Listview.prototype._destroy = function () {
 				var element = this.element;
 
 				element.removeEventListener("beforerefreshitems",

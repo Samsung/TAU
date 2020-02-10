@@ -145,7 +145,16 @@
 				engine = ns.engine,
 				utilsEvents = ns.event,
 				eventTrigger = utilsEvents.trigger,
+				gesture = ns.event.gesture,
 				prototype = new BaseWidget(),
+				DRAG_STEP_TO_VALUE = 60,
+				VIBRATION_DURATION = 10,
+				lastDragValueChange = 0,
+				dragGestureInstance = null,
+				swipeGestureInstance = null,
+				swipeNumber = 0,
+				SECOND_SWIPE_TIMEOUT = 500, //ms
+				swipeTimeout = null,
 
 				CircularIndexScrollbar = function () {
 					this._phase = null;
@@ -173,7 +182,19 @@
 					 * @event select
 					 * @member ns.widget.wearable.CircularIndexScrollbar
 					 */
-					SELECT: "select"
+					SELECT: "select",
+					/**
+					 * Event triggered before show popup with letter
+					 * @event show
+					 * @member ns.widget.wearable.CircularIndexScrollbar
+					 */
+					SHOW: "show",
+					/**
+					 * Event triggered before hide popup with letter
+					 * @event show
+					 * @member ns.widget.wearable.CircularIndexScrollbar
+					 */
+					HIDE: "hide"
 				},
 
 				classes = {
@@ -465,6 +486,97 @@
 				}
 			};
 
+			function hideWithTimeout(self) {
+				// disable previous timeout
+				clearTimeout(self._tid.phaseThree);
+
+				self._tid.phaseThree = setTimeout(function () {
+					self._hidePopup();
+					self._disableDrag();
+					// enable swipe event listener previously disabled on show indicator
+					utilsEvents.on(document, "swipe", self);
+				}, 1000);
+			}
+
+			prototype._onDrag = function (ev) {
+				var self = this,
+					dragValue;
+
+				hideWithTimeout(self);
+
+				if (self._phase === 3) {
+					dragValue = ev.detail.deltaY - lastDragValueChange;
+
+					if (Math.abs(dragValue) > DRAG_STEP_TO_VALUE) {
+						lastDragValueChange = ev.detail.deltaY;
+						// direction described in guideline doesn't make sense,
+						// the direction was changed to the opposite
+						if (ev.detail.deltaY < 0) {
+							self._nextIndex();
+						} else {
+							self._prevIndex();
+						}
+						window.navigator.vibrate(VIBRATION_DURATION);
+					}
+				}
+			}
+
+			prototype._onDragEnd = function () {
+				lastDragValueChange = 0;
+			};
+
+			function resetSwipeWithTimeout() {
+				swipeNumber = 0;
+				swipeTimeout = null;
+			}
+
+			prototype._onSwipe = function () {
+				var self = this;
+
+				window.clearTimeout(swipeTimeout);
+				if (swipeNumber === 1) {
+					utilsEvents.off(document, "swipe", self);
+					self._phase = 3;
+					swipeNumber = 0;
+					self._showPopup();
+					self._enableDrag();
+
+					hideWithTimeout(self);
+				} else {
+					swipeNumber = 1;
+					swipeTimeout = window.setTimeout(resetSwipeWithTimeout, SECOND_SWIPE_TIMEOUT);
+				}
+			};
+
+			prototype._enableDrag = function () {
+				var self = this;
+
+				self.element.style.pointerEvents = "all";
+				utilsEvents.on(document, "drag dragend", self);
+			};
+
+			prototype._disableDrag = function () {
+				var self = this;
+
+				self.element.style.pointerEvents = "none";
+				utilsEvents.off(document, "drag dragend", self);
+			};
+
+			prototype._showPopup = function () {
+				var self = this;
+
+				eventTrigger(self.element, EventType.SHOW);
+				self.element.classList.add(classes.SHOW);
+			};
+
+			prototype._hidePopup = function () {
+				var self = this;
+
+				eventTrigger(self.element, EventType.HIDE);
+				self.element.classList.remove(classes.SHOW);
+				self._phase = 1;
+			};
+
 			/**
 			 * This method is for phase 3 operation.
 			 * @method _rotaryPhaseThree
@@ -475,14 +587,12 @@
 			prototype._rotaryPhaseThree = function (direction) {
 				var self = this;
 
-				clearTimeout(self._tid.phaseThree);
-				self._tid.phaseThree = setTimeout(function () {
-					self.element.classList.remove(classes.SHOW);
-					self._phase = 1;
-				}, 1000);
+				hideWithTimeout(self);
 
 				if (self._phase === 3) {
-					self.element.classList.add(classes.SHOW);
+					self._showPopup();
+					self._enableDrag();
+
 					if (direction === rotaryDirection.CW) {
 						self._nextIndex();
 					} else {
@@ -505,6 +615,15 @@
 					case "rotarydetent":
 						self._rotary(event);
 						break;
+					case "drag":
+						self._onDrag(event);
+						break;
+					case "dragend":
+						self._onDragEnd(event);
+						break;
+					case "swipe":
+						self._onSwipe(event);
+						break;
 				}
 			};
 
@@ -517,7 +636,23 @@
 			prototype._bindEvents = function () {
 				var self = this;
 
+				// enabled drag gesture for document
+				if (dragGestureInstance === null) {
+					dragGestureInstance = new gesture.Drag({
+						blockHorizontal: true
+					});
+					utilsEvents.enableGesture(document, dragGestureInstance);
+				}
+				// enabled drag gesture for document
+				if (swipeGestureInstance === null) {
+					swipeGestureInstance = new gesture.Swipe({
+						orientation: gesture.Orientation.VERTICAL
+					});
+					utilsEvents.enableGesture(document, swipeGestureInstance);
+				}
+
 				utilsEvents.on(document, "rotarydetent", self);
+				utilsEvents.on(document, "swipe", self);
 			};
 
 			/**
@@ -529,7 +664,10 @@
 			prototype._unbindEvents = function () {
 				var self = this;
 
+				utilsEvents.disableGesture(document, dragGestureInstance);
+				utilsEvents.disableGesture(document, swipeGestureInstance);
 				utilsEvents.off(document, "rotarydetent", self);
+				utilsEvents.off(document, "swipe", self);
 			};
 
 			/**

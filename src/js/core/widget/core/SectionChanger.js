@@ -562,6 +562,9 @@
 						}
 					}
 
+					// disable tau rotaryScroller, this widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
+
 					document.addEventListener("rotarydetent", self, true);
 				},
 
@@ -580,6 +583,9 @@
 					}
 
 					document.removeEventListener("rotarydetent", self, true);
+
+					// disable tau rotaryScroller, this widget has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.unlock();
 				},
 
 				/**

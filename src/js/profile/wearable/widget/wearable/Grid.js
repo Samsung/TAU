@@ -147,7 +147,7 @@
 				 * @param {Function} onEnd
 				 * @return {Object}
 				 */
-				anim = function anim(items, duration, timingFn, drawFn, onEnd) {
+				anim = function (items, duration, timingFn, drawFn, onEnd) {
 					// item (or items) should has properties: from, to
 
 					var state = {
@@ -863,6 +863,9 @@
 
 				// set proper grid look
 				self.mode(options.mode);
+
+				// disable tau rotaryScroller the widget has own support for rotary event
+				ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
 			};
 
 			function findChildIndex(self, target) {
@@ -1333,7 +1336,7 @@
 				updateItemsFrom(items);
 				self._assembleItemsTo3x3(items);
 
-				anim(items, TRANSFORM_DURATION, changeItems, transformItem, function onTransitionEnd() {
+				anim(items, TRANSFORM_DURATION, changeItems, transformItem, function () {
 					element.style[self._scrollSize] = getGridSize(self, "3x3") + "px";
 					self._updateSnapPointPositions();
 				});

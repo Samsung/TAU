@@ -20,7 +20,7 @@
  * Contains helper function to gesture support.
  * @class ns.event.gesture.utils
  */
-(function (ns, Math) {
+(function (ns, math) {
 	"use strict";
 	//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 	define([
@@ -60,8 +60,8 @@
 					});
 
 					return {
-						clientX: (Math.min.apply(Math, valuesX) + Math.max.apply(Math, valuesX)) / 2,
-						clientY: (Math.min.apply(Math, valuesY) + Math.max.apply(Math, valuesY)) / 2
+						clientX: (math.min.apply(math, valuesX) + math.max.apply(math, valuesX)) / 2,
+						clientY: (math.min.apply(math, valuesY) + math.max.apply(math, valuesY)) / 2
 					};
 				},
 
@@ -78,8 +78,8 @@
 				 */
 				getVelocity: function (deltaTime, deltaX, deltaY) {
 					return {
-						x: Math.abs(deltaX / deltaTime) || 0,
-						y: Math.abs(deltaY / deltaTime) || 0
+						x: math.abs(deltaX / deltaTime) || 0,
+						y: math.abs(deltaY / deltaTime) || 0
 					};
 				},
 
@@ -95,7 +95,7 @@
 					var y = touch2.clientY - touch1.clientY,
 						x = touch2.clientX - touch1.clientX;
 
-					return Math.atan2(y, x) * 180 / Math.PI;
+					return math.atan2(y, x) * 180 / math.PI;
 				},
 
 			/**
@@ -107,8 +107,8 @@
 				 * @member ns.event.gesture.utils
 				 */
 				getDirection: function (touch1, touch2) {
-					var x = Math.abs(touch1.clientX - touch2.clientX),
-						y = Math.abs(touch1.clientY - touch2.clientY);
+					var x = math.abs(touch1.clientX - touch2.clientX),
+						y = math.abs(touch1.clientY - touch2.clientY);
 
 					if (x >= y) {
 						return touch1.clientX - touch2.clientX > 0 ? gesture.Direction.LEFT : gesture.Direction.RIGHT;
@@ -128,7 +128,7 @@
 					var x = touch2.clientX - touch1.clientX,
 						y = touch2.clientY - touch1.clientY;
 
-					return Math.sqrt((x * x) + (y * y));
+					return math.sqrt((x * x) + (y * y));
 				},
 
 			/**

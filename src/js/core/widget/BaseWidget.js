@@ -196,7 +196,7 @@
 				 */
 				objectUtils = util.object,
 				selectorUtils = util.selectors,
-				Set = util.Set,
+				setUtils = util.Set,
 				BaseWidget = function () {
 					this.flowState = "created";
 					return this;
@@ -365,7 +365,7 @@
 				if (options) {
 					Object.keys(options).forEach(function (option) {
 						var attributeName = utilString.camelCaseToDashes(option),
-							baseValue,
+							baseValue = getNSData(element, attributeName, true),
 							prefixedValue = getNSData(element, attributeName);
 
 						if (prefixedValue !== null) {
@@ -400,13 +400,11 @@
 							return;
 						}
 
-						baseValue = getNSData(element, attributeName, true);
 						if (baseValue !== null) {
 							options[option] = baseValue;
 						}
 					});
 				}
-
 				return options;
 			};
 
@@ -1150,6 +1148,7 @@
 				if (this.element) {
 					return eventUtils.trigger(this.element, eventName, data, bubbles, cancelable);
 				}
+				return false;
 			};
 
 			/**
@@ -1185,7 +1184,7 @@
 					func();
 				}
 				if (func !== undefined) {
-					util.requestAnimationFrame(function frameFlowCallback() {
+					util.requestAnimationFrame(function () {
 						self._framesFlow.apply(self, args);
 					});
 				}
@@ -1231,14 +1230,16 @@
 				var classList = stateObject.classList;
 
 				if (classList !== undefined) {
-					if (classList instanceof Set) {
+					if (classList instanceof setUtils) {
 						classList.clear();
 					} else {
-						classList = new Set();
+						classList = new setUtils();
 						stateObject.classList = classList;
 					}
 					if (element.classList.length) {
-						classList.add.apply(classList, slice.call(element.classList));
+						slice.call(element.classList).forEach(function (className) {
+							classList.add(className);
+						});
 					}
 				}
 			}
@@ -1262,13 +1263,13 @@
 				var recalculate = false;
 
 				if (stateObject.classList !== undefined) {
-					slice.call(element.classList).forEach(function renderRemoveClassList(className) {
+					slice.call(element.classList).forEach(function (className) {
 						if (!stateObject.classList.has(className)) {
 							element.classList.remove(className);
 							recalculate = true;
 						}
 					});
-					stateObject.classList.forEach(function renderAddClassList(className) {
+					stateObject.classList.forEach(function (className) {
 						if (!element.classList.contains(className)) {
 							element.classList.add(className);
 							recalculate = true;
@@ -1276,12 +1277,12 @@
 					});
 				}
 				if (stateObject.style !== undefined) {
-					Object.keys(stateObject.style).forEach(function renderUpdateStyle(styleName) {
+					Object.keys(stateObject.style).forEach(function (styleName) {
 						element.style[styleName] = stateObject.style[styleName];
 					});
 				}
 				if (stateObject.children !== undefined) {
-					stateObject.children.forEach(function renderChildren(child, index) {
+					stateObject.children.forEach(function (child, index) {
 						render(child, element.children[index], true);
 					});
 				}

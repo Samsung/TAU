@@ -14,19 +14,41 @@ document.addEventListener("tauinit", function () {
 			 * list - NodeList object for lists in the page
 			 */
 			var page = event.target,
+				pageWidget = tau.widget.Page(page),
 				pageId = page.id,
 				list;
+
+			if (pageWidget.option("enablePageScroll")) {
+				tau.util.rotaryScrolling.enable(page.querySelector(".ui-scroller"));
+			}
 
 			if (!page.classList.contains("page-snaplistview") &&
 				pageId !== "page-snaplistview" &&
 				pageId !== "page-swipelist" &&
 				pageId !== "page-marquee-list" &&
-				pageId !== "page-multiline-list") {
+				pageId !== "page-multiline-list" &&
+				pageId !== "drawer-page") {
 				list = page.querySelector(".ui-listview");
 				if (list) {
 					tau.widget.Listview(list);
 				}
 			}
+		}, true);
+		document.addEventListener("pagebeforehide", function (event) {
+			var page = event.target,
+				pageWidget = tau.widget.Page(page);
+
+			if (pageWidget.option("enablePageScroll")) {
+				tau.util.rotaryScrolling.disable(page.querySelector(".ui-scroller"));
+			}
+		});
+		document.addEventListener("popupshow", function (event) {
+			var popup = event.target;
+
+			tau.util.rotaryScrolling.enable(popup.querySelector(".ui-popup-wrapper"));
+		});
+		document.addEventListener("popuphide", function () {
+			tau.util.rotaryScrolling.disable();
 		});
 	}
 });

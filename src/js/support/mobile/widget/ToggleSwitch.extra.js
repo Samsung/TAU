@@ -534,9 +534,6 @@
 
 					// If changes came from input value change
 				} else {
-					if (value === null) {
-						value = getInitialValue(tagName, control);
-					}
 					if (isNaN(value)) {
 						return;
 					}

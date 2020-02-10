@@ -2,7 +2,6 @@
 
 The TAU library contains components which allows you to create Web Application UI. Each components represents UI element, such as a button or slider, which gives you interaction and manipulation features.
 
-
 ## Getting Started
 
 - Clone a copy of the master branch in the TAU Git repository:
@@ -59,14 +58,31 @@ Demo application is available on https://samsung.github.io/TAU:
 - https://code.tizen.org/TAU/1.1/examples/mobile/UIComponents/ (Mobile)
 - https://code.tizen.org/TAU/1.1/examples/wearable/UIComponents/ (Wearable)
 
-If you want to test your own version of demo app run:
+If you want to test your own version of demo app it is available under following paths in repository:
 
-`npm run http-server`
+* mobile: `examples\mobile\UIComponents`
+* wearable: `examples\wearable\UIComponents`
 
-and visit appropriate local site:
+In order to test it:
 
-* http://localhost:8888/examples/mobile/UIComponents/
+- Install http-server in TAU directory
+
+`npm install http-server -g`
+
+- Launch server in TAU directory:
+
+`npx http-server -p <port> -a localhost`
+
+e.g. `npx http-server -p 8888 -a localhost`
+
+- Visit appropriate site:
+
+`http://localhost:PORT/examples/PROFILE/UIComponents/`
+
+e.g.
+
 * http://localhost:8888/examples/wearable/UIComponents/
+* http://localhost:8888/examples/mobile/UIComponents/
 
 ### Coding style tests
 

@@ -383,7 +383,18 @@
 					self = this,
 					fromColor,
 					toColor,
-					prefix;
+					prefix,
+					animate = function () {
+						activeElementStyle.background = "-webkit-linear-gradient(" + prefix + ", " + fromColor + " 0%, " + toColor + " " + deltaX + "%)";
+						if (anim && deltaX < self.options.animationDuration) {
+							self._animating = true;
+							deltaX += self.options.animationInterval;
+							window.webkitRequestAnimationFrame(animate);
+						} else if (anim && deltaX >= self.options.animationDuration) {
+							self._animating = false;
+							self._transitionEnd();
+						}
+					};
 
 				if (this.swipeLeftElement && translateX >= 0) {
 					// left
@@ -397,17 +408,7 @@
 					deltaX = Math.abs(deltaX);
 				}
 
-				(function animate() {
-					activeElementStyle.background = "-webkit-linear-gradient(" + prefix + ", " + fromColor + " 0%, " + toColor + " " + deltaX + "%)";
-					if (anim && deltaX < self.options.animationDuration) {
-						self._animating = true;
-						deltaX += self.options.animationInterval;
-						window.webkitRequestAnimationFrame(animate);
-					} else if (anim && deltaX >= self.options.animationDuration) {
-						self._animating = false;
-						self._transitionEnd();
-					}
-				}());
+				animate();
 			};
 
 			prototype._findSwipeTarget = function (element) {
