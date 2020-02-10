@@ -181,6 +181,7 @@
 			 */
 			function render(path, data, callback, engineName) {
 				var templateFunction = templateFunctions[engineName || get("default") || ""],
+					targetPath,
 					targetCallback = function (status, element) {
 						// add current patch
 						status.absUrl = targetPath;
@@ -195,8 +196,7 @@
 							targetPath = getAbsUrl(path, false);
 							templateFunction(globalOptions, targetPath, data || {}, targetCallback);
 						}
-					},
-					targetPath;
+					};
 
 				// if template engine name and default name is not given then we
 				// take first registered engine

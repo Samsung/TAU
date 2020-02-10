@@ -11,7 +11,7 @@
 			try {
 				this.systeminfo.addPropertyValueChangeListener(
 					"BATTERY",
-					function change(battery) {
+					function (battery) {
 						if (!battery.isCharging) {
 							try {
 								tizen.application.getCurrentApplication().exit();
@@ -22,7 +22,7 @@
 					{
 						lowThreshold: self.lowThreshold
 					},
-					function onError(error) {
+					function (error) {
 						console.warn("An error occurred " + error.message);
 					}
 				);

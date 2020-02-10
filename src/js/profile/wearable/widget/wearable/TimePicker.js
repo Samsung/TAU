@@ -789,8 +789,8 @@
 
 				utilsEvents.off(document, "rotarydetent", self, true);
 				utilsEvents.off(document, "click", self, true);
-				utilsEvents.on(ui.numberMinutes, "spinchange", self, true);
-				utilsEvents.on(ui.numberHours, "spinchange", self, true);
+				utilsEvents.off(ui.numberMinutes, "spinchange", self, true);
+				utilsEvents.off(ui.numberHours, "spinchange", self, true);
 			};
 
 			TimePicker.prototype = prototype;

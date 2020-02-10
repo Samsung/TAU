@@ -46,10 +46,12 @@
 			 * @param {Event} event Event object
 			 */
 			function rotaryDetentHandler(event) {
-				if (event.detail.direction === "CW") {
-					element.scrollTop += scrollStep;
-				} else {
-					element.scrollTop -= scrollStep;
+				if (element.getAttribute("data-lock-rotary-scroll") !== "true") {
+					if (event.detail.direction === "CW") {
+						element.scrollTop += scrollStep;
+					} else {
+						element.scrollTop -= scrollStep;
+					}
 				}
 			}
 
@@ -76,6 +78,25 @@
 			function disable() {
 				scrollStep = 40;
 				document.removeEventListener("rotarydetent", rotaryDetentHandler);
+				element = null;
+			}
+
+			/**
+			 * Lock rotary scrolling for current scrolling container
+			 * @method lock
+			 * @memberof ns.util.rotaryScrolling
+			 */
+			function lock() {
+				element && element.setAttribute("data-lock-rotary-scroll", true);
+			}
+
+			/**
+			 * Unlock rotary scrolling for current scrolling container
+			 * @method unlock
+			 * @memberof ns.util.rotaryScrolling
+			 */
+			function unlock() {
+				element && element.removeAttribute("data-lock-rotary-scroll");
 			}
 
 			/**
@@ -100,6 +121,8 @@
 
 			rotaryScrolling.enable = enable;
 			rotaryScrolling.disable = disable;
+			rotaryScrolling.lock = lock;
+			rotaryScrolling.unlock = unlock;
 			rotaryScrolling.setScrollStep = setScrollStep;
 			rotaryScrolling.getScrollStep = getScrollStep;
 

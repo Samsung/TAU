@@ -337,7 +337,7 @@
 						return getInstanceByElement(binding, element, type);
 					} else {
 						// Check if widget has wrapper and find base element
-						if (element && typeof element.hasAttribute === TYPE_FUNCTION &&
+						if (typeof element.hasAttribute === TYPE_FUNCTION &&
 								element.hasAttribute(DATA_WIDGET_WRAPPER)) {
 							baseElement = slice.call(element.children).filter(filterBuiltWidget)[0];
 							if (baseElement) {
@@ -900,6 +900,16 @@
 				processHollowWidget(queueItem.element || queueItem, widgetDefinitions[queueItem.widgetName]);
 			}
 
+			function boundPerfListener() {
+				document.removeEventListener(eventType.BOUND, boundPerfListener);
+				window.tauPerf.get("engine/createWidgets", "event: " + eventType.BOUND);
+			}
+
+			function builtPerfListener() {
+				document.removeEventListener("built", builtPerfListener);
+				window.tauPerf.get("engine/createWidgets", "event: built");
+			}
+
 			/**
 			 * Build widgets on all children of context element
 			 * @method createWidgets
@@ -963,14 +973,8 @@
 				buildQueue.forEach(processBuildQueueItem);
 
 				//>>excludeStart("tauPerformance", pragmas.tauPerformance);
-				document.addEventListener(eventType.BOUND, function _boundPerfListener() {
-					document.removeEventListener(eventType.BOUND, _boundPerfListener);
-					window.tauPerf.get("engine/createWidgets", "event: " + eventType.BOUND);
-				});
-				document.addEventListener("built", function _builtPerfListener() {
-					document.removeEventListener("built", _builtPerfListener);
-					window.tauPerf.get("engine/createWidgets", "event: built");
-				});
+				document.addEventListener(eventType.BOUND, boundPerfListener);
+				document.addEventListener("built", builtPerfListener);
 				//>>excludeEnd("tauPerformance");
 
 				eventUtils.trigger(document, "built");

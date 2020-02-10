@@ -163,8 +163,10 @@
 					self._currentIndex = null;
 					self._enabled = true;
 					self._isTouched = false;
+					self._isScrollToPosition = false;
 					self._scrollEventCount = 0;
 					self._marginTop = 0;
+					self._headerHeight = 0;
 				},
 
 				prototype = new BaseWidget(),
@@ -291,19 +293,12 @@
 				return listItem.element.style.display !== "none";
 			}
 
-			function getScrollPosition(scrollableParentElement) {
-				return -scrollableParentElement.firstElementChild.getBoundingClientRect().top;
-			}
-
 			function setSelection(self) {
 				var ui = self._ui,
 					listItems = self._listItems,
 					scrollableParent = ui.scrollableParent,
 					scrollableParentHeight = scrollableParent.height || ui.page.offsetHeight,
-					scrollableParentElement = scrollableParent.element || ui.page,
-					scrollCenter = getScrollPosition(scrollableParentElement) +
-						scrollableParentHeight / 2 +
-						self._marginTop,
+					scrollCenter = scrolling.getScrollPosition() + scrollableParentHeight / 2,
 					listItemLength = listItems.length,
 					tempListItem,
 					tempListItemCoord,
@@ -349,28 +344,21 @@
 			prototype._listItemAnimate = function (scrollValue) {
 				var self = this,
 					anim = self.options.animate,
-					animateCallback = self._callbacks[anim],
-					scrollPosition,
-					scrollableParentElement = self._ui.scrollableParent.element || self._ui.page;
+					animateCallback = self._callbacks[anim];
 
 				if (animateCallback) {
-					scrollPosition = scrollValue ||
-						(getScrollPosition(scrollableParentElement) + self._marginTop);
-
 					utilArray.forEach(self._listItems, function (item) {
-						item.animate(scrollPosition, animateCallback);
+						item.animate(scrollValue, animateCallback);
 					});
 				}
 			};
 
 			function scrollEndCallback(self) {
-				if (self._isTouched === false) {
-					self._isScrollStarted = false;
-					// trigger "scrollend" event
-					utilEvent.trigger(self.element, eventType.SCROLL_END);
+				self._isScrollStarted = false;
+				// trigger "scrollend" event
+				utilEvent.trigger(self.element, eventType.SCROLL_END);
 
-					setSelection(self);
-				}
+				setSelection(self);
 			}
 
 			function scrollHandler(self, event) {
@@ -389,7 +377,9 @@
 					removeSelectedClass(self);
 				}
 
-				self._listItemAnimate(event && event.detail && event.detail.scrollTop);
+				if (event && event.detail) {
+					self._listItemAnimate(event.detail.scrollTop);
+				}
 
 				// scrollend handler can be run only when all touches are released.
 				if (self._isTouched === false) {
@@ -404,7 +394,6 @@
 
 			function onTouchEnd(self) {
 				self._isTouched = false;
-				setSelection(self);
 			}
 
 			function onRotary(self) {
@@ -447,14 +436,29 @@
 				// finding page  and scroller
 				ui.page = utilSelector.getClosestByClass(listview, "ui-page") || document.body;
 
-				scroller = getScrollableParent(listview);
+				scroller = getScrollableParent(listview) ||
+					ui.page.querySelector(".ui-scroller") ||
+					ui.page;
 				if (scroller) {
+					// disable tau rotaryScroller the snaplistview has own support for rotary event
+					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
+
+					scroller.classList.add(classes.SNAP_CONTAINER);
+					ui.scrollableParent.element = scroller;
+
+					visibleOffset = scroller.clientHeight;
+					ui.scrollableParent.height = visibleOffset;
+
+					listItem = listview.querySelector(self.options.selector);
+					if (!listItem) {
+						return scroller;
+					}
+
 					if (!scrolling.isElement(scroller)) {
 						scrolling.enable(scroller, "y");
 					}
 
-					listItem = listview.querySelector(self.options.selector);
-					elementHeight = (listItem) ? listItem.getBoundingClientRect().height : 0;
+					elementHeight = listItem.getBoundingClientRect().height;
 
 					scrollMargin = listview.getBoundingClientRect().top -
 						scroller.getBoundingClientRect().top - elementHeight / 2;
@@ -467,12 +471,6 @@
 							length: item.coord.height
 						};
 					}));
-
-					scroller.classList.add(classes.SNAP_CONTAINER);
-					ui.scrollableParent.element = scroller;
-
-					visibleOffset = scroller.clientHeight;
-					ui.scrollableParent.height = visibleOffset;
 				}
 				return scroller;
 			};
@@ -484,7 +482,8 @@
 					listItems = [],
 					scroller = ui.scrollableParent.element,
 					visibleOffset,
-					contentElement;
+					contentElement,
+					header;
 
 				if (!scroller) {
 					scroller = self._initSnapListview(listview);
@@ -495,6 +494,9 @@
 				if (contentElement) {
 					self._marginTop = parseInt(window.getComputedStyle(contentElement).marginTop, 10);
 				}
+
+				header = ui.page.querySelector(".ui-header");
+				self._headerHeight = (header) ? header.offsetHeight : 0;
 
 				// init information about widget
 				self._selectedIndex = null;
@@ -508,6 +510,11 @@
 						self._currentIndex = index;
 					}
 				});
+
+				if (listItems.length == 0) {
+					return;
+				}
+
 				scrolling.setSnapSize(listItems.map(function (item) {
 					return {
 						position: item.coord.top,
@@ -516,7 +523,7 @@
 				}));
 
 				self._listItems = listItems;
-				self._listItemAnimate();
+				self._listItemAnimate(scrolling.getScrollPosition());
 			};
 
 			/**
@@ -667,7 +674,7 @@
 				self._unbindEvents();
 
 				scroller = getScrollableParent(self.element);
-				if (scroller) {
+				if (scroller && !self._isScrollToPosition) {
 					scroller.scrollTop = 0;
 				}
 
@@ -675,6 +682,7 @@
 				self._callbacks = null;
 				self._listItems = null;
 				self._isScrollStarted = null;
+				self._isScrollToPosition = null;
 
 				if (self._scrollEndTimeoutId) {
 					window.clearTimeout(self._scrollEndTimeoutId);
@@ -682,6 +690,7 @@
 				self._scrollEndTimeoutId = null;
 				self._selectedIndex = null;
 				self._currentIndex = null;
+				self._headerHeight = null;
 
 				scrolling.disable();
 
@@ -727,7 +736,7 @@
 			 * @member ns.widget.wearable.SnapListview
 			 */
 			prototype.getSelectedIndex = function () {
-				return this._currentIndex || this._selectedIndex;
+				return this._selectedIndex;
 			};
 
 			function vClickHandler(self, e) {
@@ -810,7 +819,6 @@
 					scrollableParent = ui.scrollableParent,
 					listItemLength = listItems.length,
 					listItem = listItems[index],
-					listItemIndex,
 					dest;
 
 				// if list is disabled or selected index is out of range, or item on selected index
@@ -821,11 +829,18 @@
 				}
 
 				self._currentIndex = index;
+				self._isScrollToPosition = true;
 
 				removeSelectedClass(self);
 
-				listItemIndex = listItems[index].coord;
-				dest = listItemIndex.top - scrollableParent.height / 2 + listItemIndex.height / 2;
+				dest = scrolling.getScrollPositionByIndex(index);
+
+				// FIXME: If you scroll to the last index, the position
+				// may be slightly affected by the height of header. We
+				// need to find the correct solution.
+				if (index == listItemLength - 1) {
+					dest -= self._headerHeight;
+				}
 
 				if (skipAnimation) {
 					scrollableParent.element.scrollTop = dest;
@@ -854,34 +869,35 @@
 
 			function scrollAnimation(element, from, to, duration, callback) {
 				var easeOut = cubicBezier(0.25, 0.46, 0.45, 1),
-					startTime = 0,
 					currentTime = 0,
 					progress = 0,
 					easeProgress = 0,
 					distance = to - from,
-					animationTimer = SnapListview.animationTimer;
+					animationTimer = SnapListview.animationTimer,
+					startTime = window.performance.now(),
+					animation = function () {
+						var gap;
 
-				startTime = window.performance.now();
+						currentTime = window.performance.now();
+						progress = (currentTime - startTime) / duration;
+						easeProgress = easeOut(progress);
+						gap = distance * easeProgress;
+						element.scrollTop = from + gap;
+						if (progress <= 1 && progress >= 0) {
+							animationTimer = window.requestAnimationFrame(animation);
+						} else {
+							animationTimer = null;
+							if (callback && typeof callback === "function") {
+								callback();
+							}
+						}
+					};
+
 				if (animationTimer !== null) {
 					window.cancelAnimationFrame(animationTimer);
 				}
-				animationTimer = window.requestAnimationFrame(function animation() {
-					var gap;
 
-					currentTime = window.performance.now();
-					progress = (currentTime - startTime) / duration;
-					easeProgress = easeOut(progress);
-					gap = distance * easeProgress;
-					element.scrollTop = from + gap;
-					if (progress <= 1 && progress >= 0) {
-						animationTimer = window.requestAnimationFrame(animation);
-					} else {
-						animationTimer = null;
-						if (callback && typeof callback === "function") {
-							callback();
-						}
-					}
-				});
+				animationTimer = window.requestAnimationFrame(animation);
 			}
 
 			SnapListview.prototype = prototype;

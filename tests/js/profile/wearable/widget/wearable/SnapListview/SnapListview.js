@@ -177,12 +177,12 @@
 				assert.ok(true, "method: ns.utill.array was called");
 			});
 
-			snaplistWidget._listItemAnimate();
+			snaplistWidget._listItemAnimate(0 /* scroll position */);
 
 			helpers.restoreStub(ns.util.array, "forEach");
 		});
 
-		QUnit.test("scrollHandler", 3, function (assert) {
+		QUnit.test("scrollHandler", 4, function (assert) {
 			var snaplistWidget = new SnapListview({animate: "scale"}),
 				element = document.getElementById("snap-list");
 
@@ -192,12 +192,17 @@
 			snaplistWidget._isScrollStarted = true;
 			snaplistWidget._isTouched = true;
 
-			helpers.stub(snaplistWidget, "_listItemAnimate", function () {
+			helpers.stub(snaplistWidget, "_listItemAnimate", function (scrollPos) {
 				assert.ok(true, "method: _listItemAnimate was called");
+				assert.ok(scrollPos !== undefined, "method: _listItemAnimate has parameter");
 			});
 
 			assert.equal(snaplistWidget._scrollEventCount, 0, "not event one scrollHandler was generated");
-			snaplistWidget._callbacks.scroll(snaplistWidget);
+			snaplistWidget._callbacks.scroll(new CustomEvent("scroll", {
+				detail: {
+					scrollTop: 0
+				}
+			}));
 			assert.equal(snaplistWidget._scrollEventCount, 1, "scrollHandler was generated");
 
 			helpers.restoreStub(snaplistWidget, "_listItemAnimate");

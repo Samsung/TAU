@@ -127,10 +127,6 @@
 					return;
 				}
 
-				if (value === 0) {
-					value = "0";
-				}
-
 				pat = dom.getNSData(target, "pat");
 				targetClassList = target.classList;
 
@@ -143,12 +139,11 @@
 						if (pat.charAt(0) === "h") {
 							if (hour > 12) {
 								hour -= 12;
-							} else if (hour === "0") {
+							} else if (hour === 0) {
 								hour = 12;
 							}
 						}
-						hour = makeTwoDigits(hour);
-						text = hour;
+						text = makeTwoDigits(hour);
 						break;
 					case "m":
 					case "M":
@@ -173,13 +168,12 @@
 						break;
 					case "yyyy":
 						if (value < 10) {
-							value = "000" + value;
+							text = "000" + value;
 						} else if (value < 100) {
-							value = "00" + value;
+							text = "00" + value;
 						} else if (value < 1000) {
-							value = "0" + value;
+							text = "0" + value;
 						}
-						text = value;
 						break;
 					case "t":
 					case "tt":
@@ -427,6 +421,8 @@
 							case 4:
 								values = getCalendar().months.names.slice();
 								break;
+							default:
+								values = [];
 						}
 						if (values.length === 13) { // @TODO Lunar calendar support
 							if (values[12] === "") { // to remove lunar calendar reserved space

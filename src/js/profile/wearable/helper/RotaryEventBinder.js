@@ -70,28 +70,28 @@
 
 			function scrollAnimation(element, from, to, duration) {
 				var easeOut = cubicBezier(0.25, 0.46, 0.45, 1),
-					startTime = 0,
 					currentTime = 0,
 					progress = 0,
 					easeProgress = 0,
 					distance = to - from,
-					scrollTop = from;
+					scrollTop = from,
+					startTime = window.performance.now(),
+					animation = function () {
+						var gap;
 
-				startTime = window.performance.now();
-				animationTimer = window.requestAnimationFrame(function animation() {
-					var gap;
+						currentTime = window.performance.now();
+						progress = (currentTime - startTime) / duration;
+						easeProgress = easeOut(progress);
+						gap = distance * easeProgress;
+						element.scrollTop = scrollTop + gap;
+						if (progress < 1 && progress >= 0) {
+							animationTimer = window.requestAnimationFrame(animation);
+						} else {
+							animationTimer = null;
+						}
+					};
 
-					currentTime = window.performance.now();
-					progress = (currentTime - startTime) / duration;
-					easeProgress = easeOut(progress);
-					gap = distance * easeProgress;
-					element.scrollTop = scrollTop + gap;
-					if (progress < 1 && progress >= 0) {
-						animationTimer = window.requestAnimationFrame(animation);
-					} else {
-						animationTimer = null;
-					}
-				});
+				animationTimer = window.requestAnimationFrame(animation);
 			}
 
 			function showEdgeEffect(direction) {
@@ -169,6 +169,7 @@
 				objectUtils.merge(self.options, options);
 
 				self.bindEvents();
+				return undefined;
 			};
 
 			prototype.bindEvents = function () {

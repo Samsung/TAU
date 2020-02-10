@@ -571,6 +571,7 @@
 				lastScrollPosition = 0;
 				moveToPosition = 0;
 				lastRenderedPosition = 0;
+				baseScrollPosition = 0;
 				lastTime = Date.now();
 			}
 
@@ -816,6 +817,7 @@
 				moveToPosition = scrollPosition;
 
 				// Enforce redraw to apply selected effect
+				requestAnimationFrame(moveTo);
 				render();
 			}
 
@@ -909,6 +911,7 @@
 
 			ns.util.scrolling = {
 				getScrollPosition: getScrollPosition,
+				getScrollPositionByIndex: getScrollPositionByIndex,
 				enable: enable,
 				disable: disable,
 				enableScrollBar: enableScrollBar,
