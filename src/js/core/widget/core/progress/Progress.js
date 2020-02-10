@@ -24,7 +24,9 @@
  * Shows a control that indicates the progress percentage of an on-going operation by circular shape.
  *
  *     @example template tau-progress
- *         <progress class="ui-circle-progress" max="${1:100}" value="${2:20}"></progress>
+ *         <div class="ui-progress" data-type="bar" data-max="100" data-value="60">
+ *            <span class="ui-current-value"> times</span>
+ * 		   </div>
  *
  *
  * ##Set and Get the value
@@ -268,8 +270,21 @@
 					element = self.element,
 					page = selectors.getClosestByClass(element, Page.classes.uiPage);
 
+				self._ui.page = page;
+
 				self._callbacks.onPageBeforeShow = pageBeforeShow.bind(null, self);
 				page.addEventListener(Page.events.BEFORE_SHOW, self._callbacks.onPageBeforeShow, false);
+			};
+
+			prototype._unbindEvents = function () {
+				var self = this;
+
+				if (self._callbacks.onPageBeforeShow) {
+					self._ui.page.removeEventListener(
+						Page.events.BEFORE_SHOW,
+						self._callbacks.onPageBeforeShow,
+						false);
+				}
 			};
 
 			/**
@@ -280,20 +295,18 @@
 			 */
 			prototype._destroy = function () {
 				var self = this,
-					element = self.element,
-					page;
+					element = self.element;
 
-				while (element.firstChild) {
-					element.removeChild(element.firstChild);
+				this._unbindEvents();
+
+				if (!self._progress.destroy(self, element)) {
+					while (element.firstChild) {
+						element.removeChild(element.firstChild);
+					}
 				}
 
 				self._ui = null;
 				self._oldValue = null;
-
-				if (self._callbacks.onPageBeforeShow) {
-					page = selectors.getClosestByClass(element, Page.classes.uiPage);
-					page.removeEventListener(Page.events.BEFORE_SHOW, self._callbacks.onPageBeforeShow, false);
-				}
 
 				return element;
 			};

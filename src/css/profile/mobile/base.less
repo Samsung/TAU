@@ -1,0 +1,108 @@
+// # Naming convention:
+//
+// --(what)-[attribute]-(property)
+//
+// examples:
+//
+// @text-color
+// --text-color
+//      what: text
+//      attribute: none
+//      property: color
+//
+// @text-font-size
+// --text-font-size
+//      what: text
+//      attribute: none
+//      property: font-size
+//
+// @text-disabled-color
+// --text-disabled-color
+//      what: text
+//      attribute: disabled
+//      property: color
+//
+// # Const variabled
+// Variables with constant value in runtime
+//
+// examples:
+// @_black: #000000;
+//
+// -----------------------------------------
+
+// const
+@_black: #000000;
+@_white: #FFFFFF;
+
+// variables
+
+// default colors (light theme)
+@primary-color: #0381fe;
+
+@text-color: #252525;
+@text-secondary-color: #909090;
+@control-active-color: #3e91ff;
+@control-inactive-color: #8f8f8f;
+
+@background-color: #F2F2F2;
+@background-area-color: #fcfcfc;
+
+@control-background-color:  #e6e6e6;
+@textual-background-color: #FCFCFC;
+@color-white: #fafafa;
+@surface-color: #FCFCFC;
+@error-color: #F01445;
+@accent-badge-color: #F56A0D;
+@on-background-color: #858585;
+@border-surface-color:  #e6e6e6;
+
+@on-off-switch-off: #8f8f8f;
+@on-off-switch-off-button-border: @on-off-switch-off;
+@on-off-switch-off-disabled-track-border: fade(@on-off-switch-off, 40%);
+@on-off-switch-on-disabled-track-background: fade(@on-off-switch-off, 40%);
+@on-off-switch-off-track-background: transparent;
+@button-background-opacity: 6%;
+@button-background: fade(@_black, 0%);
+@button-flat-icon-background: #f5f5f5;
+@button-background-contained: fade(@_black, @button-background-opacity);
+@button-text-font-size: 17 * @px_base;
+@button-contained-text-font-size: 17 * @px_base;
+@button-contained-list-text-font-size: 15 * @px_base;
+
+@slider-base-color: @primary-color;
+@slider-bg-color: @slider-base-color;
+@slider-bg-disabled-color: #666666;
+@slider-bg-disabled-opacity: 15%;
+@slider-value-color: @slider-base-color;
+@slider-handler-color: @slider-base-color;
+@content-area-line-color: #d6d6d6;
+
+:root {
+    --text-color: @text-color;
+    --text-secondary-color: @text-secondary-color;
+    --primary-color: @primary-color;
+
+    --control-background: @control-background-color;
+    --textual-background: @textual-background-color;
+    --color-white: @color-white;
+    --surface: @surface-color;
+    --accent-badge: @accent-badge-color;
+    --on-background: @on-background-color;
+    --border-surface:  @border-surface-color;
+
+    --button-background: @button-background;
+    --button-background-flat: @button-flat-icon-background;
+    --button-text-font-size: @button-text-font-size;
+    --button-contained-text-font-size: @button-contained-text-font-size;
+    --button-contained-list-text-font-size: @button-contained-list-text-font-size;
+
+    --slider-bg-color: fade(@slider-bg-color, 30%);
+    --slider-bg-disabled-color: fade(@slider-bg-disabled-color, @slider-bg-disabled-opacity);
+    --slider-value-color: @slider-value-color;
+    --slider-handler-color: @slider-handler-color;
+    // On/Off Switch
+    --on-off-switch-off-button-border: @on-off-switch-off-button-border;
+    --on-off-switch-on-disabled-track-background: @on-off-switch-on-disabled-track-background;
+    --on-off-switch-off-track-background: @on-off-switch-off-track-background;
+    --on-off-switch-off-disabled-track-border: @on-off-switch-off-disabled-track-border;
+}

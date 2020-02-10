@@ -64,6 +64,11 @@ module.exports = function (grunt) {
 				js: path.join(buildRoot, "mobile", "js"),
 				theme: path.join(buildRoot, "mobile", "theme")
 			},
+			/*
+			old: {
+				js: path.join(buildRoot, "old", "js"),
+				theme: path.join(buildRoot, "old", "theme")
+			},*/
 			wearable: {
 				js: path.join(buildRoot, "wearable", "js"),
 				theme: path.join(buildRoot, "wearable", "theme")
@@ -370,7 +375,7 @@ module.exports = function (grunt) {
 						src: [
 							"src/css/profile/wearable/changeable/theme-changeable/theme.less",
 							"src/css/profile/wearable/changeable/theme-changeable/theme.circle.less",
-							"src/css/profile/mobile/changeable/theme-changeable/theme.less",
+							//"src/css/profile/old/changeable/theme-changeable/theme.less",
 							"src/css/profile/tv/changeable/theme-changeable/theme.less"
 						]
 					}
@@ -396,7 +401,7 @@ module.exports = function (grunt) {
 						src: [
 							"src/css/profile/wearable/changeable/theme-changeable/theme.less",
 							"src/css/profile/wearable/changeable/theme-changeable/theme.circle.less",
-							"src/css/profile/mobile/changeable/theme-changeable/theme.less",
+							//"src/css/profile/old/changeable/theme-changeable/theme.less",
 							"src/css/profile/tv/changeable/theme-changeable/theme.less"
 						]
 					}
@@ -406,6 +411,29 @@ module.exports = function (grunt) {
 			// Test module (tools/grunt/tasks/tests.js) add callback for [profileName].options.done
 			// If here is something changed, please verify it in tests module also.
 			requirejs: {
+				mobile: {
+					options: {
+						baseUrl: srcJs,
+						optimize: "none",
+						findNestedDependencies: true,
+						skipModuleInsertion: true,
+						name: "mobile",
+						out: path.join(buildDir.mobile.js, name) + ".js",
+						pragmas: {
+							tauPerformance: !tauPerformance,
+							tauMVC: true,
+							tauUI: false
+						},
+						pragmasOnSave: {
+							tauBuildExclude: true,
+							tauDebug: !tauDebug
+						},
+						wrap: {
+							start: wrapStart,
+							end: wrapEnd
+						}
+					}
+				},
 				wearable: {
 					options: {
 						baseUrl: srcJs,
@@ -476,14 +504,15 @@ module.exports = function (grunt) {
 					}
 				},
 
-				mobile: {
+				/*
+				old: {
 					options: {
 						baseUrl: srcJs,
 						optimize: "none",
 						findNestedDependencies: true,
 						skipModuleInsertion: true,
-						name: "mobile",
-						out: path.join(buildDir.mobile.js, name) + ".js",
+						name: "old",
+						out: path.join(buildDir.old.js, name) + ".js",
 						pragmas: {
 							tauPerformance: !tauPerformance,
 							tauMVC: true,
@@ -499,14 +528,14 @@ module.exports = function (grunt) {
 						}
 					}
 				},
-				mobileMVC: {
+				oldMVC: {
 					options: {
 						baseUrl: srcJs,
 						optimize: "none",
 						findNestedDependencies: true,
 						skipModuleInsertion: true,
-						name: "mobile",
-						out: path.join(buildDir.mobile.js, name) + ".mvc.js",
+						name: "old",
+						out: path.join(buildDir.old.js, name) + ".mvc.js",
 						pragmas: {
 							tauPerformance: !tauPerformance,
 							tauMVC: false,
@@ -522,14 +551,14 @@ module.exports = function (grunt) {
 						}
 					}
 				},
-				mobileFull: {
+				oldFull: {
 					options: {
 						baseUrl: srcJs,
 						optimize: "none",
 						findNestedDependencies: true,
 						skipModuleInsertion: true,
-						name: "mobile",
-						out: path.join(buildDir.mobile.js, name) + ".full.js",
+						name: "old",
+						out: path.join(buildDir.old.js, name) + ".full.js",
 						pragmas: {
 							tauPerformance: !tauPerformance,
 							tauMVC: false,
@@ -545,19 +574,18 @@ module.exports = function (grunt) {
 						}
 					}
 				},
-
-				mobile_support: {
+				old_support: {
 					options: {
 						baseUrl: srcJs,
 						optimize: "none",
 						findNestedDependencies: false,
 						removeCombined: true,
 						skipModuleInsertion: true,
-						name: "mobile.support-2.3",
+						name: "old.support-2.3",
 						exclude: [
-							"mobile"
+							"old"
 						],
-						out: path.join(buildDir.mobile.js, name + ".support-2.3") + ".js",
+						out: path.join(buildDir.old.js, name + ".support-2.3") + ".js",
 						pragmas: {
 							tauPerformance: !tauPerformance,
 							tauMVC: true,
@@ -573,6 +601,7 @@ module.exports = function (grunt) {
 						}
 					}
 				},
+				*/
 
 				tv: {
 					options: {
@@ -626,6 +655,14 @@ module.exports = function (grunt) {
 			},
 
 			less: {
+				mobile: {
+					files: [
+						{
+							src: path.join(srcCss, "mobile", "theme-changeable", "theme.less"),
+							dest: path.join(buildRoot, "mobile", "theme", "changeable", "tau.css")
+						}
+					]
+				},
 				wearable: {
 					files: [
 						{
@@ -638,38 +675,40 @@ module.exports = function (grunt) {
 						}
 					]
 				},
-				mobile: {
+				/*
+				old: {
 					files: [
 						{
-							src: path.join(srcCss, "mobile", "changeable", "theme-changeable", "theme.less"),
-							dest: path.join(buildRoot, "mobile", "theme", "changeable", "tau.template")
+							src: path.join(srcCss, "old", "changeable", "theme-changeable", "theme.less"),
+							dest: path.join(buildRoot, "old", "theme", "changeable", "tau.template")
 						}
 					]
 				},
-				mobile_support: {
+				old_support: {
 					files: [
 						{
-							src: path.join(srcCss, "mobile", "changeable", "theme-changeable", "theme.less"),
-							dest: path.join(buildRoot, "mobile", "theme", "changeable", "tau.template")
+							src: path.join(srcCss, "old", "changeable", "theme-changeable", "theme.less"),
+							dest: path.join(buildRoot, "old", "theme", "changeable", "tau.template")
 						},
 						{
-							src: path.join("src", "css", "support", "mobile", "changeable", "theme-changeable", "theme.support-2.3.less"),
-							dest: path.join(buildRoot, "mobile", "theme", "changeable", "tau.support-2.3.template")
+							src: path.join("src", "css", "support", "old", "changeable", "theme-changeable", "theme.support-2.3.less"),
+							dest: path.join(buildRoot, "old", "theme", "changeable", "tau.support-2.3.template")
 						}
 					]
 				},
-				mobile_iot: {
+				old_iot: {
 					files: [
 						{
-							src: path.join(srcCss, "mobile", "changeable", "iot", "iot.less"),
-							dest: path.join(buildRoot, "mobile", "theme", "changeable", "tau.iot.template")
+							src: path.join(srcCss, "old", "changeable", "iot", "iot.less"),
+							dest: path.join(buildRoot, "old", "theme", "changeable", "tau.iot.template")
 						}
 					]
 				},
+				*/
 				tv: {
 					files: [
 						{
-							src: path.join(srcCss, "mobile", "changeable", "theme-changeable", "theme.less"),
+							src: path.join(srcCss, "old", "changeable", "theme-changeable", "theme.less"),
 							dest: path.join(buildRoot, "tv", "theme", "changeable", "tau.template")
 						},
 						{
@@ -719,62 +758,64 @@ module.exports = function (grunt) {
 			},
 
 			themeConverter: {
-				mobile: {
+				/*
+				old: {
 					createColorMapFile: grunt.option("generate-colormap") || false,
 					options: {
 						index: "0",
 						style: "Dark",
-						inputColorTableXML: path.join(themeConverterXMLPath, "mobile", "InputColorTable.xml"),
-						changeableColorTableXML: path.join(themeConverterXMLPath, "mobile", "ChangeableColorTable1.xml")
+						inputColorTableXML: path.join(themeConverterXMLPath, "old", "InputColorTable.xml"),
+						changeableColorTableXML: path.join(themeConverterXMLPath, "old", "ChangeableColorTable1.xml")
 					},
 					files: [
 						{
-							src: path.join(buildDir.mobile.theme, "changeable", "tau.template"),
-							dest: path.join(buildDir.mobile.theme, "changeable", "tau.css")
+							src: path.join(buildDir.old.theme, "changeable", "tau.template"),
+							dest: path.join(buildDir.old.theme, "changeable", "tau.css")
 						}
 					]
 				},
-				mobile_support: {
+				old_support: {
 					createColorMapFile: grunt.option("generate-colormap") || false,
 					options: {
 						index: "0",
 						style: "Dark",
-						inputColorTableXML: path.join(themeConverterXMLPath, "mobile", "InputColorTable.xml"),
-						changeableColorTableXML: path.join(themeConverterXMLPath, "mobile", "ChangeableColorTable1.xml")
+						inputColorTableXML: path.join(themeConverterXMLPath, "old", "InputColorTable.xml"),
+						changeableColorTableXML: path.join(themeConverterXMLPath, "old", "ChangeableColorTable1.xml")
 					},
 					files: [
 						{
-							src: path.join(buildDir.mobile.theme, "changeable", "tau.template"),
-							dest: path.join(buildDir.mobile.theme, "changeable", "tau.css")
+							src: path.join(buildDir.old.theme, "changeable", "tau.template"),
+							dest: path.join(buildDir.old.theme, "changeable", "tau.css")
 						},
 						{
-							src: path.join(buildDir.mobile.theme, "changeable", "tau.support-2.3.template"),
-							dest: path.join(buildDir.mobile.theme, "changeable", "tau.support-2.3.css")
+							src: path.join(buildDir.old.theme, "changeable", "tau.support-2.3.template"),
+							dest: path.join(buildDir.old.theme, "changeable", "tau.support-2.3.css")
 						}
 					]
 				},
-				mobile_iot: {
+				old_iot: {
 					createColorMapFile: grunt.option("generate-colormap") || false,
 					options: {
 						index: "0",
 						style: "Dark",
-						inputColorTableXML: path.join(themeConverterXMLPath, "mobile", "InputColorTable.xml"),
-						changeableColorTableXML: path.join(themeConverterXMLPath, "mobile", "ChangeableColorTable1.xml")
+						inputColorTableXML: path.join(themeConverterXMLPath, "old", "InputColorTable.xml"),
+						changeableColorTableXML: path.join(themeConverterXMLPath, "old", "ChangeableColorTable1.xml")
 					},
 					files: [
 						{
-							src: path.join(buildDir.mobile.theme, "changeable", "tau.iot.template"),
-							dest: path.join(buildDir.mobile.theme, "changeable", "tau.iot.css")
+							src: path.join(buildDir.old.theme, "changeable", "tau.iot.template"),
+							dest: path.join(buildDir.old.theme, "changeable", "tau.iot.css")
 						}
 					]
 				},
+				*/
 				tv: {
 					createColorMapFile: grunt.option("generate-colormap") || false,
 					options: {
 						index: "0",
 						style: "Dark",
-						inputColorTableXML: path.join(themeConverterXMLPath, "mobile", "InputColorTable.xml"),
-						changeableColorTableXML: path.join(themeConverterXMLPath, "mobile", "ChangeableColorTable1.xml")
+						inputColorTableXML: path.join(themeConverterXMLPath, "old", "InputColorTable.xml"),
+						changeableColorTableXML: path.join(themeConverterXMLPath, "old", "ChangeableColorTable1.xml")
 					},
 					files: [
 						{
@@ -917,11 +958,27 @@ module.exports = function (grunt) {
 				wearableColorThemeImages: {
 					files: files.image.getImageFiles("wearable", "wearable")
 				},
-
-				mobileChangeableImages: {
-					files: files.image.getImageFiles("mobile", "changeable")
+				mobileImages: {
+					files: [{
+						expand: true,
+						cwd: "src/css/profile/mobile/theme-changeable/images/",
+						src: "**",
+						dest: "dist/mobile/theme/changeable/images"
+					}]
 				},
-
+/*
+				oldChangeableImages: {
+					files: files.image.getImageFiles("old", "changeable")
+				},
+*/
+				mobileFonts: {
+					files: [{
+						expand: true,
+						cwd: "src/css/profile/mobile/fonts/",
+						src: "**",
+						dest: "dist/mobile/theme/changeable/fonts"
+					}]
+				},
 				tvChangeableImages: {
 					files: files.image.getImageFiles("tv", "changeable")
 				},
@@ -938,7 +995,20 @@ module.exports = function (grunt) {
 						}
 					]
 				},
-
+/*
+				oldJquery: {
+					files: [
+						{
+							src: "libs/jquery.js",
+							dest: path.join(buildDir.old.js, "jquery.js")
+						},
+						{
+							src: "libs/jquery.min.js",
+							dest: path.join(buildDir.old.js, "jquery.min.js")
+						}
+					]
+				},
+*/
 				wearableJquery: {
 					files: [
 						{
@@ -983,7 +1053,7 @@ module.exports = function (grunt) {
 
 				"sdk-docs": {
 					files: [
-						{expand: true, cwd: "tools/grunt/tasks/templates/sdk/files", src: "**/*", dest: "docs/sdk/mobile/html"},
+						//{expand: true, cwd: "tools/grunt/tasks/templates/sdk/files", src: "**/*", dest: "docs/sdk/old/html"},
 						{expand: true, cwd: "tools/grunt/tasks/templates/sdk/files", src: "**/*", dest: "docs/sdk/wearable/html"},
 						{expand: true, cwd: "tools/grunt/tasks/templates/sdk/files", src: "**/*", dest: "docs/sdk/tv/html"}
 					]
@@ -1026,11 +1096,13 @@ module.exports = function (grunt) {
 					overwrite: false
 				},
 
-				wearableDefaultTheme: files.css.getDefault("wearable", "default"),
-
 				mobileDefaultTheme: files.css.getDefault("mobile", "default"),
 
-				tvDefaultTheme: files.css.getDefault("tv", "default")
+				wearableDefaultTheme: files.css.getDefault("wearable", "default")
+
+				//oldDefaultTheme: files.css.getDefault("old", "default")
+
+				//tvDefaultTheme: files.css.getDefault("tv", "default")
 			},
 
 			"developer-guide-extract": {
@@ -1049,15 +1121,17 @@ module.exports = function (grunt) {
 						// Part of the path removed in destination
 						destBase: "src/js/profile/wearable/"
 					}]
-				},
-				mobile: {
-					files: [{
-						src: "src/js/profile/mobile/**/*.js",
-						dest: "docs/guide/source/inline/mobile/",
-						// Part of the path removed in destination
-						destBase: "src/js/profile/mobile/"
-					}]
 				}
+
+				// old: {
+				// 	files: [{
+				// 		src: "src/js/profile/old/**/*.js",
+				// 		dest: "docs/guide/source/inline/old/",
+				// 		// Part of the path removed in destination
+				// 		destBase: "src/js/profile/old/"
+				// 	}]
+				// }
+
 			},
 
 			"developer-guide-build": {
@@ -1205,8 +1279,19 @@ module.exports = function (grunt) {
 			},
 
 			clean: {
-				js: [buildDir.mobile.js, buildDir.wearable.js, "dist/animation/*"],
-				theme: [buildDir.mobile.theme, buildDir.wearable.theme, buildDir.tv.theme],
+				// TODO: Consider cleaning the whole dist directory.
+				js: [
+					buildDir.mobile.js,
+					//buildDir.old.js,
+					buildDir.wearable.js,
+					"dist/animation/*"
+				],
+				theme: [
+					buildDir.mobile.theme,
+					//buildDir.old.theme,
+					buildDir.wearable.theme,
+					buildDir.tv.theme
+				],
 				templates: ["dist/**/*.template"],
 				docs: {
 					expand: true,
@@ -1237,22 +1322,24 @@ module.exports = function (grunt) {
 			"qunit-tap": {},
 
 			"docs-html": {
-				mobile: {
-					profile: "mobile",
+				/*
+				old: {
+					profile: "old",
 					template: "sdk",
 					version: version,
 					files: {
-						src: ["dist/mobile/js/tau.js"]
+						src: ["dist/old/js/tau.js"]
 					}
 				},
-				mobile_support: {
-					profile: "mobile_support",
+				old_support: {
+					profile: "old_support",
 					template: "sdk",
 					version: version,
 					files: {
-						src: ["dist/mobile/js/tau.support-2.3.js"]
+						src: ["dist/old/js/tau.support-2.3.js"]
 					}
 				},
+				*/
 				wearable: {
 					profile: "wearable",
 					template: "sdk",
@@ -1261,14 +1348,16 @@ module.exports = function (grunt) {
 						src: ["dist/wearable/js/tau.js"]
 					}
 				},
-				"mobile-components": {
-					profile: "mobile",
+				/*
+				"old-components": {
+					profile: "old",
 					template: "components",
 					version: version,
 					files: {
-						src: ["dist/mobile/js/tau.js"]
+						src: ["dist/old/js/tau.js"]
 					}
 				},
+				*/
 				"wearable-components": {
 					profile: "wearable",
 					template: "components",
@@ -1280,18 +1369,22 @@ module.exports = function (grunt) {
 			},
 
 			"analize-docs": {
-				mobile: {
-					profile: "mobile"
+				/*
+				old: {
+					profile: "old"
 				},
-				mobile_support: {
-					profile: "mobile_support"
+				old_support: {
+					profile: "old_support"
 				},
+				*/
 				wearable: {
 					profile: "wearable"
 				},
-				"mobile-components": {
-					profile: "mobile-components"
+				/*
+				"old-components": {
+					profile: "old-components"
 				},
+				*/
 				"wearable-components": {
 					profile: "wearable-components"
 				}
@@ -1410,7 +1503,7 @@ module.exports = function (grunt) {
 		var done = this.async();
 
 		async.series([
-			runJSDuck.bind(null, "mobile"),
+			//runJSDuck.bind(null, "old"),
 			runJSDuck.bind(null, "wearable")
 		], done);
 	});
@@ -1553,8 +1646,13 @@ module.exports = function (grunt) {
 	grunt.registerTask("dev", ["dom_munger:" + mediaType]);
 	grunt.registerTask("release", ["dom_munger:default"]);
 
-	grunt.registerTask("prepare-working", ["copy:examples", "string-replace:examples", "string-replace:examples_less", "dom_munger:circle",
-		"themeConverter:wearable_examples"]);
+	grunt.registerTask("prepare-working", [
+		"copy:examples",
+		"string-replace:examples",
+		"string-replace:examples_less",
+		"dom_munger:circle",
+		"themeConverter:wearable_examples"
+	]);
 
 	grunt.loadTasks("tools/app/tasks");
 
@@ -1569,24 +1667,30 @@ module.exports = function (grunt) {
 		"uglify"
 	]);
 	grunt.registerTask("image-changeable", [
+		"copy:mobileImages",
 		"copy:wearableChangeableImages",
 		"copy:wearableColorThemeImages",
-		"copy:mobileChangeableImages",
+		//"copy:oldChangeableImages",
 		"copy:tvChangeableImages"
+	]);
+
+	grunt.registerTask("fonts", [
+		"copy:mobileFonts"
 	]);
 
 	grunt.registerTask("css", "Prepare full CSS for whole project", [
 		"clean:theme",
 		"less",
-		"themeConverter:mobile",
-		"themeConverter:mobile_support",
-		"themeConverter:mobile_iot",
+		//"themeConverter:old",
+		//"themeConverter:old_support",
+		//"themeConverter:old_iot",
 		"themeConverter:wearable",
 		"themeConverter:wearable_circle",
 		"themeConverter:wearable_old",
-		"themeConverter:tv",
+		//"themeConverter:tv",
 		"cssmin",
 		"image-changeable",
+		"fonts",
 		"symlink",
 		"postcss",
 		"clean:templates"
@@ -1595,33 +1699,44 @@ module.exports = function (grunt) {
 	grunt.registerTask("css-mobile", "Prepare CSS for mobile profile", [
 		"clean:theme",
 		"less:mobile",
-		"themeConverter:mobile",
 		"cssmin",
-		"copy:mobileChangeableImages",
+		"copy:mobileImages",
+		"copy:mobileFonts",
 		"symlink:mobileDefaultTheme",
 		"postcss"
 	]);
 
-	grunt.registerTask("css-mobile_iot", "Prepare CSS for mobile iot profile", [
+/*
+	grunt.registerTask("css-old", "Prepare CSS for old profile", [
 		"clean:theme",
-		"less:mobile_iot",
-		"themeConverter:mobile_iot",
+		"less:old",
+		"themeConverter:old",
 		"cssmin",
-		"copy:mobileChangeableImages",
-		"symlink:mobileDefaultTheme",
+		"copy:oldChangeableImages",
+		"symlink:oldDefaultTheme",
 		"postcss"
 	]);
 
-	grunt.registerTask("css-mobile_support", "Prepare CSS for mobile 2.3 version", [
+	grunt.registerTask("css-old_iot", "Prepare CSS for old iot profile", [
 		"clean:theme",
-		"less:mobile_support",
-		"themeConverter:mobile_support",
+		"less:old_iot",
+		"themeConverter:old_iot",
 		"cssmin",
-		"copy:mobileChangeableImages",
-		"symlink:mobileDefaultTheme",
+		"copy:oldChangeableImages",
+		"symlink:oldDefaultTheme",
 		"postcss"
 	]);
 
+	grunt.registerTask("css-old_support", "Prepare CSS for old 2.3 version", [
+		"clean:theme",
+		"less:old_support",
+		"themeConverter:old_support",
+		"cssmin",
+		"copy:oldChangeableImages",
+		"symlink:oldDefaultTheme",
+		"postcss"
+	]);
+*/
 	grunt.registerTask("css-wearable", "Prepare CSS for wearable", [
 		"clean:theme",
 		"less:wearable",
@@ -1634,7 +1749,7 @@ module.exports = function (grunt) {
 		"postcss"
 	]);
 
-	grunt.registerTask("css-tv", "Prepare CSS for mobile tv profile", [
+	grunt.registerTask("css-tv", "Prepare CSS for old tv profile", [
 		"clean:theme",
 		"less:tv",
 		"themeConverter:tv",
@@ -1649,28 +1764,36 @@ module.exports = function (grunt) {
 	grunt.registerTask("js", "Prepare JS", [
 		"clean:js",
 		"requirejs:mobile",
+		//"requirejs:old",
 		"requirejs:wearable",
-		"requirejs:mobile_support",
+		//"requirejs:old_support",
 		"requirejs:tv",
 		"jsmin",
 		"themesjs",
 		"copy:mobileJquery",
+		//"copy:oldJquery",
 		"copy:wearableJquery",
 		"copy:tvJquery",
 		"copy:animation",
 		"bundle"
 	]);
 
-	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJquery"]); //"bundle:mobile"
-	grunt.registerTask("js-mobile_support", "Prepare JS for mobile 2.3", ["clean:js", "requirejs:mobile", "requirejs:mobile_support", "jsmin", "themesjs:mobile", "copy:mobileJquery"]);
+	grunt.registerTask("js-mobile", "Prepare JS for mobile", ["clean:js", "requirejs:mobile", "jsmin", "themesjs:mobile", "copy:mobileJqery"]); //"bundle:mobile"
+	//grunt.registerTask("license", "Add licence information to files", ["concat:licenseJs", "concat:licenseDefaultCss", "copy:license"]);
+	//grunt.registerTask("js-old", "Prepare JS for old", ["clean:js", "requirejs:old", "jsmin", "themesjs:old", "copy:oldJquery"]); //"bundle:old"
+	//grunt.registerTask("js-old_support", "Prepare JS for old 2.3", ["clean:js", "requirejs:old", "requirejs:old_support", "jsmin", "themesjs:old", "copy:oldJquery"]);
 	grunt.registerTask("js-wearable", "Prepare JS wearable", ["clean:js", "requirejs:wearable", "jsmin", "themesjs:wearable", "copy:wearableJquery"]); //"bundle:wearable"
 	grunt.registerTask("js-tv", "Prepare JS tv", ["clean:js", "requirejs:tv", "jsmin", "themesjs:tv", "copy:tvJquery"]); //"bundle:tv"
 	grunt.registerTask("license", "Add licence information to files", ["concat:licenseJs", "concat:licenseDefaultCss", "concat:licenseChangeableCss", "concat:licenseWearableCss", "copy:license"]);
 
-	grunt.registerTask("docs-mobile", ["js-mobile", "analize-docs:mobile", "copy:sdk-docs"]);
-	grunt.registerTask("docs-mobile_support", ["js-mobile_support", "analize-docs:mobile_support", "copy:sdk-docs"]);
+	//grunt.registerTask("docs-old", ["js-old", "analize-docs:old", "copy:sdk-docs"]);
+	//grunt.registerTask("docs-old_support", ["js-old_support", "analize-docs:old_support", "copy:sdk-docs"]);
 	grunt.registerTask("docs-wearable", ["js-wearable", "analize-docs:wearable", "copy:sdk-docs"]);
-	grunt.registerTask("docs", ["docs-wearable", "docs-mobile_support", "docs-mobile"]);
+	grunt.registerTask("docs", [
+		"docs-wearable"
+		//"docs-old_support",
+		//"docs-old"
+	]);
 	grunt.registerTask("docs-components-wearable", ["js-wearable", "analize-docs:wearable-components", "copy:components", "copy:components-images", "copy:fwk"]);
 	grunt.registerTask("docs-components", ["docs-components-wearable"]);
 
@@ -1687,31 +1810,47 @@ module.exports = function (grunt) {
 		"license",
 		"version"
 	]);
-
-	grunt.registerTask("build-mobile_support", "Build mobile project for 2.3", [
-		"css-mobile_support",
-		"js-mobile_support",
+/*
+	grunt.registerTask("build-old", "Build old project", [
+		"css-old",
+		"js-old",
 		"license",
 		"version"
 	]);
 
+	grunt.registerTask("build-old_support", "Build old project for 2.3", [
+		"css-old_support",
+		"js-old_support",
+		"license",
+		"version"
+	]);
+*/
 	grunt.registerTask("build-wearable", "Build wearable project", ["css-wearable", "js-wearable", "license", "version"]);
 
-	grunt.registerTask("release", "Build, est and prepare docs", ["lint", "build", "test:mobile", "test:mobile_support", "test:jqm", "test:jqm14ok", "test:wearable"]);
+	grunt.registerTask("release", "Build, est and prepare docs", [
+		"lint",
+		"build",
+		//"test:old",
+		//"test:old_support",
+		"test:jqm",
+		"test:jqm14ok",
+		"test:wearable"
+	]);
 
 	//convert to CE
 	grunt.registerTask("convert-app", "Replace html tags with custom elements, example: grunt convert-app:full path to source:full path to destination:profile", function (sourcePath, targetPath, profile) {
-		profile = profile || "mobile";
+		profile = profile || "old";
 
 		//convert application
 		ceconverter(sourcePath, targetPath, profile);
 	});
 
-	grunt.registerTask("ce-test-mobile", ["build",
-		"multitau:UIComponentsMobile",
-		"multitau:UIComponentsCEMobile",
-		"karma:CEUIComponentsMobile"]);
-
+	/*
+	grunt.registerTask("ce-test-old", ["build",
+		"multitau:UIComponentsOld",
+		"multitau:UIComponentsCEOld",
+		"karma:CEUIComponentsOld"]);
+	*/
 	grunt.registerTask("ce-test-wearable", ["build",
 		"multitau:UIComponentsWearable",
 		"multitau:UIComponentsCEWearable",
@@ -1722,12 +1861,13 @@ module.exports = function (grunt) {
 		"multitau:UIComponentsCEWearableCircular",
 		"karma:CEUIComponentsWearableCircular"]);
 
+	/*
 	grunt.registerTask("apptest", ["build",
-		"multitau:TAUControllerWithRouterMobile",
-		"multitau:TAUControllerWithOutRouterMobile",
-		"multitau:TAUControllerWithOutRouterWithPolymerMobile",
-		"multitau:TAUMultiProfilesTemplateLoadMobile",
-		"multitau:TAUApplicationFrameworkMobile",
+		"multitau:TAUControllerWithRouterOld",
+		"multitau:TAUControllerWithOutRouterOld",
+		"multitau:TAUControllerWithOutRouterWithPolymerOld",
+		"multitau:TAUMultiProfilesTemplateLoadOld",
+		"multitau:TAUApplicationFrameworkOld",
 		"karma:app",
 		"multitau:TAUControllerWithRouterWearable",
 		"multitau:TAUControllerWithOutRouterWearable",
@@ -1735,10 +1875,10 @@ module.exports = function (grunt) {
 		"multitau:TAUMultiProfilesTemplateLoadWearable",
 		"multitau:TAUApplicationFrameworkWearable",
 		"karma:app"]);
-
+	*/
 	grunt.registerTask("verify", [
 		"apptest",
-		"ce-test-mobile",
+		//"ce-test-old",
 		"ce-test-wearable",
 		"test"
 	]);

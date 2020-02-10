@@ -1,0 +1,381 @@
+//***************************************************************************
+//						Body
+//***************************************************************************
+@color_bg: var(--background-color); // #[color] Main background body color
+@color_text: var(--text-color); // #[color] Main body text color
+
+//***************************************************************************
+//						Naviframe
+//***************************************************************************
+@color_bar_header_bg: var(--background-color); // #[color] and header background color
+@color_bar_title_text: var(--text-color); // #[color] text color
+@color_bar_title_text_light: var(--text-color); //color not defined in UX guide
+@color_bar_title_multiline_text: var(--text-color); // #[color] text color //UNUSED
+
+//**************************************************************************
+//						Tabbar
+//**************************************************************************
+@color_tabbar_border_active: var(--primary-color); // #[color] divider line color
+@color_tabbar_tab_bg_normal: var(--background-color); // #[color] button normal color
+@color_tabbar_tab_bg_press: var(--on-background); // #[color] button press color
+@color_tabbar_text_normal: var(--text-color); // #[color] text normal color
+@color_tabbar_text_press: var(--primary-color); // #[color] text press color
+@color_tabbar_text_selected: var(--primary-color); // #[color] text selected color
+@color_tabbar_icon_bg_normal: var(--control-background); // #[color] icon normal background color
+@color_tabbar_icon_bg_press: var(--on-background); // #[color] icon press background color
+
+//***************************************************************************
+//						List
+//***************************************************************************
+@color_list_press: var(--active); // #[color] item pressed color
+@color_list_border_bottom: var(--primary-color); // #[color] border bottom color
+@color_list_main_text_normal: var(--text-color); // #[color] main text color
+@color_list_secondary_text_normal: var(--text-secondary-color); // #[color] secondary text color
+
+@color_list_select_all: var(--background-color);
+
+@color_list_sub_text_normal: var(--text-secondary-color); // #[color] sub text color
+@color_list_sub_text_2_normal: var(--text-secondary-color); // #[color] sub text color
+@color_list_sub_text_2_press: var(--active); // #[color] sub text press color
+@color_list_sub_text_3_normal: var(--text-secondary-color); // #[color] sub text color
+
+@color_list_divider_text: var(--text-secondary-color); // #[color] divider text color
+@color_list_divider_text_expandable_press: var(--active); // #[color] divider text color
+
+@color_list_divider_bg_press: var(--on-background); // #[color] divider background press color
+@color_list_divider_text_press: var(--active); // #[color] divider text press color
+
+@list_smallicon_size: 22 * @unit_base;
+@list_li_padding_horizontal: 8 * @unit_base;
+
+@list_bigicon_size2: 72 * @unit_base;
+
+//***************************************************************************
+//						Group Index
+//***************************************************************************
+@color_groupindex_divider: var(--on-background);
+
+//***************************************************************************
+//						Expandable
+//***************************************************************************
+@color_expandable_heading_arrow: var(--on-background); // #[color] expandable arrow color
+@color_expandable_heading_arrow_pressed: var(--active); // #[color] expandable arrow color pressed
+@color_expandable_heading_arrow_dim: var(--control-background);
+
+//***************************************************************************
+//						Index Scroll
+//***************************************************************************
+@color_indexscrollbar_bg: var(--control-background); // #[color] background color
+@color_indexscrollbar_line: var(--border-surface); // #[color] vertical border color
+@color_indexscrollbar_focus: var(--primary-color); // #[color] focused element border color
+@color_indexscrollbar_divider: var(--primary-color);
+@color_indexscrollbar_text: var(--text-color);
+@color_indexscrollbar_text_press: var(--text-color);
+@color_indexscrollbar_popup_bg: var(--control-background);
+@color_indexscrollbar_popup_text: var(--text-color); // #[color] popup text color
+
+//***************************************************************************
+//						Button(connected with other winset)
+//***************************************************************************
+// @color_button_text_normal: var(--text-color); // #[color] normal text color
+@color_button_text_press: var(--text-color); // #[color] press text color
+// @color_button_text_dim: var(--inactive); // #[color] dim text color
+
+@color_button_icon: var(--text-color); // #[color] icon color
+@color_button_icon_press: var(--text-color); // #[color] icon color
+@color_button_icon_dim: var(--text-color); // #[color] icon color
+
+@color_button_text_nobg: var(--primary-color);
+@color_button_bg_nobg: var(--ripple-color); // #[color] icon nobg  color
+
+@color_button_icon_nobg: var(--text-color); // #[color] icon nobg  color
+@color_button_icon_nobg_press: var(--text-color); // #[color] icon nobg press color
+@color_button_icon_nobg_dim: var(--text-color); // #[color] icon nobg press color
+
+//@color_button_bg: var(--button-background); // #[color] background color
+@color_button_bg_press: var(--on-background); //  #[color] background press color
+@color_button_bg_dim: var(--surface); // #[color] background dim color
+
+
+@color_button_nobg_press: var(--ripple-color);
+
+@color_button_press_effect: var(--ripple-color); // Button press effect color
+@color_button_icon_nobg_press_effect: var(--ripple-color); // Button press effect color
+
+@color_button_add: var(--text-color); // Button add icon color
+@color_button_add_press: var(--text-color); // Button add press icon color
+
+@color_button_delete: F060L3;
+@color_button_delete_press: F060L3P;
+
+@color_bottom_button_bg: var(--button-background);
+
+@color_button_light_text: W019;
+@color_button_light_text_pressed: W019P;
+@color_button_light_text_dim: W019D;
+
+@color_button_dark_text: W020;
+@color_button_dark_text_pressed: W020P;
+@color_button_dark_text_dim: W020D;
+
+@color_button_bottom_bg: var(--button-background);
+@color_button_bottom_bg_press: var(--ripple-color);
+@color_button_disabled_in_footer: var(--button-background);
+
+//***************************************************************************
+//						Contextual popup
+//***************************************************************************
+@color_ctxpopup_text: var(--text-color); // #[color] text color
+@color_ctxpopup_background: var(--more-options-background-color); // #[color] background color
+@color_ctxpopup_background_border: var(--more-options-stroke-color); // #[color] border color
+@color_ctxpopup_divider: var(--more-options-background-color); // Context popup, list element left border color (horizontal position)
+@color_ctxpopup_btn_press: var(--more-options-pressed-color); // #[color], list item press color
+@color_ctxpopup_scrollbar: var(--primary-color);
+
+//***************************************************************************
+//						Scrollview
+//***************************************************************************
+@color_scrollbar: var(--primary-color);
+
+//***************************************************************************
+//						SegmentControl
+//***************************************************************************
+@color_segmentcontrol_Seg_text: rgba(199, 199, 199, 1);
+@color_segmentcontrol_Seg_text_pressed: rgb(59, 119, 150);
+
+//***************************************************************************
+//						Popup
+//***************************************************************************
+@color_popup_bg: var(--popup-background); // #[color] background color
+@color_popup_header_bg: var(--popup-background); // #[color] header background color
+@color_popup_footer_bg: var(--popup-background); // #[color] footer background color
+@color_popup_title_text: var(--text-color); // #[color] title text color
+@color_popup_title_sub_text: T1212; // #[color] title text color
+@color_popup_text: var(--popup-text); // #[color] text color
+@color_popup_activity_small_text: T120L1; // #[color] popup activity small text color
+@color_popup_activity_medium_text: T120L2; // #[color] popup activity medium text color
+@color_popup_activity_indicator_a: W157E1; // #[color] popup activity part a indicator color
+@color_popup_list_overlay_bg: var(--overlay); // #[color] popup list overlay background color
+
+//***************************************************************************
+//						Toast
+//***************************************************************************
+@color_toast_stroke: var(--background-color); // #[color] outline color
+@color_toast_text: var(--popup-text); // #[color] text color
+@color_toast_button_text: var(--primary-color); // #[color] button text color
+@color_toast_divider: var(--color-white); // #[color] divider color
+@color_toast_button_bg_press: var(--ripple-color);
+
+//***************************************************************************
+//						Slider
+//***************************************************************************
+@color_slider_handle_text: T058L1; // #[color] handle text color
+@color_slider_bg: var(--primary-color-30p); // #[color] background color
+@color_slider_active_bg: var(--primary-color); // #[color] active background color
+@color_slider_handle_bg: var(--primary-color); // #[color] handle background color
+@color_slider_warning_bg: W062L7; // #[color] warning background color
+@color_slider_warning_active_bg: W062L8; // #[color] active warning color
+@color_slider_handle_warning_active_bg: W0642; // #[color] active warning handle color
+
+//***************************************************************************
+//						On/Off Switch
+//***************************************************************************
+@color_toggle_bg: var(--primary-color); // for old toggle
+
+@color_toggle_outline: var(--primary-color); // for old toggle
+
+@color_toggle_handle_on_bg: var(--color-white); // #[color] on background color
+@color_toggle_handle_off_bg: W015L1E1; // #[color] off background color
+@color_toggle_handle_dim_bg: W015L1D; // #[color] dim background color
+
+@color_toggle_handle_off_icon: W015L1i; // for old toggle
+
+//***************************************************************************
+//						Progress
+//***************************************************************************
+// all variables moved to progress.less
+
+//***************************************************************************
+//			   Progress Circle (Indeterminate)
+//***************************************************************************
+@color_activity_circle_a: W157E1; // #[color] activity circle color
+@color_activity_circle_b: W157E2; // #[color] activity circle color
+@color_activity_circle_c: W157E3; // #[color] activity circle color
+
+//***************************************************************************
+//			   Progress Circle on FAB (Determinate)
+//***************************************************************************
+@color_circleprogressbar_bg: var(--progress-background-color);
+@color_circleprogressbar_value: var(--primary-color);
+
+//***************************************************************************
+//						Tokentextarea
+//***************************************************************************
+@color_tokentextarea_bg: W010; // #[color] background color
+@color_tokentextarea_block_text: T020; // #[color] block token text color
+@color_tokentextarea_block_text_press: T020; // #[color] block token text press color
+@color_tokentextarea_block_bg: W012; // #[color] block token background color
+@color_tokentextarea_press_bg: W012P; // #[color] block token press background color
+@color_tokentextarea_input_text: T059L1; // #[color] input text color
+@color_tokentextarea_label_text: T059L2; // #[color] label text color
+
+//**************************************************************************
+//						Checkbox / Radio
+//**************************************************************************
+
+@color_checkboxradio_checkbox_bg_icon: var(--icon-control-color); // #[color] checkbox icon background color
+@color_checkboxradio_checkbox_bg_on: var(--control-active-color); // #[color] checkbox on background color
+@color_checkboxradio_radio_bg_on: var(--control-active-color); // #[color] radio on background color
+@color_checkboxradio_radio_bg_dim: var(--control-active-disabled-color); // #[color] radio on dim background color
+
+@color_checkboxradio_favorite_on: var(--control-active-color); // #[color] favorite icon on color
+@color_checkboxradio_favorite_dim: var(--control-active-disabled-color); // #[color] favorite icon dim color
+@color_checkboxradio_favorite_line_on: W016L1i; // #[color] favorite line on color
+
+//***************************************************************************
+//						Scrollview
+//***************************************************************************
+@color_scrollview_handler_bg: var(--primary-color); // #[color] handler background color
+@color_scrollview_handler_thumb_01: var(--icon-color); // #[color] handler upper thumb color
+@color_scrollview_handler_thumb_02: var(--icon-color); // #[color] handler lower thumb color
+//***************************************************************************
+//						Drawer
+//***************************************************************************
+@color_drawer_bg: var(--background-color); // #[color] background color
+@color_drawer_list_press: var(--ripple-color); // #[color] list item background color
+@color_drawer_overlay_bg: var(--overlay); // B016 (old theme); // #[color] overlay color
+@color_drawer_icon: var(--icon-color); // #[color] icon color
+@color_drawer_icon_press: F043P; // #[color] background icon press color
+
+@color_drawer_border_left: C002; // #[color] border left color
+@color_drawer_border_right: C002; // #[color] border right color
+
+//***************************************************************************
+//						Empty State
+//***************************************************************************
+@color_emptystate_header_bg: var(--background-color); // #[color] header background color
+@color_emptystate_content_bg: var(--background-color); // #[color] content background color
+@color_emptystate_content_pattern_bg: var(--background-color); // #[color] content pattern color
+@color_emptystate_message_text: var(--text-color); // #[color] content text color
+@color_emptystate_message_header_text: T0222L1; // #[color] content header text color
+@color_emptystate_message_search_text: T0222L4; // #[color] content search text color
+@color_emptystate_message_header_search_text: T0222L3; // #[color] content header search text color
+
+//***************************************************************************
+//						DropdownMenu
+//***************************************************************************
+@color_dropdownmenu_label_bg: var(--surface); // #[color] label background color
+@color_dropdownmenu_list_group_stroke: B0733L1; // #[color] list stroke line color
+@color_dropdownmenu_list_item_bg_press: B042; // #[color] list item background press color
+@color_dropdownmenu_icon: var(--icon-color); // #[color] icon color
+@color_dropdownmenu_option_font_dim: T12351D;
+@color_dropdownmenu_placeholder_bg: W021L1; // #[color] placeholder background color
+@color_dropdownmenu_placeholder_bg_press: W021L1P; // #[color] placeholder background press color;
+@color_dropdownmenu_placeholder_bg_press_effect: var(--ripple-color); // #[color] placeholder background press effect color;
+@color_dropdownmenu_underline: F057; // #[color] underline color
+@color_dropdownmenu_placeholder_text: T1235; // #[color] placeholder text color
+@color_dropdownmenu_placeholder_text_press: T1235P;
+@color_dropdownmenu_placeholder_text_dim: T1235D;
+@color_dropdownmenu_option_text: var(--text-color); // #[color] option text color
+
+//***************************************************************************
+//						Navigation
+//***************************************************************************
+@color_navigation_text: var(--text-color); // #[color] text color
+@color_navigation_text_press: var(--ripple-color); // #[color] text press color
+
+@color_navigation_bg: var(--background-color); // #[color] background color
+@color_navigation_bar_icon: var(--color-white); // #[color] icon color
+@color_navigation_tab_divider: var(--color-white); // #[color] divider line color
+@color_navigation_core_navi_press: var(--ripple-color); // #[color] background color for item when pressed
+
+//***************************************************************************
+//						Floating Actions
+//***************************************************************************
+//** outside content */
+@color_floatingactions_out_bg: var(--primary-dark-color); // #[color] background color
+@color_floatingactions_out_icon: var(--color-white); // #[color] icon color
+@color_floatingactions_out_icon_press: var(--ripple-color); // #[color] icon press color
+@color_floatingactions_out_icon_press_effect: var(--ripple-color); // #[color] button press effect color
+
+//** inside content */
+@color_floatingactions_bg: var(--primary-dark-color); // #[color] background color
+@color_floatingactions_icon: var(--color-white); // #[color] icon color
+@color_floatingactions_icon_press: var(--ripple-color); // #[color] icon press color
+@color_floatingactions_icon_press_effect: var(--ripple-color); // #[color] button press effect color
+
+//***************************************************************************
+//						Page Indicator
+//***************************************************************************
+@color_page_indicator_on_page: var(--primary-dark-color); // #[color] on page color
+@color_page_indicator_off_page: var(--primary-dark-color); // #[color] off page color
+
+//***************************************************************************
+//						Tabs
+//***************************************************************************
+@color_tabs_title_text: var(--tab-text-color);
+@color_tabs_title_bg: var(--background-color);
+@color_tabs_tabbar_bg: var(--background-color);
+@color_tabs_tabbar_badge_text: var(--color-white);
+@color_tabs_tabbar_badge_bg: var(--accent-badge);
+
+//***************************************************************************
+//						Grid View
+//***************************************************************************
+@color_gridview_bg: var(--color-black); // #[color] background color
+@color_gridview_text_in: var(--text-color); // #[color] text color
+@color_gridview_text_out: var(--text-color); // #[color] text color
+@color_gridview_badge_bg: var(--accent-badge); // #[color] badge on gridview
+@color_gridview_badge_text: var(--color-white); // #[color] badge on gridview text color
+
+//***************************************************************************
+//						SearchInput
+//***************************************************************************
+@color_search_input_bg: transparent;
+@color_search_text_default_dim: var(--text-input-inactive);
+@color_search_border_typing: var(--text-input-underline-active);
+@color_search_text_typing: var(--text-color);
+@color_search_text_done: var(--text-color);
+@color_search_text_dim: var(--text-input-disabled);
+@color_search_placeholder_dim: var(--text-input-label-inactive);
+
+@color_header_search_text_cursor: var(--primary-color);
+@color_header_search_placeholder_text: var(--primary-color); // (otherwise called default)
+@color_header_search_placeholder_text_dim: var(--text-input-label-inactive); // (otherwise called default dim)
+@color_header_search_text_typing: var(--text-color);
+@color_header_search_text_done: var(--text-color);
+@color_header_search_text_done_dim: var(--text-input-disabled);
+@color_header_search_line: var(--text-input-underline-active);
+
+//***************************************************************************
+//						Welcome Page
+//***************************************************************************
+@color_welcome_primary_text: var(--text-color);
+@color_welcome_secondary_text: var(--text-secondary-color);
+@color_welcome_footer_btn_default: var(--primary-color);
+@color_welcome_footer_btn_press: var(--ripple-color);
+@color_welcome_footer_btn_dim: var(--control-inactive-color);
+
+//***************************************************************************
+//						Enveloper Index
+//***************************************************************************
+@color_enveloper_start_text: var(--primary-color);
+@color_enveloper_not_active_text: var(--control-inactive-color);
+@color_enveloper_expanded_button_normal: var(--primary-color);
+@color_enveloper_expanded_button_press: var(--ripple-color);
+@color_enveloper_expanded_button_dim: var(--control-inactive-color);
+@color_enveloper_select_border_color: var(--text-input-underline-active);
+
+@color_textenveloper_div: var(--control-active-color);
+
+//***************************************************************************
+//                   Details
+//***************************************************************************
+@color_details_text: var(--text-color);
+@color_details_sub_text: var(--text-secondary-color);
+//***************************************************************************
+//                   Focus
+//***************************************************************************
+@color_focus_background: var(--ripple-color);
+@color_focus_border: var(--primary-color);
+@color_focus_header_background: rgba(50, 150, 166, 0.4);

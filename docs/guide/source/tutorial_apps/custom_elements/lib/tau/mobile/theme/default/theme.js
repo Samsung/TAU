@@ -1,1 +1,0 @@
-(function (ns) {}(tau));

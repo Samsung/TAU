@@ -193,6 +193,7 @@
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var BaseWidget = ns.widget.BaseWidget,
+				Page = ns.widget.core.Page,
 				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				/**
@@ -241,6 +242,9 @@
 					BTN_NOBG: "ui-btn-nobg",
 					BTN_ICON_ONLY: "ui-btn-icon-only",
 					BTN_TEXT: "ui-btn-text",
+					BTN_FAB: "ui-btn-fab",
+					BTN_FLAT: "ui-btn-flat",
+					BTN_CONTAINED: "ui-btn-contained",
 					/**
 					 * Creates a button widget with light text
 					 * @style ui-btn-text-light
@@ -291,17 +295,29 @@
 					 * @style ui-btn-text-middle
 					 * @member ns.widget.core.Button
 					 */
-					BTN_ICON_MIDDLE: "ui-btn-icon-middle"
+					BTN_ICON_MIDDLE: "ui-btn-icon-middle",
+					BUTTON_CONTENT: "ui-btn-content",
+					HIDDEN: "ui-hidden"
 				},
 				MIN_SIZE = 32,
 				MAX_SIZE = 230,
+				buttonStyle = {
+					CIRCLE: "circle",
+					TEXTLIGHT: "light",
+					TEXTDARK: "dark",
+					NOBG: "nobg",
+					ICON_MIDDLE: "icon-middle",
+					FLOATING: "fab",
+					FLAT: "flat",
+					CONTAINED: "contained"
+				},
 				defaultOptions = {
 					// common options
 					inline: true,
 					icon: null,
 					disabled: false,
 					// mobile options
-					style: null,
+					style: buttonStyle.CONTAINED,
 					iconpos: "left",
 					size: null,
 					middle: false,
@@ -313,14 +329,13 @@
 
 					BaseKeyboardSupport.call(self);
 					self.options = {};
+					self._ui = {
+						fab: null
+					};
+					self._callbacks = {
+						onFABClick: null
+					}
 					self._classesPrefix = classes.BTN + "-";
-				},
-				buttonStyle = {
-					CIRCLE: "circle",
-					TEXTLIGHT: "light",
-					TEXTDARK: "dark",
-					NOBG: "nobg",
-					ICON_MIDDLE: "icon-middle"
 				},
 
 				prototype = new BaseWidget();
@@ -348,7 +363,7 @@
 				/**
 				 * "circle" Make circle button
 				 * "nobg" Make button without background
-				 * @property {null|"circle"|"nobg"} [options.style=null] Set style of button
+				 * @property {string} [options.style="flat"] Set style of button
 				 * @member ns.widget.core.Button
 				 * @static
 				 */
@@ -389,16 +404,25 @@
 			 * @member ns.widget.core.Button
 			 */
 			prototype._setStyle = function (element, style) {
-				var options = this.options,
+				var self = this,
+					options = self.options,
 					buttonClassList = element.classList,
-					change = false;
+					change = false,
+					ui = self._ui;
 
 				style = style || options.style;
+
+				if (style !== buttonStyle.FLOATING && // new button style
+					ui.fab !== null) { // and current button doesn't have fab element
+					self._revertFromFAB(element); // then revert FAB html structure
+				}
 
 				buttonClassList.remove(classes.BTN_CIRCLE);
 				buttonClassList.remove(classes.BTN_NOBG);
 				buttonClassList.remove(classes.BTN_TEXT_LIGHT);
 				buttonClassList.remove(classes.BTN_TEXT_DARK);
+				buttonClassList.remove(classes.BTN_FLAT);
+				buttonClassList.remove(classes.BTN_CONTAINED);
 
 				switch (style) {
 					case buttonStyle.CIRCLE:
@@ -417,13 +441,25 @@
 						buttonClassList.add(classes.BTN_TEXT_DARK);
 						change = true;
 						break;
+					case buttonStyle.FLOATING:
+						this._changeToFAB(element);
+						change = true;
+						break;
+					case buttonStyle.FLAT:
+						buttonClassList.add(classes.BTN_FLAT);
+						change = true;
+						break;
+					case buttonStyle.CONTAINED:
+						buttonClassList.add(classes.BTN_CONTAINED);
+						change = true;
+						break;
 					default:
 				}
 
 				if (change) {
 					options.style = style;
 
-					this._saveOption("style", style);
+					self._saveOption("style", style);
 				}
 			};
 
@@ -440,6 +476,9 @@
 
 				if (inline === undefined) {
 					inline = element.getAttribute("data-inline");
+					if (inline === null) {
+						inline = this._readCommonOptionFromElementClassname(element, "inline");
+					}
 					inline = (inline === "false") ? false : !!inline;
 				}
 
@@ -507,6 +546,31 @@
 				}
 			};
 
+			prototype._removeIconposClass = function (element) {
+				var self = this;
+
+				element = element || self.element;
+				element.classList.remove(classes.BTN_ICON_POSITION_PREFIX + "left");
+				element.classList.remove(classes.BTN_ICON_POSITION_PREFIX + "top");
+				element.classList.remove(classes.BTN_ICON_ONLY);
+			};
+
+			prototype._addIconposClass = function (element) {
+				var self = this,
+					innerTextLength;
+
+				element = element || self.element;
+
+				innerTextLength = element.textContent.trim().length ||
+					(element.value ? element.value.length : 0);
+
+				if (innerTextLength > 0) {
+					element.classList.add(classes.BTN_ICON_POSITION_PREFIX + self.options.iconpos);
+				} else {
+					element.classList.add(classes.BTN_ICON_ONLY);
+				}
+			};
+
 			/**
 			 * Set iconpos option
 			 * @method _setIconpos
@@ -516,24 +580,19 @@
 			 * @member ns.widget.core.Button
 			 */
 			prototype._setIconpos = function (element, iconpos) {
-				var options = this.options,
-					style = options.style,
-					innerTextLength = element.textContent.trim().length || (element.value ? element.value.length : 0);
+				var self = this,
+					options = self.options,
+					style = options.style;
 
-				element.classList.remove(classes.BTN_ICON_POSITION_PREFIX + options.iconpos);
-				element.classList.remove(classes.BTN_ICON_ONLY);
+				self._removeIconposClass(element);
 
 				iconpos = iconpos || options.iconpos;
 
-				if (options.icon && style !== buttonStyle.CIRCLE && style !== buttonStyle.NOBG) {
-					if (innerTextLength > 0) {
-						element.classList.add(classes.BTN_ICON_POSITION_PREFIX + iconpos);
-					} else {
-						element.classList.add(classes.BTN_ICON_ONLY);
-					}
+				if (options.icon && style !== buttonStyle.CIRCLE && style !== buttonStyle.NOBG && style !== buttonStyle.FLOATING) {
 					options.iconpos = iconpos;
 
-					this._saveOption("iconpos", iconpos);
+					self._addIconposClass(element);
+					self._saveOption("iconpos", iconpos);
 				}
 			};
 
@@ -600,6 +659,27 @@
 
 				self._saveOption("disabled", options.disabled);
 			};
+
+			function wrapButtonContent(element) {
+				var content = null;
+
+				if (element.children.length > 1 ||
+					(element.children.length === 1 && // don't wrap himself
+						!element.firstElementChild.classList.contains(classes.BUTTON_CONTENT))) {
+					content = document.createElement("div");
+					content.classList.add(classes.BUTTON_CONTENT);
+
+					// move button content to the content element
+					[].slice.call(element.children).forEach(function (child) {
+						content.appendChild(child);
+					});
+
+					element.appendChild(content);
+				}
+
+				return content;
+			}
+
 			/**
 			 * Build Button
 			 * @method _build
@@ -615,6 +695,8 @@
 				if (!buttonClassList.contains(classes.BTN)) {
 					buttonClassList.add(classes.BTN);
 				}
+
+				self._content = wrapButtonContent(element);
 
 				self._setStyle(element);
 				self._setInline(element);
@@ -812,6 +894,66 @@
 			 */
 			prototype._getDefaultOption = function (optionName) {
 				return defaultOptions[optionName];
+			}
+
+			function onFABClick(self, e) {
+				ns.event.trigger(self.element, "vclick", e);
+			}
+
+			prototype._bindEventsFAB = function () {
+				var self = this,
+					fab = self._ui.fab;
+
+				self._callbacks.onFABClick = onFABClick.bind(null, self);
+				fab.addEventListener("vclick", self._callbacks.onFABClick);
+			}
+
+			prototype._unbindEventsFAB = function () {
+				var self = this,
+					fab = self._ui.fab;
+
+				fab.removeEventListener("vclick", self._callbacks.onFABClick);
+				self._callbacks.onFABClick = null;
+			}
+
+			prototype._changeToFAB = function (element) {
+				var self = this,
+					ui = self._ui,
+					fab = document.createElement("button"),
+					pageContainer = ns.util.selectors.getClosestBySelector(element, Page.selector);
+
+				ui.fab = fab;
+				fab.classList.add(classes.BTN);
+				fab.classList.add(classes.BTN_FAB);
+				if (self.options.icon) {
+					fab.classList.add(classes.BTN_ICON);
+					fab.classList.add(classes.ICON_PREFIX + self.options.icon);
+				}
+
+				// hide element
+				element.classList.add(classes.HIDDEN);
+
+				if (pageContainer) {
+					pageContainer.appendChild(fab);
+				}
+				// bind events to FAB
+				self._bindEventsFAB();
+			}
+
+			prototype._revertFromFAB = function (element) {
+				var self = this,
+					fab = self._ui.fab;
+
+				// unbind FAB events
+				self._unbindEventsFAB();
+
+				// remove element from DOM
+				if (fab) {
+					fab.parentElement.removeChild(fab);
+					self._ui.fab = null;
+				}
+				// show element
+				element.classList.remove(classes.HIDDEN);
 			}
 
 			ns.widget.core.Button = Button;

@@ -1,0 +1,114 @@
+//**************************************************************************
+//                    Content Top calculate
+//**************************************************************************
+
+.ui-page {
+	border-top: none;
+	background: @color_bg;
+	color: @color_text;
+	font-weight: normal;
+
+	font-family: @font_family;
+
+	.ui-link-inherit {
+		color: #fff;
+	}
+	.ui-link {
+		// ui-body-link
+		color: #2489CE;
+		font-weight: bold;
+		&:hover {
+			color: #2489CE;
+		}
+		&:active {
+			color: #2489CE;
+		}
+		&:visited {
+			color: #2489CE;
+		}
+	}
+}
+
+// Structure 
+// links within "buttons"
+// ------------------------------------------------------------------------------------------------
+
+a.ui-link-inherit {
+	text-decoration: none !important;
+}
+
+// Active class used as the "on" state across all themes
+// ------------------------------------------------------------------------------------------------
+
+// button default color for active state
+.ui-btn-active {
+	// global-active
+	color: var(--primary-color);
+	cursor: pointer;
+	text-decoration: none;
+	background: @color_button_bg_press;
+	outline: none;
+
+	a.ui-link-inherit {
+		color: var(--primary-color);
+	}
+}
+
+// corner rounding classes
+//-------------------------------------------------------------------------------------------------
+
+.ui-corner-tl {
+	.LESSborder-radius-topleft(.3em);
+}
+
+.ui-corner-tr {
+	.LESSborder-radius-topright(.3em);
+}
+
+.ui-corner-bl {
+	.LESSborder-radius-bottomleft(.3em);
+}
+
+.ui-corner-br {
+	.LESSborder-radius-bottomright(.3em);
+}
+
+.ui-corner-top {
+	.LESSborder-radius-topleft(.3em);
+	.LESSborder-radius-topright(.3em);
+}
+
+.ui-corner-bottom {
+	.LESSborder-radius-bottomleft(.3em);
+	.LESSborder-radius-bottomright(.3em);
+}
+
+.ui-corner-right {
+	.LESSborder-radius-topright(.3em);
+	.LESSborder-radius-bottomright(.3em);
+}
+
+.ui-corner-left {
+	.LESSborder-radius-topleft(.3em);
+	.LESSborder-radius-bottomleft(.3em);
+}
+
+.ui-corner-none {
+	.LESSborder-radius-all(0);
+}
+
+//**************************************************************************
+//                    Icon (Naviframe)
+//**************************************************************************
+
+.ui-btn .ui-icon {
+
+	&.ui-icon-naviframe-edit,
+	&.ui-icon-naviframe-plus,
+	&.ui-icon-naviframe-delete,
+	&.ui-icon-naviframe-search,
+	&.ui-icon-naviframe-selectall,
+	&.ui-icon-naviframe-drawer {
+		.mask-size(100%);
+	}
+}

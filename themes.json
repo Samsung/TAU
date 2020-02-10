@@ -1,7 +1,15 @@
 {
 	"path": "src/css/profile",
 	"device": {
-
+		"oneui": [
+			{
+				"name": "changeable",
+				"images": "images/",
+				"src": "theme.less",
+				"default": "true",
+				"changeable-path": "oneui/theme-changeable/"
+			}
+		],
 		"mobile": [
 			{
 				"name": "changeable",
@@ -25,17 +33,11 @@
 
 		"tv": [
 			{
-				"name": "changeable",
-				"images": "images/",
-				"src": "theme.less",
-				"default": "true",
-				"changeable-path": "mobile/changeable/theme-changeable/"
-			},
-			{
 				"name": "black",
 				"images": "images/",
 				"src": "theme.less",
-				"default": "false",
+				"default": "true",
+				"changeable-path": "tv/changeable/theme-changeable/",
 				"default-path": "tv/default/theme-black/"
 			}
 		]

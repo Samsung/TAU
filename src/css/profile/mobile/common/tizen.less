@@ -1,0 +1,92 @@
+@font_size_default: 22px; // Default unit font size. DO NOT USE THIS VALUE IN WIDGET CSS!
+@rem_base: (1rem/@font_size_default);
+
+@em_base: 1em/@font_size_default; // WARNING: Don't use em unit!	This value is to be removed.
+@px_base: 1px;
+
+// for Accessibility: so many winset elements have fixed size regardless of changing font-size.
+// So, we set @px_base for unit_base. and some elements will have @rem_base in less file.
+// from 2.4 theme work, we decided that use original pixel value from GUI document.
+// So, for fitting with viewport=360(qHD), we multiply px_base by (360/540).
+@unit_base: (360 / 720) * @px_base;
+
+@font_family: Roboto-Regular, Helvetica;
+
+//*****************************
+//  z-index order collection
+//*****************************
+@z_base_maximum: 2147483647;
+@z_base_loader: 100;
+@z_base_header_footer: 1000;
+@z_base_smallpopup: @z_base_header_footer + 100;
+@z_base_popup: @z_base_smallpopup + 100;
+@z_base_tickernoti: @z_base_maximum - 100;
+@z_base_slider_popup: @z_base_popup + 10; //DCM-1735 issue fix
+
+.tau-info-theme {
+	position: absolute;
+	top: -999px;
+	left: -999px;
+}
+
+//*******************************
+//  Global LESS mixin collection
+//*******************************
+
+.LESSborder-radius-topleft(@radius) {
+	-moz-border-radius-topleft: @radius;
+	-webkit-border-top-left-radius: @radius;
+	border-top-left-radius: @radius;
+}
+
+.LESSborder-radius-topright(@radius) {
+	-moz-border-radius-topright: @radius;
+	-webkit-border-top-right-radius: @radius;
+	border-top-right-radius: @radius;
+}
+
+.LESSborder-radius-bottomleft(@radius) {
+	-moz-border-radius-bottomleft: @radius;
+	-webkit-border-bottom-left-radius: @radius;
+	border-bottom-left-radius: @radius;
+}
+
+.LESSborder-radius-bottomright(@radius) {
+	-moz-border-radius-bottomright: @radius;
+	-webkit-border-bottom-right-radius: @radius;
+	border-bottom-right-radius: @radius;
+}
+
+.LESSborder-radius-all(@radius) {
+	-o-border-radius: @radius;
+	-ms-border-radius: @radius;
+	-moz-border-radius: @radius;
+	-webkit-border-radius: @radius;
+	border-radius: @radius;
+}
+
+// Mixin : box ***************************
+.LESSbox-shadow(@hshadow, @vshadow, @blur, @color) {
+	-o-box-shadow: @hshadow @vshadow @blur @color;
+	-ms-box-shadow: @hshadow @vshadow @blur @color;
+	-moz-box-shadow: @hshadow @vshadow @blur @color;
+	-webkit-box-shadow: @hshadow @vshadow @blur @color;
+	box-shadow: @hshadow @vshadow @blur @color;
+}
+
+// Mixin : transform
+.LESStransform(@method) {
+	transform: @method;
+	-ms-transform: @method;
+	-moz-transform: @method;
+	-webkit-transform: @method;
+	-o-transform: @method;
+}
+
+// Mixin : text ellipsis
+.LESStext-ellipsis() {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden !important;
+}

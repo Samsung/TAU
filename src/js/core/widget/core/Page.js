@@ -316,6 +316,7 @@
 
 					self._ui = {};
 				},
+
 				/**
 				 * Dictionary for page related event types
 				 * @property {Object} EventType
@@ -391,7 +392,11 @@
 					uiTitle: "ui-title",
 					uiPageScroll: "ui-scroll-on",
 					uiScroller: "ui-scroller",
-					uiContentUnderPopup: "ui-content-under-popup"
+					uiContentUnderPopup: "ui-content-under-popup",
+					//appbar temporary classes
+					uiAppbar: "ui-appbar",
+					uiAppbarTitle: "ui-appbar-title",
+					uiAppbarTitleContainer: "ui-appbar-title-container"
 				},
 				HEADER_SELECTOR = "header,[data-role='header'],." + classes.uiHeader,
 				FOOTER_SELECTOR = "footer,[data-role='footer'],." + classes.uiFooter,
@@ -404,6 +409,7 @@
 
 			Page.classes = classes;
 			Page.events = EventType;
+			Page.selector = "[data-role=page],.ui-page",
 
 			/**
 			 * Configure default options for widget
@@ -755,9 +761,20 @@
 					header = self._ui.header,
 					pageTitle = dataPageTitle,
 					titleElements,
-					mainTitleElement;
+					mainTitleElement,
+					titleContainer;
 
 				if (header) {
+					//TODO: Create another widget for appbar
+					header.classList.add(classes.uiAppbar);
+					titleContainer = utilSelectors.getChildrenByClass(header, classes.uiAppbarTitleContainer)[0];
+
+					if (!titleContainer) {
+						titleContainer = document.createElement("div");
+						titleContainer.classList.add(classes.uiAppbarTitleContainer);
+						header.appendChild(titleContainer);
+					}
+
 					titleElements = utilSelectors.getChildrenBySelector(header, "h1, h2, h3, h4, h5, h6");
 
 					mainTitleElement = titleElements[0];
@@ -772,7 +789,9 @@
 					}
 
 					arrayUtil.forEach(titleElements, function (titleElement) {
-						titleElement.classList.add(classes.uiTitle)
+						// TODO: Create another widget for appbar
+						titleElement.classList.add(classes.uiAppbarTitle);
+						titleContainer.appendChild(titleElement);
 					});
 				}
 			};
@@ -870,10 +889,28 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype._bindEvents = function () {
-				var self = this;
+				var self = this,
+					header = self._ui.header;
 
 				self._contentFillAfterResizeCallback = self._contentFill.bind(self);
 				window.addEventListener("resize", self._contentFillAfterResizeCallback, false);
+				if (header) {
+					header.addEventListener("appbarcollapsed", function () {
+						var scroller = self.getScroller(),
+							scrollview = ns.engine.getBinding(scroller);
+
+						scrollview.enableScrolling();
+					}, false);
+
+					header.addEventListener("appbarexpanded", function () {
+						var scroller = self.getScroller(),
+							scrollview = ns.engine.getBinding(scroller, "Scrollview");
+
+						if (scrollview) {
+							scrollview.disableScrolling();
+						}
+					}, false);
+				}
 			};
 
 			/**
@@ -1024,7 +1061,7 @@
 
 			engine.defineWidget(
 				"Page",
-				"[data-role=page],.ui-page",
+				Page.selector,
 				[
 					"focus",
 					"blur",
