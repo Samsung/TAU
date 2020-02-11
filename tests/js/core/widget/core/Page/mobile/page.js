@@ -33,15 +33,11 @@ test("Page DOM created", function () {
 });
 
 test("Page titles", function () {
-	ok(true, "Test disabled");
-	/*
-	var h1 = document.getElementById("h1"),
-		h2 = document.getElementById("h2");
+	var h1 = document.getElementById("h1");
 
 	$("#page1").page();
-	ok(h1.classList.contains("ui-title"), "Title has been enhanced");
+	ok(h1.classList.contains("ui-appbar-title"), "Title has been enhanced");
 	equal(h1.getAttribute("role"), "heading");
 	equal(h1.getAttribute("aria-level"), "1");
 	equal(h1.getAttribute("aria-label"), "title");
-	*/
 });

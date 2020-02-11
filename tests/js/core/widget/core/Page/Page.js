@@ -598,8 +598,6 @@
 		});
 
 		test("_setTitle", function () {
-			ok(true, "Test disabled");
-			/* test disabled
 			var pageElement = document.getElementById("title-h1"),
 				pageWidget = new Page(),
 				ui = {
@@ -609,7 +607,7 @@
 			pageWidget._ui = ui;
 			pageWidget._setTitle(pageElement);
 			equal(pageElement.dataset.title, "Header", "title was found");
-			equal(ui.title, ui.header.children[0], "title was found");
+			equal(ui.title, ui.header.querySelector(".ui-appbar-title"), "title was found");
 
 			pageElement = document.getElementById("title-h6");
 			pageWidget = new Page();
@@ -620,7 +618,7 @@
 			pageWidget._ui = ui;
 			pageWidget._setTitle(pageElement);
 			equal(pageElement.dataset.title, "Header", "title was found");
-			equal(ui.title, ui.header.children[0], "title was found");
+			equal(ui.title, ui.header.querySelector(".ui-appbar-title"), "title was found");
 
 			pageElement = document.getElementById("data-title");
 			pageWidget = new Page();
@@ -632,7 +630,6 @@
 			pageWidget._setTitle(pageElement);
 			equal(pageElement.dataset.title, "title", "title was found");
 			equal(ui.title, undefined, "title was not found");
-			*/
 		});
 
 
