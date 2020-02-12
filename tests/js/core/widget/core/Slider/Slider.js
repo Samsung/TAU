@@ -17,8 +17,6 @@
 		});
 
 		test("_setValue", 1, function () {
-			ok(true, "Test disabled");
-			/*
 			var element = document.getElementById("normal"),
 				widget = new Slider();
 
@@ -27,78 +25,13 @@
 
 			//set Value for the slider with the expanded handler
 			widget.options.expand = true;
-			helpers.stub(widget, "_setNormalValue", function (value) {
+			helpers.stub(widget, "_setNormalValue", function () {
 				ok(true, "method: _setNormalValue was run");
 			});
-			helpers.stub(widget, "_updateSliderColors", function (value) {
-				ok(true, "method: _updateSliderColors was run");
-			});
+
 			widget._setValue(7);
-			helpers.restoreStub(widget, "_updateSliderColors");
+
 			helpers.restoreStub(widget, "_setNormalValue");
-
-			equal(widget._ui["handlerElement"].children[0].tagName.toLowerCase() , "span",
-					"expander handler was inserted with the value");
-			*/
-		});
-
-		test("_setSliderColors", 1, function () {
-			ok(true, "Test disabled");
-			/*
-			var element = document.getElementById("normal"),
-				widget = new Slider();
-
-			widget._build(element);
-			helpers.stub(widget, "_setValue", function (value) {
-				ok(true, "method: _setValue was run");
-			});
-
-			helpers.stub(widget, "_setInputRangeSize", function (value) {
-				ok(true, "method: _setInputRangeSize was run");
-			});
-
-			widget._init(element);
-			helpers.restoreStub(widget, "_setValue");
-			helpers.restoreStub(widget, "_setInputRangeSize");
-			widget._setSliderColors(4);
-			ok(widget._ui.barElement.firstElementChild.style.background.indexOf("rgb") >= 0, "standard color is set");
-
-			widget.options.warning = 1;
-			widget._setSliderColors(4);
-			ok(widget._ui.barElement.firstElementChild.style.background.indexOf("gradient"), "linear gradient is set");
-			*/
-		});
-
-		test("setBackground", 1, function () {
-			ok(true, "Test disabled");
-			/*
-			var element = document.getElementById("normal"),
-				widget = new Slider();
-
-			widget._build(element);
-			helpers.stub(widget, "_setValue", function (value) {
-				ok(true, "method: _setValue was run");
-			});
-
-			helpers.stub(widget, "_setInputRangeSize", function (value) {
-				ok(true, "method: _setInputRangeSize was run");
-			});
-
-			widget._init(element);
-			helpers.restoreStub(widget, "_setValue");
-			helpers.restoreStub(widget, "_setInputRangeSize");
-
-			widget.options.warning = 1;
-			widget._setSliderColors(4);
-
-			ok(widget._ui.barElement.firstElementChild.style.background.indexOf("gradient"), "linear gradient is set");
-
-			widget._setSliderColors(0);
-
-			ok(widget._ui.barElement.firstElementChild.style.background.indexOf("rgb") >= 0, "background without gradient was set");
-
-			ok(true, "Slider has ui-slider class");
-			*/
 		});
 
 		test("Slider getContainer method", 4, function () {

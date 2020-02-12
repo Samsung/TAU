@@ -1,12 +1,10 @@
-/* global test, tau, ok */
-(function () {
+/* global test, tau, equal */
+(function (ns) {
 	"use strict";
 
 	module("core/widget/core/Slider");
 
 	test("API ns.widget.Slider", function () {
-		ok(true, "Test disabled");
-		/*
 		var widget,
 			Slider;
 
@@ -31,19 +29,18 @@
 
 		equal(typeof Slider.classes, "object", "Property slider.classes exists");
 		equal(typeof Slider.classes.SLIDER, "string", "Property slider.classes.SLIDER exists");
-		equal(typeof Slider.classes.SLIDER_HORIZONTAL, "string", "Property slider.classes.SLIDER_HORIZONTAL exists");
-		equal(typeof Slider.classes.SLIDER_VERTICAL, "string", "Property slider.classes.SLIDER_VERTICAL exists");
 		equal(typeof Slider.classes.SLIDER_VALUE, "string", "Property slider.classes.SLIDER_VALUE exists");
 		equal(typeof Slider.classes.SLIDER_HANDLER, "string", "Property slider.classes.SLIDER_HANDLER exists");
-		equal(typeof Slider.classes.SLIDER_HANDLER_EXPAND, "string", "Property slider.classes.SLIDER_HANDLER_EXPAND exists");
-		equal(typeof Slider.classes.SLIDER_CENTER, "string", "Property slider.classes.SLIDER_CENTER exists");
-		equal(typeof Slider.classes.SLIDER_HANDLER_ACTIVE, "string", "Property slider.classes.SLIDER_HANDLER_ACTIVE exists");
+		equal(typeof Slider.classes.SLIDER_DISABLED, "string", "Property slider.classes.SLIDER_DISABLED exists");
+		equal(typeof Slider.classes.SLIDER_HANDLER_VALUE, "string", "Property slider.classes.SLIDER_HANDLER_VALUE exists");
+		equal(typeof Slider.classes.SLIDER_FOCUS, "string", "Property slider.classes.SLIDER_FOCUS exists");
+		equal(typeof Slider.classes.SLIDER_BAR, "string", "Property slider.classes.SLIDER_BAR exists");
+		equal(typeof Slider.classes.SLIDER_ACTIVE, "string", "Property slider.classes.SLIDER_ACTIVE exists");
 
 
 		equal(typeof widget._build, "function", "Method slider._build exists");
 		equal(typeof widget._bindEvents, "function", "Method slider._bindEvents exists");
 		equal(typeof widget._init, "function", "Method slider._bindEvents exists");
 		equal(typeof widget.value, "function", "Method slider.value exists");
-		*/
 	});
 }(tau));
