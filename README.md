@@ -35,13 +35,13 @@ nvm use 6.16.0
 
 Build TAU by running the following command in the tau directory:
 
-`npx grunt build`
+`npm run build`
 
 ## Running the tests
 
 TAU has automated tests. To run tests execute command:
 
-`npx grunt test`
+`npm run test`
 
 ## Debuggging
 

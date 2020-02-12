@@ -4,6 +4,7 @@
   "description": "Tizen Advanced UI",
   "version": "1.0.25",
   "scripts": {
+    "build": "grunt build",
     "test": "grunt test",
     "lint-check": "lint-diff $TRAVIS_COMMIT_RANGE",
     "spellcheck": "cspell 'src/**/*.js'"
