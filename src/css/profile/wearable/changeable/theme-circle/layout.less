@@ -208,7 +208,7 @@ body {
 			height: 72 * @unit_base;
 			width: 210 * @unit_base;
 			background-color: @bg_color_button_bottom;
-			border: 3 * @unit_base solid @border_color_button_bottom;
+			border: 0;
 			border-radius: 60 * @unit_base;
 
 			&::after {
@@ -243,7 +243,6 @@ body {
 			&.ui-state-disabled, &:disabled {
 				color: @color_button_bottom_text_disable;
 				background-color: @bg_color_button_bottom_disabled;
-				border-color: @border_color_button_bottom_disabled;
 			}
 
 			&.ui-btn-icon-only {

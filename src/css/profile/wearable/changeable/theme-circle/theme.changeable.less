@@ -1,32 +1,35 @@
+@import "./theme.colorPalette.less";
+
 /***************************************************************************
                   Body
 ***************************************************************************/
-@color_bg: B015;
+@color_bg: @black-color;
 @color_bg_cover: @color_bg;
-@color_text: T011;
+@color_text: @white-color;
+@font_size_text: 32 * @unit_base;
 
 /***************************************************************************
                    Action Bar / Header
 ***************************************************************************/
-@color_actionbar_title_text: T012;
-@color_actionbar_title_text_big: T191;
-@color_actionbar_subtitle_text: T019;
-@color_actionbar_title_bg: B011;
-@color_actionbar_title_bg_disable: B0511D;
+@color_actionbar_title_text: @primary-color;
+@color_actionbar_title_text_big: @primary-color;
+@color_actionbar_subtitle_text: @sub-title-bar-color;
+@color_actionbar_title_bg: @black-color;
+@color_actionbar_title_bg_disable: @black-color;
 
 /****************************************************************************
                Circle Progress Bar
 ****************************************************************************/
-@color_circleprogressbar_bg: B065L3;
-@color_circleprogressbar_value: B065L2;
+@color_circleprogressbar_bg: @progress-bg-color;
+@color_circleprogressbar_value: @progress-bg-stroke-color;
 
 /****************************************************************************
 		Progress Bar
 ****************************************************************************/
 @color_progressbar_text: @color_text;
-@color_progressbar_normal_bg: B065L3;
-@color_progressbar_value_bg: B065L2;
-@color_progressbar_indeterminate: B065L6;
+@color_progressbar_normal_bg: @progress-bg-color;
+@color_progressbar_value_bg: @progress-bg-stroke-color;
+@color_progressbar_indeterminate: @progress-green-color;
 
 /****************************************************************************
 		Processing
@@ -38,24 +41,22 @@
 /***************************************************************************
                    Buttons
 ***************************************************************************/
-@color_button_default_text: T042;
-@color_button_default_text_pressed: T042P;
-@color_button_default_text_disable: T042D;
+@color_button_default_text: @white-color;
+@color_button_default_text_pressed: fade(@white-color, 40%);
+@color_button_default_text_disable: fade(@white-color, 40%);
 
-@color_button_default_normal_bg: W011;
+@color_button_default_normal_bg: fade(@primary-color, 25%);
 @color_button_default_focus_bg: W011;
-@color_button_default_press_bg: W011P;
-@color_button_default_disable_bg: W011D;
+@color_button_default_press_bg: fade(#0d4c80, 85%);
+@color_button_default_disable_bg: fade(@bg-dim-color, 85%);
 
-@color_button_bottom_text: T041;
-@color_button_bottom_text_pressed: T041P;
-@color_button_bottom_text_disable: T041D;
+@color_button_bottom_text: @button-bottom-color;
+@color_button_bottom_text_pressed: @button-bottom-color;
+@color_button_bottom_text_disable: fade(@bg-dim-color, 35%);
 
-@bg_color_button_bottom_pressed: rgba(0, 47, 77, 1);
-@bg_color_button_bottom: rgba(0, 0, 0, 1);
-@bg_color_button_bottom_disabled: rgba(26, 26, 26, 1);
-@border_color_button_bottom: rgba(0, 154, 249, 1);
-@border_color_button_bottom_disabled: rgba(0, 94, 153, 1);
+@bg_color_button_bottom_pressed: fade(@bg-press-color, 85%);
+@bg_color_button_bottom: fade(@bg-normal-color, 85%);
+@bg_color_button_bottom_disabled: fade(@bg-dim-color, 85%);
 
 @color_button_red_text: T041;
 @color_button_red_text_pressed: T041P;
@@ -94,9 +95,9 @@
 /***************************************************************************
                    Popup
 ***************************************************************************/
-@color_popup_title_text: T091;
-@color_popup_content_text: T092;
-@color_popup_bg: B061L1E;
+@color_popup_title_text: @primary-color;
+@color_popup_content_text: #cccccc;
+@color_popup_bg: @black-color;
 @color_popup_edge_inner_glow: B061L8;
 @color_popup_edge_shadow: B0610;
 @color_popup_bg_cover: B061L1;
@@ -105,10 +106,10 @@
 @color_popup_border: B061L8;
 @color_popup_overlay: W1712;
 @color_popup_button_bg_press: B065L4P;
-@color_popup_side_button_bg: B065L4;
-@color_popup_side_button_bg_press: B065L4P;
-@color_popup_button_icon_bg: F022L1i;
-@color_popup_button_icon_bg_press: F022L1iP;
+@color_popup_side_button_bg: fade(@bg-normal-color, 85%);
+@color_popup_side_button_bg_press: fade(@bg-press-color, 85%);
+@color_popup_button_icon_bg: #38a4fc;
+@color_popup_button_icon_bg_press: #38a4fc;
 
 /***************************************************************************
                    Footer
@@ -122,16 +123,16 @@
 ***************************************************************************/
 @color_toast_popup_border: B061L7;
 @color_toast_popup_bg: W1712;
-@color_popup_toast_check: B069;
-@color_toast_text: T099;
+@color_popup_toast_check: @white-color;
+@color_toast_text: @white-color;
 
 /***************************************************************************
                    Small Toast Popup
 ***************************************************************************/
-@color_toast_popup_small_bg: W15021;
-@color_toast_popup_small_text: T0911;
+@color_toast_popup_small_bg: fade(#666666, 90%);
+@color_toast_popup_small_text: #f5f5f5;
 @color_toast_popup_small_stroke: W15022;
-@color_toast_popup_icon: W1503;
+@color_toast_popup_icon: @white-color;
 
 /***************************************************************************
                    Option Popup
@@ -144,28 +145,29 @@
 @color_circularindexscrollbar_text_normal: T0311;
 @color_circularindexscrollbar_text_selected: T0311P;
 
-@color_circularindexscrollbar_indicator_bg: B0731;
-@color_circularindexscrollbar_indicator_text: T0312P;
+@color_circularindexscrollbar_indicator_bg: @index-scroll-bg-color;
+@color_circularindexscrollbar_indicator_text: @color_text;
 
 /***************************************************************************
                   Listview
 ***************************************************************************/
 @color_list_press_bg: B041P;
 @color_listview_border: B0222;
-@color_listview_text: T0211;
-@color_listview_text_press: T0211P;
-@color_listview_text_dim: T0211D;
-@color_listview_text_highlight: T0212;
+@color_listview_text: @color_text;
+@color_listview_text_press: @color_text;
+@color_listview_text_dim: fade(@white-color, 40%);
+@color_listview_text_highlight: @color_text;
 @color_list_actionicon_divider: B0221L1;
 @color_list_actionicon_image_normal: F022L1i;
 @color_list_actionicon_image_disable: F022L1iD;
 @color_list_divider_bg: B023;
 @color_list_divider_text: T0231;
-@color_listview_sub_text: T022;
-@color_listview_sub_text_press: T022P;
-@color_listview_sub_text_dim: T022D;
-@color_listview_focus: rgba(48, 48, 48, 0.65); /* B011 */
-@color_listview_focus_press: rgba(81, 81, 81, 0.5); /* B0210P */
+@color_listview_sub_text: @listview-sub-text-color;
+@listview-sub-text-color: #b3b3b3;
+@color_listview_sub_text_press: @listview-sub-text-color;
+@color_listview_sub_text_dim: fade(@listview-sub-text-color, 40%);
+@color_listview_focus: fade(@white-color, 9%);
+@color_listview_focus_press: fade(@white-color, 6%);
 @color_listview_focus_ef: B027;
 @color_listview_focus_ef_press: B027P;
 
@@ -178,72 +180,74 @@
 /***************************************************************************
                    Multiline List
 ***************************************************************************/
-@color_multiline_list_item: T0261;
-@color_multiline_list_item_press: T0261P;
-@color_multiline_list_item_divider: white; // This color is not specified in UX Guide
-@color_multiline_list_text: T0263;
-@color_multiline_list_text_press: T0263P;
-@color_multiline_list_subtext: T0262;
-@color_multiline_list_subtext_press: T9262P;
+@color_multiline_list_item: @color_text;
+@color_multiline_list_item_press: @color_text;
+@color_multiline_list_item_divider: fade(@white-color, 20%);
+@color_multiline_list_text: #cccccc;
+@color_multiline_list_text_press: #cccccc;
+@color_multiline_list_subtext: @listview-sub-text-color;
+@color_multiline_list_subtext_press: @listview-sub-text-color;
 
 /***************************************************************************
                    Checkbox/Radio
 ***************************************************************************/
-@color_checkboxradio_radio: W013L3;
-@color_checkboxradio_radio_press: W013L3P;
-@color_checkboxradio_radio_dim: W013L3D;
-@color_checkboxradio_radio_off: W013L4;
-@color_checkboxradio_radio_off_press: W013L4P;
-@color_checkboxradio_radio_off_dim: W013L4D;
-@color_checkboxradio_radiobox_line: W013L1;
-@color_checkboxradio_radiobox_line_press: W013L1P;
-@color_checkboxradio_radiobox_line_dim: W013L1D;
-@color_checkboxradio_radiobox_line_off: W013L2;
-@color_checkboxradio_radiobox_line_off_press: W013L2P;
-@color_checkboxradio_radiobox_line_off_dim: W013L2D;
+@color_checkboxradio_radio: @controller-on-color;
+@color_checkboxradio_radio_press: fade(@controller-on-color, 65%);
+@color_checkboxradio_radio_dim: fade(@controller-on-color, 30%);
+@color_checkboxradio_radio_off: fade(@controller-off-color, 80%);
+@color_checkboxradio_radio_off_press: fade(@controller-off-color, 60%);
+@color_checkboxradio_radio_off_dim: fade(@controller-off-color, 30%);
 
-@color_checkboxradio_check: W012L3;
-@color_checkboxradio_check_press: W012L3P;
-@color_checkboxradio_check_dim: W012L3D;
-@color_checkboxradio_uncheck: W012L4;
-@color_checkboxradio_uncheck_press: W012L4P;
-@color_checkboxradio_uncheck_dim: W012L4D;
-@color_checkboxradio_checkbox_bg: W012L1;
-@color_checkboxradio_checkbox_bg_press: W012L1P;
-@color_checkboxradio_checkbox_bg_dim: W012L1D;
-@color_checkboxradio_checkbox_bg_uncheck: W012L2;
-@color_checkboxradio_checkbox_bg_uncheck_press: W012L2P;
-@color_checkboxradio_checkbox_bg_uncheck_dim: W012L2D;
+@color_checkboxradio_radiobox_line: @controller-on-color;
+@color_checkboxradio_radiobox_line_press: fade(@controller-on-color, 65%);
+@color_checkboxradio_radiobox_line_dim: fade(@controller-on-color, 30%);
+@color_checkboxradio_radiobox_line_off: fade(@controller-off-color, 80%);
+@color_checkboxradio_radiobox_line_off_press: fade(@controller-off-color, 60%);
+@color_checkboxradio_radiobox_line_off_dim: fade(@controller-off-color, 30%);
+
+@color_checkboxradio_check: @controller-on-color;
+@color_checkboxradio_check_press: fade(@controller-on-color, 65%);
+@color_checkboxradio_check_dim: fade(@controller-on-color, 30%);
+@color_checkboxradio_uncheck: fade(@controller-off-color, 80%);
+@color_checkboxradio_uncheck_press: fade(@controller-off-color, 60%);
+@color_checkboxradio_uncheck_dim: fade(@controller-off-color, 30%);
+
+@color_checkboxradio_checkbox_bg: @controller-on-color;
+@color_checkboxradio_checkbox_bg_press: fade(@controller-on-color, 65%);
+@color_checkboxradio_checkbox_bg_dim: fade(@controller-on-color, 30%);
+@color_checkboxradio_checkbox_bg_uncheck: fade(@controller-off-color, 80%);
+@color_checkboxradio_checkbox_bg_uncheck_press: fade(@controller-off-color, 60%);
+@color_checkboxradio_checkbox_bg_uncheck_dim: fade(@controller-off-color, 30%);
 
 /***************************************************************************
 						Page Indicator
 ***************************************************************************/
-@color_page_indicator_normal: W1911D;
-@color_page_indicator_selected: W1911;
+@color_page_indicator_normal: fade(@white-color, 50%);
+@color_page_indicator_selected: @white-color;
 
 /****************************************************************************
 		Toggle Switch
 ****************************************************************************/
 @color_switch_text: T0811;
 @color_switch_sub_text: T161;
-@color_toggle_on_handler: rgba(13, 124, 214, 1); /* W014L3 */
-@color_toggle_on_handler_press: rgba(7, 119, 211, 1); /* W014L3P */
-@color_toggle_on_handler_dim: rgba(3, 36, 65, 1); /* W014L3D */
-@color_toggle_off_handler: rgba(0, 0, 0, 0.5); /* W014L4 */
-@color_toggle_off_handler_press: W014L4P;
-@color_toggle_off_handler_dim: W014L4D;
-@color_toggle_on_bg: rgba(66, 151, 255, 1); /* W014L1 */
-@color_toggle_on_bg_press: rgba(66, 151, 255, 1); /*W014L1P*/
-@color_toggle_on_bg_dim: rgba(20, 46, 77, 1); /* W014L1D */
-@color_toggle_off_bg: W014L2;
-@color_toggle_off_bg_press: rgba(0, 0, 0, 1); /* W014L2P */
-@color_toggle_off_bg_dim: W014L2D;
-@color_toggle_on_handler_on: rgba(255, 255, 255, 1); /* W014L5 */
-@color_toggle_on_handler_on_press: rgba(190, 190, 190, 1); /* W014L5P */
-@color_toggle_on_handler_on_dim: rgba(75, 75, 75, 1); /* W014L5D */
-@color_toggle_off_handler_off: rgba(255, 255, 255, 1);  /* W014L5 */
-@color_toggle_off_handler_off_press: rgba(190, 190, 190, 1); /* W014L5P */
-@color_toggle_off_handler_off_dim: rgba(75, 75, 75, 1); /* W014L5D */
+
+@color_toggle_on_handler: #0074d4;
+@color_toggle_on_handler_press: #0074d4;
+@color_toggle_on_handler_dim: fade(@color_toggle_on_handler, 30%);
+@color_toggle_off_handler: #a1a1a1;
+@color_toggle_off_handler_press: #a1a1a1;
+@color_toggle_off_handler_dim: fade(@color_toggle_off_handler, 30%);
+
+@color_toggle_on_bg: @controller-on-color;
+@color_toggle_on_bg_press: @controller-on-color;
+@color_toggle_on_bg_dim: fade(@controller-on-color, 30%);
+@color_toggle_off_bg: @controller-off-color;
+@color_toggle_off_bg_press: @controller-off-color;
+@color_toggle_off_bg_dim: fade(@controller-off-color, 24%);
+
+@color_toggle_handler_bg: #fafafa;
+@color_toggle_handler_bg_press: #bfbfbf;
+@color_toggle_handler_bg_dim: fade(@color_toggle_handler_bg, 30%);
 
 /***************************************************************************
                    Scroller
@@ -271,18 +275,19 @@
 /***************************************************************************
                    Selector
 ***************************************************************************/
-@color_selector_layer_bg: B01153;
-@color_selector_icon_bg: B0554;
-@color_selector_icon_bg_press: B0554P;
-@color_selector_icon_bg_dim: B0554D;
+@color_selector_layer_bg: fade(@black-color, 85%);
+@color_selector_icon_bg: @white-color;
+@color_selector_icon_bg_press: @rotary-bg-press-color;
+@color_selector_icon_bg_dim: @rotary-bg-dim-color;
 @color_selector_handler_bg: B0116;
 @color_selector_handler_bg_pressed: B0116P;
 @color_selector_layer_sub1_bg: B058L1;
 @color_selector_layer_sub2_bg: B058L2;
-@color_selector_text: T117;
-@color_selector_subtext: T118;
+@color_selector_text: @white-color;
+@color_selector_subtext: @primary-light_color;
 @color_selector_btn: B058;
 @color_selector_btn_press: B058P;
+
 @color_selector_edit_icon_bg: B1672;
 @color_selector_edit_icon_bg_press: B1672P;
 @color_selector_edit_icon_minus: B1671;
@@ -319,10 +324,10 @@
 /***************************************************************************
                    Number Picker
 ***************************************************************************/
-@color_number_picker_label: T273S;
-@color_number_picker_number: T2751;
-@color_number_picker_number_disabled: T273D;
-@color_number_picker_number_pressed: T275P;
+@color_number_picker_label: @white-color;
+@color_number_picker_number: @white-color;
+@color_number_picker_number_disabled: #666666;
+@color_number_picker_number_pressed: fade(@color_number_picker_number, 40%);
 @color_number_picker_blink_on: T275S;
 @color_number_picker_blink_off: T275;
 

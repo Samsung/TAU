@@ -54,7 +54,7 @@
 			~ .ui-switch-button{
 				background-color: transparent;
 				&::before {
-					background-color: @color_toggle_off_handler_off_press;
+					background-color: @color_toggle_handler_bg_press;
 				}
 			}
 		}
@@ -64,7 +64,7 @@
 			~ .ui-switch-button {
 				background-color: transparent;
 				&::before {
-					background-color: @color_toggle_off_handler_off_dim;
+					background-color: @color_toggle_handler_bg_dim;
 				}
 			}
 		}
@@ -86,7 +86,7 @@
 			border: 2 * @unit_base solid @color_toggle_off_handler;
 			left: 0;
 			top: 0;
-			background-color: @color_toggle_on_handler_on;
+			background-color: @color_toggle_handler_bg;
 			transition-property: transform;
 			transition-duration: 300ms;
 			transition-timing-function: ease-out;
@@ -114,7 +114,7 @@
 			transform: none;
 			&::before {
 				transform: translateX(25 * @unit_base);
-				background-color: @color_toggle_on_handler_on;
+				background-color: @color_toggle_handler_bg;
 				border: 2 * @unit_base solid @color_toggle_on_handler;
 			}
 			&::after {
@@ -126,7 +126,7 @@
 			&~ .ui-switch-activation, ~ .ui-switch-button {
 				background-color: transparent;
 				&::before {
-					background-color: @color_toggle_on_handler_on_press;
+					background-color: @color_toggle_handler_bg_press;
 					border-color: @color_toggle_on_handler_press;
 				}
 			}
@@ -136,7 +136,7 @@
 			&~ .ui-switch-activation, ~ .ui-switch-button {
 				background-color: transparent;
 				&::before {
-					background-color: @color_toggle_on_handler_on_dim;
+					background-color: @color_toggle_handler_bg_dim;
 					border-color: @color_toggle_on_handler_dim;
 				}
 			}
