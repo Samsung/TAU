@@ -789,7 +789,8 @@
 					}
 
 					arrayUtil.forEach(titleElements, function (titleElement) {
-						// TODO: Create another widget for appbar
+						// TODO: Create another widget for appbar on mobile
+						titleElement.classList.add(classes.uiTitle);
 						titleElement.classList.add(classes.uiAppbarTitle);
 						titleContainer.appendChild(titleElement);
 					});
