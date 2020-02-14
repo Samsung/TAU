@@ -70,6 +70,7 @@
 			"./core/widget/core/CoverFlow",
 			"./core/widget/core/Dimmer",
 			"./core/widget/core/Graph",
+			"./core/widget/core/ScrollHandler",
 			// wearable widgets
 			"./profile/wearable/widget/wearable/Scrollview",
 			"./profile/wearable/widget/wearable/Popup",

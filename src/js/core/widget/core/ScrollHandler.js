@@ -277,8 +277,8 @@
  * API (jQuery Mobile-like API). Since this widget extends Scrollview,
  * all the Scrollview methods can be called also.
  *
- * @class ns.widget.mobile.ScrollHandler
- * @extends ns.widget.mobile.Scrollview
+ * @class ns.widget.core.ScrollHandler
+ * @extends ns.widget.core.Scrollview
  *
  * @author Krzysztof Antoszek <k.antoszek@samsung.com>
  * @author Piotr Karny <p.karny@samsung.com>
@@ -296,7 +296,7 @@
 			"../../../core/util/selectors",
 			"../../../core/widget/core/Page",
 			"../../../core/widget/core/Scrollview",
-			"./BaseWidgetMobile"
+			"../BaseWidget"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
@@ -310,7 +310,7 @@
 					 * @property {"x"|"y"} [options.direction="y"] The direction of the handler
 					 * @property {"x"|"y"|"xy"} [options.scroll="y"] The direction of scrolling
 					 * @property {number} [options.delay=1500] Time in ms after which the scrollhandler disappears.
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 */
 
 					self.options = {
@@ -323,7 +323,7 @@
 					/**
 					 * A collection of handler UI elements
 					 * @property {Object} ui
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @instance
 					 */
 					self.ui = {
@@ -344,7 +344,7 @@
 					 * @property {Function} _callbacks.touchmove Touch move  handler
 					 * @property {Function} _callbacks.touchend Touch end handler
 					 * @property {Function} _callbacks.resize Window resize handler
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._callbacks = {
@@ -359,14 +359,14 @@
 					/**
 					 * A drag indicator flag
 					 * @property {boolean} [_dragging=false]
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._dragging = false;
 					/**
 					 * Collection of scroll bounds params
 					 * @property {Object} _offsets
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._offsets = {
@@ -378,35 +378,35 @@
 					/**
 					 * Holds original pointer events state
 					 * @property {string} [_lastPointerEvents=""]
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._lastPointerEvents = "";
 					/**
 					 * Holds information about scrollviews available offset
 					 * @property {number} [_availableOffsetX=0]
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._availableOffsetX = 0;
 					/**
 					 * Holds information about scrollviews available offset
 					 * @property {number} [_availableOffsetX=0]
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._availableOffsetY = 0;
 					/**
 					 * @property {?number} [_hideTimer=null]
 					 * Holds timer ID
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._hideTimer = null;
 					/**
 					 * Holds last mouse position
 					 * @property {Object} _lastMouse
-					 * @member ns.widget.mobile.ScrollHandler
+					 * @member ns.widget.core.ScrollHandler
 					 * @protected
 					 */
 					self._lastMouse = {
@@ -425,6 +425,7 @@
 				ScrollviewInit = ScrollviewPrototype._init,
 				ScrollviewBindEvents = ScrollviewPrototype._bindEvents,
 				ScrollviewDestroy = ScrollviewPrototype._destroy,
+				CIRCULAR_ANGLE_RANGE = 60, // degree
 				max = Math.max,
 				min = Math.min,
 				floor = Math.floor,
@@ -439,7 +440,7 @@
 				 * @property {string} [classes.scrollbarDisabled="scrollbar-disabled"] Scrollview scrollbar disabled class
 				 * @property {string} [classes.disabled="disabled"] Disabled class
 				 * @property {string} [classes.hideNativeScrollbar="ui-hide-scrollbar"] Hides native scrollbar in scrollview
-				 * @member ns.widget.mobile.ScrollHandler
+				 * @member ns.widget.core.ScrollHandler
 				 * @static
 				 * @readonly
 				 */
@@ -462,21 +463,28 @@
 
 			/**
 			 * Translates objects position to a new position
-			 * @param {ns.widget.mobile.ScrollHandler} self
+			 * @param {ns.widget.core.ScrollHandler} self
 			 * @param {number} xOffset
 			 * @param {number} yOffset
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
 			function translate(self, xOffset, yOffset) {
 				var style = null,
+					offsets,
 					translateString = null;
 
 				if (self.options.handler) {
 					style = self.ui.handle.style;
-					translateString = "translate3d(" + (xOffset || 0) + "px, " + (yOffset || 0) + "px, 0px)";
-
+					if (ns.support.shape.circle) {
+						offsets = self._offsets,
+						translateString = "rotateZ(" +
+							(((yOffset / offsets.maxY) * CIRCULAR_ANGLE_RANGE - CIRCULAR_ANGLE_RANGE / 2) || 0) +
+							"deg)";
+					} else {
+						translateString = "translate3d(" + (xOffset || 0) + "px, " + (yOffset || 0) + "px, 0px)";
+					}
 					style.webkitTransform = translateString;
 					style.mozTransform = translateString;
 					style.msTransform = translateString;
@@ -487,8 +495,8 @@
 
 			/**
 			 * Sets handler position according to scrollviews position
-			 * @param {ns.widget.mobile.ScrollHandler} self
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @param {ns.widget.core.ScrollHandler} self
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -519,8 +527,8 @@
 
 			/**
 			 * Handles scroll start event
-			 * @param {ns.widget.mobile.ScrollHandler} self
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @param {ns.widget.core.ScrollHandler} self
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -536,8 +544,8 @@
 
 			/**
 			 * Handles scroll update event
-			 * @param {ns.widget.mobile.ScrollHandler} self
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @param {ns.widget.core.ScrollHandler} self
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -552,8 +560,8 @@
 
 			/**
 			 * Handles scroll stop event
-			 * @param {ns.widget.mobile.ScrollHandler} self
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @param {ns.widget.core.ScrollHandler} self
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -571,10 +579,10 @@
 
 			/**
 			 * Handles dragging
-			 * @param {ns.widget.mobile.ScrollHandler} self
+			 * @param {ns.widget.core.ScrollHandler} self
 			 * @param {number} x
 			 * @param {number} y
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -616,9 +624,9 @@
 
 			/**
 			 * Handles touch start event
-			 * @param {ns.widget.mobile.ScrollHandler} self
+			 * @param {ns.widget.core.ScrollHandler} self
 			 * @param {MouseEvent|TouchEvent} event
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -637,6 +645,12 @@
 				lastMouse.y = touch ? touch.clientY : event.clientY;
 
 				self.ui.handle.classList.add("ui-active");
+				// disable scroll indicator
+				if (self.options.direction === "y") {
+					self.element.style.overflowY = "hidden";
+				} else {
+					self.element.style.overflowX = "hidden";
+				}
 
 				tauEvent.stopImmediatePropagation(event);
 				tauEvent.preventDefault(event);
@@ -644,9 +658,9 @@
 
 			/**
 			 * Handles touch move events
-			 * @param {ns.widget.mobile.ScrollHandler} self
+			 * @param {ns.widget.core.ScrollHandler} self
 			 * @param {MouseEvent|TouchEvent} event
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -670,9 +684,9 @@
 
 			/**
 			 * Handles touch end event
-			 * @param {ns.widget.mobile.ScrollHandler} self
+			 * @param {ns.widget.core.ScrollHandler} self
 			 * @param {MouseEvent|TouchEvent} event
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 * @private
 			 * @static
 			 */
@@ -684,6 +698,13 @@
 
 					tauEvent.stopImmediatePropagation(event);
 					tauEvent.preventDefault(event);
+
+					// disable scroll indicator
+					if (self.options.direction === "y") {
+						self.element.style.overflowY = "auto";
+					} else {
+						self.element.style.overflowX = "auto";
+					}
 
 					ui.handle.classList.remove("ui-active");
 
@@ -701,7 +722,7 @@
 			 * @param {HTMLElement} element
 			 * @return {HTMLElement}
 			 * @method _build
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 * @protected
 			 */
 			prototype._build = function (element) {
@@ -767,7 +788,7 @@
 			 * @param {HTMLElement} element
 			 * @method _init
 			 * @protected
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 */
 			prototype._init = function (element) {
 				var self = this,
@@ -804,7 +825,7 @@
 			 * Refreshes the scrollhander bounds and dimensions
 			 * @method _refresh
 			 * @protected
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 */
 			prototype._refresh = function () {
 				var self = this,
@@ -840,7 +861,7 @@
 			 * @param {HTMLElement} element
 			 * @method _bindEvents
 			 * @protected
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 */
 			prototype._bindEvents = function (element) {
 				var self = this,
@@ -902,7 +923,7 @@
 			 * @param {boolean} enable
 			 * @return {boolean}
 			 * @method enableHandler
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 */
 			prototype.enableHandler = function (enable) {
 				var self = this,
@@ -932,7 +953,7 @@
 			 * @param {string} theme
 			 * @method _setHandlerTheme
 			 * @protected
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 */
 			prototype._setHandlerTheme = function (theme) {
 				var elementClassList = this.element.classList,
@@ -949,7 +970,7 @@
 			 * Destroys the scrollhander and scrollview DOM
 			 * @method _destroy
 			 * @protected
-			 * @member ns.widget.mobile.ScrollHandler
+			 * @member ns.widget.core.ScrollHandler
 			 */
 			prototype._destroy = function () {
 				var self = this,
@@ -974,7 +995,7 @@
 
 			ScrollHandler.prototype = prototype;
 
-			ns.widget.mobile.ScrollHandler = ScrollHandler;
+			ns.widget.core.ScrollHandler = ScrollHandler;
 			engine.defineWidget(
 				"ScrollHandler",
 				"[data-role='content'][data-handler='true']:not([data-scroll='none']):not(.ui-scrollview-clip):not(.ui-scrolllistview),[data-handler='true'], .ui-scrollhandler",

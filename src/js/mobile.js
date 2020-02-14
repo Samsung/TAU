@@ -116,7 +116,7 @@
 			"./profile/mobile/widget/IndexScrollbar",
 			"./profile/mobile/widget/Button",
 			"./profile/mobile/widget/FloatingActions",
-			"./profile/mobile/widget/ScrollHandler",
+			"./core/widget/core/ScrollHandler",
 			"./core/widget/core/Tabs",
 			"./profile/mobile/widget/GridView",
 			"./profile/mobile/expose",
