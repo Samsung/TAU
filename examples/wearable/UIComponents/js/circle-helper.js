@@ -19,7 +19,11 @@ document.addEventListener("tauinit", function () {
 				list;
 
 			if (pageWidget.option("enablePageScroll")) {
-				tau.util.rotaryScrolling.enable(page.querySelector(".ui-scroller"));
+				if (page.classList.contains("ui-scrollhandler")) {
+					tau.util.rotaryScrolling.enable(page);
+				} else {
+					tau.util.rotaryScrolling.enable(page.querySelector(".ui-scroller"));
+				}
 			}
 
 			if (!page.classList.contains("page-snaplistview") &&
@@ -39,7 +43,11 @@ document.addEventListener("tauinit", function () {
 				pageWidget = tau.widget.Page(page);
 
 			if (pageWidget.option("enablePageScroll")) {
-				tau.util.rotaryScrolling.disable(page.querySelector(".ui-scroller"));
+				if (page.classList.contains("ui-scrollhandler")) {
+					tau.util.rotaryScrolling.disable(page);
+				} else {
+					tau.util.rotaryScrolling.disable(page.querySelector(".ui-scroller"));
+				}
 			}
 		});
 		document.addEventListener("popupshow", function (event) {
