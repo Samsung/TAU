@@ -61,6 +61,7 @@
 				TOUCH_MOVE_TIME_THRESHOLD = 140,
 				// in px
 				TOUCH_MOVE_Y_THRESHOLD = 10,
+				TOUCH_MOVE_X_BOUNCING_THRESHOLD = 50,
 				// time of animation in skip animation mode, this is one animation frame and animation is
 				// invisible
 				ONE_FRAME_TIME = 40,
@@ -259,6 +260,7 @@
 				lastTouchTime = 0,
 				factorsX = [],
 
+				lastTouchX = 0,
 				lastTouchY = 0,
 				deltaTouchY = 0,
 				deltaSumTouchY = 0,
@@ -954,7 +956,7 @@
 				}
 
 				self._setMaxScrollY();
-				self._bouncingEffect._maxValue = self._maxScrollY;
+				self._bouncingEffect._maxScrollValue.y = self._maxScrollY;
 
 				// refresh widget view
 				self.refresh();
@@ -1098,6 +1100,7 @@
 					touch = event.changedTouches[0],
 					state = self._state;
 
+				lastTouchX = touch.clientX;
 				deltaTouchY = 0;
 				lastTouchY = touch.clientY;
 				startTouchTime = Date.now();
@@ -1127,6 +1130,7 @@
 					deltaTouchTime,
 					scroll = state.scroll,
 					current = scroll.current,
+					deltaTouchX = 0,
 					bouncingEffect = self._bouncingEffect;
 
 				if (self._items.length === 0) {
@@ -1138,9 +1142,12 @@
 				deltaTouchTime = lastTouchTime - startTouchTime;
 
 				// move
+				deltaTouchX = touch.clientX - lastTouchX;
 				deltaTouchY = touch.clientY - lastTouchY;
 				current += deltaTouchY;
 				deltaSumTouchY += deltaTouchY;
+
+
 
 				if (didScroll === false &&
 					(deltaTouchTime > TOUCH_MOVE_TIME_THRESHOLD || abs(deltaSumTouchY) > TOUCH_MOVE_Y_THRESHOLD)) {
@@ -1151,22 +1158,33 @@
 				}
 
 				if (didScroll) {
-					lastTouchY = touch.clientY;
 					// set current to correct range
 					if (current > 0) {
 						current = 0;
 						// enable top end effect
-						bouncingEffect.drag(0, 0);
+						bouncingEffect.drag(-touch.clientX, 0);
 						self._setBouncingTimeout();
 					} else if (current < -self._maxScrollY) {
 						current = -self._maxScrollY;
 						// enable bottom end effect
-						bouncingEffect.drag(0, current);
+						bouncingEffect.drag(-touch.clientX, current);
 						self._setBouncingTimeout();
+					} else if (abs(deltaTouchX) > TOUCH_MOVE_X_BOUNCING_THRESHOLD) {
+						if (touch.clientX > lastTouchX) {
+							// enable left end effect
+							bouncingEffect.drag(0, -touch.clientY);
+							self._setBouncingTimeout();
+						} else {
+							// enable right end effect
+							bouncingEffect.drag(-self.element.getBoundingClientRect().right, -touch.clientY);
+							self._setBouncingTimeout();
+						}
 					} else {
 						// hide end effect
 						bouncingEffect.dragEnd();
 					}
+
+					lastTouchY = touch.clientY;
 					scroll.current = current;
 
 					state.currentIndex = self._findItemIndexByY(-1 * (current - SCREEN_HEIGHT / 2 + 1));
@@ -1194,6 +1212,7 @@
 
 				if (didScroll) {
 					deltaTouchY = touch.clientY - lastTouchY;
+					lastTouchX = touch.clientX;
 					lastTouchY = touch.clientY;
 					scroll.current += deltaTouchY;
 					if (scroll.current > 0) {
@@ -1828,9 +1847,9 @@
 
 				self._setMaxScrollY();
 				self._bouncingEffect = new ns.widget.core.scroller.effect.Bouncing(self._ui.page, {
-					maxScrollX: 0,
+					maxScrollX: self.element.getBoundingClientRect().right,
 					maxScrollY: self._maxScrollY,
-					orientation: "vertical"
+					orientation: "vertical-horizontal"
 				});
 			};
 
