@@ -38,11 +38,14 @@
 					var self = this;
 
 					self._orientation = null;
-					self._maxValue = null;
-
+					self._maxScrollValue = null;
 					self._container = null;
-					self._minEffectElement = null;
-					self._maxEffectElement = null;
+					self._effectElement = {
+						top: null,
+						bottom: null,
+						left: null,
+						right: null
+					}
 
 					self.options = utilsObject.merge({}, Bouncing.defaults, {scrollEndEffectArea: ns.getConfig("scrollEndEffectArea", Bouncing.defaults.scrollEndEffectArea)});
 					/**
@@ -61,7 +64,8 @@
 				},
 				Orientation = {
 					VERTICAL: "vertical",
-					HORIZONTAL: "horizontal"
+					HORIZONTAL: "horizontal",
+					VERTICAL_HORIZONTAL: "vertical-horizontal"
 				},
 				endEffectAreaType = {
 					content: "content",
@@ -97,39 +101,72 @@
 					}
 
 					self._orientation = options.orientation;
-					self._maxValue = self._getValue(options.maxScrollX, options.maxScrollY);
+
+					if (self._orientation === Orientation.HORIZONTAL || self._orientation == Orientation.VERTICAL) {
+						self._maxScrollValue = self._getValue(options.maxScrollX, options.maxScrollY);
+					} else {
+						self._maxScrollValue = {
+							x: options.maxScrollX,
+							y: options.maxScrollY
+						}
+					}
 
 					self._initLayout();
 				},
 
+				_createDivElement: function () {
+					return document.createElement("DIV");
+				},
+
 				_initLayout: function () {
 					var self = this,
-						minElement = self._minEffectElement = document.createElement("DIV"),
-						maxElement = self._maxEffectElement = document.createElement("DIV"),
+						leftEffectElement = null,
+						rightEffectElement = null,
+						topEffectElement = null,
+						bottomEffectElement = null,
 						className = classes.bouncingEffect;
 
-					if (self._orientation === Orientation.HORIZONTAL) {
-						minElement.className = className + " " + classes.left;
-						maxElement.className = className + " " + classes.right;
-					} else {
-						minElement.className = className + " " + classes.top;
-						maxElement.className = className + " " + classes.bottom;
+					if (self._orientation === Orientation.HORIZONTAL || self._orientation == Orientation.VERTICAL_HORIZONTAL) {
+						leftEffectElement = self._createDivElement();
+						rightEffectElement = self._createDivElement();
+						leftEffectElement.className = className + " " + classes.left;
+						rightEffectElement.className = className + " " + classes.right;
+						self._container.appendChild(leftEffectElement);
+						self._container.appendChild(rightEffectElement);
+						self._registerAnimationEnd(leftEffectElement);
+						self._registerAnimationEnd(rightEffectElement);
+						self._effectElement.left = leftEffectElement;
+						self._effectElement.right = rightEffectElement;
 					}
 
-					self._container.appendChild(minElement);
-					self._container.appendChild(maxElement);
+					if (self._orientation === Orientation.VERTICAL || self._orientation == Orientation.VERTICAL_HORIZONTAL) {
+						topEffectElement = self._createDivElement();
+						bottomEffectElement = self._createDivElement();
+						topEffectElement.className = className + " " + classes.top;
+						bottomEffectElement.className = className + " " + classes.bottom;
+						self._container.appendChild(topEffectElement);
+						self._container.appendChild(bottomEffectElement);
+						self._registerAnimationEnd(topEffectElement);
+						self._registerAnimationEnd(bottomEffectElement);
+						self._effectElement.top = topEffectElement;
+						self._effectElement.bottom = bottomEffectElement;
+					}
+				},
 
-					minElement.addEventListener("animationEnd", this);
-					minElement.addEventListener("webkitAnimationEnd", this);
-					minElement.addEventListener("mozAnimationEnd", this);
-					minElement.addEventListener("msAnimationEnd", this);
-					minElement.addEventListener("oAnimationEnd", this);
+				_registerAnimationEnd: function (element) {
+					element.addEventListener("animationEnd", this);
+					element.addEventListener("webkitAnimationEnd", this);
+					element.addEventListener("mozAnimationEnd", this);
+					element.addEventListener("msAnimationEnd", this);
+					element.addEventListener("oAnimationEnd", this);
+				},
 
-					maxElement.addEventListener("animationEnd", this);
-					maxElement.addEventListener("webkitAnimationEnd", this);
-					maxElement.addEventListener("mozAnimationEnd", this);
-					maxElement.addEventListener("msAnimationEnd", this);
-					maxElement.addEventListener("oAnimationEnd", this);
+				_unregisterAnimationEnd: function (element) {
+					element.removeEventListener("animationEnd", this);
+					element.removeEventListener("webkitAnimationEnd", this);
+					element.removeEventListener("mozAnimationEnd", this);
+					element.removeEventListener("msAnimationEnd", this);
+					element.removeEventListener("oAnimationEnd", this);
 				},
 
 				/**
@@ -182,8 +219,7 @@
 					var self = this;
 
 					if (self._isShow) {
-						self._minEffectElement.style.display = "none";
-						self._maxEffectElement.style.display = "none";
+						self._targetElement.style.display = "none";
 						self._targetElement.classList.remove(classes.hide);
 						self._targetElement.classList.remove(classes.show);
 					}
@@ -195,24 +231,57 @@
 
 				_checkAndShow: function (x, y) {
 					var self = this,
-						val = self._getValue(x, y);
+						val = null;
 
 					if (!self._isShow) {
-						if (val >= 0) {
-							self._targetElement = self._minEffectElement;
-							self.show();
-						} else if (val <= self._maxValue) {
-							self._targetElement = self._maxEffectElement;
-							self.show();
+						if (self._orientation === Orientation.HORIZONTAL || self._orientation === Orientation.VERTICAL) {
+							val = self._getValue(x, y);
+							if (val >= 0) {
+								self._targetElement = self._getMinEffectElement();
+							} else if (val <= self._maxScrollValue) {
+								self._targetElement = self._getMaxEffectElement();
+							}
+						} else {
+							// Handle bouncing in both orientations.
+							if (y == 0) {
+								self._targetElement = self._effectElement.top;
+							} else if (y == -self._maxScrollValue.y) {
+								self._targetElement = self._effectElement.bottom;
+							} else if (x == 0) {
+								self._targetElement = self._effectElement.left;
+							} else if (x == -self._maxScrollValue.x) {
+								self._targetElement = self._effectElement.right;
+							}
 						}
-
+						self.show();
 					} else if (self._isShow && !self._isDrag && !self._isShowAnimating && !self._isHideAnimating) {
 						self._beginHide();
 					}
 				},
 
 				_getValue: function (x, y) {
+					if (this._orientation === Orientation.VERTICAL_HORIZONTAL) {
+						return null;
+					}
 					return this._orientation === Orientation.HORIZONTAL ? x : y;
+				},
+
+				_getMinEffectElement: function () {
+					var self = this;
+
+					if (self._orientation === Orientation.VERTICAL_HORIZONTAL) {
+						return null;
+					}
+					return self._orientation === Orientation.HORIZONTAL ? self._effectElement.left : self._effectElement.top;
+				},
+
+				_getMaxEffectElement: function () {
+					var self = this;
+
+					if (self._orientation === Orientation.VERTICAL_HORIZONTAL) {
+						return null;
+					}
+					return self._orientation === Orientation.HORIZONTAL ? self._effectElement.right : self._effectElement.bottom;
 				},
 
 				_beginShow: function () {
@@ -287,32 +356,38 @@
 				 */
 				destroy: function () {
 					var self = this,
-						maxEffectElement = this._maxEffectElement,
-						minEffectElement = this._minEffectElement;
+						topEffectElement = self._effectElement.top,
+						bottomEffectElement = self._effectElement.bottom,
+						leftEffectElement = self._effectElement.left,
+						rightEffectElement = self._effectElement.right;
 
-					minEffectElement.removeEventListener("animationEnd", this);
-					minEffectElement.removeEventListener("webkitAnimationEnd", this);
-					minEffectElement.removeEventListener("mozAnimationEnd", this);
-					minEffectElement.removeEventListener("msAnimationEnd", this);
-					minEffectElement.removeEventListener("oAnimationEnd", this);
+					if (topEffectElement) {
+						self._unregisterAnimationEnd(topEffectElement);
+						self._container.removeChild(topEffectElement);
+					}
 
-					maxEffectElement.removeEventListener("animationEnd", this);
-					maxEffectElement.removeEventListener("webkitAnimationEnd", this);
-					maxEffectElement.removeEventListener("mozAnimationEnd", this);
-					maxEffectElement.removeEventListener("msAnimationEnd", this);
-					maxEffectElement.removeEventListener("oAnimationEnd", this);
+					if (bottomEffectElement) {
+						self._unregisterAnimationEnd(bottomEffectElement);
+						self._container.removeChild(bottomEffectElement);
+					}
 
-					self._container.removeChild(minEffectElement);
-					self._container.removeChild(maxEffectElement);
+					if (leftEffectElement) {
+						self._unregisterAnimationEnd(leftEffectElement);
+						self._container.removeChild(leftEffectElement);
+					}
+
+					if (rightEffectElement) {
+						self._unregisterAnimationEnd(rightEffectElement);
+						self._container.removeChild(rightEffectElement);
+					}
 
 					self._container = null;
-					self._minEffectElement = null;
-					self._maxEffectElement = null;
+					self._effectElement = null;
 					self._targetElement = null;
 
 					self._isShow = null;
 					self._orientation = null;
-					self._maxValue = null;
+					self._maxScrollValue = null;
 				}
 			};
 
