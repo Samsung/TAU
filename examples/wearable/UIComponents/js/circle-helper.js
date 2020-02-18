@@ -27,7 +27,7 @@ document.addEventListener("tauinit", function () {
 				pageId !== "page-swipelist" &&
 				pageId !== "page-marquee-list" &&
 				pageId !== "page-multiline-list" &&
-				pageId !== "drawer-page") {
+				pageId !== "assist-panel-page") {
 				list = page.querySelector(".ui-listview");
 				if (list) {
 					tau.widget.Listview(list);

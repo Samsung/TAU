@@ -27,6 +27,9 @@
  *
  * - left (left position, default)
  * - right (right position)
+ * @since 1.2
+ * - down (bottom position)
+ * - up (top position)
  *
  * ##Opening / Closing Drawer
  * To open / close Drawer one can use open() and close() methods.
@@ -101,6 +104,7 @@
 				 */
 				DEFAULT = {
 					WIDTH: 240,
+					HEIGHT: 360,
 					DURATION: 300,
 					POSITION: "left"
 				},
@@ -112,7 +116,7 @@
 					var self = this;
 					/**
 					 * Drawer field containing options
-					 * @property {string} options.position Position of Drawer ("left" or "right")
+					 * @property {string} options.position Position of Drawer ("left", "right" or "bottom")
 					 * @property {number} options.width Width of Drawer
 					 * @property {number} options.duration Duration of Drawer entrance animation
 					 * @property {boolean} options.closeOnClick If true Drawer will be closed on overlay
@@ -126,6 +130,7 @@
 					self.options = {
 						position: DEFAULT.POSITION,
 						width: DEFAULT.WIDTH,
+						height: DEFAULT.HEIGHT,
 						duration: DEFAULT.DURATION,
 						closeOnClick: true,
 						overlay: true,
@@ -140,6 +145,7 @@
 					self._state = STATE.CLOSED;
 					self._settlingType = STATE.CLOSED;
 					self._translatedX = 0;
+					self._translatedY = 0;
 
 					self._ui = {};
 
@@ -174,6 +180,18 @@
 					 * @member ns.widget.core.Drawer
 					 */
 					right: "ui-drawer-right",
+					/**
+					 * Drawer appears from the top side.
+					 * @style ui-drawer-up
+					 * @member ns.widget.core.Drawer
+					 */
+					up: "ui-drawer-up",
+					/**
+					 * Drawer appears from the bottom side.
+					 * @style ui-drawer-down
+					 * @member ns.widget.core.Drawer
+					 */
+					down: "ui-drawer-down",
 					/**
 					 * Set the drawer overlay when the drawer is opened.
 					 * @style ui-drawer-overlay
@@ -210,14 +228,13 @@
 			 * @param {Object} self
 			 * @param {HTMLElement} element
 			 * @member ns.widget.core.Drawer
-			 * @private
-			 * @static
+			 * @protected
 			 */
-			function unbindDragEvents(self, element) {
+			prototype._unbindDragEvents = function (self, element) {
 				var overlayElement = self._ui.drawerOverlay;
 
 				events.disableGesture(element);
-				events.off(element, "drag dragstart dragend dragcancel swipe swipeleft swiperight vmouseup", self, false);
+				events.off(element, "drag dragstart dragend dragcancel swipe swipeleft swiperight swipe vmouseup", self, false);
 				events.prefixedFastOff(self.element, "transitionEnd", self, false);
 				events.off(window, "resize", self, false);
 				if (overlayElement) {
@@ -231,10 +248,9 @@
 			 * @param {Object} self
 			 * @param {HTMLElement} element
 			 * @member ns.widget.core.Drawer
-			 * @private
-			 * @static
+			 * @protected
 			 */
-			function bindDragEvents(self, element) {
+			prototype._bindDragEvents = function (self, element) {
 				var overlayElement = self._ui.drawerOverlay;
 
 				self._eventBoundElement = element;
@@ -244,11 +260,14 @@
 
 					new Gesture.Drag(),
 					new Gesture.Swipe({
-						orientation: Gesture.Orientation.HORIZONTAL
+						orientation: (self.options.position === "left" || self.options.position === "right") ?
+							Gesture.Orientation.HORIZONTAL : Gesture.Orientation.VERTICAL
 					})
 				);
 
-				events.on(element, "drag dragstart dragend dragcancel swipe swipeleft swiperight vmouseup", self, false);
+				events.on(element,
+					"drag dragstart dragend dragcancel swipe swipeleft swiperight swipeup swipedown vmouseup",
+					self, false);
 				events.prefixedFastOn(self.element, "transitionEnd", self, false);
 				events.on(window, "resize", self, false);
 				if (overlayElement) {
@@ -284,6 +303,8 @@
 					case "swipe":
 					case "swipeleft":
 					case "swiperight":
+					case "swipeup":
+					case "swipedown":
 						self._onSwipe(event);
 						break;
 					case "vclick":
@@ -388,12 +409,26 @@
 
 				// Now mobile has two swipe event
 				if (event.detail) {
-					direction = event.detail.direction === "left" ? "right" : "left";
+					switch (event.detail.direction) {
+						case "left" : direction = "right";
+							break;
+						case "right" : direction = "left";
+							break;
+						case "up" : direction = "down";
+							break;
+						case "down" : direction = "up";
+							break;
+					}
 				} else if (event.type === "swiperight") {
 					direction = "left";
 				} else if (event.type === "swipeleft") {
 					direction = "right";
+				} else if (event.type === "swipeup") {
+					direction = "down";
+				} else if (event.type === "swipedown") {
+					direction = "up";
 				}
+
 				if (options.enable && self._isDrag && options.position === direction) {
 					self.open();
 					self._isDrag = false;
@@ -428,21 +463,39 @@
 			prototype._onDrag = function (event) {
 				var self = this,
 					deltaX = event.detail.deltaX,
+					deltaY = event.detail.deltaY,
 					options = self.options,
 					translatedX = self._translatedX,
-					movedX;
+					translatedY = self._translatedY,
+					movedX,
+					movedY;
 
 				if (options.enable && self._isDrag && self._state !== STATE.SETTLING) {
-					if (options.position === "left") {
-						movedX = -options.width + deltaX + translatedX;
-						if (movedX < 0) {
-							self._translate(movedX, 0);
-						}
-					} else {
-						movedX = window.innerWidth + deltaX - translatedX;
-						if (movedX > 0 && movedX > window.innerWidth - options.width) {
-							self._translate(movedX, 0);
-						}
+					switch (options.position) {
+						case "left":
+							movedX = -options.width + deltaX + translatedX;
+							if (movedX < 0) {
+								self._translate(movedX, 0, 0);
+							}
+							break;
+						case "right":
+							movedX = window.innerWidth + deltaX - translatedX;
+							if (movedX > 0 && movedX > window.innerWidth - options.width) {
+								self._translate(movedX, 0, 0);
+							}
+							break;
+						case "up":
+							movedY = -options.height + deltaY + translatedY;
+							if (movedY < 0) {
+								self._translate(0, movedY, 0);
+							}
+							break;
+						case "down":
+							movedY = window.innerHeight + deltaY - translatedY;
+							if (movedY > 0 && movedY > window.innerHeight - options.height) {
+								self._translate(0, movedY, 0);
+							}
+							break;
 					}
 				}
 			};
@@ -459,10 +512,19 @@
 					detail = event.detail;
 
 				if (options.enable && self._isDrag) {
-					if (Math.abs(detail.deltaX) > options.width / 2) {
-						self.open();
-					} else if (self._state !== STATE.SETTLING) {
-						self.close();
+					if (options.position === "left" || options.position === "left") {
+						if (Math.abs(detail.deltaX) > options.width / 2) {
+							self.open();
+						} else if (self._state !== STATE.SETTLING) {
+							self.close();
+						}
+					}
+					if (options.position === "up" || options.position === "down") {
+						if (Math.abs(detail.deltaY) > options.height / 2) {
+							self.open();
+						} else if (self._state !== STATE.SETTLING) {
+							self.close();
+						}
 					}
 				}
 				self._isDrag = false;
@@ -482,6 +544,7 @@
 				}
 				self._isDrag = false;
 			};
+
 			/**
 			 * Drawer translate function
 			 * @method _translate
@@ -490,7 +553,7 @@
 			 * @member ns.widget.core.Drawer
 			 * @protected
 			 */
-			prototype._translate = function (x, duration) {
+			prototype._translate = function (x, y, duration) {
 				var self = this,
 					element = self.element;
 
@@ -503,9 +566,9 @@
 				}
 
 				// there should be a helper for this :(
-				utilDOM.setPrefixedStyle(element, "transform", "translate3d(" + x + "px, 0px, 0px)");
+				utilDOM.setPrefixedStyle(element, "transform", "translate3d(" + x + "px, " + y + "px, 0px)");
 				if (self.options.overlay) {
-					self._setOverlay(x);
+					self._setOverlay(x, y);
 				}
 				if (!duration) {
 					self._onTransitionEnd();
@@ -514,26 +577,74 @@
 			};
 
 			/**
-			 * Set overlay opacity and visibility
-			 * @method _setOverlay
-			 * @param {number} x
+			 * Set overlay opacity
+			 * @method _setOverlayOpacity
+			 * @param {number} ratio
 			 * @member ns.widget.core.Drawer
 			 * @protected
 			 */
-			prototype._setOverlay = function (x) {
-				var self = this,
-					options = self.options,
-					overlay = self._ui.drawerOverlay,
-					overlayStyle = overlay.style,
-					absX = Math.abs(x),
-					ratio = options.position === "right" ? absX / window.innerWidth : absX / options.width;
+			prototype._setOverlayOpacity = function (ratio) {
+				this._ui.drawerOverlay.style.opacity = 1 - ratio;
+			};
+
+			/**
+			 * Set overlay visibility
+			 * @method _setOverlayVisibility
+			 * @param {number} ratio
+			 * @member ns.widget.core.Drawer
+			 * @protected
+			 */
+			prototype._setOverlayVisibility = function (ratio) {
+				var overlayStyle = this._ui.drawerOverlay.style;
 
 				if (ratio < 1) {
 					overlayStyle.visibility = "visible";
 				} else {
 					overlayStyle.visibility = "hidden";
 				}
-				overlayStyle.opacity = 1 - ratio;
+			};
+
+			/**
+			 * Calculation of overlay position and opacity
+			 * depending to touch move
+			 * @method _calcOverlay
+			 * @param {number} x
+			 * @param {number} y
+			 * @member ns.widget.core.Drawer
+			 * @protected
+			 */
+			prototype._calcOverlay = function (x, y) {
+				var ratio,
+					options = this.options,
+					absX = Math.abs(x),
+					absY = Math.abs(y);
+
+				if (options.position === "right") {
+					ratio = absX / window.innerWidth;
+				} else if (options.position === "left") {
+					ratio = absX / options.width;
+				} else if (options.position === "down") {
+					ratio = absY / window.innerHeight;
+				} else if (options.position === "up") {
+					ratio = absY / options.height;
+				}
+				return ratio;
+			};
+
+			/**
+			 * Set overlay visibility
+			 * @method _setOverlay
+			 * @param {number} x
+			 * @param {number} y
+			 * @member ns.widget.core.Drawer
+			 * @protected
+			 */
+			prototype._setOverlay = function (x, y) {
+				var self = this,
+					ratio = self._calcOverlay(x, y);
+
+				self._setOverlayVisibility(ratio);
+				self._setOverlayOpacity(ratio);
 			};
 
 			/**
@@ -619,14 +730,13 @@
 					element = self.element,
 					elementStyle = element.style,
 					ui = self._ui,
-					overlayStyle = ui.drawerOverlay ? ui.drawerOverlay.style : null,
-					height;
+					overlayStyle = ui.drawerOverlay ? ui.drawerOverlay.style : null;
 
 				options.width = options.width || ui.targetElement.offsetWidth;
-				height = ui.targetElement.offsetHeight;
+				options.height = options.height || ui.targetElement.offsetHeight;
 
 				elementStyle.width = (options.width !== 0) ? options.width + "px" : "100%";
-				elementStyle.height = (height !== 0) ? height + "px" : "100%";
+				elementStyle.height = (options.height !== 0) ? options.height + "px" : "100%";
 				elementStyle.top = "0";
 
 				if (overlayStyle) {
@@ -636,11 +746,16 @@
 				}
 				if (options.position === "right") {
 					element.classList.add(classes.right);
-					self._translate(window.innerWidth, 0);
-				} else {
-					// left or default
+					self._translate(window.innerWidth, 0, 0);
+				} else if (options.position === "left") {
 					element.classList.add(classes.left);
-					self._translate(-options.width, 0);
+					self._translate(-options.width, 0, 0);
+				} else if (options.position === "up") {
+					element.classList.add(classes.up);
+					self._translate(0, -window.innerHeight, 0);
+				} else if (options.position === "down") {
+					element.classList.add(classes.down);
+					self._translate(0, options.height, 0);
 				}
 
 				self._state = STATE.CLOSED;
@@ -660,10 +775,10 @@
 					// If drawer position is right, drawer should be moved right side
 					if (self._state === STATE.OPENED) {
 						// drawer opened
-						self._translate(window.innerWidth - options.width, 0);
+						self._translate(window.innerWidth - options.width, 0, 0);
 					} else {
 						// drawer closed
-						self._translate(window.innerWidth, 0);
+						self._translate(window.innerWidth, 0, 0);
 					}
 				}
 			};
@@ -679,16 +794,25 @@
 				var self = this,
 					detail = event.detail,
 					eventClientX = detail.pointer.clientX - detail.estimatedDeltaX,
+					eventClientY = detail.pointer.clientY - detail.estimatedDeltaY,
 					options = self.options,
 					position = options.position,
 					boundElement = self._eventBoundElement,
 					boundElementOffsetWidth = boundElement.offsetWidth,
+					boundElementOffsetHeight = boundElement.offsetHeight,
 					boundElementRightEdge = boundElement.offsetLeft + boundElementOffsetWidth,
-					dragStartArea = boundElementOffsetWidth * options.dragEdge;
+					boundElementDownEdge = boundElement.offsetTop + boundElementOffsetHeight,
+					dragStartAreaWidth = boundElementOffsetWidth * options.dragEdge,
+					dragStartAreaHeight = boundElementOffsetHeight * options.dragEdge;
 
-				return ((position === "left" && eventClientX > 0 && eventClientX < dragStartArea) ||
-				(position === "right" && eventClientX > boundElementRightEdge - dragStartArea &&
-				eventClientX < boundElementRightEdge));
+				return (
+					(position === "left" && eventClientX > 0 && eventClientX < dragStartAreaWidth) ||
+					(position === "right" && eventClientX > boundElementRightEdge - dragStartAreaWidth &&
+						eventClientX < boundElementRightEdge) ||
+					(position === "up" && eventClientY > 0 && eventClientY < dragStartAreaHeight) ||
+					(position === "down" && eventClientY > boundElementDownEdge - dragStartAreaHeight &&
+						eventClientY < boundElementDownEdge)
+				);
 			};
 			/**
 			 * Refreshes Drawer widget
@@ -729,7 +853,20 @@
 				var self = this,
 					targetElement = self._ui.targetElement;
 
-				bindDragEvents(self, targetElement);
+				self._bindDragEvents(self, targetElement);
+			};
+
+			/**
+			 * Unbinds events to a Drawer widget
+			 * @method _unbindEvents
+			 * @member ns.widget.core.Drawer
+			 * @protected
+			 */
+			prototype._unbindEvents = function () {
+				var self = this,
+					targetElement = self._ui.targetElement;
+
+				self._unbindDragEvents(self, targetElement);
 			};
 
 			/**
@@ -784,9 +921,13 @@
 					drawerClassList.remove(classes.close);
 					drawerClassList.add(classes.open);
 					if (options.position === "left") {
-						self._translate(0, duration);
-					} else {
-						self._translate(window.innerWidth - options.width, duration);
+						self._translate(0, 0, duration);
+					} else if (options.position === "right") {
+						self._translate(window.innerWidth - options.width, 0, duration);
+					} else if (options.position === "up") {
+						self._translate(0, 0, duration);
+					} else if (options.position === "down") {
+						self._translate(0, window.innerHeight - options.height, duration);
 					}
 				}
 			};
@@ -818,10 +959,15 @@
 					duration = duration !== undefined ? duration : selfOptions.duration;
 					drawerClassList.remove(classes.open);
 					drawerClassList.add(classes.close);
+
 					if (selfOptions.position === "left") {
-						self._translate(-selfOptions.width, duration);
-					} else {
-						self._translate(window.innerWidth, duration);
+						self._translate(-selfOptions.width, 0, duration);
+					} else if (selfOptions.position === "right") {
+						self._translate(window.innerWidth, 0, duration);
+					} else if (selfOptions.position === "up") {
+						self._translate(0, -selfOptions.height, duration);
+					} else if (selfOptions.position === "down") {
+						self._translate(0, window.innerHeight, duration);
 					}
 				}
 			};
@@ -837,8 +983,8 @@
 				var self = this;
 
 				self.options.dragEdge = 1;
-				unbindDragEvents(self, self._eventBoundElement);
-				bindDragEvents(self, element);
+				self._unbindDragEvents(self, self._eventBoundElement);
+				self._bindDragEvents(self, element);
 			};
 
 			/**
@@ -853,11 +999,19 @@
 					options = self.options;
 
 				if (options.position === "left") {
-					self._translate(-options.width + position, options.duration);
-				} else {
-					self._translate(options.width - position, options.duration);
+					self._translate(-options.width + position, 0, options.duration);
+					self._translatedX = position;
+				} else if (options.position === "right") {
+					self._translate(options.width - position, 0, options.duration);
+					self._translatedX = position;
 				}
-				self._translatedX = position;
+				if (options.position === "up") {
+					self._translate(0, -options.height + position, options.duration);
+					self._translatedY = position;
+				} else if (options.position === "down") {
+					self._translate(0, options.height - position, options.duration);
+					self._translatedY = position;
+				}
 			};
 
 			/**
@@ -886,8 +1040,10 @@
 				if (drawerOverlay) {
 					drawerOverlay.removeEventListener("vclick", self._onClickBound, false);
 				}
-				unbindDragEvents(self, self._eventBoundElement);
+				self._unbindEvents();
 			};
+
+			Drawer.STATE = STATE;
 
 			ns.widget.core.Drawer = Drawer;
 

@@ -74,6 +74,7 @@
 			"./profile/wearable/widget/wearable/Scrollview",
 			"./profile/wearable/widget/wearable/Popup",
 			"./profile/wearable/widget/wearable/Drawer",
+			"./profile/wearable/widget/wearable/AssistPanel",
 			"./profile/wearable/widget/wearable/Slider",
 			"./profile/wearable/widget/wearable/CircleProgressBar",
 			"./profile/wearable/widget/wearable/Listview",

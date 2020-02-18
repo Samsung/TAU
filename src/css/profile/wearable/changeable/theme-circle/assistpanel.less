@@ -1,0 +1,31 @@
+/***************************************************************************
+                  Assist Panel
+***************************************************************************/
+.ui-assist-panel {
+	background-color : @black-color;
+	border-radius: 50%;
+
+	&-indicator {
+		width: 36 * @unit_base;
+		height: 18 * @unit_base;
+		position: fixed;
+		bottom: 14 * @unit_base;
+		left: 50%;
+		transform: translateX(-50%);
+		&:after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;;
+			mask-size: 100%;
+			mask-repeat: no-repeat;
+			mask-image: url("images/primary_assist_btn.png");
+			background-color: @white-color;
+		}
+	}
+	&-overlay {
+		opacity: 0;
+	}
+}
