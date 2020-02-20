@@ -64,7 +64,7 @@
 				/**
 				 * Alias for {@link ns.engine}
 				 * @property {Object} engine
-				 * @member ns.widget.wearable.Page
+				 * @member ns.widget.wearable.Scrollview
 				 * @private
 				 * @static
 				 */
@@ -73,7 +73,7 @@
 				/**
 				 * Alias for {@link ns.util}
 				 * @property {Object} util
-				 * @member ns.widget.wearable.Page
+				 * @member ns.widget.wearable.Scrollview
 				 * @private
 				 * @static
 				 */
@@ -82,7 +82,7 @@
 				/**
 				 * Alias for {@link ns.util.DOM}
 				 * @property {Object} doms
-				 * @member ns.widget.wearable.Page
+				 * @member ns.widget.wearable.Scrollview
 				 * @private
 				 * @static
 				 */
@@ -90,15 +90,23 @@
 				/**
 				 * Alias for {@link ns.util.selectors}
 				 * @property {Object} selectors
-				 * @member ns.widget.wearable.Page
+				 * @member ns.widget.wearable.Scrollview
 				 * @private
 				 * @static
 				 */
 				selectors = util.selectors,
 				/**
+				 * Alias for method {@link Math.abs}
+				 * @property {Function} abs
+				 * @memberof ns.widget.wearable.Scrollview
+				 * @private
+				 * @static
+				 */
+				abs = Math.abs,
+				/**
 				 * Alias for {@link ns.util.object}
 				 * @property {Object} object
-				 * @member ns.widget.wearable.Page
+				 * @member ns.widget.wearable.Scrollview
 				 * @private
 				 * @static
 				 */
@@ -106,6 +114,7 @@
 					CIRCLE: "tizen-circular-scrollbar"
 				},
 				EffectBouncing = ns.widget.core.scroller.effect.Bouncing,
+				BOUNCING_THRESHOLD = 20,
 				Scrollview = function () {
 					this.options = {
 						bouncingEffect: true
@@ -198,17 +207,14 @@
 				self.maxScrollX = 0;
 				self.maxScrollY = 0;
 				if (scroller) {
-					self.maxScrollY = scroller.scrollHeight - window.innerHeight;
+					self.maxScrollX = scroller.scrollWidth;
+					self.maxScrollY = scroller.scrollHeight;
 				}
-				self.minScrollX = 0;
-				self.minScrollY = 0;
 				self.bouncingEffect = new EffectBouncing(self.element, {
 					maxScrollX: self.maxScrollX,
 					maxScrollY: self.maxScrollY,
-					orientation: "vertical"
+					orientation: "vertical-horizontal"
 				});
-				self.scrollerOffsetX = 0;
-				self.scrollerOffsetY = 0;
 				self._setBouncingEffect(self.element, self.options.bouncingEffect);
 			};
 
@@ -219,8 +225,6 @@
 				self.scrolled = false;
 				self.dragging = true;
 				self.scrollCanceled = false;
-				self.startScrollerOffsetX = self.scrollerOffsetX;
-				self.startScrollerOffsetY = self.scrollerOffsetY;
 			};
 
 			prototype._end = function () {
@@ -271,30 +275,41 @@
 			prototype._move = function (event) {
 				var self = this,
 					scroller = self.scroller,
-					newX = self.startScrollerOffsetX,
-					newY = self.startScrollerOffsetY,
-					scrollTop,
-					maxScrollY,
+					scrollPositionX,
+					scrollPositionY,
 					deltaY = event.detail.deltaY,
+					deltaX = event.detail.deltaX,
+					clientX = event.detail.pointer.clientX,
+					clientY = event.detail.pointer.clientY,
 					bouncingEffect = self.bouncingEffect;
 
 				if (scrolling.isElement(scroller)) {
-					scrollTop = scrolling.getScrollPosition();
-					maxScrollY = scrolling.getMaxScroll();
+					// FIXME: implement getting left scroll position.
+					scrollPositionX = 0;
+					scrollPositionY = scrolling.getScrollPosition();
 				} else {
-					scrollTop = scroller.scrollTop;
-					maxScrollY = self.maxScrollY;
+					scrollPositionX = scroller.scrollLeft;
+					scrollPositionY = scroller.scrollTop;
 				}
 
-				if ((scrollTop === 0 && deltaY > 0) ||
-					(scrollTop === maxScrollY && deltaY < 0)) {
-					if (bouncingEffect) {
-						bouncingEffect.drag(0, -scrollTop);
+				// Handle bouncing (End Effect).
+				if (abs(deltaY) > BOUNCING_THRESHOLD) {
+					if (deltaY > 0) {
+						// show top bouncing.
+						bouncingEffect.drag(clientX, scrollPositionY);
+					} else if (deltaY < 0) {
+						// show bottom bouncing.
+						bouncingEffect.drag(clientX, -(scrollPositionY + window.innerHeight));
+					}
+				} else if (abs(deltaX) > BOUNCING_THRESHOLD) {
+					if (deltaX > 0) {
+						// show left bouncing.
+						bouncingEffect.drag(scrollPositionX, clientY);
+					} else {
+						// show right bouncing.
+						bouncingEffect.drag(-(scrollPositionX + window.innerWidth), clientY);
 					}
 				}
-
-				self.scrollerOffsetX = newX;
-				self.scrollerOffsetY = newY;
 			};
 
 			Scrollview.prototype = prototype;
