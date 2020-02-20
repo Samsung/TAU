@@ -1,4 +1,7 @@
-var testPaths = [
+/* eslint-disable no-unused-vars */
+/*global testPaths:true */
+
+testPaths = [
 	"profile/mobile/config",
 	"profile/wearable/config",
 	"core/widget/core/Page",
@@ -24,7 +27,7 @@ var testPaths = [
 	"profile/wearable/widget/wearable/ArcListview",
 	"profile/wearable/widget/wearable/Scrollview",
 	"profile/wearable/widget/wearable/ColorPicker",
-	"core/defaults",
+	// "core/defaults",
 	"core/support/tizen",
 	"core/engine",
 	"core/util",
