@@ -2,7 +2,7 @@
   "name": "tau",
   "title": "tau",
   "description": "Tizen Advanced UI",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "scripts": {
     "build": "grunt build",
     "test": "grunt test",
