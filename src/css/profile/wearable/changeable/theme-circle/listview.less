@@ -351,7 +351,9 @@
 	}
 	&.ui-arc-listview-carousel-item:not(.ui-snap-listview) {
 		li {
-			flex-direction: row;
+			&:not(.ui-li-has-multiline):not(.li-has-multiline) {
+				flex-direction: row;
+			}
 		}
 	}
 
