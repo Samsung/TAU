@@ -14,8 +14,6 @@
 					tizen.application.getCurrentApplication().exit();
 				} catch (ignore) {
 				}
-			} else {
-				window.history.back();
 			}
 		}
 	});
