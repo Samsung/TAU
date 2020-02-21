@@ -1147,8 +1147,6 @@
 				current += deltaTouchY;
 				deltaSumTouchY += deltaTouchY;
 
-
-
 				if (didScroll === false &&
 					(deltaTouchTime > TOUCH_MOVE_TIME_THRESHOLD || abs(deltaSumTouchY) > TOUCH_MOVE_Y_THRESHOLD)) {
 					didScroll = true;
