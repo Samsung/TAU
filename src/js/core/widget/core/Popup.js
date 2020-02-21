@@ -92,7 +92,14 @@
 				 */
 				Router = ns.router && ns.router.Router,
 
+				/**
+				 * Alias for BaseKeyBoard Support
+				 * @property {ns.widget.core.BaseKeyboardSupport} BaseKeyboardSupport
+				 * @member ns.widget.core.Popup
+				 * @private
+				 */
 				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
+
 				/**
 				 * Alias for class ns.widget.core.Page
 				 * @property {ns.router.Router} Router
@@ -815,7 +822,7 @@
 				if (self.isKeyboardSupport) {
 					self.disableFocusableElements(this._ui.page);
 					self.enableDisabledFocusableElements(this.element);
-					ns.widget.core.BaseKeyboardSupport.focusElement(this.element);
+					BaseKeyboardSupport.focusElement(this.element);
 				}
 				self.trigger(events.show);
 			};
