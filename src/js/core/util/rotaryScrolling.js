@@ -39,18 +39,41 @@
 				 * Scroll step
 				 * @type {number}
 				 */
-				scrollStep = 40;
+				scrollStep = 40,
+				/**
+				 * Time after bound effect will be hidden.
+				 * @type {number}
+				 */
+				BOUNCING_TIMEOUT = 1000;
 
 			/**
 			 * Handler for rotary event
 			 * @param {Event} event Event object
 			 */
 			function rotaryDetentHandler(event) {
+				var scrollview = null,
+					maxScrollY = 0;
+
 				if (element.getAttribute("data-lock-rotary-scroll") !== "true") {
+					scrollview = ns.engine.getBinding(element.parentElement, "Scrollview");
 					if (event.detail.direction === "CW") {
 						element.scrollTop += scrollStep;
+						if (scrollview) {
+							maxScrollY = element.scrollTop + window.innerHeight;
+							scrollview.bouncingEffect.drag(undefined /* ignore horizontal effect */, -maxScrollY);
+						}
 					} else {
 						element.scrollTop -= scrollStep;
+						if (scrollview) {
+							scrollview.bouncingEffect.drag(undefined /* ignore horizontal effect */, element.scrollTop);
+						}
+					}
+
+					// Hide bouncing after timeout.
+					if (scrollview) {
+						setTimeout(function () {
+							scrollview.bouncingEffect.dragEnd();
+						}, BOUNCING_TIMEOUT);
 					}
 				}
 			}
