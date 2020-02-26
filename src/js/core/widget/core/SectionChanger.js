@@ -599,9 +599,11 @@
 
 					switch (event.type) {
 						case "swipe":
-						case "rotarydetent" :
 						case "taufocusborder":
 							this._change(event);
+							break;
+						case "rotarydetent" :
+							this._change(event, true);
 							break;
 						case "webkitTransitionEnd":
 						case "mozTransitionEnd":
@@ -638,17 +640,24 @@
 				 * Changes the currently active section element.
 				 * @method setActiveSection
 				 * @param {number} index
-				 * @param {number} duration For smooth scrolling,
+				 * @param {number} [duration=0] For smooth scrolling,
 				 * the duration parameter must be in milliseconds.
-				 * @param {number} [direct=false]
+				 * @param {number} [direct=false] Whether section is set once directly (e.g. with bezel)
+				 *  or with touch events
 				 * @member ns.widget.core.SectionChanger
 				 */
 				setActiveSection: function (index, duration, direct) {
 					var position = this.sectionPositions[index],
-						scrollbarDuration = duration,
+						scrollbarDuration,
 						oldActiveIndex = this.activeIndex,
 						newX = 0,
 						newY = 0;
+
+					//default parameters
+					duration = duration || 0;
+					direct = !!direct;
+
+					scrollbarDuration = duration;
 
 					if (this.orientation === Orientation.HORIZONTAL) {
 						newX = this._sectionChangerHalfWidth - calculateCenter(this.orientation, this.sections, position);
@@ -746,7 +755,14 @@
 					}
 				},
 
-				_change: function (event) {
+				/**
+				 * Changes the currently active section element.
+				 * @method _change
+				 * @param {event} event
+				 * @param {boolean} [direct=false]
+				 * @private
+				 */
+				_change: function (event, direct) {
 					var self = this,
 						direction = event.detail.direction,
 						offset = direction === gesture.Direction.UP ||
@@ -759,6 +775,8 @@
 					}
 
 					newIndex = self._calculateIndex(self.beforeIndex + offset);
+
+					direct = !!direct;
 
 					if (self.enabled && !self.scrollCanceled) {
 						// bouncing effect
@@ -776,8 +794,7 @@
 							self._notifyChangedSection(newIndex);
 						}
 
-						self.setActiveSection(newIndex, self.options.animateDuration, false);
-
+						self.setActiveSection(newIndex, self.options.animateDuration, direct);
 						self.dragging = false;
 					}
 				},
