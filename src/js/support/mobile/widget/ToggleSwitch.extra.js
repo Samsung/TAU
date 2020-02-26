@@ -496,7 +496,6 @@
 					handle = self._ui.handle,
 					slider = self._ui.slider,
 					localClasses = handle.classList,
-					tagName = control.nodeName.toLowerCase(),
 					max = control.querySelectorAll("option").length - 1,
 					stepValue = DOMUtils.getNumberFromAttribute(control,
 						"step", "float", 0),
