@@ -50,6 +50,8 @@ module.exports = function (config) {
 			{pattern: "libs/**/*.js", included: false, served: true, watch: true},
 			{pattern: "dist/**/*", included: false, served: true, watch: true},
 			{pattern: "libs/path-to-regexp.js", included: false, served: true},
+			{pattern: "libs/BezierCurve.js", included: false, served: true},
+			{pattern: "some-script.js", included: false, served: true},
 			"tests/karma/testPaths.js",
 			"tests/karma/runner.js"
 		],
@@ -82,7 +84,7 @@ module.exports = function (config) {
 		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
 		customLaunchers: {
 			bigScreen: {
-				base: "Chrome",
+				base: "ChromeHeadless",
 				flags: ["--window-size=800,800"]
 			}
 		},
@@ -91,7 +93,7 @@ module.exports = function (config) {
 
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: false,
+		singleRun: true,
 		processKillTimeout: 10000,
 		browserDisconnectTimeout: 10000
 	});
