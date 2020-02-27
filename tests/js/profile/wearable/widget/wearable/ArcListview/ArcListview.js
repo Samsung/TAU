@@ -34,7 +34,8 @@
 				selection: null,
 				arcListviewCarousel: null,
 				arcListviewSelection: null,
-				dummyElement: null
+				dummyElement: null,
+				header: null
 			}, "_ui was correct initialized");
 
 			assert.deepEqual(arclistWidget.options, {
@@ -44,7 +45,8 @@
 				ellipsisB: 180,
 				selectedIndex: 0,
 				dataLength: 0,
-				listItemUpdater: null
+				listItemUpdater: null,
+				focusedTitle: true
 			}, "options was correct initialized");
 		});
 
@@ -668,7 +670,7 @@
 			}, "arclistWidget._carousel is updated correctly");
 		});
 
-		QUnit.test("_render", 4, function (assert) {
+		QUnit.test("_render", 6, function (assert) {
 			var arclistWidget = new ArcListview();
 
 			arclistWidget._state = {
@@ -690,7 +692,15 @@
 				return 5;
 			};
 
+			helpers.stub(tau.util, "requestAnimationFrame", function (callback) {
+				assert.ok(true, "requestAnimationFrame");
+				assert.equal(typeof callback, "function", "callback for requestAnimationFrame was given");
+			});
+
+			// tested method
 			arclistWidget._render();
+
+			helpers.restoreStub(tau.util, "requestAnimationFrame");
 			assert.equal(arclistWidget._state.currentIndex, 5, "_state.currentIndex is updated");
 
 		});
@@ -730,9 +740,10 @@
 			arclistWidget._scroll();
 		});
 
-		QUnit.test("_roll", 3, function (assert) {
+		QUnit.test("_roll", 4, function (assert) {
 			var arclistWidget = new ArcListview();
 
+			// prepare widget state
 			arclistWidget._state = {
 				scroll: {
 					current: 5
@@ -745,8 +756,14 @@
 				toIndex: 0
 			};
 			arclistWidget._scrollAnimationEnd = true;
+			arclistWidget._requestRender = function () {
+				assert.ok(true, "_requestRender was called");
+			};
 
+			// tested method
 			arclistWidget._roll(2000);
+
+			// check state
 			assert.equal(arclistWidget._state.duration, 2000, "_state.duration is 2000");
 			assert.ok(arclistWidget._state.startTime, "_state.startTime is set");
 			assert.deepEqual(arclistWidget._state.scroll, {
@@ -808,6 +825,9 @@
 			};
 			arclistWidget._roll = function () {
 				assert.ok(true, "_roll was called");
+			};
+			arclistWidget._overscrollTop = function () {
+				assert.ok(true, "_overscrollTop was called");
 			};
 			arclistWidget._state = {
 				items: new Array(5),
