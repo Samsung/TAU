@@ -67,6 +67,17 @@
 				ONE_FRAME_TIME = 40,
 				// half of screen height - center element height (112)
 				BOTTOM_MARGIN = (window.innerHeight - 112) / 2,
+				STARTING_Y_POSITION = 10,
+
+				// Focused title parameters
+				OVERSCROLL_TOP = 108,
+				OVERSCROLL_IN_DURATION = 500, //ms
+				OVERSCROLL_OUT_DURATION = 800, //ms
+				NORMAL_TITLE_WIDTH = 232,
+				FOCUSED_TITLE_WIDTH = 340,
+				NORMAL_TITLE_FONT_SIZE = 30,
+				FOCUSED_TITLE_FONT_SIZE = 40,
+
 				/**
 				 * Alias for class {@link ns.engine}
 				 * @property {Object} engine
@@ -174,7 +185,8 @@
 						bouncingTimeout: 1000,
 						visibleItems: 3,
 						listItemUpdater: null,
-						dataLength: 0
+						dataLength: 0,
+						focusedTitle: true
 					};
 					// items table on start is empty
 					self._items = [];
@@ -194,6 +206,7 @@
 					self._carouselIndex = 0;
 					self._disabledByPopup = false;
 					self._previousIndex = null;
+					self._overscrollRotaryHandler = null,
 					/**
 					 * Cache for widget UI HTMLElements
 					 * @property {Object} _ui
@@ -208,7 +221,8 @@
 						arcListviewSelection: null,
 						// ensures correct behaviour of radio buttons once
 						// item goes out of the screen (is removed from carousel)
-						dummyElement: null
+						dummyElement: null,
+						header: null
 					};
 				},
 
@@ -230,7 +244,8 @@
 					LISTVIEW: "ui-listview",
 					SELECTED: "ui-arc-listview-selected",
 					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden",
-					DUMMY_ELEMENT: WIDGET_CLASS + "-dummy-element"
+					DUMMY_ELEMENT: WIDGET_CLASS + "-dummy-element",
+					HEADER_FOCUSED: "ui-header-focused"
 				},
 				events = {
 					CHANGE: "change"
@@ -264,6 +279,7 @@
 				lastTouchY = 0,
 				deltaTouchY = 0,
 				deltaSumTouchY = 0,
+
 
 				// virtual list parameters
 				NUMBER_ITEMS_TO_ADD = 20,
@@ -340,7 +356,7 @@
 					duration: 0,
 					progress: 0,
 					scroll: {
-						current: 10,
+						current: STARTING_Y_POSITION,
 						from: null,
 						to: null
 					},
@@ -653,6 +669,29 @@
 				self._ui.scroller.scrollTop = -1 * state.scroll.current;
 			};
 
+			prototype._updateFocusedTitle = function () {
+				var self = this,
+					header = self._ui.header,
+					title = self._ui.title,
+					state = self._state,
+					progress,
+					dWidth = FOCUSED_TITLE_WIDTH - NORMAL_TITLE_WIDTH,
+					dFontSize = FOCUSED_TITLE_FONT_SIZE - NORMAL_TITLE_FONT_SIZE;
+
+				if (header && title) {
+					progress = (state.scroll.current - STARTING_Y_POSITION) / (OVERSCROLL_TOP - STARTING_Y_POSITION);
+					if (state.scroll.current > STARTING_Y_POSITION) {
+						header.classList.add(classes.HEADER_FOCUSED);
+						header.style.transform = "translateY(" + (round(progress * OVERSCROLL_TOP)) + "px)";
+						title.style.width = round(progress * dWidth + NORMAL_TITLE_WIDTH) + "px";
+						title.style.fontSize = (progress * dFontSize + NORMAL_TITLE_FONT_SIZE) + "px";
+					} else {
+						header.classList.remove(classes.HEADER_FOCUSED);
+						title.style.fontSize = "auto";
+					}
+				}
+			};
+
 			/**
 			 * Update positions of items
 			 * @param {number} currentIndex
@@ -671,6 +710,10 @@
 					carouselItemElement,
 					carouselItemUpperSeparatorElement,
 					top;
+
+				if (self.options.focusedTitle) {
+					self._updateFocusedTitle();
+				}
 
 				if (self._previousIndex !== currentIndex) {
 					ns.event.trigger(self.element, "currentindexchange", {"index": currentIndex});
@@ -1011,14 +1054,14 @@
 					state.toIndex--;
 					// hide end effect
 					bouncingEffect.dragEnd();
+					self._roll();
 				} else {
+					self._overscrollTop();
 					// show top end effect
 					bouncingEffect.drag(0, 0);
 					// hide after timeout
 					self._setBouncingTimeout();
 				}
-
-				self._roll();
 			};
 
 			/**
@@ -1029,11 +1072,14 @@
 			prototype._onRotary = function (event) {
 				var self = this;
 
-				self._scrollAnimationEnd = true;
-				if (event.detail.direction === "CW") {
-					self._rollDown();
-				} else {
-					self._rollUp();
+				if (self._ui.header && !self._ui.header.classList.contains(classes.HEADER_FOCUSED) ||
+					!self._ui.header) {
+					self._scrollAnimationEnd = true;
+					if (event.detail.direction === "CW") {
+						self._rollDown();
+					} else {
+						self._rollUp();
+					}
 				}
 			};
 
@@ -1157,8 +1203,8 @@
 
 				if (didScroll) {
 					// set current to correct range
-					if (current > 0) {
-						current = 0;
+					if (current > OVERSCROLL_TOP) {
+						current = OVERSCROLL_TOP;
 						// enable top end effect
 						bouncingEffect.drag(-touch.clientX, 0);
 						self._setBouncingTimeout();
@@ -1213,12 +1259,10 @@
 					lastTouchX = touch.clientX;
 					lastTouchY = touch.clientY;
 					scroll.current += deltaTouchY;
-					if (scroll.current > 0) {
-						scroll.current = 0;
+					if (scroll.current > OVERSCROLL_TOP) {
+						scroll.current = OVERSCROLL_TOP;
 					}
 
-					state.currentIndex = self._findItemIndexByY(-1 * (scroll.current - SCREEN_HEIGHT / 2 + 1));
-					self._carouselUpdate(state.currentIndex);
 
 					momentum = MOMENTUM_VALUE;
 					self._scrollAnimationEnd = true;
@@ -1232,6 +1276,41 @@
 				} else {
 					self._roll();
 				}
+			};
+
+			prototype._overscrollTop = function () {
+				var self = this,
+					state = self._state,
+					scroll = state.scroll;
+
+				state.duration = OVERSCROLL_IN_DURATION;
+
+				// start scroll animation from current scroll position
+				scroll.from = scroll.current;
+				scroll.to = OVERSCROLL_TOP;
+
+				// if scroll animation is ended then animation start
+				if (self._scrollAnimationEnd) {
+					state.startTime = Date.now();
+					self._scrollAnimationEnd = false;
+					self._requestRender();
+				}
+
+				// clear timeout
+				if (self._overscrollRotaryHandler) {
+					window.clearTimeout(self._overscrollRotaryHandler);
+					self._overscrollRotaryHandler = null;
+				}
+
+				// back to initial position
+				self._overscrollRotaryHandler = window.setTimeout(function () {
+					momentum = MOMENTUM_VALUE;
+					state.startTime = Date.now();
+					self._requestRender();
+					self._scroll();
+					lastTouchTime = 0;
+					self._overscrollRotaryHandler = null;
+				}, OVERSCROLL_OUT_DURATION);
 			};
 
 			function showHighlight(arcListviewSelection, selectedElement) {
@@ -1542,6 +1621,7 @@
 					element = self.element,
 					options = self.options,
 					page,
+					header,
 					scroller,
 					ui = self._ui,
 					carousel = self._carousel,
@@ -1551,6 +1631,12 @@
 				page = selectorsUtil.getClosestBySelector(element, selectors.PAGE);
 				ui.page = page;
 
+				header = page.querySelector("header");
+				if (header) {
+					ui.header = header;
+					ui.title = header.querySelector(".ui-title:not(.ui-subtitle)");
+					ui.subTitle = header.querySelector(".ui-title.ui-subtitle");
+				}
 				scroller = selectorsUtil.getClosestBySelector(element, selectors.SCROLLER);
 
 

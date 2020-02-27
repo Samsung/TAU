@@ -131,6 +131,17 @@ body {
 		&.ui-header-has-only-more-button {
 			position: absolute;
 		}
+
+		&.ui-header-focused {
+			.ui-title {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+		.ui-overflow-gradient {
+			text-overflow: clip;
+			-webkit-mask-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 85%, transparent 100%);
+		}
 	}
 
 	.ui-more {
