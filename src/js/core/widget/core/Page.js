@@ -714,6 +714,15 @@
 				self._setContent(element, self.options.content);
 			};
 
+			prototype._buildGoToTopButton = function (element) {
+				var self = this,
+					ui = self._ui;
+
+				ui.goToTopButton = document.createElement("div");
+				ui.goToTopButton.classList.add("ui-button-go-to-top");
+				element.appendChild(ui.goToTopButton);
+			}
+
 
 			/**
 			 * Set ARIA attributes on page structure
@@ -812,6 +821,7 @@
 				self._buildHeader(element);
 				self._buildFooter(element);
 				self._buildContent(element);
+				self._buildGoToTopButton(element);
 				self._setTitle(element);
 				self._setAria();
 
@@ -891,7 +901,9 @@
 			 */
 			prototype._bindEvents = function () {
 				var self = this,
-					header = self._ui.header;
+					header = self._ui.header,
+					goToTopButton = self._ui.goToTopButton,
+					scroller = self.getScroller();
 
 				self._contentFillAfterResizeCallback = self._contentFill.bind(self);
 				window.addEventListener("resize", self._contentFillAfterResizeCallback, false);
@@ -911,6 +923,21 @@
 							scrollview.disableScrolling();
 						}
 					}, false);
+				}
+
+				if (goToTopButton) {
+					scroller.addEventListener("showGoToTopButton", function () {
+						goToTopButton.style.display = "block";
+					}, false);
+
+					scroller.addEventListener("hideGoToTopButton", function () {
+						goToTopButton.style.display = "none";
+					}, false);
+
+					goToTopButton.addEventListener("vclick", function () {
+						scroller.scrollTop = 0;
+						goToTopButton.style.display = "none";
+					}, true);
 				}
 			};
 
