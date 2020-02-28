@@ -22,7 +22,8 @@ module.exports = function (config) {
 				// reporters not supporting the `file` property
 				{ type: "html", subdir: "html" },
 				{ type: "clover", subdir: "clover" },
-				{ type: "lcov", subdir: "lcov" }
+				{ type: "lcov", subdir: "lcov" },
+				{ type: "text"}
 			]
 		},
 
