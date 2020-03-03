@@ -30,6 +30,7 @@
 			//>>excludeEnd("tauBuildExclude");
 			// Default configuration properties for wearable
 			ns.setConfig("autoBuildOnPageChange", false, true);
+			ns.setConfig("enableGoToTopButton", false, true);
 
 			if (ns.support.shape.circle) {
 				ns.setConfig("pageTransition", "pop", true);
