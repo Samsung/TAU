@@ -99,6 +99,12 @@
 			 */
 			defineProperty("enablePageScroll");
 			/**
+			 * @property {boolean} enableGoToTopButton=false
+			 * @member ns.defaults
+			 * @static
+			 */
+			defineProperty("enableGoToTopButton");
+			/**
 			 * @property {string} scrollEndEffectArea="content
 			 * @member ns.defaults
 			 * @static

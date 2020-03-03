@@ -425,14 +425,17 @@
 				 * @property {boolean|string|null} [options.header=false] Sets content of header.
 				 * @property {boolean|string|null} [options.footer=false] Sets content of footer.
 				 * @property {boolean} [options.autoBuildWidgets=false] Automatically build widgets inside page.
+				 * @property {boolean} [options.enableGoToTopButton=false] Shows go to top button at the bottom of the page.
 				 * @property {string} [options.content=null] Sets content of popup.
 				 * @member ns.widget.core.Page
 				 * @static
 				 */
 
+
 				options.header = null;
 				options.footer = null;
 				options.content = null;
+				options.enableGoToTopButton = ns.getConfig("enableGoToTopButton");
 				options.enablePageScroll = ns.getConfig("enablePageScroll");
 				options.autoBuildWidgets = ns.getConfig("autoBuildOnPageChange");
 				this.options = options;
@@ -718,9 +721,11 @@
 				var self = this,
 					ui = self._ui;
 
-				ui.goToTopButton = document.createElement("div");
-				ui.goToTopButton.classList.add("ui-button-go-to-top");
-				element.appendChild(ui.goToTopButton);
+				if (self.options.enableGoToTopButton) {
+					ui.goToTopButton = document.createElement("div");
+					ui.goToTopButton.classList.add("ui-button-go-to-top");
+					element.appendChild(ui.goToTopButton);
+				}
 			}
 
 
