@@ -241,7 +241,7 @@
 						self._initLayout();
 						self._super(element);
 						self._repositionSections(true);
-						self.setActiveSection(self.activeIndex);
+						self.setActiveSection(self.activeIndex, 0, false, false);
 
 						// set correct options values.
 						if (!options.animate) {
@@ -506,11 +506,12 @@
 				 * @param {number} index
 				 * @param {number} [duration=0] For smooth scrolling,
 				 * the duration parameter must be in milliseconds.
-				 * @param {number} [direct=false] Whether section is set once directly (e.g. with bezel)
+				 * @param {boolean} [direct=false] Whether section is set once directly (e.g. with bezel)
 				 *  or with touch events
+				 * @param {boolean} [reposition=true] Whether sections should be repositioned
 				 * @member ns.widget.core.SectionChanger
 				 */
-				setActiveSection: function (index, duration, direct) {
+				setActiveSection: function (index, duration, direct, reposition) {
 					var position = this.sectionPositions[index],
 						scrollbarDuration,
 						oldActiveIndex = this.activeIndex,
@@ -520,6 +521,9 @@
 					//default parameters
 					duration = duration || 0;
 					direct = !!direct;
+					if (reposition == undefined) {
+						reposition = true;
+					}
 
 					scrollbarDuration = duration;
 
@@ -553,6 +557,11 @@
 					if (this.activeIndex !== oldActiveIndex) {
 						this._notifyChangedSection(this.activeIndex);
 					}
+
+					if (reposition) {
+						this._repositionSections(true);
+					}
+
 				},
 
 				/**
@@ -609,7 +618,7 @@
 							self.bouncingEffect.dragEnd();
 						}
 
-						self.setActiveSection(self.activeIndex, self.options.animateDuration, false);
+						self.setActiveSection(self.activeIndex, self.options.animateDuration, false, false);
 						self.dragging = false;
 					}
 				},
@@ -640,7 +649,7 @@
 							self._notifyChangedSection(newIndex);
 						}
 
-						self.setActiveSection(newIndex, self.options.animateDuration, direct);
+						self.setActiveSection(newIndex, self.options.animateDuration, direct, false);
 						self.dragging = false;
 					}
 				},
