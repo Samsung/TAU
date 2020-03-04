@@ -1025,6 +1025,7 @@
 					// hide end effect
 					bouncingEffect.dragEnd();
 				} else {
+					self._setGoToTopButtonVisibility("show");
 					// show bottom end effect
 					bouncingEffect.drag(0, -self._maxScrollY);
 					// hide after timeout
@@ -1052,6 +1053,7 @@
 
 				if (state.toIndex > 0) {
 					state.toIndex--;
+					self._setGoToTopButtonVisibility("hide");
 					// hide end effect
 					bouncingEffect.dragEnd();
 					self._roll();
@@ -1232,6 +1234,8 @@
 					scroll.current = current;
 
 					state.currentIndex = self._findItemIndexByY(-1 * (current - SCREEN_HEIGHT / 2 + 1));
+					// Show Go-to-top button once last element is reached. Otherwise, hide it.
+					self._setGoToTopButtonVisibility((state.currentIndex == self._items.length - 1) ? "show" : "hide");
 					self._carouselUpdate(state.currentIndex);
 
 					momentum = 0;
@@ -1409,6 +1413,9 @@
 				if (!event.defaultPrevented && this._state.items.length > 0) {
 					if (selectedIndex !== undefined) {
 						this._selectItem(selectedIndex);
+						if (selectedIndex == this._state.items.length - 1) {
+							this._setGoToTopButtonVisibility("show");
+						}
 					} else {
 						classList.remove(classes.SELECTION_SHOW);
 						selectedElement = this._state.items[unselectedIndex].element,
@@ -1935,6 +1942,13 @@
 					maxScrollY: self._maxScrollY,
 					orientation: "vertical-horizontal"
 				});
+			};
+
+			prototype._setGoToTopButtonVisibility = function (visibility) {
+				var self = this,
+					page = self._ui.page;
+
+				eventUtils.trigger(page, visibility === "show" ? "showGoToTopButton" : "hideGoToTopButton");
 			};
 
 			ArcListview.prototype = prototype;
