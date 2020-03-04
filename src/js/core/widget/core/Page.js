@@ -305,6 +305,7 @@
 					self._contentFillAfterResizeCallback = null;
 					self._initialContentStyle = {};
 					self._lastScrollPosition = 0;
+					self._requestToShowGoToTopButton = null;
 					/**
 					 * Options for widget.
 					 * @property {Object} options
@@ -392,6 +393,7 @@
 					uiTitle: "ui-title",
 					uiPageScroll: "ui-scroll-on",
 					uiScroller: "ui-scroller",
+					uiArcListview: "ui-arc-listview",
 					uiContentUnderPopup: "ui-content-under-popup",
 					//appbar temporary classes
 					uiAppbar: "ui-appbar",
@@ -405,11 +407,12 @@
 				//indexscrollbar element
 				CONTENT_SELECTOR = "[data-role='content'],." + classes.uiContent,
 				ONLY_CHILD_MORE_BUTTON_SELECTOR = "." + classes.uiMore + ":first-child:last-child",
+				SHOW_GO_TO_TOP_BUTTON_TIMEOUT = 800,
 				prototype = new BaseWidget();
 
 			Page.classes = classes;
 			Page.events = EventType;
-			Page.selector = "[data-role=page],.ui-page",
+			Page.selector = "[data-role=page],.ui-page";
 
 			/**
 			 * Configure default options for widget
@@ -425,7 +428,7 @@
 				 * @property {boolean|string|null} [options.header=false] Sets content of header.
 				 * @property {boolean|string|null} [options.footer=false] Sets content of footer.
 				 * @property {boolean} [options.autoBuildWidgets=false] Automatically build widgets inside page.
-				 * @property {boolean} [options.enableGoToTopButton=false] Shows go to top button at the bottom of the page.
+				 * @property {boolean} [options.goToTopButton=false] Shows go to top button at the bottom of the page.
 				 * @property {string} [options.content=null] Sets content of popup.
 				 * @member ns.widget.core.Page
 				 * @static
@@ -435,7 +438,7 @@
 				options.header = null;
 				options.footer = null;
 				options.content = null;
-				options.enableGoToTopButton = ns.getConfig("enableGoToTopButton");
+				options.goToTopButton = ns.getConfig("goToTopButton");
 				options.enablePageScroll = ns.getConfig("enablePageScroll");
 				options.autoBuildWidgets = ns.getConfig("autoBuildOnPageChange");
 				this.options = options;
@@ -721,13 +724,59 @@
 				var self = this,
 					ui = self._ui;
 
-				if (self.options.enableGoToTopButton) {
+				if (self.options.goToTopButton) {
 					ui.goToTopButton = document.createElement("div");
 					ui.goToTopButton.classList.add("ui-button-go-to-top");
 					element.appendChild(ui.goToTopButton);
 				}
-			}
+			};
 
+			prototype._showGoToTopButton = function () {
+				var self = this,
+					ui = self._ui,
+					goToTopButton = ui.goToTopButton;
+
+				if (!self._requestToShowGoToTopButton) {
+					self._requestToShowGoToTopButton = setTimeout(function () {
+						goToTopButton.style.display = "block";
+						self._requestToShowGoToTopButton = null;
+					}, SHOW_GO_TO_TOP_BUTTON_TIMEOUT);
+				}
+			};
+
+			prototype._hideGoToTopButton = function () {
+				var self = this,
+					ui = self._ui,
+					goToTopButton = ui.goToTopButton;
+
+				if (self._requestToShowGoToTopButton) {
+					clearTimeout(self._requestToShowGoToTopButton);
+					self._requestToShowGoToTopButton = null;
+				}
+				goToTopButton.style.display = "none";
+			};
+
+			prototype._handleGoToTopButtonClick = function () {
+				var self = this,
+					element = self.element,
+					scroller = self.getScroller(),
+					arcListViewElement = null,
+					arcListViewWidget = null;
+
+				self._hideGoToTopButton();
+
+				arcListViewElement = element.querySelector("." + classes.uiArcListview);
+				if (arcListViewElement) {
+					arcListViewWidget = ns.engine.getBinding(arcListViewElement);
+					if (arcListViewWidget) {
+						// FIXME: according to guide, scroll should be made immediately.
+						// However, this API does not properly work without animation.
+						arcListViewWidget.scrollToPosition(0, false /* do animation */);
+					}
+				} else {
+					scroller.scrollTop = 0;
+				}
+			};
 
 			/**
 			 * Set ARIA attributes on page structure
@@ -906,9 +955,9 @@
 			 */
 			prototype._bindEvents = function () {
 				var self = this,
+					element = self.element,
 					header = self._ui.header,
-					goToTopButton = self._ui.goToTopButton,
-					scroller = self.getScroller();
+					goToTopButton = self._ui.goToTopButton;
 
 				self._contentFillAfterResizeCallback = self._contentFill.bind(self);
 				window.addEventListener("resize", self._contentFillAfterResizeCallback, false);
@@ -931,18 +980,9 @@
 				}
 
 				if (goToTopButton) {
-					scroller.addEventListener("showGoToTopButton", function () {
-						goToTopButton.style.display = "block";
-					}, false);
-
-					scroller.addEventListener("hideGoToTopButton", function () {
-						goToTopButton.style.display = "none";
-					}, false);
-
-					goToTopButton.addEventListener("vclick", function () {
-						scroller.scrollTop = 0;
-						goToTopButton.style.display = "none";
-					}, true);
+					element.addEventListener("showGoToTopButton", self._showGoToTopButton.bind(self), false);
+					element.addEventListener("hideGoToTopButton", self._hideGoToTopButton.bind(self), false);
+					goToTopButton.addEventListener("vclick", self._handleGoToTopButtonClick.bind(self), false);
 				}
 			};
 

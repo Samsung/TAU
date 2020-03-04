@@ -115,7 +115,6 @@
 				},
 				EffectBouncing = ns.widget.core.scroller.effect.Bouncing,
 				BOUNCING_THRESHOLD = 20,
-				SHOW_GO_TO_TOP_BUTTON_TIMEOUT = 800,
 				Scrollview = function () {
 					this.options = {
 						bouncingEffect: true
@@ -285,6 +284,7 @@
 
 			prototype._move = function (event) {
 				var self = this,
+					page = self.element,
 					scroller = self.scroller,
 					scrollPositionX,
 					scrollPositionY,
@@ -322,20 +322,7 @@
 					}
 				}
 
-				if (self._isEndOfScroll(scrollPositionY)) {
-					if (!self.requestToShowGoToTopButton) {
-						self.requestToShowGoToTopButton = setTimeout(function () {
-							utilsEvents.trigger(scroller, "showGoToTopButton");
-							self.requestToShowGoToTopButton = null;
-						}, SHOW_GO_TO_TOP_BUTTON_TIMEOUT);
-					}
-				} else {
-					utilsEvents.trigger(scroller, "hideGoToTopButton");
-					if (self.requestToShowGoToTopButton) {
-						clearTimeout(self.requestToShowGoToTopButton);
-						self.requestToShowGoToTopButton = null;
-					}
-				}
+				utilsEvents.trigger(page, self._isEndOfScroll(scrollPositionY) ? "showGoToTopButton" : "hideGoToTopButton");
 			};
 
 			Scrollview.prototype = prototype;

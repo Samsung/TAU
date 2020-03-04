@@ -774,7 +774,7 @@
 
 		});
 
-		QUnit.test("_rollDown", 12, function (assert) {
+		QUnit.test("_rollDown", 13, function (assert) {
 			var arclistWidget = new ArcListview();
 
 			arclistWidget.trigger = function (name, details) {
@@ -785,6 +785,9 @@
 			};
 			arclistWidget._setBouncingTimeout = function () {
 				assert.ok(true, "_setBouncingTimeout was called");
+			};
+			arclistWidget._setGoToTopButtonVisibility = function () {
+				assert.ok(true, "_setGoToTopButtonVisibility was called");
 			};
 			arclistWidget._roll = function () {
 				assert.ok(true, "_roll was called");
@@ -822,6 +825,9 @@
 			};
 			arclistWidget._setBouncingTimeout = function () {
 				assert.ok(true, "_setBouncingTimeout was called");
+			};
+			arclistWidget._setGoToTopButtonVisibility = function () {
+				assert.ok(true, "_setGoToTopButtonVisibility was called");
 			};
 			arclistWidget._roll = function () {
 				assert.ok(true, "_roll was called");
