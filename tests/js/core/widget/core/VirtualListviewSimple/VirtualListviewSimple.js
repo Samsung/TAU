@@ -9,7 +9,7 @@
 				var parent = document.getElementById("qunit-fixture") || helpers.initFixture();
 
 				parent.innerHTML =
-					helpers.loadHTMLFromFile("/base/tests/js/core/widget/core/VirtualListSimple/test-data/sample.html");
+					helpers.loadHTMLFromFile("/base/tests/js/core/widget/core/VirtualListviewSimple/test-data/sample.html");
 				resolve();
 			});
 		}

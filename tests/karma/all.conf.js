@@ -47,11 +47,10 @@ module.exports = function (config) {
 			{pattern: "tests/karma/tests/helpers.js", included: false, served: true, watch: true},
 			{pattern: "tests/js/**/*.js", included: false, served: true, watch: true},
 			{pattern: "tests/js/**/*.html", included: false, served: true, watch: true},
+			{pattern: "tests/js/**/*.jpg", included: false, served: true, watch: true},
 			{pattern: "src/js/**/*.js", included: false, served: true, watch: true},
 			{pattern: "libs/**/*.js", included: false, served: true, watch: true},
 			{pattern: "dist/**/*", included: false, served: true, watch: true},
-			{pattern: "libs/path-to-regexp.js", included: false, served: true},
-			{pattern: "libs/BezierCurve.js", included: false, served: true},
 			{pattern: "some-script.js", included: false, served: true},
 			"tests/karma/testPaths.js",
 			"tests/karma/runner.js"
