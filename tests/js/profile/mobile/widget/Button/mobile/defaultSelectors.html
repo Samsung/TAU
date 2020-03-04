@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../../../../../libs/qunit-1.11.0.css" />
+	<title>Button</title>
+</head>
+
+<body>
+
+<h1 id="qunit-header">Button: default selectors</h1>
+<h2 id="qunit-banner"></h2>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+
+<div id="qunit-fixture">
+	<div data-role="page" id="page1">
+		<div data-role="content">
+			<div data-role="button" id="button-data-role">Button</div>
+			<button id="button-button">Button</button>
+			<input type="button" id="button-type-button" value="Button">
+			<input type="submit" id="button-type-submit" value="Button">
+			<input type="reset" id="button-type-reset" value="Button">
+			<div class="ui-btn" id="button-class-selector">Button</div>
+			<a href="#" class="ui-btn" id="link-button">Link button</a>
+		</div>
+	</div>
+</div>
+	<script src="../../../../../../libs/qunit-1.11.0.js"></script>
+	<script src="../../../../../../libs/support.js"></script>
+
+	<script src="defaultSelectors.js"></script>
+	<script type="text/javascript">
+		var tauConfig = {
+			"autorun": false
+		};
+	</script>
+	<script type="text/javascript" src="../../../../../../libs/dist/js/tau.js"></script>
+</body>
+</html>

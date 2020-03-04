@@ -46,8 +46,11 @@ module.exports = function (config) {
 			{pattern: "tests/karma/tests/helpers.js", included: false, served: true, watch: true},
 			{pattern: "tests/js/**/*.js", included: false, served: true, watch: true},
 			{pattern: "tests/js/**/*.html", included: false, served: true, watch: true},
+			{pattern: "tests/js/**/*.jpg", included: false, served: true, watch: true},
 			{pattern: "src/js/**/*.js", included: false, served: true, watch: true},
+			{pattern: "libs/**/*.js", included: false, served: true, watch: true},
 			{pattern: "dist/**/*", included: false, served: true, watch: true},
+			{pattern: "some-script.js", included: false, served: true},
 			"tests/karma/single.test.path.js",
 			"tests/karma/runner.js"
 		],
@@ -73,7 +76,7 @@ module.exports = function (config) {
 
 		// level of logging
 		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-		logLevel: config.LOG_INFO,
+		logLevel: config.LOG_DEBUG,
 
 
 		// start these browsers
@@ -90,6 +93,14 @@ module.exports = function (config) {
 		// if true, Karma captures browsers, runs the tests and exits
 		singleRun: false,
 		processKillTimeout: 10000,
-		browserDisconnectTimeout: 10000
+		browserDisconnectTimeout: 10000,
+
+		// client configuration
+		client: {
+			qunit: {
+				showUI: true,
+				testTimeout: 5000
+			}
+		}
 	});
 };
