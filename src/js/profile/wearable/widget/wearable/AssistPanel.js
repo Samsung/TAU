@@ -119,6 +119,7 @@
 	//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 	define(
 		[
+			"../wearable",
 			"../../../../core/widget/core/Drawer",
 			"../../../../core/engine",
 			"../../../../core/util/DOM/css",
@@ -215,8 +216,6 @@
 			/**
 			 * Set overlay visibility
 			 * @method _setOverlay
-			 * @param {number} x
-			 * @param {number} y
 			 * @override
 			 * @member ns.widget.wearable.AssistPanel
 			 * @protected
@@ -236,9 +235,7 @@
 				callbacks.onClick = onClick.bind(self);
 				CoreAssistPanel.prototype._bindEvents.call(this);
 
-				this._ui.indicator.addEventListener("vclick", function () {
-					self.open();
-				});
+				this._ui.indicator.addEventListener("vclick", callbacks.onClick);
 			};
 
 			prototype._unbindEvents = function () {

@@ -27,6 +27,7 @@ testPaths = [
 	"profile/wearable/widget/wearable/ArcListview",
 	"profile/wearable/widget/wearable/Scrollview",
 	"profile/wearable/widget/wearable/ColorPicker",
+	"profile/wearable/widget/wearable/AssistPanel",
 	// "core/defaults",
 	"core/support/tizen",
 	"core/engine",
