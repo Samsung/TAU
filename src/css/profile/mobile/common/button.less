@@ -167,7 +167,7 @@ a.ui-btn {
 	.user-select(none);
 	z-index: 0;
 	border-radius: 18 * @px_base;
-	font-family: Roboto-Medium;
+	.font(medium);
 
 	&::before {
 		position: absolute;
@@ -496,12 +496,12 @@ a.ui-btn {
 		margin: 0 auto;
 		:first-child {
 			font-size: 13 * @px_base;
-			@font-family: Roboto-Regular;
+			.font(regular);
 			color: #949494;
 		}
 		:nth-child(2) {
 			font-size: 13 * @px_base;
-			font-family: Roboto-Medium;
+			.font(medium);
 			color: #404040;
 		}
 	}
