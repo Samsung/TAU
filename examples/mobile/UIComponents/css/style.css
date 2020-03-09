@@ -691,3 +691,17 @@
 #ContainedButtonMediumHighEmphasis1Demo button.ui-btn.ui-btn-contained ~ button.ui-btn.ui-btn-contained {
 	margin-top: 10px;
 }
+
+
+/* Sample of line size & fonts */
+.sample-unit-line {
+	background-color: black;
+	margin: 4px;
+}
+.sample-unit-lines {
+	font-size: 12px;
+	text-indent: 10px;
+}
+.sample-unit-lines p {
+	margin-bottom: 2px;
+}

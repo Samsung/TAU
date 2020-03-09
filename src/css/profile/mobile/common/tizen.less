@@ -10,7 +10,16 @@
 // So, for fitting with viewport=360(qHD), we multiply px_base by (360/540).
 @unit_base: (360 / 720) * @px_base;
 
-@font_family: Roboto-Regular, Helvetica;
+.font(light) {
+	font-family: Roboto-Light, sans-serif-light;
+}
+.font(regular) {
+	font-family: Roboto-Regular, sec-roboto-light;
+}
+.font(medium) {
+	font-family: Roboto-Medium, sec-roboto-light;
+	font-weight: bold;
+}
 
 //*****************************
 //  z-index order collection
