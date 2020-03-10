@@ -28,6 +28,7 @@
             //>>excludeEnd("tauBuildExclude");
 
 			var THEME_CLASS_PREFIX = "ui-theme-",
+				DEFAULT_THEME = "light",
 				themeManager = {
                     /**
                      * A function used to set newtheme for application
@@ -45,6 +46,7 @@
 						});
 						if (newTheme) {
 							classList.add(THEME_CLASS_PREFIX + newTheme);
+							ns.event.trigger(document, "themechange", {theme: newTheme});
 						}
 					},
 					getTheme: function () {
@@ -59,7 +61,7 @@
 						if (classArray.length) {
 							return classArray[0].replace(THEME_CLASS_PREFIX, "");
 						}
-						return "";
+						return "" || DEFAULT_THEME;
 					}
 				};
 
