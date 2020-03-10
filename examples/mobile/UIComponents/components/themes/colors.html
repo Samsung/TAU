@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="colors-demo-page">
+		<style>
+			[data-color] {
+				margin-right: 10px;
+			}
+		</style>
+		<div class="ui-header" data-position="fixed">
+			<h1>
+				Color
+			</h1>
+		</div>
+		<div class="ui-content">
+			<ul class="ui-listview" style="color: var(--color-white);">
+				<li style="background-color: var(--primary-color)" class="ui-li-flex">
+					<span class="ui-li-area ui-li-area-a">Primary</span>
+					<span data-color="--primary-color" class="ui-li-area-c"></span>
+				</li>
+				<li style="background-color: var(--primary-dark-color)" class="ui-li-flex">
+					<span class="ui-li-area ui-li-area-a">Primary Dark</span>
+					<span data-color="--primary-dark-color" class="ui-li-area-c"></span>
+				</li>
+				<li style="background-color: var(--control-active-color)" class="ui-li-flex">
+					<span class="ui-li-area ui-li-area-a">Color Control Active</span>
+					<span data-color="--control-active-color" class="ui-li-area-c"></span>
+				</li>
+				<li style="background-color: var(--color-white); color: var(--color-black);" class="ui-li-flex">
+					<span class="ui-li-area ui-li-area-a">White</span>
+					<span data-color="--color-white" class="ui-li-area-c"></span>
+				</li>
+				<li style="background-color: var(--color-black); color: var(--color-white);" class="ui-li-flex">
+					<span class="ui-li-area ui-li-area-a">Black</span>
+					<span data-color="--color-black" class="ui-li-area-c"></span>
+				</li>
+			</ul>
+		</div>
+		<script src="colors.js"></script>
+	</div>
+</body>
+
+</html>
