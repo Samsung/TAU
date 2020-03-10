@@ -25,12 +25,33 @@ tau-expandable {
 	 * because this widget has canvas which has to be visible outside the listview
 	 */
 	// overflow: hidden;
-	margin: 0;
+	margin: auto;
+
+	// List width for Tablet
+	@media (min-width: 673px) and (min-height: 411px) {
+		width: 90%;
+	}
+	@media (min-width: 960px) {
+		width: 75%;
+	}
+
 	padding: 0;
 	list-style: none;
 	counter-reset: listnumbering;
 	position: relative;
 	transform: translate3d(0, 0, 0);
+
+	// End of List (Bottom spacing)
+	&.ui-content-area:last-of-type {
+		margin-bottom: 16 * @px_base;
+
+		// Fab button
+		& + button[data-style=fab] {
+			display: block;
+			min-height: 0;
+			margin-bottom: 108 * @px_base;
+		}
+	}
 
 	li, tau-expandable {
 		position: relative;
