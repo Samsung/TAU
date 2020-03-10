@@ -34,7 +34,7 @@
 		&.ui-btn-icon {
 			background-color: transparent;
 			position: relative;
-			top: 14 * @px_base;
+			top: 15 * @px_base;
 
 			width: 24 * @px_base;
 			height: 24 * @px_base;
@@ -52,22 +52,35 @@
 				height: 24 * @px_base;
 			}
 
-			// TODO: icon definitions should be moved to button stylesheet (temporary solution)
-
 			&-back::after {
-				mask-image: url("images/oneui/tw_ic_ab_back_mtrl.svg");
+				mask-image: url("images/1_App_Bar/tw_ic_ab_back_mtrl.svg");
 			}
 
 			&-more::after {
-				mask-image: url("images/oneui/tw_ic_ab_more_mtrl.svg");
+				mask-image: url("images/1_App_Bar/tw_ic_ab_more_mtrl.svg");
 			}
 
 			&-search::after {
-				mask-image: url("images/oneui/tw_ic_ab_search_mtrl.svg");
+				mask-image: url("images/1_App_Bar/tw_ic_ab_search_mtrl.svg");
 			}
 
 			&-add::after {
-				mask-image: url("images/oneui/tw_ic_ab_add_mtrl.svg");
+				mask-image: url("images/1_App_Bar/tw_ic_ab_add_mtrl.svg");
+			}
+
+			// Override styles from .ui-btn-flat with icon
+			&.ui-btn-flat {
+				min-height: 24 * @px_base;
+				&::after {
+					mask-size: 100%;
+					width: 24 * @px_base;
+					height: 24 * @px_base;
+				}
+				&::before {
+					background-color: transparent;
+					width: 48 * @px_base;
+					height: 48 * @px_base;
+				}
 			}
 		}
 	}
