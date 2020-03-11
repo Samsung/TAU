@@ -124,7 +124,6 @@
 			"./core/router/Router",
 			"./core/router/route/page",
 			"./core/router/route/popup",
-			"./core/router/route/popup",
 			"./core/router/route/drawer",
 			"./core/router/route/panel",
 			"./core/history/manager",

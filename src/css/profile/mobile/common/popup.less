@@ -5,19 +5,30 @@
 	display: none;
 	position: absolute;
 	left: 0;
-	width: 100%;
-	margin-top: 80 * @unit_base;
+	margin-bottom: 16 * @px_base;
 	z-index: (@z_base_popup + 1) !important;
 	background-color: @color_popup_bg;
-	border: 0;
+	border-radius: 26 * @px_base;;
+
+	@media (orientation: portrait) and (max-width: 479px) {
+		width: 100%;
+		margin-top: 56 * @px_base;
+	}
+	@media (orientation: landscape) and (max-height: 479px) {
+		width: 60%;
+		margin-top: 32 * @px_base;
+	}
+	@media (orientation: portrait) and (min-width: 600px) {
+		width: 60%;
+		margin-top: 56 * @px_base;
+	}
+	@media (orientation: landscape) and (min-width: 960px) {
+		width: 37.5%;
+		margin-top: 32 * @px_base;
+	}
 
 	.ui-popup-wrapper {
 		width: 100%;
-	}
-
-	@media (orientation: landscape) {
-		width: 720 * @unit_base;
-		left: 360 * @unit_base;
 	}
 
 	&.ui-popup-active {
@@ -36,8 +47,9 @@
 	.ui-popup-header {
 		width: 100%;
 		min-height: 110 * @unit_base;
-		text-align: center;
+		text-align: left;
 		background-color: @color_popup_header_bg;
+		position: sticky;
 
 		font-size: @font_size_popup_title_text;
 		color: @color_popup_title_text;
@@ -46,7 +58,6 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 
-		padding: 21 * @unit_base 32 * @unit_base;
 		&.ui-popup-header-has-subtitle {
 			padding: 19.5 * @unit_base 32 * @unit_base;
 			line-height: 57 * @unit_base;
@@ -55,6 +66,19 @@
 		}
 		& .ui-popup-subtitle {
 			line-height: 38 * @unit_base;
+		}
+
+		@media (orientation: portrait) and (max-width: 479px) {
+			padding: 24 * @px_base 24 * @px_base 18 * @px_base 24 * @px_base;
+		}
+		@media (orientation: landscape) and (max-height: 479px) {
+			padding: 12 * @px_base 24 * @px_base 8 * @px_base 24 * @px_base;
+		}
+		@media (orientation: portrait) and (min-width: 600px) {
+			padding: 24 * @px_base 24 * @px_base 18 * @px_base 24 * @px_base;
+		}
+		@media (orientation: landscape) and (min-width: 960px) {
+			padding: 12 * @px_base 24 * @px_base 8 * @px_base 24 * @px_base;
 		}
 	}
 
@@ -67,7 +91,6 @@
 		overflow: auto;
 		.touch-scrolling();
 		line-height: 54 * @unit_base;
-		padding: 12 * @unit_base 32 * @unit_base 24 * @unit_base 32 * @unit_base;
 
 		img {
 			display: block;
@@ -79,11 +102,47 @@
 			margin-bottom: -12 * @unit_base;
 			margin-right: 22 * @unit_base;
 		}
+
+		@media (orientation: portrait) and (max-width: 479px) {
+			padding: 0 * @px_base 24 * @px_base 24 * @px_base 24 * @px_base;
+		}
+		@media (orientation: landscape) and (max-height: 479px) {
+			padding: 0 * @px_base 24 * @px_base 12 * @px_base 24 * @px_base;
+		}
+		@media (orientation: portrait) and (min-width: 600px) {
+			padding: 0 * @px_base 24 * @px_base 24 * @px_base 24 * @px_base;
+		}
+		@media (orientation: landscape) and (min-width: 960px) {
+			padding: 0 * @px_base 24 * @px_base 12 * @px_base 24 * @px_base;
+		}
 	}
 
 	.ui-popup-footer {
 		background-color: @color_popup_footer_bg;
+		position: sticky;
 		.LESSui-footer();
+
+		@media (orientation: portrait) and (max-width: 479px) {
+			padding: 0 * @px_base 24 * @px_base 20 * @px_base 24 * @px_base;
+		}
+		@media (orientation: landscape) and (max-height: 479px) {
+			padding: 0 * @px_base 24 * @px_base 4 * @px_base 24 * @px_base;
+		}
+		@media (orientation: portrait) and (min-width: 600px) {
+			padding: 0 * @px_base 24 * @px_base 20 * @px_base 24 * @px_base;
+		}
+		@media (orientation: landscape) and (min-width: 960px) {
+			padding: 0 * @px_base 24 * @px_base 4 * @px_base 24 * @px_base;
+		}
+	}
+
+	.ui-listview {
+		border-top-width: 1 * @px_base;
+		border-top-color: #e6e6e6;
+		border-top-style: solid;
+		border-bottom-width: 1 * @px_base;
+		border-bottom-color: #e6e6e6;
+		border-bottom-style: solid;
 	}
 
 	.ui-popup-header,
