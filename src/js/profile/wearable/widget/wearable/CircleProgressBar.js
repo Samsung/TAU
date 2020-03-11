@@ -285,13 +285,13 @@
 				/**
 				 * Options for widget
 				 * @property {Object} options Options for widget
-				 * @property {number} [options.thickness=8] Sets the border width of CircleProgressBar.
+				 * @property {number} [options.thickness=6] Sets the border width of CircleProgressBar.
 				 * @property {number|"full"|"large"|"medium"|"small"|null} [options.size="full"] Sets the size of CircleProgressBar.
 				 * @property {?string} [options.containerClassName=null] Sets the class name of CircleProgressBar container.
 				 * @member ns.widget.wearable.CircleProgressBar
 				 */
 				this.options = utilObject.merge({}, {
-					thickness: 8,
+					thickness: 6,
 					size: size.MEDIUM,
 					containerClassName: null,
 					type: "circle",
@@ -327,7 +327,7 @@
 			 * @param {number} thickness Thickness of line in pixels
 			 */
 			function drawLine(canvasContext, from, to, size, thickness, margin) {
-				canvasContext.strokeStyle = "rgba(55,161,237,1)";
+				canvasContext.strokeStyle = "rgba(0, 140, 256, 1)";
 				canvasContext.lineWidth = thickness;
 				canvasContext.beginPath();
 				canvasContext.arc(size, size, size - margin - thickness / 2, from, to);

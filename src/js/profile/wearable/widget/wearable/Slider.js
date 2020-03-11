@@ -165,23 +165,24 @@
 				/**
 				 * Options for widget
 				 * @property {Object} options Options for widget
-				 * @property {number} [options.thickness=8] Sets the border width of CircleProgressBar.
+				 * @property {number} [options.thickness=6] Sets the border width of CircleProgressBar.
 				 * @property {number|"full"|"large"|"medium"|"small"|null} [options.size="full"] Sets the size of CircleProgressBar.
 				 * @property {?string} [options.containerClassName=null] Sets the class name of CircleProgressBar container.
 				 * @property {"circle"|"normal"} [options.type="circle"] Sets type of slider
 				 * @property {number} [options.touchableWidth=50] In circle slider define size of touchable area on border
 				 * @property {boolean} [options.buttons=false] Enable additional + / - buttons
-				 * @property {string} [options.bgcolor="rgba(61, 185, 204, 0.4)"] Background color for inactive slider line
+				 * @property {string} [options.bgcolor="rgba(0, 42, 77, 1)"] Background color for inactive slider line
 				 * @property {boolean} [options.endPoint=true] Indicator of current slider position
-				 * @property {number} [options.margin=7] In circle slider define size of margin
+				 * @property {number} [options.margin=6] In circle slider define size of margin
 				 * @member ns.widget.wearable.Slider
 				 */
 				options.size = "full";
 				options.touchableWidth = 50;
 				options.buttons = false;
-				options.bgcolor = "rgba(61, 185, 204, 0.4)";
+				options.bgcolor = "rgba(0, 42, 77, 1)";
+				options.thickness = 6;
 				options.endPoint = true;
-				options.margin = 7;
+				options.margin = 6;
 			};
 
 			/**
