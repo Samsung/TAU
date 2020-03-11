@@ -5,17 +5,22 @@
 	 * radioresult - Indicator for active radio
 	 */
 	var page = document.getElementById("radio-demo"),
-		radios = document.querySelectorAll("input[name='radio-choice']"),
-		radioresult = document.querySelector((".radio-result")),
-		idx;
+		idx,
+		radios = document.querySelectorAll("input[name='radio-group']"),
+		radioText1 = document.getElementById("radio-text-1"),
+		radioText2 = document.getElementById("radio-text-2");
 
 	/**
 	 * Updates text for an selected radio
 	 * @param {HTMLElement} target
 	 */
-	function setRadioresultFromTarget(target) {
-		if (target.checked) {
-			radioresult.innerHTML = "The Active Radio is " + target.id;
+	function setRadioResultFromTarget(target) {
+		if (target.id == "radio-1") {
+			radioText1.innerHTML = "Radio on";
+			radioText2.innerHTML = "Radio off"
+		} else if (target.id == "radio-2") {
+			radioText1.innerHTML = "Radio off";
+			radioText2.innerHTML = "Radio on"
 		}
 	}
 
@@ -26,9 +31,8 @@
 	page.addEventListener("pageshow", function () {
 		for (idx = 0; idx < radios.length; idx++) {
 			radios[idx].addEventListener("change", function (event) {
-				setRadioresultFromTarget(event.target);
+				setRadioResultFromTarget(event.target);
 			});
-			setRadioresultFromTarget(radios[idx]);
 		}
 	});
 }());
