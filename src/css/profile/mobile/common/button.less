@@ -381,6 +381,9 @@ a.ui-btn {
 	}
 	&.ui-btn-flat {
 		color: var(--primary-dark-color);
+		&::before {
+			border-radius: 22 * @px_base;
+		}
 
 		&.ui-btn-icon {
 			color: var(--text-color);
