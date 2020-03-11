@@ -53,16 +53,54 @@ tau-expandable {
 		}
 	}
 
-	li, tau-expandable {
+	li {
+		display: flex;
 		position: relative;
 		box-sizing: content-box;
-		margin: 0;
+		margin: 0 20 * @px_base;
 		overflow: visible;
 		text-align: left;
 		font-size: @font_size_list_main_text;
-		line-height: 54 * @unit_base;
-		padding: 33 * @unit_base 32 * @unit_base;
+		min-height: 50 * @px_base;
 
+		&[disabled] {
+			opacity: 0.4;
+		}
+
+		.ui-li-text {
+			display: inline-flex;
+			flex-direction: column;
+			padding: 14 * @px_base 4 * @px_base;
+
+			.ui-li-text-title {
+				font-size: 18 * @sp_base;
+				color: var(--text-color);
+			}
+
+			.ui-li-text-sub {
+				font-size: @font_size_list_secondary_text;
+				color: var(--text-secondary-color);
+
+				&.ui-li-text-value {
+					color: var(--primary-color);
+				}
+			}
+		}
+		
+		// Divider
+		&.ui-li-divider::after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			height: 1 * @px_base;
+			background-color: var(--divider-color);
+			opacity: var(--divider-opacity);
+		}
+	}
+
+	// Deprecated since 1.2
+	li, tau-expandable {
 		box-shadow: none;
 		.ui-link-inherit {
 			color: @color_list_main_text_normal;
