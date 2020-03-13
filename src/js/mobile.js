@@ -103,6 +103,7 @@
 			"./core/widget/core/Marquee",
 			"./core/widget/core/tab/Tabbar",
 			"./core/widget/core/OnOffSwitch",
+			"./core/widget/core/MasterOnOffSwitch",
 			"./profile/mobile/widget/TextInput",
 			"./profile/mobile/widget/DropdownMenu",
 			"./profile/mobile/widget/TextEnveloper",

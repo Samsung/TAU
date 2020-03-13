@@ -1,4 +1,4 @@
-/*global window, ns, define */
+/*global ns, define */
 /*jslint nomen: true */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
@@ -524,7 +524,8 @@
 					self._init(element);
 				}
 
-				if (element.getAttribute("disabled") || self.options.disabled === true) {
+				if (element.hasAttribute("disabled") && element.getAttribute("disabled") !== "false" ||
+					self.options.disabled === true) {
 					self.disable();
 				} else {
 					self.enable();

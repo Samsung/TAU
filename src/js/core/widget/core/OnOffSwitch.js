@@ -1,4 +1,4 @@
-/*global window, define, ns */
+/*global define, ns */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -320,7 +320,32 @@
 				self._ui.input = element.parentElement.querySelector("input");
 				if (self._type === "select") {
 					self._ui.input.checked = !!element.selectedIndex;
+					if (element.hasAttribute("disabled")) {
+						self._disable();
+					}
 				}
+			};
+
+			/**
+			 * Common method to set disabled state of Switch
+			 * @method _disable
+			 * @member ns.widget.core.OnOffSwitch
+			 * @instance
+			 * @since 1.2
+			 */
+			OnOffSwitch.prototype._disable = function () {
+				this._ui.input.setAttribute("disabled", "true");
+			};
+
+			/**
+			 * Common method to set enabled state of Switch
+			 * @method _enable
+			 * @member ns.widget.core.OnOffSwitch
+			 * @instance
+			 * @since 1.2
+			 */
+			OnOffSwitch.prototype._enable = function () {
+				this._ui.input.removeAttribute("disabled");
 			};
 
 			/**
