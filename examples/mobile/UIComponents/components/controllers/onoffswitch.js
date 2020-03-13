@@ -1,5 +1,5 @@
 (function () {
-	var page = document.getElementById("switch-demo"),
+	var page = document.getElementById("switch-demo") || document.getElementById("master-switch-demo"),
 		switch1 = document.getElementById("switch-1"),
 		switch2 = document.getElementById("switch-2"),
 		switchResult1 = document.getElementById("switch-result-1"),
