@@ -324,6 +324,19 @@
 			};
 
 			/**
+			 * Common method to set state of Switch
+			 * @method checked
+			 * @param {boolean} enabled
+			 * @member ns.widget.core.OnOffSwitch
+			 * @instance
+			 * @since 1.2
+			 */
+			OnOffSwitch.prototype.checked = function (enabled) {
+				this._ui.input.checked = enabled;
+				events.trigger(this.element, "change");
+			};
+
+			/**
 			 * Get value of toggle switch. If widget is based on input type
 			 * tag otherwise it return index of the element
 			 * @method _getValue

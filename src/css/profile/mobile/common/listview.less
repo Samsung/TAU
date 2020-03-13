@@ -687,6 +687,38 @@ tau-expandable {
 			box-sizing: border-box;
 		}
 	}
+
+	.ui-li-master-on-off {
+		.font(regular);
+		font-size: 18 * @sp_base;
+		margin-left: 0;
+		margin-right: 0;
+		margin-bottom: 20 * @px_base;
+		height: 64 * @px_base;
+
+		.ui-on-off-label {
+			background-color: var(--master-on-off-off-color);
+			position: absolute;
+			left: 0;
+			right: 0;
+			width: 100%;
+			height: 100%;
+			border-radius: 26 * @px_base;
+			box-sizing: border-box;
+			padding-left: 24 * @px_base;
+			padding-right: 24 * @px_base;
+			display: flex;
+			align-items: center;
+
+			span {
+				flex: 1;
+			}
+			&-active {
+				color: var(--color-white);
+				background-color: var(--master-on-off-on-color);
+			}
+		}
+	}
 }
 
 @keyframes button-handler-activate {

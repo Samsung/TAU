@@ -160,7 +160,8 @@
 							colorRestOfTheScreenBellow: true,
 							colorRestOfTheScreenAbove: true,
 							firstColorStep: 0,
-							lastColorStep: 0
+							lastColorStep: 0,
+							masterOnOff: false
 						};
 
 					CoreListview.call(self);
@@ -287,7 +288,13 @@
 					"CANCEL_ANIMATION": "cancelAnimation",
 					"DEACTIVATE_HANDLERS": "deactivateHandlers",
 					"FOCUS": "ui-listview-focus",
-					"ITEMFOCUS": "ui-listview-item-focus"
+					"ITEMFOCUS": "ui-listview-item-focus",
+					/**
+					 * Create handler for master on/off switch
+					 * @style ui-listview-master-on-off
+					 * @member ns.widget.mobile.Listview
+					 */
+					MASTER_ON_OFF: "ui-li-master-on-off"
 				},
 
 				/**
@@ -423,7 +430,83 @@
 				this._context = context;
 
 				return canvas;
-			}
+			};
+
+			prototype._toggleAllOnOff = function (enabled) {
+				var allOnOff = [].slice.call(this.element.querySelectorAll(".ui-on-off-switch")),
+					ui = this._ui;
+
+				allOnOff.filter(function (item) {
+					return item !== ui.onOff;
+				}).forEach(function (onOff) {
+					// lack of common API to set checked state
+					ns.widget.OnOffSwitch(onOff).checked(enabled);
+				});
+			};
+
+			/**
+			 * Builds master on off switch
+			 * @method _buildMasterOnOff
+			 * @param {HTMLElement} element Main element of widget
+			 * @member ns.widget.mobile.Listview
+			 * @return {HTMLElement}
+			 * @protected
+			 */
+			prototype._buildMasterOnOff = function (element) {
+				var self = this,
+					masterLi = document.createElement("li"),
+					firstLiElement = element.querySelector("li"),
+					label = document.createElement("label"),
+					labelText = document.createElement("span"),
+					onOff = document.createElement("input");
+
+				onOff.classList.add("ui-on-off-switch");
+				onOff.type = "checkbox";
+				label.classList.add("ui-on-off-label");
+
+				labelText.innerHTML = "Off";
+				label.appendChild(labelText);
+				label.appendChild(onOff);
+				masterLi.appendChild(label);
+				masterLi.classList.add(classes.MASTER_ON_OFF);
+
+				if (firstLiElement) {
+					element.insertBefore(masterLi, firstLiElement);
+				} else {
+					element.appendChild(masterLi);
+				}
+
+				self._ui.masterLi = masterLi;
+				self._ui.onOff = onOff;
+
+				// create instance of widget
+				ns.widget.OnOffSwitch(onOff);
+
+				// bind events
+				onOff.addEventListener("change", function () {
+					if (onOff.checked) {
+						label.classList.add("ui-on-off-label-active");
+						labelText.innerHTML = "On";
+					} else {
+						label.classList.remove("ui-on-off-label-active");
+						labelText.innerHTML = "Off";
+					}
+					self._toggleAllOnOff(onOff.checked);
+				});
+			};
+
+			/**
+			 * Remove master on/off switch
+			 * @method _removeMasterOnOff
+			 * @member ns.widget.mobile.Listview
+			 * @return {HTMLElement}
+			 * @protected
+			 */
+			prototype._removeMasterOnOff = function () {
+				var self = this;
+
+				self.element.removeChild(self._ui.masterLi);
+			};
 
 			/**
 			 * Builds widget
@@ -435,11 +518,16 @@
 			 */
 			prototype._build = function (element) {
 				var self = this,
+					options = self.options,
 					newElement = CoreListviewProto._build.call(self, element),
 					isChildListview = element &&
 						selectorUtils.getClosestByClass(element.parentElement, "ui-listview");
 
 				self._isChildListview = isChildListview;
+
+				if (options.masterOnOff) {
+					self._buildMasterOnOff(element);
+				}
 
 				if (!isChildListview) {
 					self._addCanvas(newElement);
@@ -854,7 +942,7 @@
 					scrollableContainerTop = scrollableContainerRect.top;
 				}
 
-					// Reset first color step if listview is above top edge of scroll container
+				// Reset first color step if listview is above top edge of scroll container
 				if (scrollableContainerRect && top < scrollableContainerTop) {
 					if (self.options.firstColorStep !== 0) {
 						self.options.firstColorStep = 0;
