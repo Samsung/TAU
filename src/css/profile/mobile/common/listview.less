@@ -243,6 +243,9 @@ tau-expandable {
 			overflow-x: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			font-size: 18 * @px_base;
+			color: var(--text-color);
+			max-height: 24.25 * @px_base;
 			> *:not(.ui-li-text-sub-2) {
 				flex: 1;
 				// no wrap text
@@ -256,9 +259,10 @@ tau-expandable {
 			width: 100%;
 		}
 		.ui-li-text-2 {
-			color: @color_list_secondary_text_normal;
+			color: var(--text-secondary-color);
 			line-height: 43 * @unit_base;
-			font-size: @font_size_list_secondary_text;
+			font-size: 13 * @px_base;
+  			max-height: 17.5 * @px_base;
 			display: flex;
 			// no wrap text
 			overflow-x: hidden;
