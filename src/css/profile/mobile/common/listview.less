@@ -162,6 +162,27 @@ tau-expandable {
 				left: 52 * @px_base;
 			}
 		}
+
+		.ui-li-divider {
+			display: flex;
+			align-items: center;
+			margin-left: 12 * @px_base;
+			margin-right: 9 * @px_base;
+
+			&::after {
+				content: "";
+				position: absolute;
+				width: 1 * @px_base;
+				height: 22 * @px_base;
+				background-color: var(--on-off-switch-divider-color);
+				opacity: var(--on-off-switch-divider-opacity);
+			}
+		}
+
+		.ui-on-off-switch-container {
+			align-self: center;
+			margin-left: auto;
+		}
 	}
 
 	// Deprecated since 1.2
