@@ -85,6 +85,7 @@ tau-expandable {
 				margin-right: 16 * @px_base;
 				min-height: 36 * @px_base;
 				align-items: center;
+				white-space: nowrap;
 			}
 
 			&::after {
@@ -111,16 +112,26 @@ tau-expandable {
 		.ui-li-icon {
 			width: 40 * @px_base;
 			height: 40 * @px_base;
+			display: inline-flex;
 			position: relative;
 			align-self: center;
-			margin-right: 8 * @px_base;
-			left: -8 * @px_base;
 
-			* {
+			&.ui-li-icon-small, &.ui-li-icon-small:after {
+				width: 25px !important;
+				height: 25px !important;
+			}
+
+			+ .ui-li-text {
+				margin-left: 8px;
+			}
+
+			&::after, * {
 				content: "";
 				position: absolute;
-				width: 100%;
-				height: 100%;
+				width: 40px;
+				height: 40px;
+				mask-size: 100%;
+				mask-position: center center;
 			}
 		}
 
@@ -139,9 +150,14 @@ tau-expandable {
 				font-size: @font_size_list_secondary_text;
 				color: var(--text-secondary-color);
 
-				&.ui-li-text-value {
-					color: var(--primary-color);
+				img {
+					width: 15 * @px_base;
+					height: 15 * @px_base;
 				}
+			}
+
+			.ui-li-text-value {
+				color: var(--primary-color);
 			}
 		}
 		
@@ -179,9 +195,32 @@ tau-expandable {
 			}
 		}
 
-		.ui-on-off-switch-container {
+		.ui-li-action {
 			align-self: center;
+			display: inline-flex;
 			margin-left: auto;
+			white-space: nowrap;
+		}
+
+		.ui-li-right {
+			margin-left: auto !important;
+		}
+		
+		.ui-li-text-ellipse {
+			min-width: 0;
+			white-space: nowrap;
+
+			* {
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+		}
+
+		input {
+			&[type="checkbox"].ui-checkbox, &[type="radio"].ui-radio {
+				margin: unset;
+				align-self: center;
+			}
 		}
 	}
 
