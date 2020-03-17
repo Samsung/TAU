@@ -258,7 +258,7 @@
 					self._changed = false;
 				} else if (self._lastIndex !== index) {
 					self._changed = true;
-					sectionChanger.setActiveSection(index, self.options.changeDuration);
+					sectionChanger.setActiveSection(index, self.options.changeDuration, false, false);
 				}
 				self._lastIndex = index;
 			};
