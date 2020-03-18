@@ -10,22 +10,28 @@
 </head>
 
 <body>
-	<div class="ui-page" id="ContainedButtonsContentDemo">
+	<div class="ui-page" id="ContainedButtonsOnListDemo">
 		<div class="ui-header" data-position="fixed">
 			<h1>
-				Buttons on content
+				List Buttons
 			</h1>
 		</div>
 		<div class="ui-content">
-            <button data-style="contained">Default width (60%)</button>
-            <br/>
-            <br/>
-            <button data-style="contained" style="width: 100%">Max. (default) width (75%)</button>
-            <br/>
-            <br/>
-            <button data-style="contained">
-				Multiline button max 2 lines, Multiline button max 2 lines, Multiline button max 2 lines
-			</button>
+			<ul class="ui-listview">
+				<li class="li-has-right-btn">
+					Contained button
+					<button data-inline="true" data-style="contained">
+						Button
+					</button>
+				</li>
+				<li class="li-has-right-btn">
+					Contained button disabled
+					<button data-inline="true" data-style="contained" disabled>
+						Button
+					</button>
+				</li>
+			</ul>
+		</div>
 	</div>
 </body>
 
