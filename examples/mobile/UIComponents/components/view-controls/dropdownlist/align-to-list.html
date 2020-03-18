@@ -3,24 +3,27 @@
 
 <head>
 	<meta content="width=device-width, user-scalable=no" name="viewport" />
-	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
-	<link href="../../css/style.css" rel="stylesheet" />
-	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	<link href="../../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../../lib/tau/mobile/js/tau.js">
 	</script>
 </head>
 
 <body>
 	<div class="ui-page" id="dropdownmenu-demo">
-		<div class="ui-header" data-position="fixed">
-			<h1>
-				Dropdown menu
-			</h1>
-		</div>
+		<header>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">Align_Top Align_Bottom of list</span>
+			</div>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" data-style="flat"></button>
+			</div>
+		</header>
 		<div class="ui-content">
-			<ul class="ui-listview">
-				<li class="ui-group-index">
-					Basic
-				</li>
+			<ul class="ui-listview ui-content-area">
 				<li class="ui-li-static ui-li-has-dropdownmenu">
 					<select data-native-menu="false" id="select-custom-1" name="select-custom-1">
 						<option data-placeholder="true" value="first-line" data-hide-placeholder-menu-items="false">
