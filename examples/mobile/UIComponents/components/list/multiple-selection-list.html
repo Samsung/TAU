@@ -10,22 +10,84 @@
 </head>
 
 <body>
-	<div class="ui-page">
+	<div class="ui-page" id="checkbox-list-selected-demo">
 		<header>
 			<div class="ui-appbar-left-icons-container">
-				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+				<label>All
+					<input class="ui-checkbox-all" type="checkbox"/>
+				</label>
 			</div>
 			<div class="ui-appbar-title-container">
-				<span class="ui-appbar-title">Selection items</span>
+				<span class="ui-appbar-title">Select items</span>
 			</div>
 			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn" data-style="flat">Cancel</button>
 				<button class="ui-btn ui-btn-icon ui-btn-icon-more" data-style="flat"></button>
 			</div>
 		</header>
 		<div class="ui-content">
-			<ul class="ui-listview ui-content-area">
+			<ul class="ui-listview ui-content-area" data-multiple-selection="true">
+				<li class="ui-li-divider ui-li-has-checkbox">
+					<input name="checkbox-1" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-1">
+							Selection item 01
+						</span>
+					</div>
+				</li>
+				<li class="ui-li-divider ui-li-has-checkbox">
+					<input name="checkbox-2" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-2">
+							Selection item 02
+						</span>
+					</div>
+				</li>
+				<li class="ui-li-has-checkbox">
+					<input name="checkbox-3" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-3">
+							Selection item 03
+						</span>
+					</div>
+				</li>
+			</ul>
+
+			<ul class="ui-listview ui-content-area" data-multiple-selection="true">
+				<li class="ui-li-divider ui-li-has-checkbox">
+					<input name="checkbox-4" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-4">
+							Selection item 04
+						</span>
+					</div>
+				</li>
+				<li class="ui-li-divider ui-li-has-checkbox">
+					<input name="checkbox-5" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-5">
+							Selection item 05
+						</span>
+					</div>
+				</li>
+				<li class="ui-li-has-checkbox">
+					<input name="checkbox-6" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-6">
+							Selection item 06
+						</span>
+					</div>
+				</li>
 			</ul>
 		</div>
+
+		<footer>
+			<div class="ui-bottom-bar ui-bottom-bar-icons">
+				<button class="ui-btn" data-style="flat" data-icon="move" data-iconpos="top">Move</button>
+				<button class="ui-btn" data-style="flat" data-icon="share" data-iconpos="top">Share</button>
+				<button class="ui-btn" data-style="flat" data-icon="delete" data-iconpos="top">Delete</button>
+			</div>
+		</footer>
 	</div>
 </body>
 
