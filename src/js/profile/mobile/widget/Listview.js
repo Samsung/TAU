@@ -160,7 +160,8 @@
 							colorRestOfTheScreenBellow: true,
 							colorRestOfTheScreenAbove: true,
 							firstColorStep: 0,
-							lastColorStep: 0
+							lastColorStep: 0,
+							multipleSelection: false
 						};
 
 					CoreListview.call(self);
@@ -263,6 +264,12 @@
 					 * @member ns.widget.mobile.Listview
 					 */
 					"ITEM_ACTIVE": "ui-listview-item-active",
+					/**
+					 * Set list item selected
+					 * @style ui-li-selected
+					 * @member ns.widget.mobile.Listview
+					 */
+					"ITEM_SELECTED": "ui-li-selected",
 					/**
 					 * Set helper for listview widget
 					 * @style ui-listview-helper
@@ -393,6 +400,40 @@
 
 			Listview.classes = objectUtils.fastMerge(classes, CoreListview.classes);
 			Listview.events = events;
+
+
+			function onChangeSelection(event) {
+				var liElement = null,
+					target = event.target;
+
+				if (target.tagName === "INPUT" && target.type === "checkbox") {
+					liElement = selectorUtils.getClosestByTag(target, "li");
+					if (liElement) {
+						if (target.checked) {
+							liElement.classList.add(classes.ITEM_SELECTED);
+						} else {
+							liElement.classList.remove(classes.ITEM_SELECTED);
+						}
+					}
+				}
+			}
+
+			/**
+			 * Enables / disables multiple selection on listview
+			 * @method _setMultipleSelection
+			 * @param {HTMLElement} element Main element of widget
+			 * @param {boolean} enabled option value
+			 * @member ns.widget.mobile.Listview
+			 * @protected
+			 */
+			prototype._setMultipleSelection = function (element, enabled) {
+				if (enabled) {
+					element.addEventListener("change", onChangeSelection, true);
+				} else {
+					element.removeEventListener("change", onChangeSelection, true);
+				}
+				this.options.multipleSelection = enabled;
+			};
 
 			prototype._setFirstColorStep = function (element, value) {
 				value = parseInt(value, 10);
@@ -713,6 +754,7 @@
 					self.options.colorRestOfTheScreenAbove = false;
 				}
 
+				self._setMultipleSelection(self.element, self.options.multipleSelection);
 			};
 
 			/**
@@ -854,7 +896,7 @@
 					scrollableContainerTop = scrollableContainerRect.top;
 				}
 
-					// Reset first color step if listview is above top edge of scroll container
+				// Reset first color step if listview is above top edge of scroll container
 				if (scrollableContainerRect && top < scrollableContainerTop) {
 					if (self.options.firstColorStep !== 0) {
 						self.options.firstColorStep = 0;
