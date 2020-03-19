@@ -21,7 +21,6 @@
 		}
 	}
 
-
 	&:focus {
 		outline: 4 * @unit_base solid @color_focus_border;
 	}
@@ -37,6 +36,13 @@
 		transition: transform cubic-bezier(0.33, 0, 0.2, 1) 300ms,
 					left cubic-bezier(0.17, 0.2, 0.2, 1) 200ms;
 		transform-origin: 0 50% 0;
+	}
+
+	&.ui-slider-active {
+		.ui-slider-handler {
+			width: 22 * @px_base;
+			height: 22 * @px_base;
+		}
 	}
 
 	&.ui-disabled {
