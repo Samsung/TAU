@@ -57,7 +57,7 @@ tau-expandable {
 		display: flex;
 		position: relative;
 		box-sizing: content-box;
-		margin: 0 20 * @px_base;
+		margin: 0 23 * @px_base;
 		overflow: visible;
 		text-align: left;
 		font-size: @font_size_list_main_text;
@@ -68,7 +68,7 @@ tau-expandable {
 
 		// Subheader
 		&.ui-li-subheader {
-			margin-left: 20 * @px_base;
+			margin-left: 23 * @px_base;
 			flex-direction: row;
 			align-items: center;
 
@@ -139,7 +139,7 @@ tau-expandable {
 		.ui-li-text {
 			display: inline-flex;
 			flex-direction: column;
-			padding: 14 * @px_base 4 * @px_base;
+			padding: 14 * @px_base 0;
 
 			.ui-li-text-title {
 				font-size: 18 * @sp_base;
@@ -166,11 +166,13 @@ tau-expandable {
 			&::after {
 				content: "";
 				position: absolute;
-				width: 100%;
+				width: calc(~"100% + "8 * @px_base);
 				bottom: 0;
 				height: 1 * @px_base;
-				background-color: var(--divider-color);
 				opacity: var(--divider-opacity);
+				margin-left: -4 * @px_base;
+				border-bottom: 1 * @px_base solid var(--divider-color);
+				box-sizing: border-box;
 			}
 
 			&.ui-li-has-icon::after {
