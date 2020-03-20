@@ -179,12 +179,9 @@
 	overflow: hidden;
 	z-index: 1201;
 	min-width: 168px;
-	&.ui-dropdownmenu-options-top {
+	&.ui-dropdownmenu-options-vertical-margins {
 		margin-top: 6 * @px_base;
-	}
-	&.ui-dropdownmenu-options-bottom {
 		margin-bottom: 6 * @px_base;
-
 	}
 	&.ui-dropdownmenu-active {
 		visibility: visible;
@@ -193,6 +190,11 @@
 	&.ui-dropdownmenu-options-opened {
 		border-top: 1 * @px_base solid @color_dropdownmenu_list_group_stroke;
 		border-bottom: 1 * @px_base solid @color_dropdownmenu_list_group_stroke;
+	}
+	// top, bottom classes just describes direction in which menu is animated.
+	&.ui-dropdownmenu-options-top {
+	}
+	&.ui-dropdownmenu-options-bottom {
 	}
 	&.ui-dropdownmenu-options-opening.ui-dropdownmenu-options-top .ui-dropdownmenu-options {
 		.animation(open-to-top 300ms);

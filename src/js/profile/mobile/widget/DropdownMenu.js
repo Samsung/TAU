@@ -179,6 +179,9 @@
 						elContent: null,
 						elDefaultOption: null
 					};
+
+					self._horizontalPosition = null;
+
 					/**
 					 * @property {Object} options Object with default options
 					 * @property {boolean} [options.nativeMenu=true] Sets the DropdownMenu widget as native/custom type.
@@ -361,7 +364,13 @@
 					 * @style ui-focus
 					 * @member ns.widget.mobile.DropdownMenu
 					 */
-					focus: BaseKeyboardSupport.classes.focus
+					focus: BaseKeyboardSupport.classes.focus,
+					/**
+					 * Set top and bottom margins for dropdownmenu
+					 * @style "ui-dropdownmenu-options-vertical-margins"
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
+					verticalMargins: "ui-dropdownmenu-options-vertical-margins"
 				},
 				prototype = new BaseWidget();
 
@@ -378,7 +387,7 @@
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			function toggleMenu(self, event) {
-				self._toggleSelect();
+				self._toggleSelect(event);
 				eventUtils.stopPropagation(event);
 				eventUtils.preventDefault(event);
 			}
@@ -400,7 +409,7 @@
 				if (tag === "LI" && !classList.contains(classes.optionGroup) && !classList.contains(classes.disabled)) {
 					self._selectedIndex = indexOf.call(self._ui.elOptions, target);
 					self._changeOption();
-					self._toggleSelect();
+					self._toggleSelect(event);
 				}
 				event.stopPropagation();
 				event.preventDefault();
@@ -433,7 +442,7 @@
 			function onResize(self, event) {
 				if (self._isOpen === true) {
 					self._isOpen = !self._isOpen;
-					self._toggleSelect();
+					self._toggleSelect(event);
 					event.stopPropagation();
 					event.preventDefault();
 				}
@@ -578,30 +587,28 @@
 			};
 
 			/**
-			 * Return offset of element
-			 * @method getOffsetOfElement
+			 * Return top offset of element
+			 * @method getTopOffsetOfElement
 			 * @private
 			 * @static
 			 * @param {HTMLElement} element
 			 * @param {HTMLElement} container
-			 * @return {Object}
+			 * @return number
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
-			function getOffsetOfElement(element, container) {
-				var top = element.offsetTop,
-					left = element.offsetLeft,
+			function getTopOffsetOfElement(element, container) {
+				var offsetTop = element.offsetTop,
 					offsetParent;
 
 				while (element.offsetParent) {
 					offsetParent = element.offsetParent;
-					top += offsetParent.offsetTop;
-					left += offsetParent.offsetLeft;
+					offsetTop += offsetParent.offsetTop;
 					if (element === container) {
 						break;
 					}
 					element = offsetParent;
 				}
-				return {top: top, left: left};
+				return offsetTop;
 			}
 
 			/**
@@ -1001,7 +1008,6 @@
 					wrapperMinWidth = parseInt(window.getComputedStyle(ui.elOptionWrapper).minWidth, 10),
 					selectedItem = ui.elOptionContainer.querySelector("." + classes.selected),
 					stylesOfSelectedOptionAfter = window.getComputedStyle(selectedItem, ":after"),
-					listItemHeight = ui.elOptionContainer.children[0].offsetHeight,
 					options = self.options,
 					scrollTop = ui.elOptionWrapper.parentNode.querySelector(".ui-scrollview-clip").scrollTop,
 					height,
@@ -1010,7 +1016,7 @@
 					widgetParentStyle = window.getComputedStyle(widgetParent),
 					maxContainerWidth;
 
-				self._offset = getOffsetOfElement(ui.elSelectWrapper, ui.page);
+				self._offsetTop = getTopOffsetOfElement(ui.elSelectWrapper, ui.page);
 				areaInfo = self._chooseDirection();
 
 				width = biggestListItemWidth > wrapperMinWidth ?
@@ -1018,9 +1024,11 @@
 				parseInt(stylesOfSelectedOptionAfter.width, 10) : wrapperMinWidth;
 
 				height = optionHeight;
+
 				// This part decides the location and direction of option list.
-				offsetLeft = self._offset.left;
+				offsetLeft = self._horizontalPosition === "right" ? window.screen.width - width : 0;
 				optionStyle = "left: " + offsetLeft + "px; ";
+
 				if (options.inline === true) {
 					height = ui.elOptionContainer.children[0].offsetHeight * 5;
 					maxContainerWidth = widgetParent.offsetWidth -
@@ -1029,12 +1037,19 @@
 				}
 
 				if (areaInfo.direction === "top") {
-					offsetTop = self._offset.top - height - scrollTop + listItemHeight;
+					offsetTop = self._offsetTop - height - scrollTop + ui.elPlaceHolder.offsetHeight;
 					ui.elOptionWrapper.classList.add(classes.top);
 				} else {
-					offsetTop = self._offset.top + ui.elPlaceHolder.offsetHeight - scrollTop - listItemHeight;
+					offsetTop = self._offsetTop - scrollTop;
 					ui.elOptionWrapper.classList.add(classes.bottom);
+
 				}
+
+				// List does not require vertical paddings.
+				if (selectors.getParentsByTag(ui.elSelect, "li").length == 0) {
+					ui.elOptionWrapper.classList.add(classes.verticalMargins);
+				}
+
 				optionStyle += "top: " + offsetTop + "px; width: " + width + "px; max-height: " + height + "px;";
 				return optionStyle;
 			};
@@ -1053,11 +1068,9 @@
 						belowArea: 0,
 						topArea: 0,
 						direction: ""
-					},
-					currentOffset = self._offset;
-
-				areaInfo.belowArea = ui.page.offsetHeight - currentOffset.top - ui.elPlaceHolder.offsetHeight + ui.content.scrollTop;
-				areaInfo.topArea = currentOffset.top - ui.content.scrollTop;
+					};
+				areaInfo.belowArea = ui.page.offsetHeight - self._offsetTop - ui.elPlaceHolder.offsetHeight + ui.content.scrollTop;
+				areaInfo.topArea = self._offsetTop - ui.content.scrollTop;
 
 				if ((areaInfo.belowArea < areaInfo.topArea) && (ui.elOptionContainer.offsetHeight > areaInfo.belowArea)) {
 					areaInfo.direction = "top";
@@ -1070,14 +1083,17 @@
 			/**
 			 * Open and Close Option List
 			 * @method _toggleSelect
+			 * @param {event} [clickEvent=null] click event
 			 * @protected
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
-			prototype._toggleSelect = function () {
+			prototype._toggleSelect = function (clickEvent) {
 				var self = this,
 					ui = self._ui,
 					optionContainer = ui.elOptionContainer,
 					optionWrapperClassList = ui.elOptionWrapper.classList;
+
+				self._horizontalPosition = (clickEvent && clickEvent.clientX > (window.screen.width / 2)) ? "right" : "left";
 
 				if (self._isOpen && !optionWrapperClassList.contains(classes.opening)) {
 					optionWrapperClassList.remove(classes.opened);
