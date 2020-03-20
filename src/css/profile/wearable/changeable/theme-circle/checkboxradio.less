@@ -143,7 +143,8 @@ input[type="radio"] {
 		background: radial-gradient(transparent, transparent 63%, @color_checkboxradio_radiobox_line_off_dim 65%, @color_checkboxradio_radiobox_line_off_dim 68%, transparent 72%, transparent);
 		mask-image: none;
 		&::before {
-			transition: none;
+			content: '';
+			background-color: @color_checkboxradio_radio;
 		}
 		&::after {
 			background-color: @color_checkboxradio_radio_off_dim;
