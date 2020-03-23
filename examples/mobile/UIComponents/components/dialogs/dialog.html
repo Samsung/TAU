@@ -13,91 +13,98 @@
 	<div class="ui-page" data-role="page" id="demo-popup-page">
 		<div class="ui-header" data-position="fixed">
 			<h1>
-				Popup
+				General Dialogs
 			</h1>
 		</div>
 		<div class="ui-content">
-			<ul class="ui-listview">
-				<li class="ui-group-index">
-					Button
-				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#1btn_popup">
-						1btn popup
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#2-btn-popup">
+						2 Button Title Dialog
 					</a>
 				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#2btn_popup">
-						2btn popup
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#1-btn-2level-popup">
+						1 Button Title 2level description Dialog
 					</a>
 				</li>
-				<li class="ui-group-index">
-					Header and Footer
-				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#header_popup">
-						Header popup
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#1-btn-checkbox-popup">
+						1 Button Title Checkbox Dialog
 					</a>
 				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#footer_popup">
-						Footer popup
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#2-btn-notitle-popup">
+						2 Button No Title Dialog
 					</a>
 				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#2line_title_popup">
-						2line title
-						popup
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#0-btn-title-popup">
+						0 Button Title Dialog
 					</a>
 				</li>
-				<li class="ui-group-index">
-					List
-				</li>
-				<li>
-					<a data-inline="true" data-position-to="window" data-rel="popup" href="#listview_popup">
-						List popup
+				<li class="ui-li-anchor">
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#listview-popup">
+						2 Button Title List Dialog
 					</a>
 				</li>
-				<li>
-					<a data-inline="true" data-position-to="window" data-rel="popup" href="#listview_popup_2">
-						List popup (2 lines)
+				<li class="ui-li-anchor">
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#listview-popup-2">
+						1 Button Title Detailview Dialog
 					</a>
 				</li>
-				<li>
-					<a data-inline="true" data-position-to="window" data-rel="popup" href="#2line_title_listview_popup">
-						2line title List popup
+				<li class="ui-li-anchor">
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#3-btn-popup">
+						3 Button Title Dialog
 					</a>
 				</li>
-				<li class="ui-group-index">
-					Input
-				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#text-input-popup">
-						TextInput Popup
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#3-stackbtn-popup">
+						3 StackButton Title Dialog
 					</a>
 				</li>
-				<li class="ui-group-index">
-					Content
-				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#2btn_image_popup">
-						Popup with
-						image
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
+						0 Button Title Select List Dialog
 					</a>
 				</li>
-				<li class="ui-group-index">
-					Controls
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
+						1 Button Title Single Choice List Dialog
+					</a>
 				</li>
-				<li>
-					<a data-position-to="window" data-rel="popup" href="#2btn_checkbox_popup">
-						2 buttons
-						with checkbox
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
+						1 Button Title Single Choice Description List Dialog
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
+						1 Button Title Multi Choice Dialog
 					</a>
 				</li>
 			</ul>
-			<div class="ui-popup" id="1btn_popup">
+			<div class="ui-popup" id="2-btn-popup">
 				<div class="ui-popup-header">
-					Popup Header
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					Lorem ipsum dolor sit amet,
+					consectetur adiptiscing elit, sed
+					doei usmod tempore sit ipsum
+				</div>
+				<div class="ui-popup-footer ui-grid-col-2">
+					<a class="ui-btn" data-rel="back">
+						Action1
+					</a>
+					<a class="ui-btn" data-rel="back">
+						Action2
+					</a>
+				</div>
+			</div>
+			<div class="ui-popup" id="1-btn-2level-popup">
+				<div class="ui-popup-header">
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
 					Lorem ipsum dolor sit amet,
@@ -106,27 +113,27 @@
 				</div>
 				<div class="ui-popup-footer">
 					<a class="ui-btn" data-rel="back">
-						Cancel
+						Action button
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="text-input-popup">
+			<div class="ui-popup" id="1-btn-checkbox-popup">
 				<div class="ui-popup-header">
-					Popup Title
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					<textarea>I have some text</textarea>
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+					<br />
+					<input checked="" type="checkbox" />
+					Do not show again
 				</div>
 				<div class="ui-popup-footer">
 					<a class="ui-btn" data-rel="back">
-						Cancel
+						Action
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="2btn_popup">
-				<div class="ui-popup-header">
-					Popup Header
-				</div>
+			<div class="ui-popup" id="2-btn-notitle-popup">
 				<div class="ui-popup-content">
 					Lorem ipsum dolor sit amet,
 					consectetur adiptiscing elit, sed
@@ -134,16 +141,16 @@
 				</div>
 				<div class="ui-popup-footer ui-grid-col-2">
 					<a class="ui-btn" data-rel="back">
-						Cancel
+						Action1
 					</a>
 					<a class="ui-btn" data-rel="back">
-						Done
+						Action2
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="header_popup">
+			<div class="ui-popup" id="0-btn-title-popup">
 				<div class="ui-popup-header">
-					Popup Header
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
 					Lorem ipsum dolor sit amet,
@@ -151,50 +158,9 @@
 					doei usmod tempore sit ipsum
 				</div>
 			</div>
-			<div class="ui-popup" id="footer_popup">
+			<div class="ui-popup" id="listview-popup">
 				<div class="ui-popup-header">
-					Popup Header
-				</div>
-				<div class="ui-popup-content">
-					Lorem ipsum dolor sit amet,
-					consectetur adiptiscing elit, sed
-					doei usmod tempore sit ipsum
-				</div>
-				<div class="ui-popup-footer ui-grid-col-2">
-					<a class="ui-btn" data-rel="back">
-						Cancel
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Done
-					</a>
-				</div>
-			</div>
-			<div class="ui-popup" id="2line_title_popup">
-				<div class="ui-popup-header popup-2line-title">
-					<h1>
-						Main text
-					</h1>
-					<h2>
-						sub text
-					</h2>
-				</div>
-				<div class="ui-popup-content">
-					Lorem ipsum dolor sit amet,
-					consectetur adiptiscing elit, sed
-					doei usmod tempore sit ipsum
-				</div>
-				<div class="ui-popup-footer ui-grid-col-2">
-					<a class="ui-btn" data-rel="back">
-						Cancel
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Done
-					</a>
-				</div>
-			</div>
-			<div class="ui-popup" id="listview_popup">
-				<div class="ui-popup-header">
-					Popup Header
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
 					<ul class="ui-listview">
@@ -266,9 +232,9 @@
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="listview_popup_2">
+			<div class="ui-popup" id="listview-popup-2">
 				<div class="ui-popup-header">
-					Popup Header
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
 					<ul class="ui-listview">
@@ -330,50 +296,51 @@
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="2btn_checkbox_popup">
+			<div class="ui-popup" id="3-btn-popup">
 				<div class="ui-popup-header">
-					Title
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-					<br />
-					<input checked="" type="checkbox" />
-					Do not show again
+					Lorem ipsum dolor sit amet,
+					consectetur adiptiscing elit, sed
+					doei usmod tempore sit ipsum
 				</div>
-				<div class="ui-popup-footer ui-grid-col-2">
+				<div class="ui-popup-footer ui-grid-col-3">
 					<a class="ui-btn" data-rel="back">
-						Cancel
+						Action1
 					</a>
 					<a class="ui-btn" data-rel="back">
-						Done
+						Action2
+					</a>
+					<a class="ui-btn" data-rel="back">
+						Action3
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="2btn_image_popup">
+			<div class="ui-popup" id="3-stackbtn-popup">
 				<div class="ui-popup-header">
-					Title
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					<img src="images/1.jpg" style="height: 118px;" />
-					Lorem ipsum dolor sit amet
+					Lorem ipsum dolor sit amet,
+					consectetur adiptiscing elit, sed
+					doei usmod tempore sit ipsum
 				</div>
-				<div class="ui-popup-footer ui-grid-col-2">
+				<div class="ui-popup-footer">
 					<a class="ui-btn" data-rel="back">
-						Cancel
+						Action1
 					</a>
 					<a class="ui-btn" data-rel="back">
-						Done
+						Action2
+					</a>
+					<a class="ui-btn" data-rel="back">
+						Action3
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="2line_title_listview_popup">
-				<div class="ui-popup-header popup-2line-title">
-					<h1>
-						Main text
-					</h1>
-					<h2>
-						sub text
-					</h2>
+			<div class="ui-popup" id="0-btn-selectlist-popup">
+				<div class="ui-popup-header">
+					Dialog header
 				</div>
 				<div class="ui-popup-content">
 					<ul class="ui-listview">
@@ -423,11 +390,6 @@
 							</a>
 						</li>
 					</ul>
-				</div>
-				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Cancel
-					</a>
 				</div>
 			</div>
 		</div>
