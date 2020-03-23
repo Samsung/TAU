@@ -6,18 +6,27 @@
 	flex-direction: column;
 	justify-content: space-around;
 
-	.ui-slider-bar {
-		background-color: var(--slider-bg-color);
-		height: 3 * @px_base;
-		border-radius: 1.5 * @px_base;
-		overflow: hidden;
-		transition: height 250ms, border-radius 250ms;
-		transition-timing-function: cubic-bezier(0.33, 0, 0.2, 1);
+	.ui-slider-bar::before {
+		content: '';
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		border-image: url(images/3_Controllers/tw_progress_bar_n.9.png) 3 fill;
+		border-image-width: 1 * @px_base;
+		opacity: 0.3;
+		position: absolute;
+	}
 
+	.ui-slider-bar {
+		position: relative;
+		height: 3 * @px_base;
+		overflow: hidden;
 
 		.ui-slider-value {
 			height: 100%;
-			background-color: var(--slider-handler-color);
+			border-image: url(images/3_Controllers/tw_progress_bar_n.9.png) 3 fill;
+			border-image-width: 1 * @px_base;
 		}
 	}
 
@@ -36,6 +45,7 @@
 		transition: transform cubic-bezier(0.33, 0, 0.2, 1) 300ms,
 					left cubic-bezier(0.17, 0.2, 0.2, 1) 200ms;
 		transform-origin: 0 50% 0;
+		z-index: 9;
 	}
 
 	&.ui-slider-active {
@@ -46,12 +56,14 @@
 	}
 
 	&.ui-disabled {
-		opacity: 1;
 		.ui-slider-bar {
-			background-color: var(--slider-bg-disabled-color);
+			border-image: url(images/3_Controllers/tw_progress_bar_d.9.png) 3 fill;
+			border-image-width: 1 * @px_base;
+			opacity: 0.15;
 
 			.ui-slider-value {
-				background-color: var(--slider-handler-disabled-color);
+				border-image: url(images/3_Controllers/tw_progress_bar_d.9.png) 3 fill;
+				border-image-width: 1 * @px_base;
 			}
 		}
 
