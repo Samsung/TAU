@@ -1,0 +1,24 @@
+.ui-footer {
+    height: 56 * @px_base;
+    padding: 0;
+    .ui-bottom-bar {
+        display: flex;
+        width: 100%;
+        min-height: 56 * @px_base;
+        background-color: var(--bottom-bar-color);
+        margin: 0 24 * @px_base;
+    
+        .ui-btn {
+            font-size: 18 * @sp_base;
+            max-width: 100%;
+        }
+    }
+}
+
+@media all and (min-width: 685px) and (min-height: 411px) {
+    .ui-footer .ui-bottom-bar {
+        margin: 0 auto;
+        width: 75%;
+        min-width: 637 * @px_base;
+    }
+}
