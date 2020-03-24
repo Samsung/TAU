@@ -1,0 +1,113 @@
+.calendarView {
+	width: 100%;
+	border-spacing: 0;
+}
+tr {
+	td {
+		height: 32 * @px_base;
+		text-align: center;
+		vertical-align: middle;
+		font-size: 15 * @sp_base;
+		.font(regular); 
+		color: var(--calendar-text-color);
+		padding: 0;
+		&:only-child {
+			width: 100%;
+		}
+		&:nth-last-child(2) {
+			width: 50%;
+		}
+		&:nth-last-child(2)+td {
+			width: 50%;
+		}
+		&:nth-last-child(3) {
+			width: 33.3%;
+		}
+		&:nth-last-child(3)~td {
+			width: 33.3%;
+		}
+		&:nth-last-child(4) {
+			width: 25%;
+		}
+		&:nth-last-child(4)~td {
+			width: 25%;
+		}
+		&:nth-last-child(5) {
+			width: 20%;
+		}
+		&:nth-last-child(5)~td {
+			width: 20%;
+		}
+		&:nth-last-child(6) {
+			width: 16.6%;
+		}
+		&:nth-last-child(6)~td {
+			width: 16.6%;
+		}
+		&:nth-last-child(7) {
+			width: 14.2%;
+		}
+		&:nth-last-child(7)~td {
+			width: 14.2%;
+		}
+		&:nth-child(7) {
+			color: var(--calendar-weekend-day-color);
+		}
+	}
+}
+.topSpace {
+	height: 10 * @px_base;
+}
+.oneWeek {	
+	height: 32 * @px_base;
+	td {
+		.font(regular);
+		font-size: 11 * @sp_base;
+		color: var(--text-secondary-color);
+	}
+	.sunday {
+		color: var(--calendar-weekend-color);
+	}
+}
+.controller {
+	width: 100%;
+	height: 36 * @px_base;
+	line-height: 36 * @px_base;
+	margin: 0 auto;
+	text-align: center;
+	div.calendarArrowLeft {
+		float: left;
+		width: 36 * @px_base;
+		height: 36 * @px_base;
+		mask-image: url("images/4_Dialogs/tw_numberpicker_prev_mtrl.svg");
+		mask-repeat: no-repeat;
+		mask-position: center;
+		mask-size: 100%;
+		background-color: var(--calendar-arrow-color);
+	}
+	div.calendarArrowRight {
+		float: right;
+		width: 36 * @px_base;
+		height: 36 * @px_base;
+		mask-image: url("images/4_Dialogs/tw_numberpicker_next_mtrl.svg");
+		mask-repeat: no-repeat;
+		mask-position: center;
+		mask-size: 100%;
+		background-color: var(--calendar-arrow-color);
+	}
+	div.calendarSwitch {
+		text-align: center;
+		text-decoration: underline;
+		.font(regular);
+		font-size: 17 * @sp_base;
+		color: var(--calendar-text-color);
+		line-height: 36 * @px_base;
+		display: inline;
+	}
+}
+@media (min-width: 361px) {
+	.controller {
+		width: 328 * @px_base;
+		margin: 0 auto;
+	}
+}
