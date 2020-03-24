@@ -1,3 +1,5 @@
+@dropdown-options-margin: 6 * @px_base;
+
 .ui-dropdownmenu-overlay {
 	opacity: 0;
 	position: absolute;
@@ -179,9 +181,10 @@
 	overflow: hidden;
 	z-index: 1201;
 	min-width: 168px;
+	max-width: 100vw;
 	&.ui-dropdownmenu-options-vertical-margins {
-		margin-top: 6 * @px_base;
-		margin-bottom: 6 * @px_base;
+		margin-top: @dropdown-options-margin;
+		margin-bottom: @dropdown-options-margin;
 	}
 	&.ui-dropdownmenu-active {
 		visibility: visible;
@@ -213,6 +216,8 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
+		max-height: calc(~"100vh - "2 * @dropdown-options-margin);
+		overflow-y: auto;
 		background-color: var(--dropdown-menu-options-background);
 		border-radius: 26 * @px_base;
 		box-shadow: inset 0 -3 * @px_base 0 0 @dropdown-list-box-shadow-color;
@@ -246,24 +251,15 @@
 			}
 		}
 		li {
-			padding: 0 24 * @px_base 0 24 * @px_base;
+			padding: 13 * @px_base 60 * @px_base 13 * @px_base 24 * @px_base;
 			font-size: 17 * @px_base;
 			.font(regular);
 			display: block;
 			position: relative;
-			min-height: 48 * @px_base;
-			line-height: 48 * @px_base;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			color: var(--dropdown-menu-options-color);
-			&:first-child {
-				border-top: 0;
-			}
-			&.ui-focus,
-			&:not(.ui-dropdownmenu-optiongroup):not(.ui-dropdownmenu-disabled):active {
-				background-color: @color_dropdownmenu_list_item_bg_press;
-			}
 			&:focus,
 			&:active {
 				outline: none;
