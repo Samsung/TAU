@@ -123,6 +123,7 @@
 			"./core/widget/core/Tabs",
 			"./profile/mobile/widget/GridView",
 			"./profile/mobile/expose",
+			"./profile/mobile/widget/Calendar",
 			// router modules
 			"./core/router/Router",
 			"./core/router/route/page",
