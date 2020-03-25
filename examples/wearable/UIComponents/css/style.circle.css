@@ -615,69 +615,69 @@ li.hide-popup-li {
 
 /* -----------------------------------  OPTION POPUP------------------------------------ */
 .option-icon-action::before {
-	-webkit-mask-image: url(../contents/popup/images/b_option_list_icon_action.png);
-	mask-image: url(../contents/popup/images/b_option_list_icon_action.png);
+	-webkit-mask-image: url(../contents/assistviews/images/b_option_list_icon_action.png);
+	mask-image: url(../contents/assistviews/images/b_option_list_icon_action.png);
 }
 
 .option-icon-delete::before {
-	-webkit-mask-image: url(../contents/popup/images/b_option_list_icon_delete.png);
-	mask-image: url(../contents/popup/images/b_option_list_icon_delete.png);
+	-webkit-mask-image: url(../contents/assistviews/images/b_option_list_icon_delete.png);
+	mask-image: url(../contents/assistviews/images/b_option_list_icon_delete.png);
 }
 
 .option-icon-enter::before {
-	-webkit-mask-image: url(../contents/popup/images/b_option_list_icon_enter.png);
-	mask-image: url(../contents/popup/images/b_option_list_icon_enter.png);
+	-webkit-mask-image: url(../contents/assistviews/images/b_option_list_icon_enter.png);
+	mask-image: url(../contents/assistviews/images/b_option_list_icon_enter.png);
 }
 
 .option-icon-share::before {
-	-webkit-mask-image: url(../contents/popup/images/b_option_list_icon_share.png);
-	mask-image: url(../contents/popup/images/b_option_list_icon_share.png);
+	-webkit-mask-image: url(../contents/assistviews/images/b_option_list_icon_share.png);
+	mask-image: url(../contents/assistviews/b_option_list_icon_share.png);
 }
 
 .option-icon-notext-call::before {
-	-webkit-mask-image: url(../contents/popup/images/b_option_icon_call.png);
-	mask-image: url(../contents/popup/images/b_option_icon_call.png);
+	-webkit-mask-image: url(../contents/assistviews/images/b_option_icon_call.png);
+	mask-image: url(../contents/assistviews/images/b_option_icon_call.png);
 }
 
 .option-icon-notext-contacts::before {
-	-webkit-mask-image: url(../contents/popup/images/b_option_icon_contacts.png);
-	mask-image: url(../contents/popup/images/b_option_icon_contacts.png);
+	-webkit-mask-image: url(../contents/assistviews/images/b_option_icon_contacts.png);
+	mask-image: url(../contents/assistviews/images/b_option_icon_contacts.png);
 }
 
 .option-icon-notext-message::before {
-	-webkit-mask-image: url(../contents/popup/images/b_option_icon_message.png);
-	mask-image: url(../contents/popup/images/b_option_icon_message.png);
+	-webkit-mask-image: url(../contents/assistviews/images/b_option_icon_message.png);
+	mask-image: url(../contents/assistviews/images/b_option_icon_message.png);
 }
 
 /* -----------------------------------POPUP------------------------------------ */
 .btn-icon-share::before {
 	background-color: rgba(245, 245, 245, 1);
-	-webkit-mask-image: url(../contents/popup/images/tw_ic_button_share_holo_dark.png);
-	mask-image: url(../contents/popup/images/tw_ic_button_share_holo_dark.png);
+	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_button_share_holo_dark.png);
+	mask-image: url(../contents/assistviews/images/tw_ic_button_share_holo_dark.png);
 }
 
 .btn-icon-showonphone::before {
 	background-color: rgba(245, 245, 245, 1);
-	-webkit-mask-image: url(../contents/popup/images/tw_ic_button_showonphone_holo_dark.png);
-	mask-image: url(../contents/popup/images/tw_ic_button_showonphone_holo_dark.png);
+	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_button_showonphone_holo_dark.png);
+	mask-image: url(../contents/assistviews/images/tw_ic_button_showonphone_holo_dark.png);
 }
 
 .btn-icon-delete::before {
 	background-color: rgba(245, 245, 245, 1);
-	-webkit-mask-image: url(../contents/popup/images/tw_ic_button_delete_holo_dark.png);
-	mask-image: url(../contents/popup/images/tw_ic_button_delete_holo_dark.png);
+	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_button_delete_holo_dark.png);
+	mask-image: url(../contents/assistviews/images/tw_ic_button_delete_holo_dark.png);
 }
 
 .btn-icon-check::before {
 	background-color: rgba(245, 245, 245, 1);
-	-webkit-mask-image: url(../contents/popup/images/tw_ic_popup_btn_check.png);
-	mask-image: url(../contents/popup/images/tw_ic_popup_btn_check.png);
+	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
+	mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
 }
 
 .btn-icon-cancel::before {
 	background-color: rgba(245, 245, 245, 1);
-	-webkit-mask-image: url(../contents/popup/images/tw_ic_popup_btn_delete.png);
-	mask-image: url(../contents/popup/images/tw_ic_popup_btn_delete.png);
+	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_delete.png);
+	mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_delete.png);
 }
 
 .btn-icon-toast-check {
@@ -686,8 +686,8 @@ li.hide-popup-li {
 
 .btn-icon-toast-check::after {
 	background-color: rgba(255, 255, 255, 1);
-	-webkit-mask-image: url(../contents/popup/images/tw_ic_popup_btn_check.png);
-	mask-image: url(../contents/popup/images/tw_ic_popup_btn_check.png);
+	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
+	mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
 }
 
 /* ----------------------------------Toggle Switch-------------------------------- */
