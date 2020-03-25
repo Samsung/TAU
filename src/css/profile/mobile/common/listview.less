@@ -57,7 +57,6 @@ tau-expandable {
 		display: flex;
 		position: relative;
 		box-sizing: content-box;
-		margin: 0 20 * @px_base;
 		overflow: visible;
 		text-align: left;
 		font-size: @font_size_list_main_text;
@@ -91,7 +90,7 @@ tau-expandable {
 			&::after {
 				content: "";
 				display: inline-flex;
-				width: 100%;
+				width: calc(~"100%" - 20 * @px_base);
 				background-color: var(--subheader-divider-color);
 				mask-image: url(images/6_Lists/tw_list_subheader_divider.svg);
 				mask-size: 4.5 * @px_base 1.5 * @px_base;
@@ -99,13 +98,15 @@ tau-expandable {
 				mask-position: center;
 				height: 1.5 * @px_base;
 				align-items: center;
+				margin-right: 20 * @px_base;
 			}
 		}
 
 		&.ui-li-anchor {
 			display: flex;
 			flex-direction: column;
-			padding: 14 * @px_base 4 * @px_base;
+			padding: 14 * @px_base 0;
+			margin: 0 24 * @px_base;
 		}
 
 		// Icon
@@ -115,14 +116,11 @@ tau-expandable {
 			display: inline-flex;
 			position: relative;
 			align-self: center;
+			margin: 0 12 * @px_base;
 
 			&.ui-li-icon-small, &.ui-li-icon-small:after {
-				width: 25px !important;
-				height: 25px !important;
-			}
-
-			+ .ui-li-text {
-				margin-left: 8px;
+				width: 25 * @px_base !important;
+				height: 25 * @px_base !important;
 			}
 
 			&::after, * {
@@ -143,7 +141,8 @@ tau-expandable {
 		.ui-li-text {
 			display: inline-flex;
 			flex-direction: column;
-			padding: 14 * @px_base 4 * @px_base;
+			padding: 14 * @px_base 0;
+			margin-right: 24 * @px_base;
 
 			.ui-li-text-title {
 				font-size: 18 * @sp_base;
@@ -164,13 +163,18 @@ tau-expandable {
 				color: var(--primary-color);
 			}
 		}
+
+		& > .ui-li-text:first-child {
+			margin-left: 24 * @px_base;
+		}
 		
 		// Divider
 		&.ui-li-divider {
 			&::after {
 				content: "";
 				position: absolute;
-				width: 100%;
+				width: calc(~"100%" - 40 * @px_base);
+				left: 20 * @px_base;
 				bottom: 0;
 				height: 1 * @px_base;
 				background-color: var(--divider-color);
@@ -178,8 +182,8 @@ tau-expandable {
 			}
 
 			&.ui-li-has-icon::after {
-				width: calc(~"100%" - 52 * @px_base);
-				left: 52 * @px_base;
+				width: calc(~"100%" - 84 * @px_base);
+				left: 64 * @px_base;
 			}
 		}
 
@@ -192,7 +196,7 @@ tau-expandable {
 			&::after {
 				content: "";
 				position: absolute;
-				width: 1 * @px_base;
+				width: @px_base;
 				height: 22 * @px_base;
 				background-color: var(--on-off-switch-divider-color);
 				opacity: var(--on-off-switch-divider-opacity);
@@ -204,6 +208,10 @@ tau-expandable {
 			display: inline-flex;
 			margin-left: auto;
 			white-space: nowrap;
+
+			.ui-on-off-switch-container {
+				margin-right: 24 * @px_base;
+			}
 		}
 
 		.ui-li-right {
@@ -222,7 +230,6 @@ tau-expandable {
 
 		input {
 			&[type="checkbox"].ui-checkbox, &[type="radio"].ui-radio {
-				margin: unset;
 				align-self: center;
 			}
 		}
