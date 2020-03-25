@@ -137,6 +137,26 @@ tau-button {
 	}
 }
 
+@keyframes animation_opacity_in {
+	0% {
+		opacity: 0;
+	}
+	10% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@keyframes animation_opacity_out {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
 button.ui-btn,
 input[type="button"].ui-btn {
 	.appearance(none);
@@ -285,7 +305,7 @@ a.ui-btn {
 			}
 
 			&-delete::after {
-				mask-image: url("images/controls/core_button_delete.png");
+				mask-image: url("images/1_App_Bar/tw_ic_bb_delete_mtrl.svg");
 			}
 
 			&-cancel::after {
@@ -298,6 +318,13 @@ a.ui-btn {
 
 			&-pause::after {
 				mask-image: url("images/controls/00_button_pause.png");
+			}
+
+			&-share::after {
+				mask-image: url("images/1_App_Bar/tw_ic_bb_share_mtrl.svg");
+			}
+			&-check::after {
+				mask-image: url("images/13_View_Controls/tw_dropdown_ic_check.svg");
 			}
 		}
 
@@ -405,19 +432,44 @@ a.ui-btn {
 				opacity: 1;
 			}
 			&-top {
-				padding: 64 * @px_base 0 0 0;
+				line-height: normal;
+				height: 60 * @px_base;
+				display: flex;
+				align-items: center;
+				flex-direction: column-reverse;
+				justify-content: center;
+				padding: 0;
+				color: var(--appbar-subtitle-color);
+
 				&::after {
-					top: 0;
+					top: auto;
+					left: auto;
+					border-radius: 0;
+					width: 24 * @px_base;
+					height: 24 * @px_base;
+					mask-size: 24 * @px_base;
+					position: relative;
+					padding-bottom: 1 * @px_base;
+					transform: none;
+					background-color: var(--bottom-button-icon-color);
 				}
 				&::before {
-					top: 0;
-					transform: translateX(-50%);
+					top: auto;
+					left: auto;
+					border-radius: 12 * @px_base;
+					transform: none;
+					width: 100%;
+					height: 60 * @px_base - 4 * @px_base;
+					opacity: 0;
+					background-color: var(--ripple-color);
 				}
 				&.ui-btn-icon.ui-btn-active::before {
-					animation: btn_press_animation_flat_icon_opacity_in linear 100ms,
-						btn_press_animation_flat_icon_opacity_out linear 400ms 100ms,
-						btn_press_animation_flat_icon_scale_top cubic-bezier(0.33, 0, 0.2, 1) 350ms;
-				}	
+					animation: animation_opacity_in 200ms linear;
+					animation-fill-mode: both;
+				}
+				&.ui-btn-icon.ui-btn-inactive::before {
+					animation: animation_opacity_out 50ms linear;
+				}
 			}
 			&-left {
 				padding-top: 13 * @px_base;
@@ -579,6 +631,8 @@ a.ui-btn {
 	&.ui-btn-icon {
 		&::after {
 			background-color: @color_button_icon_nobg;
+			mask-size: 100%;
+			mask-position: center;
 		}
 		&.ui-btn-active {
 			&::after {
@@ -596,5 +650,6 @@ a.ui-btn {
 				.transition(background-color 300ms);
 			}
 		}
+
 	}
 }
