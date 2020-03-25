@@ -67,7 +67,8 @@
 				},
 				classes = {
 					checkbox: "ui-checkbox",
-					focus: "ui-checkbox-focus"
+					focus: "ui-checkbox-focus",
+					active: "ui-checkbox-active"
 				},
 				prototype = new BaseWidget();
 
@@ -168,6 +169,26 @@
 			};
 
 			/**
+			 * Checkbox element touch start callback
+			 * @method _onTouchStart
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onTouchStart = function () {
+				this.element.classList.add(classes.active);
+			};
+
+			/**
+			 * Checkbox element touch end callback
+			 * @method _onTouchEnd
+			 * @member ns.widget.core.Checkbox
+			 * @protected
+			 */
+			prototype._onTouchEnd = function () {
+				this.element.classList.remove(classes.active);
+			};
+
+			/**
 			 * Checkbox element keyup callback
 			 * @method _onKeyUp
 			 * @param {Event} event
@@ -198,10 +219,14 @@
 				self._focusCallbackBound = self._onFocus.bind(self);
 				self._blurCallbackBound = self._onBlur.bind(self);
 				self._keyupCallbackBound = self._onKeyUp.bind(self);
+				self._onTouchStart = self._onTouchStart.bind(self);
+				self._onTouchEnd = self._onTouchEnd.bind(self);
 
 				element.addEventListener("focus", self._focusCallbackBound, false);
 				element.addEventListener("blur", self._blurCallbackBound, false);
 				element.addEventListener("keyup", self._keyupCallbackBound, false);
+				element.addEventListener("vmousedown", self._onTouchStart, false);
+				element.addEventListener("vmouseup", self._onTouchEnd, false);
 			}
 
 			/**
@@ -216,7 +241,9 @@
 
 				element.removeEventListener("focus", self._focusCallbackBound, false);
 				element.removeEventListener("blur", self._blurCallbackBound, false);
-				element.reEventListener("keyup", self._keyupCallbackBound, false);
+				element.removeEventListener("keyup", self._keyupCallbackBound, false);
+				element.removeEventListener("vmousedown", self._onTouchStart, false);
+				element.removeEventListener("vmouseup", self._onTouchEnd, false);
 			}
 
 			// definition
