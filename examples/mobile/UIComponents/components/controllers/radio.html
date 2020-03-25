@@ -17,46 +17,38 @@
 			</h1>
 		</div>
 		<div class="ui-content">
-			<ul class="ui-listview">
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span id="radio-text-1">
-								Radio on
-							</span>
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-divider ui-li-has-radio">
+					<input checked="checked" id="radio-1" name="radio-group" type="radio" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="radio-text-1">
+							Radio on
 						</span>
-					</span>
-					<input checked="checked" class="ui-li-area-b" id="radio-1" name="radio-group" type="radio" />
+					</div>
 				</li>
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span id="radio-text-2">
-								Radio off
-							</span>
+				<li class="ui-li-divider ui-li-has-radio">
+					<input id="radio-2" name="radio-group" type="radio" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="radio-text-2">
+							Radio off
 						</span>
-					</span>
-					<input class="ui-li-area-b" id="radio-2" name="radio-group" type="radio" />
+					</div>
 				</li>
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span>
-								Radio on disabled
-							</span>
+				<li class="ui-li-divider ui-li-has-radio">
+					<input checked="checked" disabled="disabled" id="radio-3" name="radio-3" type="radio" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Radio on disabled
 						</span>
-					</span>
-					<input checked="checked" class="ui-li-area-b" disabled="disabled" id="radio-3" name="radio-3" type="radio" />
+					</div>
 				</li>
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span>
-								Radio off disabled
-							</span>
+				<li class="ui-li-has-radio">
+					<input disabled="disabled" id="radio-4" name="radio-4" type="radio" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Radio off disabled
 						</span>
-					</span>
-					<input class="ui-li-area-b" disabled="disabled" id="radio-4" name="radio-4" type="radio" />
+					</div>
 				</li>
 			</ul>
 		</div>
