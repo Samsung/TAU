@@ -20,67 +20,67 @@
 			<ul class="ui-listview ui-content-area">
 				<li class="ui-li-anchor">
 					<a data-position-to="window" data-rel="popup" href="#2-btn-popup">
-						2 Button Title Dialog
+						2 Button Basic Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#1-btn-2level-popup">
-						1 Button Title 2level description Dialog
+					<a data-position-to="window" data-rel="popup" href="#2level-desc-dialog">
+						Title + 2level description Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#1-btn-checkbox-popup">
-						1 Button Title Checkbox Dialog
+					<a data-position-to="window" data-rel="popup" href="#checkbox-dialog">
+						Checkbox Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#2-btn-notitle-popup">
-						2 Button No Title Dialog
+					<a data-position-to="window" data-rel="popup" href="#no-title-dialog">
+						No Title Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#0-btn-title-popup">
-						0 Button Title Dialog
+					<a data-position-to="window" data-rel="popup" href="#no-action-dialog">
+						No Action Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-inline="true" data-position-to="window" data-rel="popup" href="#listview-popup">
-						2 Button Title List Dialog
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#listview-dialog">
+						List Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-inline="true" data-position-to="window" data-rel="popup" href="#listview-popup-2">
-						1 Button Title Detailview Dialog
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#list-detailview-dialog">
+						List Detailview Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-inline="true" data-position-to="window" data-rel="popup" href="#3-btn-popup">
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#3-btn-title-dialog">
 						3 Button Title Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#3-stackbtn-popup">
-						3 StackButton Title Dialog
+					<a data-position-to="window" data-rel="popup" href="#3-stacked-btn-dialog">
+						3 Stacked Buttons Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
-						0 Button Title Select List Dialog
+					<a data-position-to="window" data-rel="popup" href="#select-dialog">
+						Select Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
-						1 Button Title Single Choice List Dialog
+					<a data-position-to="window" data-rel="popup" href="#single-choice-list-dialog">
+						Single Choice List Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
-						1 Button Title Single Choice Description List Dialog
+					<a data-position-to="window" data-rel="popup" href="#single-choice-desc-list-dialog">
+						Single Choice Description List Dialog
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-position-to="window" data-rel="popup" href="#0-btn-selectlist-popup">
-						1 Button Title Multi Choice Dialog
+					<a data-position-to="window" data-rel="popup" href="#multi-choice-dialog">
+						Multi Choice Dialog
 					</a>
 				</li>
 			</ul>
@@ -102,7 +102,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="1-btn-2level-popup">
+			<div class="ui-popup" id="2level-desc-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
@@ -110,6 +110,11 @@
 					Lorem ipsum dolor sit amet,
 					consectetur adiptiscing elit, sed
 					doei usmod tempore sit ipsum
+					<div class="ui-popup-2level-description">
+						<div><span>&#8226;</span>Mobile payment service</div>
+						<div><span>&#8226;</span>Tag read & write</div>
+						<div><span>&#8226;</span>Identify and access</div>
+					</div>
 				</div>
 				<div class="ui-popup-footer">
 					<a class="ui-btn" data-rel="back">
@@ -117,15 +122,15 @@
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="1-btn-checkbox-popup">
+			<div class="ui-popup" id="checkbox-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
 				<div class="ui-popup-content">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-					<br />
-					<input checked="" type="checkbox" />
-					Do not show again
+					<div class="ui-popup-controlbox">
+						<div><input type="checkbox" checked="checked"/>Do not show again</div>
+					</div>
 				</div>
 				<div class="ui-popup-footer">
 					<a class="ui-btn" data-rel="back">
@@ -133,13 +138,13 @@
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="2-btn-notitle-popup">
-				<div class="ui-popup-content">
+			<div class="ui-popup" id="no-title-dialog">
+				<div class="ui-popup-content ui-popup-notitle">
 					Lorem ipsum dolor sit amet,
 					consectetur adiptiscing elit, sed
 					doei usmod tempore sit ipsum
 				</div>
-				<div class="ui-popup-footer ui-grid-col-2">
+				<div class="ui-popup-footer ui-grid-col-3">
 					<a class="ui-btn" data-rel="back">
 						Action1
 					</a>
@@ -148,7 +153,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="0-btn-title-popup">
+			<div class="ui-popup" id="no-action-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
@@ -158,145 +163,115 @@
 					doei usmod tempore sit ipsum
 				</div>
 			</div>
-			<div class="ui-popup" id="listview-popup">
+			<div class="ui-popup" id="listview-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					<ul class="ui-listview">
+					<ul class="ui-listview ui-content-area">
 						<li>
-							<a href="#">
-								List item 1
-							</a>
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Mail name (11)
+								</span>
+								<span class="ui-li-text-sub">
+									account01@samsung.com
+								</span>
+							</div>
 						</li>
 						<li>
-							<a href="#">
-								List item 2
-							</a>
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Combined view (121)
+								</span>
+							</div>
 						</li>
 						<li>
-							<a href="#">
-								List item 3
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 4
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 5
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 6
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 7
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 8
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 9
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 10
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 11
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 12
-							</a>
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Mail title
+								</span>
+								<span class="ui-li-text-sub">
+									account02@samsung.com
+								</span>
+							</div>
 						</li>
 					</ul>
 				</div>
 				<div class="ui-popup-footer">
 					<a class="ui-btn" data-rel="back">
-						Cancel
+						Action 1
+					</a>
+					<a class="ui-btn" data-rel="back">
+						Action 2
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="listview-popup-2">
+			<div class="ui-popup" id="list-detailview-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					<ul class="ui-listview">
-						<li class="ui-li-flex ui-li-multilines">
-							<span class="ui-li-area ui-li-area-a">
-								<span class="ui-li-text">
-									Primary text
+					<ul class="ui-listview ui-content-area">
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-sub">
+									Name
 								</span>
-								<span class="ui-li-text-2">
-									Secondary text
+								<span class="ui-li-text-title">
+									Winter.jpg
 								</span>
-							</span>
+							</div>
 						</li>
-						<li class="ui-li-flex ui-li-multilines">
-							<span class="ui-li-area ui-li-area-a">
-								<span class="ui-li-text">
-									Primary text
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-sub">
+									Size
 								</span>
-								<span class="ui-li-text-2">
-									Secondary text
+								<span class="ui-li-text-title">
+									2.5MB(2,345,907 bytes)
 								</span>
-							</span>
+							</div>
 						</li>
-						<li class="ui-li-flex ui-li-multilines">
-							<span class="ui-li-area ui-li-area-a">
-								<span class="ui-li-text">
-									Primary text
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-sub">
+									Last modified
 								</span>
-								<span class="ui-li-text-2">
-									Secondary text
+								<span class="ui-li-text-title">
+									18/11/2019 18:11
 								</span>
-							</span>
+							</div>
 						</li>
-						<li class="ui-li-flex ui-li-multilines">
-							<span class="ui-li-area ui-li-area-a">
-								<span class="ui-li-text">
-									Primary text
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-sub">
+									Contains
 								</span>
-								<span class="ui-li-text-2">
-									Secondary text
+								<span class="ui-li-text-title">
+									20 files
 								</span>
-							</span>
+							</div>
 						</li>
-						<li class="ui-li-flex ui-li-multilines">
-							<span class="ui-li-area ui-li-area-a">
-								<span class="ui-li-text">
-									Primary text
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-sub">
+									Path
 								</span>
-								<span class="ui-li-text-2">
-									Secondary text
+								<span class="ui-li-text-title">
+									/storage/pictures/spring.jpg
 								</span>
-							</span>
+							</div>
 						</li>
 					</ul>
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-inline="true" data-rel="back">
-						Cancel
+					<a class="ui-btn" data-rel="back">
+						Action
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="3-btn-popup">
+			<div class="ui-popup" id="3-btn-title-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
@@ -338,58 +313,92 @@
 					</a>
 				</div>
 			</div>
-			<div class="ui-popup" id="0-btn-selectlist-popup">
+			<div class="ui-popup" id="select-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
 				<div class="ui-popup-content">
 					<ul class="ui-listview">
 						<li>
-							<a href="#">
-								List item 1
-							</a>
+							<div class="ui-li-text">
+								<a class="ui-li-text-title" data-rel="back">
+									List
+								</a>
+							</div>
 						</li>
 						<li>
-							<a href="#">
-								List item 2
-							</a>
+							<div class="ui-li-text">
+								<a class="ui-li-text-title" data-rel="back">
+									Detailed list
+								</a>
+							</div>
 						</li>
 						<li>
-							<a href="#">
-								List item 3
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 4
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 5
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 6
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 7
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 8
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								List item 9
-							</a>
+							<div class="ui-li-text">
+								<a class="ui-li-text-title" data-rel="back">
+									Grid
+								</a>
+							</div>
 						</li>
 					</ul>
+				</div>
+			</div>
+			<div class="ui-popup" id="single-choice-list-dialog">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					<div class="ui-popup-controlbox">
+						<div><input type="radio" name="test"/>List</div>
+						<div><input type="radio" name="test"/>Detailed list</div>
+						<div><input type="radio" name="test"/>Grid</div>
+					</div>
+				</div>
+				<div class="ui-popup-footer">
+					<a class="ui-btn" data-rel="back">
+						Action
+					</a>
+				</div>
+			</div>
+			<div class="ui-popup" id="single-choice-desc-list-dialog">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+					<div class="ui-popup-controlbox">
+						<div><input type="radio" name="test"/>Never timeout</div>
+						<div><input type="radio" name="test"/>5 Minutes</div>
+						<div><input type="radio" name="test"/>10 Minutes</div>
+						<div><input type="radio" name="test"/>20 Minutes</div>
+					</div>
+				</div>
+				<div class="ui-popup-footer">
+					<a class="ui-btn" data-rel="back">
+						Action
+					</a>
+				</div>
+			</div>
+			<div class="ui-popup" id="multi-choice-dialog">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+					<div class="ui-popup-controlbox">
+						<div><input type="checkbox" checked="checked"/>Time</div>
+						<div><input type="checkbox"/>Type</div>
+						<div><input type="checkbox"/>Name</div>
+						<div><input type="checkbox"/>Size</div>
+					</div>
+				</div>
+				<div class="ui-popup-footer ui-grid-col-2">
+					<a class="ui-btn" data-rel="back">
+						Cancel
+					</a>
+					<a class="ui-btn" data-rel="back">
+						Done
+					</a>
 				</div>
 			</div>
 		</div>
