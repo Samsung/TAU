@@ -165,4 +165,3 @@ test("Values Spin test", 4, function () {
 	spinWidget.destroy();
 
 });
-
