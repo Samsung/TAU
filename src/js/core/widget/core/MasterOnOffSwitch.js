@@ -163,13 +163,21 @@
 					labelText = self._ui.labelTextOnOff;
 
 				if (onOff.checked) {
-					label.classList.add("ui-on-off-label-active");
+					label.classList.add("ui-on-off-label-on");
 					labelText.innerHTML = "On";
 				} else {
-					label.classList.remove("ui-on-off-label-active");
+					label.classList.remove("ui-on-off-label-on");
 					labelText.innerHTML = "Off";
 				}
 				self._disableAllOnOff(!onOff.checked);
+			}
+
+			function onTouchStart(self) {
+				self._ui.labelOnOff.classList.add("ui-on-off-label-active");
+			}
+
+			function onTouchEnd(self) {
+				self._ui.labelOnOff.classList.remove("ui-on-off-label-active");
 			}
 
 			/**
@@ -182,9 +190,15 @@
 			prototype._bindEvents = function () {
 				var self = this,
 					onOff = self._ui.onOff,
-					_onChangeMasterOnOff = onChangeMasterOnOff.bind(null, self);
+					labelOnOff = self._ui.labelOnOff,
+					_onChangeMasterOnOff = onChangeMasterOnOff.bind(null, self),
+					_onTouchStart = onTouchStart.bind(null, self),
+					_onTouchEnd = onTouchEnd.bind(null, self);
+
 
 				onOff.addEventListener("change", _onChangeMasterOnOff);
+				labelOnOff.addEventListener("vmousedown", _onTouchStart);
+				labelOnOff.addEventListener("vmouseup", _onTouchEnd);
 
 				self._onChangeMasterOnOff = _onChangeMasterOnOff;
 			};
@@ -194,8 +208,12 @@
 					onOff = self._ui.onOff;
 
 				onOff.removeEventListener("change", self._onChangeMasterOnOff);
+				onOff.removeEventListener("vmousedown", self._onTouchStart);
+				onOff.removeEventListener("vmouseup", self._onTouchEnd);
 
 				self._onChangeMasterOnOff = null;
+				self._onTouchStart = null;
+				self._onTouchEnd = null;
 			};
 
 			/**
