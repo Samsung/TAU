@@ -57,6 +57,7 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		.font(medium);
 
 		&.ui-popup-header-has-subtitle {
 			padding: 19.5 * @unit_base 32 * @unit_base;
@@ -90,7 +91,7 @@
 		font-size: @font_size_popup_text;
 		overflow: auto;
 		.touch-scrolling();
-		line-height: 54 * @unit_base;
+		line-height: 42 * @unit_base;
 
 		img {
 			display: block;
@@ -128,6 +129,10 @@
 		background-color: @color_popup_footer_bg;
 		position: sticky;
 		.LESSui-footer();
+		
+		.ui-li-action {
+			width: 50%;
+		}
 
 		@media (orientation: portrait) and (max-width: 479px) {
 			padding: 0 * @px_base 24 * @px_base 20 * @px_base 24 * @px_base;
@@ -144,13 +149,7 @@
 	}
 
 	.ui-listview {
-		border-top-width: 1 * @px_base;
-		border-top-color: #e6e6e6;
-		border-top-style: solid;
-		border-bottom-width: 1 * @px_base;
-		border-bottom-color: #e6e6e6;
-		border-bottom-style: solid;
-		margin-left: -16 * @px_base;
+		margin-left: -24 * @px_base;
 	}
 
 	.ui-popup-notitle {
