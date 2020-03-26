@@ -97,13 +97,8 @@ input[type="checkbox"]:not(.ui-switch-input) {
 }
 
 input[type="radio"] {
-	background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_off 63%, @color_checkboxradio_radiobox_line_off 68%, transparent 72%, transparent);
+	background: radial-gradient(transparent, transparent 63%, @controller-off-color 65%, @controller-off-color 68%, transparent 72%, transparent);
 	mask-image: none;
-	&::after {
-		content: "";
-		mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
-		background-color: @color_checkboxradio_radio_off;
-	}
 	&::before {
 		content: "";
 		background-color: @color_checkboxradio_radio;
@@ -117,7 +112,7 @@ input[type="radio"] {
 		transition: transform 300ms;
 	}
 	&:checked {
-		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line 63%, @color_checkboxradio_radiobox_line 68%, transparent 72%, transparent);
+		background: radial-gradient(transparent, transparent 63%, @controller-on-color 65%, @controller-on-color 68%, transparent 72%, transparent);
 		&::before {
 			background-color: @color_checkboxradio_radio;
 			mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
@@ -130,6 +125,7 @@ input[type="radio"] {
 		mask-image: none;
 		&::after {
 			mask-image: url('images/Controller_icon/Radio/tw_btn_radio_holo_dark.png');
+			mask-position: center;
 			background-color: @color_checkboxradio_radio_off_press;
 		}
 		&:checked {
@@ -144,7 +140,7 @@ input[type="radio"] {
 		}
 	}
 	&:disabled {
-		background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_off_dim 63%, @color_checkboxradio_radiobox_line_off_dim 68%, transparent 72%, transparent);
+		background: radial-gradient(transparent, transparent 63%, @color_checkboxradio_radiobox_line_off_dim 65%, @color_checkboxradio_radiobox_line_off_dim 68%, transparent 72%, transparent);
 		mask-image: none;
 		&::before {
 			transition: none;
@@ -153,7 +149,7 @@ input[type="radio"] {
 			background-color: @color_checkboxradio_radio_off_dim;
 		}
 		&:checked {
-			background: radial-gradient(transparent, transparent 59%, @color_checkboxradio_radiobox_line_dim 63%, @color_checkboxradio_radiobox_line_dim 68%, transparent 72%, transparent);
+			background: radial-gradient(transparent, transparent 63%, @color_checkboxradio_radiobox_line_dim 65%, @color_checkboxradio_radiobox_line_dim 68%, transparent 72%, transparent);
 			&::before {
 				background-color: @color_checkboxradio_radio_dim;
 				transition: none;
