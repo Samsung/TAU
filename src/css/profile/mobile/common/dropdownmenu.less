@@ -260,9 +260,23 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 			color: var(--dropdown-menu-options-color);
-			&:focus,
-			&:active {
+
+			&:focus, &:active {
 				outline: none;
+			}
+
+			&::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: var(--ripple-color);
+				opacity: 0;
+			}
+			&:active::before {
+				opacity: 1;
 			}
 		}
 	}
