@@ -61,3 +61,5 @@ TomaszLukawskiSam
 
 * PR can be merged by PR owner or TAU reviewer if at least one TAU Reviewer approved and verified it.
 * TAU Reviewers can not approve their own PR.
+* When merging **standard PR use "Rebase and merge"** option in order to have straight git history
+* When merging changes between tau_* branches use "Create a merge commit" option in order to allow to synchronization between branches.
