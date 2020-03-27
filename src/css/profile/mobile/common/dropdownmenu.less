@@ -256,11 +256,18 @@
 			.font(regular);
 			display: block;
 			position: relative;
-			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			color: var(--dropdown-menu-options-color);
-
+			&.ui-dropdown-two-lines {
+				max-height: 2em;	// FIXME: max-height should be 2 * line-height but gives more than two lines.
+				line-height: 1.4em;
+				// FIXME: add support for text ellipsis for second line manually since
+				//		  -webkit-line-clamp does not work on Tizen Emulator 5.5.
+			}
+			&:not(.ui-dropdown-two-lines) {
+				white-space: nowrap;
+			}
 			&:focus, &:active {
 				outline: none;
 			}
