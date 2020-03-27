@@ -401,20 +401,23 @@
 			Listview.classes = objectUtils.fastMerge(classes, CoreListview.classes);
 			Listview.events = events;
 
+			function changeLiSelection(checkbox) {
+				var liElement = selectorUtils.getClosestByTag(checkbox, "li");
+
+				if (liElement) {
+					if (checkbox.checked) {
+						liElement.classList.add(classes.ITEM_SELECTED);
+					} else {
+						liElement.classList.remove(classes.ITEM_SELECTED);
+					}
+				}
+			}
 
 			function onChangeSelection(event) {
-				var liElement = null,
-					target = event.target;
+				var target = event.target;
 
 				if (target.tagName === "INPUT" && target.type === "checkbox") {
-					liElement = selectorUtils.getClosestByTag(target, "li");
-					if (liElement) {
-						if (target.checked) {
-							liElement.classList.add(classes.ITEM_SELECTED);
-						} else {
-							liElement.classList.remove(classes.ITEM_SELECTED);
-						}
-					}
+					changeLiSelection(target);
 				}
 			}
 
@@ -852,6 +855,29 @@
 			};
 
 			/**
+			 * Handler for "select-all" event. This event is triggering by AppBar widget
+			 * when checkbox "All" is changing state
+			 * @method _selectAll
+			 * @protected
+			 * @member ns.widget.mobile.Listview
+			 */
+			prototype._selectAll = function (event) {
+				var checkboxes = [].slice.call(this.element.querySelectorAll("input[type='checkbox']"));
+
+				checkboxes.forEach(function (checkbox) {
+					var checked = event.detail.checked;
+
+					checkbox.checked = checked;
+					if (checked) {
+						checkbox.setAttribute("checked", "checked");
+					} else {
+						checkbox.removeAttribute("checked");
+					}
+					changeLiSelection(checkbox);
+				});
+			};
+
+			/**
 			 * Calculate element height as difference between top of current element and top of next element
 			 * @param {HTMLElement} nextVisibleLiElement
 			 * @param {Object} rectangle
@@ -1214,12 +1240,14 @@
 					}
 
 					self._backgroundRenderCallback = self._backgroundRender.bind(self);
+					self._selectAllCallback = self._selectAll.bind(self);
 					self.on("expand collapse", self._backgroundRenderCallback, false);
 					// support rotation
 					eventUtils.on(window, "resize", self._backgroundRenderCallback, false);
 
 					if (pageContainer) {
 						eventUtils.on(pageContainer, Page.events.BEFORE_SHOW, self._backgroundRenderCallback);
+						eventUtils.on(pageContainer, "select-all", self._selectAllCallback, true);
 					}
 					if (popupContainer) {
 						eventUtils.on(popupContainer, Popup.events.transition_start, self._backgroundRenderCallback);
@@ -1275,6 +1303,7 @@
 					}
 					if (self._pageContainer) {
 						eventUtils.off(self._pageContainer, Page.events.BEFORE_SHOW, self._backgroundRenderCallback);
+						eventUtils.off(self._pageContainer, "select-all", self._selectAllCallback, true);
 						self._pageContainer = null;
 					}
 					if (self._popupContainer) {

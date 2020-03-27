@@ -16,7 +16,7 @@
 /*global window, define, ns */
 /**
  *
- * @since 6.0
+ * @since 1.2
  * @class ns.widget.core.Appbar
  * @extends ns.widget.core.BaseWidget
  * @author Pawel Kaczmarczyk <p.kaczmarczy@samsung.com>
@@ -48,7 +48,9 @@
 					self._ui = {
 						titleContainer: null,
 						leftIconsContainer: null,
-						actionButtonsContainer: null
+						actionButtonsContainer: null,
+						page: null,
+						selectAll: null
 					},
 					self._appbarState = states.COLLAPSED;
 					self._dragStartingHeight = 0;
@@ -67,7 +69,8 @@
 					expanded: classPrefix + "-expanded",
 					dragging: classPrefix + "-dragging",
 					controlsContainer: classPrefix + "-controls-container",
-					expandedTitleContainer: classPrefix + "-expanded-title-container"
+					expandedTitleContainer: classPrefix + "-expanded-title-container",
+					selectAll: "ui-label-select-all"
 				},
 				states = {
 					EXPANDED: "EXPANDED",
@@ -107,9 +110,9 @@
 				var self = this;
 
 				self._appbarState = states.COLLAPSED;
-				self._pageContainer = selectors.getClosestBySelector(element, Page.selector);
-			}
-
+				self._ui.page = selectors.getClosestBySelector(element, Page.selector);
+				self._ui.selectAll = element.querySelector("." + classes.selectAll + " input[type='checkbox']");
+			};
 
 			/**
 			 * Build the widget
@@ -124,7 +127,7 @@
 				self._readTitleType(element);
 				self._setTitleType(element, self.options.titleType);
 				return element;
-			}
+			};
 
 			/**
 			 * Refresh the widget
@@ -136,7 +139,7 @@
 				var self = this;
 
 				self._setLineType(element);
-			}
+			};
 
 			/**
 			 * Method that creates containers (or finds ones if already exists)
@@ -180,7 +183,7 @@
 				[].slice.call(ui.titleContainer.children).forEach(function (node) {
 					ui.expandedTitleContainer.appendChild(node.cloneNode(true));
 				});
-			}
+			};
 
 			/**
 			 * Binds event listeners
@@ -191,11 +194,11 @@
 			prototype._bindEvents = function () {
 				var self = this;
 
-				ns.event.enableGesture(self._pageContainer,
+				ns.event.enableGesture(self._ui.page,
 					new ns.event.gesture.Drag());
 
-				utilsEvents.on(self._pageContainer, "scrollboundary drag dragstart dragend scrollstart", self);
-			}
+				utilsEvents.on(self._ui.page, "scrollboundary drag dragstart dragend scrollstart change pagebeforeshow", self);
+			};
 
 			/**
 			 * Handle event
@@ -223,8 +226,28 @@
 					case "scrollstart":
 						self._onScrollStart(event);
 						break;
+					case "change":
+						self._onChange(event);
+						break;
+					case "pagebeforeshow":
+						self._onPageBeforeShow();
+						break;
 				}
-			}
+			};
+
+			/**
+			 * PageBeforeShow event handler
+			 * @method _onPageBeforeShow
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._onPageBeforeShow = function () {
+				var self = this;
+
+				if (self._ui.selectAll) {
+					self._triggerSelectAll();
+				}
+			};
 
 			/**
 			 * Scrollstart event handler
@@ -247,8 +270,8 @@
 					direction = event && event.detail && event.detail.direction;
 
 				self._scrolledToTop = (direction === "top");
-				utilsEvents.one(self._pageContainer, "scrollstart", self._onScrollStart.bind(self));
-			}
+				utilsEvents.one(self._ui.page, "scrollstart", self._onScrollStart.bind(self));
+			};
 
 			/**
 			 * Dragstart event handler
@@ -271,7 +294,7 @@
 						self._expandedTitleHeight += item.offsetHeight;
 					});
 				}
-			}
+			};
 
 			prototype._setTitlesOpacity = function (expandLevel) {
 				var self = this,
@@ -281,7 +304,7 @@
 
 				mainTitle.style.opacity = 1 - expandLevel;
 				expandedTitle.style.opacity = expandLevel;
-			}
+			};
 
 			/**
 			 * Dragend event handler
@@ -311,7 +334,7 @@
 
 				// trigger appbarDragStart Event - page should enable scrolling back again
 				// appbar resized event should be triggered (in order to inform Page about content height change)
-			}
+			};
 
 			/**
 			 * Drag event handler
@@ -340,7 +363,59 @@
 						self._setTitlesOpacity(0);
 					}
 				}
-			}
+			};
+
+			/**
+			 * Method triggers "select-all" event
+			 * @method _triggerSelectAll
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._triggerSelectAll = function () {
+				var self = this;
+
+				utilsEvents.trigger(self.element, "select-all", {checked: self._ui.selectAll.checked});
+			};
+
+			/**
+			 * Toggle state of checkbox "All"
+			 * @method _toggleSelectAll
+			 * @param {boolean} checked
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._toggleSelectAll = function (checked) {
+				var selectAll = this._ui.selectAll;
+
+				if (selectAll) {
+					selectAll.checked = checked;
+					if (checked) {
+						selectAll.setAttribute("checked", "checked");
+					} else {
+						selectAll.removeAttribute("checked");
+					}
+				}
+			};
+
+			/**
+			 * Handler for "change" event
+			 * @method _onChange
+			 * @param {event} event
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._onChange = function (event) {
+				var target = event.target,
+					self = this;
+
+				if (target.tagName === "INPUT") {
+					if (target === self._ui.selectAll) {
+						self._triggerSelectAll();
+					} else {
+						self._toggleSelectAll(!self._ui.page.querySelector(".ui-listview input[type='checkbox']:not(:checked)"));
+					}
+				}
+			};
 
 			/**
 			 * Unbinds event listeners
@@ -351,8 +426,8 @@
 			prototype._unbindEvents = function () {
 				var self = this;
 
-				utilsEvents.off(self._pageContainer, "scrollboundary drag dragstart dragend scrollstart", self);
-			}
+				utilsEvents.off(self._ui.page, "scrollboundary drag dragstart dragend scrollstart change", self);
+			};
 
 			/**
 			 * Destroys the widget
@@ -365,7 +440,7 @@
 
 				self._unbindEvents();
 				// restore title elements if they're moved during build
-			}
+			};
 
 			/**
 			 * Method that detects title style
@@ -383,7 +458,7 @@
 				if (titleContainer.classList.contains(classes.hasSubtitle)) {
 					self.options.titleType = "subtitle";
 				}
-			}
+			};
 
 			/**
 			 * Method that sets styling for title
@@ -409,7 +484,7 @@
 					case "singleLine":
 						break;
 				}
-			}
+			};
 
 			ns.widget.core.Appbar = Appbar;
 			ns.engine.defineWidget(
