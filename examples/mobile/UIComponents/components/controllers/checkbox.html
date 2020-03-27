@@ -17,46 +17,38 @@
 			</h1>
 		</div>
 		<div class="ui-content">
-			<ul class="ui-listview">
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span id="checkbox-text-1">
-								Check on
-							</span>
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-divider ui-li-has-checkbox">
+					<input checked="checked" class="checkboxes" name="checkbox-1" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-1">
+							Check on
 						</span>
-					</span>
-					<input checked="checked" class="ui-li-area-b checkboxes" name="checkbox-1" type="checkbox" />
+					</div>
 				</li>
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span id="checkbox-text-2">
-								Check off
-							</span>
+				<li class="ui-li-divider ui-li-has-checkbox">
+					<input class="checkboxes" name="checkbox-2" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" id="checkbox-text-2">
+							Check off
 						</span>
-					</span>
-					<input class="ui-li-area-b checkboxes" name="checkbox-2" type="checkbox" />
+					</div>
 				</li>
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span>
-								Check on disabled
-							</span>
+				<li class="ui-li-divider ui-li-has-checkbox">
+					<input checked="checked" disabled="disabled" name="checkbox-3" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Check on disabled
 						</span>
-					</span>
-					<input checked="checked" class="ui-li-area-b" disabled="disabled" id="checkbox-3" name="checkbox-3" type="checkbox" />
+					</div>
 				</li>
-				<li class="ui-li-flex">
-					<span class="ui-li-area ui-li-area-a">
-						<span class="ui-li-text">
-							<span>
-								Check off disabled
-							</span>
+				<li class="ui-li-has-checkbox">
+					<input disabled="disabled" name="checkbox-4" type="checkbox" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Check off disabled
 						</span>
-					</span>
-					<input class="ui-li-area-b" disabled="disabled" id="checkbox-4" name="checkbox-4" type="checkbox" />
+					</div>
 				</li>
 			</ul>
 		</div>
