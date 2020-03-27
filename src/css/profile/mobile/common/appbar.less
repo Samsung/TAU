@@ -93,15 +93,17 @@
 					height: 48 * @px_base;
 				}
 			}
+			&.ui-btn-icon-back {
+				margin-left: 20 * @px_base;
+				margin-right: 12 * @px_base;
+			}
 		}
 	}
 
 
 	.ui-appbar-controls-container {
 		flex: 0 0 56 * @px_base;
-		width: calc(~"100% - "20 * @px_base);
-
-		margin-left: 20 * @px_base;
+		width: 100%;
 
 		display: flex;
 		flex-direction: row;
@@ -110,13 +112,12 @@
 		.ui-appbar-left-icons-container {
 			height: 100%;
 			flex-shrink: 0;
+			min-width: 24 * @px_base;
 		}
 
 		.ui-appbar-title-container {
 			height: 100%;
 			display: flex;
-
-			padding-left: 4 * @px_base;
 
 			overflow: hidden;
 			flex-direction: column;
@@ -217,6 +218,22 @@
 	&.ui-appbar-dragging {
 		.ui-appbar-expanded-title-container {
 			overflow: hidden;
+		}
+	}
+
+	.ui-label-select-all {
+		font-size: 12 * @sp_base;
+		width: 32 * @px_base;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-top: 10 * @px_base;
+		line-height: 10 * @px_base;
+		margin-left: 18 * @px_base;
+		margin-right: 18 * @px_base;
+		
+		input[type="checkbox"].ui-checkbox {
+			margin: 0;
 		}
 	}
 }
