@@ -93,13 +93,10 @@
 					consectetur adiptiscing elit, sed
 					doei usmod tempore sit ipsum
 				</div>
-				<div class="ui-popup-footer ui-grid-col-2">
-					<a class="ui-btn" data-rel="back">
-						Action1
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Action2
-					</a>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Action 1</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Action 2</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="2level-desc-dialog">
@@ -117,9 +114,7 @@
 					</div>
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Action button
-					</a>
+					<button class="ui-btn" data-style="flat">Action Button</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="checkbox-dialog">
@@ -128,14 +123,21 @@
 				</div>
 				<div class="ui-popup-content">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-					<div class="ui-popup-controlbox">
-						<div><input type="checkbox" checked="checked"/>Do not show again</div>
+					<div class="ui-popup-body-text ui-popup-body-checkbox">
+						<ul class="ui-listview ui-content-area">
+							<li class="ui-li-has-checkbox">
+								<input checked="checked" class="checkboxes" name="checkbox-1" type="checkbox" />
+								<div class="ui-li-text">
+									<span class="ui-li-text-title" id="checkbox-text-1">
+										Do not show again
+									</span>
+								</div>
+							</li>
+						</ul>
 					</div>
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Action
-					</a>
+					<button class="ui-btn" data-style="flat">Action</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="no-title-dialog">
@@ -144,13 +146,10 @@
 					consectetur adiptiscing elit, sed
 					doei usmod tempore sit ipsum
 				</div>
-				<div class="ui-popup-footer ui-grid-col-3">
-					<a class="ui-btn" data-rel="back">
-						Action1
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Action2
-					</a>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Action 1</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Action 2</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="no-action-dialog">
@@ -199,12 +198,9 @@
 					</ul>
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Action 1
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Action 2
-					</a>
+					<button class="ui-btn" data-style="flat">Action 1</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Action 2</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="list-detailview-dialog">
@@ -266,9 +262,7 @@
 					</ul>
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Action
-					</a>
+					<button class="ui-btn" data-style="flat">Action</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="3-btn-title-dialog">
@@ -280,19 +274,15 @@
 					consectetur adiptiscing elit, sed
 					doei usmod tempore sit ipsum
 				</div>
-				<div class="ui-popup-footer ui-grid-col-3">
-					<a class="ui-btn" data-rel="back">
-						Action1
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Action2
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Action3
-					</a>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Action 1</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Action 2</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Action 3</button>
 				</div>
 			</div>
-			<div class="ui-popup" id="3-stackbtn-popup">
+			<div class="ui-popup" id="3-stacked-btn-dialog">
 				<div class="ui-popup-header">
 					Dialog header
 				</div>
@@ -302,15 +292,11 @@
 					doei usmod tempore sit ipsum
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Action1
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Action2
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Action3
-					</a>
+					<div class="ui-popup-stack">
+						<button class="ui-btn" data-style="flat">Action button Number one</button>
+						<button class="ui-btn" data-style="flat">Action button two</button>
+						<button class="ui-btn" data-style="flat">Action the third</button>
+					</div>
 				</div>
 			</div>
 			<div class="ui-popup" id="select-dialog">
@@ -348,16 +334,35 @@
 					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					<div class="ui-popup-controlbox">
-						<div><input type="radio" name="test"/>List</div>
-						<div><input type="radio" name="test"/>Detailed list</div>
-						<div><input type="radio" name="test"/>Grid</div>
-					</div>
+					<ul class="ui-listview ui-content-area">
+						<li class="ui-li-has-radio">
+							<input type="radio" id="radio-id" name="radio" checked="checked" />
+							<div class="ui-li-text">
+								<span class="ui-li-text-title" id="radio-text-1">
+									List
+								</span>
+							</div>
+						</li>
+						<li class="ui-li-has-radio">
+							<input type="radio" id="radio-id" name="radio" />
+							<div class="ui-li-text">
+								<span class="ui-li-text-title" id="radio-text-2">
+									Detailed list
+								</span>
+							</div>
+						</li>
+						<li class="ui-li-has-radio">
+							<input type="radio" id="radio-id" name="radio" />
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Grid
+								</span>
+							</div>
+						</li>
+					</ul>
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Action
-					</a>
+					<button class="ui-btn" data-style="flat">Action</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="single-choice-desc-list-dialog">
@@ -366,17 +371,45 @@
 				</div>
 				<div class="ui-popup-content">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-					<div class="ui-popup-controlbox">
-						<div><input type="radio" name="test"/>Never timeout</div>
-						<div><input type="radio" name="test"/>5 Minutes</div>
-						<div><input type="radio" name="test"/>10 Minutes</div>
-						<div><input type="radio" name="test"/>20 Minutes</div>
+					<div class="ui-popup-body-text">
+						<ul class="ui-listview ui-content-area">
+							<li class="ui-li-has-radio">
+								<input type="radio" id="radio-1" name="radio-group" checked="checked" />
+								<div class="ui-li-text">
+									<span class="ui-li-text-title" id="radio-text-1">
+										Never timeout
+									</span>
+								</div>
+							</li>
+							<li class="ui-li-has-radio">
+								<input type="radio" id="radio-2" name="radio-group" />
+								<div class="ui-li-text">
+									<span class="ui-li-text-title" id="radio-text-2">
+										5 Minutes
+									</span>
+								</div>
+							</li>
+							<li class="ui-li-has-radio">
+								<input type="radio" id="radio-3" name="radio-group" />
+								<div class="ui-li-text">
+									<span class="ui-li-text-title">
+										10 Minutes
+									</span>
+								</div>
+							</li>
+							<li class="ui-li-has-radio">
+								<input type="radio" id="radio-4" name="radio-group" />
+								<div class="ui-li-text">
+									<span class="ui-li-text-title">
+										20 Minutes
+									</span>
+								</div>
+							</li>
+						</ul>
 					</div>
 				</div>
 				<div class="ui-popup-footer">
-					<a class="ui-btn" data-rel="back">
-						Action
-					</a>
+					<button class="ui-btn" data-style="flat">Action</button>
 				</div>
 			</div>
 			<div class="ui-popup" id="multi-choice-dialog">
@@ -384,21 +417,43 @@
 					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-					<div class="ui-popup-controlbox">
-						<div><input type="checkbox" checked="checked"/>Time</div>
-						<div><input type="checkbox"/>Type</div>
-						<div><input type="checkbox"/>Name</div>
-						<div><input type="checkbox"/>Size</div>
-					</div>
+					<ul class="ui-listview ui-content-area">
+						<li class="ui-li-has-checkbox">
+							<input checked="checked" class="checkboxes" name="checkbox-1" type="checkbox" />
+							<div class="ui-li-text">
+								<span class="ui-li-text-title" id="checkbox-text-1">
+									Time
+								</span>
+							</div>
+						</li>
+						<li class="ui-li-has-checkbox">
+							<input class="checkboxes" name="checkbox-2" type="checkbox" />
+							<div class="ui-li-text">
+								<span class="ui-li-text-title" id="checkbox-text-2">
+									Type
+								</span>
+							</div>
+						</li>
+						<li class="ui-li-has-checkbox">
+							<input class="checkboxes" name="checkbox-3" type="checkbox" />
+							<div class="ui-li-text">
+								<span class="ui-li-text-title" id="checkbox-text-3">
+									Name
+								</span>
+							</div>
+						</li>
+						<li class="ui-li-has-checkbox">
+							<input class="checkboxes" name="checkbox-4" type="checkbox" />
+							<div class="ui-li-text">
+								<span class="ui-li-text-title" id="checkbox-text-4">
+									Size
+								</span>
+							</div>
+						</li>
+					</ul>
 				</div>
-				<div class="ui-popup-footer ui-grid-col-2">
-					<a class="ui-btn" data-rel="back">
-						Cancel
-					</a>
-					<a class="ui-btn" data-rel="back">
-						Done
-					</a>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Action</button>
 				</div>
 			</div>
 		</div>
