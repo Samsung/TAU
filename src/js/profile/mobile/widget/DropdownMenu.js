@@ -733,7 +733,12 @@
 					selectors.getParentsByClass(element, pageClasses.uiHeader)[0];
 				ui.elDefaultOption = element.querySelector("option[data-placeholder='true']");
 
-				self._selectedIndex = element.selectedIndex;
+				// check if selected index is after data placeholder item
+				if (ui.elDefaultOption && element.selectedIndex > ui.elDefaultOption.index) {
+					self._selectedIndex = element.selectedIndex - 1;
+				} else {
+					self._selectedIndex = element.selectedIndex;
+				}
 
 				if (create) {
 					selectedOption = ui.elDefaultOption || element[element.selectedIndex] || element.options.item(element.selectedIndex);
