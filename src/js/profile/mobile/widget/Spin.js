@@ -41,6 +41,8 @@
 			engine = ns.engine,
 			selectors = ns.util.selectors,
 			utilsEvents = ns.event,
+			objectUtil = ns.util.object,
+			classes = objectUtil.copy(CoreSpin.classes),
 			Spin = function () {
 				var self = this;
 
@@ -49,16 +51,18 @@
 			prototype = new CoreSpin();
 
 		Spin.prototype = prototype;
+		Spin.classes = classes,
+		Spin.timing = CoreSpin.timing;
 
 		prototype._vclick = function (event) {
 			var target = event.target;
 
-			if (selectors.getClosestBySelector(target, ".ui-spin") === null) {
+			if (selectors.getClosestBySelector(target, "." + classes.SPIN) === null) {
 				this.option("enabled", false);
 			} else {
 				if (!this.option("enabled")) {
 					this.option("enabled", true);
-				} else if (target.classList.contains("ui-spin-item-selected")) {
+				} else if (target.classList.contains(classes.SELECTED)) {
 					this.option("enabled", false);
 				}
 			}

@@ -46,7 +46,7 @@
 				selectors = ns.util.selectors,
 				prototype = new ns.widget.BaseWidget(),
 				Spin = ns.widget.wearable.Spin,
-				SPIN_CLASS = "ui-spin",
+				SPIN_CLASS = Spin.classes.SPIN,
 
 				/**
 				* Standard number picker widget
