@@ -469,6 +469,18 @@
 			}
 
 			/**
+			 * Function stops propagation of events to appbar
+			 * @private
+			 * @static
+			 * @param {ns.widget.mobile.DropdownMenu} self
+			 * @param {Event} event
+			 * @member ns.widget.mobile.DropdownMenu
+			 */
+			function onTouchMove(self, event) {
+				event.stopPropagation();
+			}
+
+			/**
 			 * Function removes ui-focus class on focus
 			 * @private
 			 * @static
@@ -970,11 +982,13 @@
 				self._nativeChangeOptionBound = nativeChangeOption.bind(null, self);
 				self._focusBound = onFocus.bind(null, self);
 				self._blurBound = onBlur.bind(null, self);
+				self._touchMoveBound = onTouchMove.bind(null, self);
 
 				elSelectWrapper.addEventListener("focus", self._focusBound);
 				elSelectWrapper.addEventListener("blur", self._blurBound);
 				if (!self.options.nativeMenu) {
 					elSelectWrapper.addEventListener("vclick", self._toggleMenuBound);
+					elOptionContainer.addEventListener("touchmove", self._touchMoveBound);
 					elOptionContainer.addEventListener("vclick", self._changeOptionBound);
 					elOptionContainer.addEventListener("focusin", self._focusBound); // bubble
 					elOptionContainer.addEventListener("focusout", self._blurBound); // bubble
@@ -1287,6 +1301,7 @@
 				domUtils.replaceWithNodes(ui.elSelectWrapper, ui.elSelect);
 				if (!self.options.nativeMenu) {
 					elSelectWrapper.removeEventListener("vclick", self._toggleMenuBound);
+					elOptionContainer.removeEventListener("touchmove", self._touchMoveBound);
 					elOptionContainer.removeEventListener("vclick", self._changeOptionBound);
 					elOptionContainer.removeEventListener("focusin", self._focusBound);
 					elOptionContainer.removeEventListener("focusout", self._blurBound);
