@@ -40,6 +40,8 @@
 		//>>excludeEnd("tauBuildExclude");
 		var CoreSpin = ns.widget.core.Spin,
 			engine = ns.engine,
+			objectUtil = ns.util.object,
+			classes = objectUtil.copy(CoreSpin.classes),
 			Spin = function () {
 				var self = this;
 
@@ -48,6 +50,8 @@
 			prototype = new CoreSpin();
 
 		Spin.prototype = prototype;
+		Spin.classes = classes;
+		Spin.timing = CoreSpin.timing;
 
 		ns.widget.wearable.Spin = Spin;
 

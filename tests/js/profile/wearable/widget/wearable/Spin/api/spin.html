@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,user-scalable=no"/>
+		<title>Tizen Web IDE - Template - Tizen Web UI Framework - Spin</title>
+	
+		<link rel="stylesheet"
+			href="../../../../../../../libs/qunit-1.11.0.css">
+		<link rel="stylesheet"
+			href="../../../../../../../libs/dist/theme/default/tau.css">
+		<script src="../../../../../../../libs/qunit-1.11.0.js"
+			type="text/javascript"></script>
+		<script src="../../../../../../../libs/support.js"></script>
+
+	</head>
+	
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture">
+			<!-- Start of page: #one -->
+			<div class="ui-page" id="default-spin-page" data-enable-page-scroll="false">
+				<div class="ui-content">
+					<div id="spin" 
+						class="ui-spin sample-spin"
+						data-min="0"
+						data-max="9"
+						data-value="3"
+						data-roll-height="container">
+					</div>
+				</div>
+			</div><!-- /page one -->
+
+			<div class="ui-page" id="first">
+				<div data-role="mock" id="mock1">Mock</div>
+			</div>
+			<div class="ui-page" id="second">
+				<div data-role="mock" id="mock2">Mock</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+				var tauConfig = {
+					"autorun": false
+				};
+			</script>
+		<script type="text/javascript"
+			src="../../../../../../../libs/dist/js/tau.js"></script>
+		<script src="spin.js"></script>
+	</body>
+</html>
