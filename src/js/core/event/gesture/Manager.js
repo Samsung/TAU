@@ -88,7 +88,7 @@
 					var element = _instance.getElement();
 
 					if (this.touchSupport) {
-						element.addEventListener("touchstart", this, false);
+						element.addEventListener("touchstart", this, {passive: false});
 					} else {
 						element.addEventListener("mousedown", this, false);
 					}
@@ -104,9 +104,9 @@
 					var self = this;
 
 					if (self.touchSupport) {
-						document.addEventListener("touchmove", self);
-						document.addEventListener("touchend", self);
-						document.addEventListener("touchcancel", self);
+						document.addEventListener("touchmove", self, {passive: false});
+						document.addEventListener("touchend", self, {passive: false});
+						document.addEventListener("touchcancel", self, {passive: false});
 					} else {
 						document.addEventListener("mousemove", self);
 						document.addEventListener("mouseup", self);
@@ -124,7 +124,7 @@
 					var element = _instance.getElement();
 
 					if (this.touchSupport) {
-						element.removeEventListener("touchstart", this, false);
+						element.removeEventListener("touchstart", this, {passive: false});
 					} else {
 						element.removeEventListener("mousedown", this, false);
 					}
@@ -140,9 +140,9 @@
 					var self = this;
 
 					if (self.touchSupport) {
-						document.removeEventListener("touchmove", self, false);
-						document.removeEventListener("touchend", self, false);
-						document.removeEventListener("touchcancel", self, false);
+						document.removeEventListener("touchmove", self, {passive: false});
+						document.removeEventListener("touchend", self, {passive: false});
+						document.removeEventListener("touchcancel", self, {passive: false});
 					} else {
 						document.removeEventListener("mousemove", self, false);
 						document.removeEventListener("mouseup", self, false);
