@@ -62,6 +62,7 @@
 				prototype = new BaseWidget(),
 				classPrefix = "ui-appbar",
 				classes = {
+					title: classPrefix + "-title",
 					leftIconsContainer: classPrefix + "-left-icons-container",
 					actionButtonsContainer: classPrefix + "-action-buttons-container",
 					titleContainer: classPrefix + "-title-container",
@@ -258,6 +259,7 @@
 					if (ui.bottomBar) {
 						self._toggleBottomBar(!!ui.page.querySelector(selectors.IS_CHECKED));
 					}
+					self._updateTitle();
 				}
 			};
 
@@ -421,9 +423,20 @@
 			};
 
 			/**
+			 * Method returns number of checkboxes in state checked
+			 * @method _getNumberOfChecked
+			 * @member ns.widget.core.Appbar
+			 * @return {number}
+			 * @protected
+			 */
+			prototype._getNumberOfChecked = function () {
+				return this._ui.page.querySelectorAll(selectors.IS_CHECKED).length;
+			};
+
+			/**
 			 * Handler for "change" event
 			 * @method _onChange
-			 * @param {event} event
+			 * @param {Event} event
 			 * @member ns.widget.core.Appbar
 			 * @protected
 			 */
@@ -442,7 +455,27 @@
 					if (self._ui.bottomBar) {
 						self._toggleBottomBar(!!page.querySelector(selectors.IS_CHECKED));
 					}
+					if (self._ui.selectAll) {
+						self._updateTitle();
+					}
 				}
+			};
+
+			/**
+			 * Update AppBar title according to number of selected items
+			 * @method _updateTitle
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._updateTitle = function () {
+				var titles = [].slice.call(this.element.querySelectorAll("." + classes.title)),
+					numberOfSelectedItems = this._getNumberOfChecked();
+
+				titles.forEach(function (title) {
+					title.textContent = numberOfSelectedItems === 0 ?
+						"Select items" :
+						numberOfSelectedItems + " selected";
+				});
 			};
 
 			/**
