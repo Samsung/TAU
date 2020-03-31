@@ -37,7 +37,7 @@
 			//>>excludeEnd("tauBuildExclude");
 			var utilsObject = ns.util.object,
 				utilsEvents = ns.event,
-				selectors = ns.util.selectors,
+				utilSelectors = ns.util.selectors,
 				Page = ns.widget.core.Page,
 				min = Math.min,
 				max = Math.max,
@@ -50,7 +50,8 @@
 						leftIconsContainer: null,
 						actionButtonsContainer: null,
 						page: null,
-						selectAll: null
+						selectAll: null,
+						bottomBar: null
 					},
 					self._appbarState = states.COLLAPSED;
 					self._dragStartingHeight = 0;
@@ -70,7 +71,9 @@
 					dragging: classPrefix + "-dragging",
 					controlsContainer: classPrefix + "-controls-container",
 					expandedTitleContainer: classPrefix + "-expanded-title-container",
-					selectAll: "ui-label-select-all"
+					selectAll: "ui-label-select-all",
+					bottomBar: "ui-bottom-bar",
+					hidden: "ui-hidden"
 				},
 				states = {
 					EXPANDED: "EXPANDED",
@@ -98,6 +101,10 @@
 						position: 2
 					}
 				},
+				selectors = {
+					IS_CHECKED: ".ui-listview li > input[type='checkbox']:checked",
+					IS_NOT_CHECKED: ".ui-listview li > input[type='checkbox']:not(:checked)"
+				},
 				defaults = {
 					titleType: "singleLine" // "multiline", "subtitle"
 				};
@@ -110,8 +117,9 @@
 				var self = this;
 
 				self._appbarState = states.COLLAPSED;
-				self._ui.page = selectors.getClosestBySelector(element, Page.selector);
+				self._ui.page = utilSelectors.getClosestBySelector(element, Page.selector);
 				self._ui.selectAll = element.querySelector("." + classes.selectAll + " input[type='checkbox']");
+				self._ui.bottomBar = self._ui.page.querySelector("." + classes.bottomBar);
 			};
 
 			/**
@@ -242,10 +250,14 @@
 			 * @protected
 			 */
 			prototype._onPageBeforeShow = function () {
-				var self = this;
+				var self = this,
+					ui = self._ui;
 
-				if (self._ui.selectAll) {
+				if (ui.selectAll) {
 					self._triggerSelectAll();
+					if (ui.bottomBar) {
+						self._toggleBottomBar(!!ui.page.querySelector(selectors.IS_CHECKED));
+					}
 				}
 			};
 
@@ -398,6 +410,17 @@
 			};
 
 			/**
+			 * Toggle visibility of BottomBar
+			 * @method _toggleBottomBar
+			 * @param {boolean} visible
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._toggleBottomBar = function (visible) {
+				this._ui.bottomBar.classList.toggle(classes.hidden, !visible);
+			};
+
+			/**
 			 * Handler for "change" event
 			 * @method _onChange
 			 * @param {event} event
@@ -406,13 +429,18 @@
 			 */
 			prototype._onChange = function (event) {
 				var target = event.target,
-					self = this;
+					self = this,
+					page = self._ui.page;
 
 				if (target.tagName === "INPUT") {
 					if (target === self._ui.selectAll) {
 						self._triggerSelectAll();
 					} else {
-						self._toggleSelectAll(!self._ui.page.querySelector(".ui-listview input[type='checkbox']:not(:checked)"));
+						self._toggleSelectAll(!page.querySelector(selectors.IS_NOT_CHECKED));
+					}
+
+					if (self._ui.bottomBar) {
+						self._toggleBottomBar(!!page.querySelector(selectors.IS_CHECKED));
 					}
 				}
 			};
