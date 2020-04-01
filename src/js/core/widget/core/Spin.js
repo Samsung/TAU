@@ -490,8 +490,6 @@
 				element.classList.add(classes.ENABLED);
 				utilsEvents.on(document, "drag dragend", self);
 
-				// disable tau rotaryScroller the widget has own support for rotary event
-				ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
 			} else {
 				element.classList.add(classes.ENABLING);
 				window.setTimeout(function () {
@@ -502,8 +500,6 @@
 				utilsEvents.off(document, "drag dragend", self);
 				// disable animation
 				self._animation.stop();
-				// enable tau rotaryScroller the widget has own support for rotary event
-				ns.util.rotaryScrolling && ns.util.rotaryScrolling.unlock();
 			}
 			// reset previous value;
 			this._prevValue = null;

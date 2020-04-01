@@ -34,11 +34,13 @@
 	define([
 		"../../../../core/widget/core/Spin",
 		"../../../../core/engine",
-		"../../../../core/util/object"
+		"../../../../core/util/object",
+		"../../../../core/util/rotaryScrolling"
 	],
 	function () {
 		//>>excludeEnd("tauBuildExclude");
 		var CoreSpin = ns.widget.core.Spin,
+			CoreSpinPrototype = CoreSpin.prototype,
 			engine = ns.engine,
 			Spin = function () {
 				var self = this;
@@ -48,6 +50,20 @@
 			prototype = new CoreSpin();
 
 		Spin.prototype = prototype;
+
+		prototype._setEnabled = function (element, value) {
+			var self = this;
+
+			CoreSpinPrototype._setEnabled.call(self, element, value);
+
+			if (self.options.enabled) {
+				// disable tau rotaryScroller the widget has own support for rotary event
+				ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
+			} else {
+				// enable tau rotaryScroller the widget has own support for rotary event
+				ns.util.rotaryScrolling && ns.util.rotaryScrolling.unlock();
+			}
+		}
 
 		ns.widget.wearable.Spin = Spin;
 
