@@ -80,27 +80,34 @@
 				events = ns.event,
 				/**
 			 	 * Widget options
-				 * @property {boolean} [options.type="normal"] Slider type. 'normal', 'center' or 'circle'
-				 * @property {string} [options.orientation="horizontal"] Slider orientation. horizontal or vertical
-				 * @property {boolean} [options.expand=false] Slider expand mode. true or false
+				 * @property {string} [options.type="continues"] Slider type. 'continues', 'level-bar'
+				 * @property {boolean} [options.disabled=false] Slider disabled mode. true or false
+				 * @property {number} [min=0] minimum value of Slider
+				 * @property {number} [max=10] maximum value of Slider
+				 * @property {number} [step=1] step specifies the granularity that the value must adhere to
 				 **/
 				defaults = {
-					type: "normal",
+					type: "continues",
 					orientation: "horizontal",
 					expand: false,
 					warning: false,
 					warningLevel: 0,
 					disabled: false,
-					toggle: ""
+					toggle: "",
+					min: 0,
+					max: 10,
+					step: 1
 				},
-				unsupportedOptions = ["type", "orientation", "expand", "warning", "warningLevel", "toggle"],
+				unsupportedOptions = ["orientation", "expand", "warning", "warningLevel", "toggle"],
 				Slider = function () {
 					var self = this;
 
 					self.options = objectMerge({}, defaults);
 					BaseKeyboardSupport.call(self);
 
-					self._ui = {};
+					self._ui = {
+						scale: null
+					};
 				},
 				classes = {
 					SLIDER: "ui-slider",
@@ -110,7 +117,10 @@
 					SLIDER_HANDLER_VALUE: "ui-slider-handler-value",
 					SLIDER_FOCUS: "ui-slider-focus",
 					SLIDER_BAR: "ui-slider-bar",
-					SLIDER_ACTIVE: "ui-slider-active"
+					SLIDER_ACTIVE: "ui-slider-active",
+					TRACK: "ui-slider-handler-track",
+					SPACE_BEFORE: "ui-slider-before-space",
+					SPACE_AFTER: "ui-slider-after-space"
 				},
 				prototype = new BaseWidget();
 
@@ -150,6 +160,76 @@
 			}
 
 			/**
+			 * Method changes look of scale for Slider widget when type is level bar
+			 * @method _updateLevelBar
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._updateLevelBar = function () {
+				var self = this,
+					ui = self._ui,
+					scale = ui.scale,
+					options = self.options,
+					numberOfDots = Math.round((options.max - options.min) / options.step) + 1,
+					currentDots = scale.children.length,
+					delta = numberOfDots - currentDots,
+					dot,
+					i;
+
+				// modify DOM
+				if (delta > 0) {
+					// add
+					for (i = 0; i < delta; i++) {
+						dot = document.createElement("div");
+						dot.classList.add("ui-slider-scale-dot");
+						scale.appendChild(dot);
+					}
+				} else if (delta < 0) {
+					// remove redundant dots
+					delta = -delta;
+					for (i = 0; i < delta; i++) {
+						scale.removeChild(scale.lastElementChild);
+					}
+				}
+			}
+
+			/**
+			 * Method is called when "type" option has change
+			 * @method _setType
+			 * @member ns.widget.core.Slider
+			 * @param {HTMLElement} element element parameter is required by BaseWidget
+			 * @param {string} value
+			 * @protected
+			 */
+			prototype._setType = function (element, value) {
+				var self = this,
+					ui = self._ui,
+					scale = ui.scale,
+					containerElement = ui.containerElement;
+
+				if (value === "level-bar") {
+					// create element
+					if (!scale) {
+						scale = document.createElement("div");
+						scale.classList.add("ui-slider-scale");
+						containerElement.appendChild(scale);
+						ui.scale = scale;
+					}
+					// update dots
+					self._updateLevelBar();
+				} else {
+					if (scale) {
+						containerElement.remove(scale);
+						ui.scale = null;
+					}
+				}
+
+				containerElement.classList.toggle("ui-slider-level-bar", value === "level-bar");
+
+				self.options.type = value;
+			}
+
+			/**
 			 * Build structure of Slider component
 			 * @method _build
 			 * @param {HTMLElement} element
@@ -163,16 +243,27 @@
 					containerElement = document.createElement("div"),
 					barElement = document.createElement("div"),
 					valueElement = document.createElement("div"),
-					handlerElement = document.createElement("div");
+					handlerElement = document.createElement("div"),
+					handlerTrack = document.createElement("div"),
+					beforeSpace = document.createElement("div"),
+					afterSpace = document.createElement("div");
 
 				containerElement.classList.add(classes.SLIDER);
 
 				barElement.classList.add(classes.SLIDER_BAR);
-
 				valueElement.classList.add(classes.SLIDER_VALUE);
 				barElement.appendChild(valueElement);
+
 				handlerElement.classList.add(classes.SLIDER_HANDLER);
-				containerElement.appendChild(handlerElement);
+				handlerTrack.classList.add(classes.TRACK);
+				beforeSpace.classList.add(classes.SPACE_BEFORE);
+				afterSpace.classList.add(classes.SPACE_AFTER);
+
+				handlerTrack.appendChild(beforeSpace);
+				handlerTrack.appendChild(handlerElement);
+				handlerTrack.appendChild(afterSpace);
+
+				containerElement.appendChild(handlerTrack);
 				containerElement.appendChild(barElement);
 
 				element.parentNode.appendChild(containerElement);
@@ -180,6 +271,8 @@
 				ui.valueElement = valueElement;
 				ui.handlerElement = handlerElement;
 				ui.containerElement = containerElement;
+				ui.beforeSpace = beforeSpace;
+				ui.afterSpace = afterSpace;
 
 				element.parentNode.replaceChild(containerElement, element);
 				containerElement.appendChild(element);
@@ -194,6 +287,27 @@
 			};
 
 			/**
+			 * Update Slider properties from widget options
+			 * @method _updateProperties
+			 * @member ns.widget.core.Slider
+			 * @protected
+			 */
+			prototype._updateProperties = function () {
+				var self = this,
+					options = self.options,
+					attrValue = parseFloat(self.element.getAttribute("value"));
+
+				self._min = options.min;
+				self._max = options.max;
+				self._minValue = self._min;
+				self._maxValue = self._max;
+				self._interval = self._max - self._min;
+
+				self._value = attrValue ? attrValue : parseFloat(self.element.value);
+				self._previousValue = self._value;
+			};
+
+			/**
 			 * init Slider component
 			 * @method _init
 			 * @param {HTMLElement} element
@@ -202,20 +316,11 @@
 			 * @protected
 			 */
 			prototype._init = function (element) {
-				var self = this,
-					attrMin = parseFloat(element.getAttribute("min")),
-					attrMax = parseFloat(element.getAttribute("max")),
-					attrValue = parseFloat(element.getAttribute("value"));
+				var self = this;
 
 				self._warnAboutUnsupportedOptions();
+				self._updateProperties();
 
-				self._min = attrMin ? attrMin : 0;
-				self._max = attrMax ? attrMax : 100;
-				self._minValue = self._min;
-				self._maxValue = self._max;
-				self._value = attrValue ? attrValue : parseFloat(self.element.value);
-				self._interval = self._max - self._min;
-				self._previousValue = self._value;
 				self._setDisabled(element);
 				self._locked = false;
 
@@ -243,6 +348,8 @@
 				var self = this,
 					ui = self._ui;
 
+				self._setType(self.element, self.options.type);
+
 				self._containerElementWidth = ui.containerElement.offsetWidth;
 
 				self._setValue(self._value);
@@ -258,13 +365,13 @@
 			prototype._setNormalValue = function (value) {
 				var self = this,
 					ui = self._ui,
-					containerElementLength,
-					validValue;
+					percentValue;
 
-				containerElementLength = self._containerElementWidth;
-				validValue = containerElementLength * (value - self._min) / self._interval;
-				ui.valueElement.style["width"] = validValue + "px";
-				ui.handlerElement.style["left"] = validValue + "px";
+				// position of handle element
+				percentValue = value / (self._max - self._min) * 100;
+				ui.beforeSpace.style["width"] = percentValue + "%";
+				ui.afterSpace.style["width"] = (100 - percentValue) + "%";
+				ui.valueElement.style["width"] = percentValue + "%";
 			};
 
 			/**
@@ -471,9 +578,12 @@
 			 * @member ns.widget.core.Slider
 			 * @protected
 			 */
-			prototype.refresh = function () {
-				this._setDisabled(this.element);
-				this._initLayout();
+			prototype._refresh = function () {
+				var self = this;
+
+				self._updateProperties()
+				self._setDisabled(self.element);
+				self._initLayout();
 			};
 
 			/**
