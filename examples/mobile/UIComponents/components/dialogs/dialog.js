@@ -21,4 +21,5 @@
 
 	page.addEventListener("pagebeforeshow", onPageShow);
 	page.addEventListener("pagebeforehide", onPageHide);
-}());
+
+}(window.document, window.tau));
