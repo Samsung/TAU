@@ -668,18 +668,6 @@ li.hide-popup-li {
 	mask-image: url(../contents/assistviews/images/tw_ic_button_delete_holo_dark.png);
 }
 
-.btn-icon-check::before {
-	background-color: rgba(245, 245, 245, 1);
-	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
-	mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
-}
-
-.btn-icon-cancel::before {
-	background-color: rgba(245, 245, 245, 1);
-	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_delete.png);
-	mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_delete.png);
-}
-
 .btn-icon-toast-check {
 	margin-bottom: 16px;
 }
