@@ -35,6 +35,7 @@
 		padding-right: @fixed_popup_header_padding_right;
 		padding-bottom: 0;
 		padding-left: @fixed_popup_header_padding_left;
+		font-weight: bold;
 		+ .ui-popup-content {
 			padding-top: 26 * @px_base;
 		}
@@ -43,8 +44,8 @@
 	.ui-popup-content {
 		color: @color_popup_content_text;
 		background-color: transparent;
-		font-size: 32 * @px_base;
-		line-height: 42 * @unit_base;
+		font-size: 30 * @px_base;
+		line-height: 37 * @unit_base;
 		padding: 60 * @unit_base 30 * @unit_base 10 * @unit_base;
 		text-align: center;
 		.ui-listview,
@@ -55,8 +56,8 @@
 	}
 
 	&.ui-has-side-buttons .ui-popup-content {
-		padding-left: 64 * @unit_base;
-		padding-right: 64 * @unit_base;
+		padding-left: 81 * @unit_base;
+		padding-right: 81 * @unit_base;
 	}
 
 	.ui-popup-footer.ui-side-button {
@@ -71,11 +72,24 @@
 			padding: 8 * @unit_base 18 * @unit_base 0 23 * @unit_base 0;
 			color: @color_button_bottom_text;
 			margin: 8 * @unit_base 0;
-			height: 100 * @unit_base;
-			width: 60 * @unit_base;
-			background-color: @bg_color_button_bottom;
+			height: 121 * @unit_base;
+			width: 73 * @unit_base;
+			background-color: @color_popup_side_button_bg;
+			mask-image: url("./images/Popup/tw_ic_popup_btn_bg.png");
 			border: 0;
-			border-radius: 60 * @unit_base;
+
+			&.ui-btn-check {
+				&::before {
+					background-color: @color_popup_button_icon_bg;
+					mask-image: url("./images/Popup/tw_ic_popup_btn_check.png");
+				}
+			}
+			&.ui-btn-delete {
+				&::before {
+					background-color: @color_popup_button_icon_bg;
+					mask-image: url("./images/Popup/tw_ic_popup_btn_delete.png");
+				}
+			}
 
 			&::before {
 				content: "";
@@ -106,9 +120,8 @@
 			&.ui-btn-active {
 				color: @color_button_bottom_text_pressed;
 				background-color: @bg_color_button_bottom_pressed;
-				height: 100 * @unit_base;
-				width: 60 * @unit_base;
-				border-radius: 65 * @unit_base;
+				height: 121 * @unit_base;
+				width: 73 * @unit_base;
 				font-size: 30 * @unit_base;
 				&::after {
 					animation: btn-footer-opacity-press linear 565ms;
@@ -117,9 +130,8 @@
 
 			&.ui-btn-inactive {
 				background-color: @bg_color_button_bottom;
-				height: 100 * @unit_base;
-				width: 60 * @unit_base;
-				border-radius: 65 * @unit_base;
+				height: 121 * @unit_base;
+				width: 73 * @unit_base;
 				font-size: 28 * @unit_base;
 
 				&::after {
