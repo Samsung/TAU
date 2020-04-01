@@ -401,6 +401,9 @@
 						}
 
 						if (baseValue !== null) {
+							if (typeof options[option] === "number") {
+								baseValue = parseFloat(baseValue);
+							}
 							options[option] = baseValue;
 						}
 					});

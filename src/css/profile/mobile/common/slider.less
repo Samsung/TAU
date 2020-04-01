@@ -34,11 +34,27 @@
 		outline: 4 * @unit_base solid @color_focus_border;
 	}
 
+	.ui-slider-handler-track {
+		position: absolute;
+		width: 100%;
+		display: flex;
+
+		// below elements are use to postitioning handler element by % of width
+		.ui-slider-before-space {
+			height: 1 * @px_base;
+		}
+		.ui-slider-after-space {
+			height: 1 * @px_base;
+		}
+	}
+
 	.ui-slider-handler {
 		width: 17 * @px_base;
 		height: 17 * @px_base;
+		min-width: 17 * @px_base;
+		min-height: 17 * @px_base;
 		background-color: var(--slider-value-color);
-		position: absolute;
+		position: relative;
 		border-radius: 50%;
 		pointer-events: none;
 		z-index: 9;
@@ -57,8 +73,8 @@
 
 	&.ui-slider-active {
 		.ui-slider-handler {
-			width: 22 * @px_base;
-			height: 22 * @px_base;
+			min-width: 22 * @px_base;
+			min-height: 22 * @px_base;
 			&::before {
 				opacity: 1;
 			}
@@ -81,6 +97,44 @@
 			background-color: var(--slider-handler-disabled-color);
 		}
 	}
+	&.ui-slider-level-bar {
+		margin-left: 5 * @px_base;
+		margin-right: 5 * @px_base;
+		height: 32 * @px_base;
+
+		.ui-slider-bar {
+			background-color: var(--slider-level-bar-bg-color);
+			.ui-slider-value {
+				display: none;
+			}
+			&::before {
+				display: none;
+				border-image: none;
+			}
+		}
+		input {
+			width: 100%;
+		}
+		.ui-slider-scale {
+			position: absolute;
+			width: 100%;
+			height: 7 * @px_base;
+			display: flex;
+			justify-content: space-between;
+			pointer-events: none;
+
+			.ui-slider-scale-dot {
+				width: 7 * @px_base;
+				height: 7 * @px_base;
+				border-radius: 100%;
+				background-color: var(--slider-scale-dot);
+			}
+		}
+		.ui-slider-handler-track {
+			width: calc(~"100% + "10 * @px_base); // to reduce margin effect from parent
+			left: -5 * @px_base; // to reduce margin effect from parent
+		}
+	}
 }
 
 input[data-tau-built="Slider"] {
@@ -88,4 +142,5 @@ input[data-tau-built="Slider"] {
 	display: block;
 	width: 100%;
 	position: absolute;
+	margin: 0;
 }
