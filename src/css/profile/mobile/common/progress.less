@@ -5,19 +5,36 @@ tau-progress {
 // *************************************************
 //            Progress Bar type
 // *************************************************
+.ui-progress-container {
+	width: 360 * @px_base;
+	height: inherit;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	box-sizing: border-box;
+}
+
 .ui-progress-bar {
 	position: relative;
-	min-width: 12 * @unit_base;
+	min-width: 12 * @px_base;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-
-	margin-left: 32 * @unit_base;
-	margin-right: 32 * @unit_base;
+	height: 32 * @px_base;
+	justify-content: center;
+	justify-items: center;
 
 	.ui-progress-current-value {
-		font-size: 36 * @px_base;
+		font-size: 36 * @sp_base;
 	}
+}
+
+.ui-progress-text {
+	padding-top: 17 * @px_base;
+	display: block;
+	font-size: 15 * @sp_base;
+	text-align: center;
+	color: var(--text-color);
 }
 
 .ui-progress-bar-labels-top {
@@ -30,21 +47,22 @@ tau-progress {
 }
 
 .ui-progress-bar-value-bg {
-	min-height: 3 * @px_base;
+	height: 3 * @px_base;
+	max-height: 3 * @px_base;
 	width: 100%;
 	position: relative;
 	flex: 1;
 	order: 2;
 	background-color: var(--progress-bar-bg-color);
-	border-radius: 3 * @px_base;
+	border-radius: 1.5 * @px_base;
 }
 .ui-progress-bar-label {
 	span ~ span {
-		margin-left: 4 * @unit_base; // it doesn't defined in guideline
+		margin-left: 2 * @px_base; // it doesn't defined in guideline
 	}
 }
 .ui-progress-bar-label-left-bottom {
-	padding: 8 * @unit_base 0 0;
+	padding: 4 * @px_base 0 0;
 	color: var(--text-secondary-color);
 	font-size: @font_size_progress_label_left;
 	flex: 1;
@@ -53,7 +71,7 @@ tau-progress {
 }
 
 .ui-progress-bar-label-right-bottom {
-	padding: 8 * @unit_base 0 0;
+	padding: 4 * @px_base 0 0;
 	color: var(--text-secondary-color);
 	font-size: @font_size_progress_label_right;
 	flex: 1;
@@ -62,7 +80,7 @@ tau-progress {
 }
 
 .ui-progress-bar-label-right-top {
-	padding: 0 0 8 * @unit_base;
+	padding: 0 0 4 * @px_base;
 	color: var(--progress-bar-color);
 	font-size: @font_size_progress_label_right;
 	flex: 1;
@@ -71,12 +89,12 @@ tau-progress {
 }
 
 .ui-progress-bar-value {
-	height: 100%;
+	height: 3 * @px_base;
 	position: absolute;
 	left: 0;
 	top: 0;
 	background-color: var(--progress-bar-color);
-	border-radius: 3 * @px_base;
+	border-radius: 1.5 * @px_base;
 }
 
 // ************************************************
@@ -399,11 +417,16 @@ tau-progress {
 }
 
 .ui-listview .ui-li-has-progress {
-	height: 8 * @unit_base;
-	padding: (120 - 8) / 2 * @unit_base 0;
+	height: 4 * @px_base;
+	padding: (60 - 4) / 2 * @px_base 0;
 }
 
 .ui-listview .ui-li-has-progress-with-labels {
 	height: 8 * @unit_base;
 	padding: (144 - 8) / 2 * @unit_base 0;
+}
+
+.ui-scrollview-view > .ui-progress-container {
+	padding-left: 56 * @px_base;
+	padding-right: 56 * @px_base;
 }
