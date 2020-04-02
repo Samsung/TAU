@@ -74,7 +74,7 @@
 				 *  // the spin will rotate by 1 -> 0 -> 9 -> 0
 				 * @property {number} [options.duration=ROLL_DURATION] time of rotate to indicated value
 				 * @property {string} [options.direction="up"] direction of spin rotation
-				 * @property {string} [options.rollHeight="container"] size of frame to rotate one item
+				 * @property {string} [options.rollHeight="custom"] size of frame to rotate one item
 				 * @property {number} [options.itemHeight=38] size of frame for "custom" rollHeight
 				 * @property {number} [options.momentumLevel=0] define moementum level on drag
 				 * @property {number} [options.scaleFactor=0.4] second / next items scale factor
@@ -189,6 +189,7 @@
 					item.style.transform = "translateY(-1000px)"; // move item from active area
 				}
 				item.style.opacity = change.opacity;
+				item.style.height = itemHeight + "px";
 			});
 			ns.event.trigger(self.element, "spinstep", parseInt(state.value, 10));
 		}
