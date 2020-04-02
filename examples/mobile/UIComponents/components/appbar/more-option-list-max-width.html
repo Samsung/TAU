@@ -14,6 +14,9 @@
 			<div class="ui-appbar-left-icons-container">
 				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
 			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">More option list (Max width)</span>
+			</div>
 			<div class="ui-appbar-action-buttons-container">
 				<button class="ui-btn ui-btn-icon ui-btn-icon-more" data-style="flat" onClick="openDropdownMenu()"></button>
 				<select data-native-menu="false" id="dropdownmenu" style="display: none">
@@ -37,8 +40,11 @@
 		</div>
 
 		<script>
+			var dropDownMenu = document.getElementById("dropdownmenu");
+			dropdownmenu.selectedIndex = -1;
+
 			function openDropdownMenu() {
-				var dropdownmenuWidget = tau.widget.DropdownMenu(document.getElementById("dropdownmenu"));
+				var dropdownmenuWidget = tau.widget.DropdownMenu(dropDownMenu);
 
 				dropdownmenuWidget.open();
 			}

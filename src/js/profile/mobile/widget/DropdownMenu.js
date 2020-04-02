@@ -1025,8 +1025,6 @@
 					listItemWidthOffsets = [].slice.call(ui.elOptionContainer.children).map(mapItemWidth),
 					biggestListItemWidth = Math.max.apply(Math, listItemWidthOffsets),
 					wrapperMinWidth = parseInt(window.getComputedStyle(ui.elOptionWrapper).minWidth, 10),
-					selectedItem = ui.elOptionContainer.querySelector("." + classes.selected),
-					stylesOfSelectedOptionAfter = window.getComputedStyle(selectedItem, ":after"),
 					options = self.options,
 					scrollTop = ui.elOptionWrapper.parentNode.querySelector(".ui-scrollview-clip").scrollTop,
 					height,
@@ -1038,10 +1036,7 @@
 				self._offsetTop = getTopOffsetOfElement(ui.elSelectWrapper, ui.page);
 				areaInfo = self._chooseDirection();
 
-				width = biggestListItemWidth > wrapperMinWidth ?
-				biggestListItemWidth + parseInt(stylesOfSelectedOptionAfter.marginRight, 10) +
-				parseInt(stylesOfSelectedOptionAfter.width, 10) : wrapperMinWidth;
-
+				width = Math.max(biggestListItemWidth, wrapperMinWidth);
 				height = optionHeight;
 
 				// This part decides the location and direction of option list.
@@ -1261,7 +1256,9 @@
 						return;
 					}
 					eventUtils.trigger(ui.elSelect, "change");
-					previousOption.classList.remove(classes.selected);
+					if (previousOption) {
+						previousOption.classList.remove(classes.selected);
+					}
 					selectedOption.classList.add(classes.selected);
 				}
 			};
