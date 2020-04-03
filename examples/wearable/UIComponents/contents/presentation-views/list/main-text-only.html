@@ -4,7 +4,7 @@
 <head>
 	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
 	<title>
-		List
+		Wearable UI
 	</title>
 	<link href="../../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
 	<link href="../../../lib/tau/wearable/theme/default/tau.circle.css" rel="stylesheet" />
@@ -15,26 +15,42 @@
 </head>
 
 <body>
-	<div class="ui-page" data-go-to-top-button="true">
-		<header>
+	<div class="ui-page" id="arc-listview-page">
+		<header class="ui-header">
 			<h2 class="ui-title">
-				List
+				Main Text Only
 			</h2>
 		</header>
 		<div class="ui-content">
-			<ul class="ui-listview">
+			<ul class="ui-arc-listview ui-arc-listview-5" data-visible-items="5">
 				<li>
-					<a href="basic-list.html">
-						Basic List
+					<a href="#">
+						List 01
 					</a>
 				</li>
 				<li>
-					<a href="main-text-only.html">
-						Main Text Only
+					<a href="#">
+						List 02
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						List 03
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						List 04
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						List 05
 					</a>
 				</li>
 			</ul>
 		</div>
+		<script src="list-arclistview.js"></script>
 	</div>
 </body>
 
