@@ -6,25 +6,22 @@
 	position: absolute;
 	left: 0;
 	margin-bottom: 16 * @px_base;
+	margin-top: 32 * @px_base;
 	z-index: (@z_base_popup + 1) !important;
 	background-color: @color_popup_bg;
 	border-radius: 26 * @px_base;;
 
 	@media (orientation: portrait) and (max-width: 479px) {
 		width: 100%;
-		margin-top: 56 * @px_base;
 	}
 	@media (orientation: landscape) and (max-height: 479px) {
-		width: 60%;
-		margin-top: 32 * @px_base;
+		width: 55%;
 	}
-	@media (orientation: portrait) and (min-width: 600px) {
-		width: 60%;
-		margin-top: 56 * @px_base;
+	@media (orientation: portrait) and (min-width: 673px) {
+		width: 55%;
 	}
-	@media (orientation: landscape) and (min-width: 960px) {
-		width: 37.5%;
-		margin-top: 32 * @px_base;
+	@media (orientation: landscape) and (min-width: 986px) {
+		width: 35%;
 	}
 
 	.ui-popup-wrapper {
@@ -46,14 +43,13 @@
 
 	.ui-popup-header {
 		width: 100%;
-		min-height: 110 * @unit_base;
+		min-height: 55 * @px_base;
 		text-align: left;
 		background-color: @color_popup_header_bg;
 		position: sticky;
 
 		font-size: @font_size_popup_title_text;
 		color: @color_popup_title_text;
-		line-height: 68 * @unit_base;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -69,17 +65,11 @@
 			line-height: 38 * @unit_base;
 		}
 
-		@media (orientation: portrait) and (max-width: 479px) {
-			padding: 24 * @px_base 24 * @px_base 18 * @px_base 24 * @px_base;
+		@media (orientation: portrait) {
+			padding: 26 * @px_base 24 * @px_base 19 * @px_base 24 * @px_base;
 		}
-		@media (orientation: landscape) and (max-height: 479px) {
-			padding: 12 * @px_base 24 * @px_base 8 * @px_base 24 * @px_base;
-		}
-		@media (orientation: portrait) and (min-width: 600px) {
-			padding: 24 * @px_base 24 * @px_base 18 * @px_base 24 * @px_base;
-		}
-		@media (orientation: landscape) and (min-width: 960px) {
-			padding: 12 * @px_base 24 * @px_base 8 * @px_base 24 * @px_base;
+		@media (orientation: landscape) {
+			padding: 14 * @px_base 24 * @px_base 8 * @px_base 24 * @px_base;
 		}
 	}
 
@@ -121,6 +111,7 @@
 		ul .ui-li-has-checkbox {
 			& .ui-li-text span {
 				font-size: 16 * @px_base;
+				line-height: 23 * @px_base;
 			}
 			& input {
 				margin-left: 20 * @px_base;
@@ -128,17 +119,11 @@
 			}
 		}
 
-		@media (orientation: portrait) and (max-width: 479px) {
+		@media (orientation: portrait) {
 			padding: 0 * @px_base 24 * @px_base 24 * @px_base 24 * @px_base;
 		}
-		@media (orientation: landscape) and (max-height: 479px) {
-			padding: 0 * @px_base 24 * @px_base 12 * @px_base 24 * @px_base;
-		}
-		@media (orientation: portrait) and (min-width: 600px) {
-			padding: 0 * @px_base 24 * @px_base 24 * @px_base 24 * @px_base;
-		}
-		@media (orientation: landscape) and (min-width: 960px) {
-			padding: 0 * @px_base 24 * @px_base 12 * @px_base 24 * @px_base;
+		@media (orientation: landscape) {
+			padding: 0 * @px_base 24 * @px_base 11 * @px_base 24 * @px_base;
 		}
 	}
 
@@ -182,16 +167,10 @@
 			width: 50%;
 		}
 
-		@media (orientation: portrait) and (max-width: 479px) {
+		@media (orientation: portrait) {
 			padding: 0 * @px_base 24 * @px_base 20 * @px_base 24 * @px_base;
 		}
-		@media (orientation: landscape) and (max-height: 479px) {
-			padding: 0 * @px_base 24 * @px_base 4 * @px_base 24 * @px_base;
-		}
-		@media (orientation: portrait) and (min-width: 600px) {
-			padding: 0 * @px_base 24 * @px_base 20 * @px_base 24 * @px_base;
-		}
-		@media (orientation: landscape) and (min-width: 960px) {
+		@media (orientation: landscape) {
 			padding: 0 * @px_base 24 * @px_base 4 * @px_base 24 * @px_base;
 		}
 	}
@@ -201,17 +180,11 @@
 	}
 
 	.ui-popup-notitle {
-		@media (orientation: portrait) and (max-width: 479px) {
-			margin-top: 24 * @px_base;
+		@media (orientation: portrait) {
+			margin-top: 26 * @px_base;
 		}
-		@media (orientation: landscape) and (max-height: 479px) {
-			margin-top: 12 * @px_base;
-		}
-		@media (orientation: portrait) and (min-width: 600px) {
-			margin-top: 24 * @px_base;
-		}
-		@media (orientation: landscape) and (min-width: 960px) {
-			margin-top: 12 * @px_base;
+		@media (orientation: landscape) {
+			margin-top: 14 * @px_base;
 		}
 	}
 
