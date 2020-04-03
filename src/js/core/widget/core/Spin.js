@@ -83,7 +83,7 @@
 				 * @property {string} [options.labels=""] defines labels for values likes days of week separated by ","
 				 * // eg. "Monday,Tuesday,Wednesday"
 				 * @property {string} [options.digits=0] value filling with zeros, eg. 002 for digits=3;
-				 * // eg. "Monday,Tuesday,Wednesday"
+				 * @property {string} [options.dragTarget="document"] set target element for drag gesture
 				 * @member ns.widget.core.Spin
 				 */
 				this.options = {
@@ -102,7 +102,8 @@
 					loop: "enabled",
 					labels: [],
 					digits: 0, // 0 - doesn't complete by zeros
-					value: 0
+					value: 0,
+					dragTarget: "document" // "document" | "self"
 				};
 				this._ui = {};
 				this.length = this.options.max - this.options.min + 1;
@@ -388,6 +389,7 @@
 			options.labels = (Array.isArray(options.labels)) ? options.labels : options.labels.split(",");
 
 			self.length = options.max - options.min + 1;
+			self.dragTarget = (options.dragTarget === "document") ? document : self.element;
 
 			self._refresh();
 		};
@@ -488,7 +490,7 @@
 					element.classList.remove(classes.ENABLING);
 				}, ENABLING_DURATION);
 				element.classList.add(classes.ENABLED);
-				utilsEvents.on(document, "drag dragend", self);
+				utilsEvents.on(self.dragTarget, "drag dragend", self);
 
 			} else {
 				element.classList.add(classes.ENABLING);
@@ -497,7 +499,7 @@
 					self.refresh();
 				}, ENABLING_DURATION);
 				element.classList.remove(classes.ENABLED);
-				utilsEvents.off(document, "drag dragend", self);
+				utilsEvents.off(self.dragTarget, "drag dragend", self);
 				// disable animation
 				self._animation.stop();
 			}
@@ -517,7 +519,7 @@
 
 			// if element is detached from DOM then event listener should be removed
 			if (document.getElementById(self.element.id) === null) {
-				utilsEvents.off(document, "drag dragend", self);
+				utilsEvents.off(self.dragTarget, "drag dragend", self);
 			} else {
 				if (self.options.enabled) {
 					value = self.value();
@@ -578,7 +580,7 @@
 			var self = this;
 
 			// enabled drag gesture for document
-			utilsEvents.enableGesture(document, new gesture.Drag({
+			utilsEvents.enableGesture(self.dragTarget, new gesture.Drag({
 				blockHorizontal: true
 			}));
 
@@ -588,9 +590,9 @@
 		prototype._unbindEvents = function () {
 			var self = this;
 
-			utilsEvents.disableGesture(document);
+			utilsEvents.disableGesture(self.dragTarget);
 
-			utilsEvents.off(document, "drag dragend", self);
+			utilsEvents.off(self.dragTarget, "drag dragend", self);
 			utilsEvents.off(self.element, "click", self);
 		};
 

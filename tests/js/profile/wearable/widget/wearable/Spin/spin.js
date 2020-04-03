@@ -9,7 +9,7 @@ module("Spin tests (circular)", {
 	}
 });
 
-test("Default options Spin test", 16, function () {
+test("Default options Spin test", 17, function () {
 	var spin = document.getElementById("spin"),
 		spinWidget = new tau.widget.Spin(spin),
 		spinClasses = {
@@ -30,7 +30,8 @@ test("Default options Spin test", 16, function () {
 			moveFactor: 0.4,
 			loop: "enabled",
 			labels: [],
-			digits: 0 // 0 - doesn't complete by zeros
+			digits: 0, // 0 - doesn't complete by zeros
+			dragTarget: "document"
 		};
 
 	ok(spin.classList.contains(spinClasses.spin),
@@ -60,6 +61,8 @@ test("Default options Spin test", 16, function () {
 		"Default option loop of Spin is " + defaultoptions.loop);
 	equal(spinWidget.option("digits"), defaultoptions.digits,
 		"Default option digits of Spin is " + defaultoptions.digits);
+	equal(spinWidget.option("dragTarget"), defaultoptions.dragTarget,
+		"Default option dragTarget of Spin is " + defaultoptions.dragTarget);
 	spinWidget.value(5);
 	equal(spinWidget.value(), 5,
 		"Default option value of Spin is " + 5);
@@ -70,7 +73,7 @@ test("Default options Spin test", 16, function () {
 
 });
 
-test("Defined options Spin test", 13, function () {
+test("Defined options Spin test", 14, function () {
 	var spin = document.getElementById("spin"),
 		options = {
 			min: 3,
@@ -86,7 +89,8 @@ test("Defined options Spin test", 13, function () {
 			moveFactor: 0.1,
 			loop: "disabled",
 			labels: ["Aaa", "Bbb", "Ccc", "Ddd"],
-			digits: 3 // 0 - doesn't complete by zeros
+			digits: 3, // 0 - doesn't complete by zeros
+			dragTarget: "self"
 		},
 		spinWidget = new tau.widget.Spin(spin, options);
 
@@ -114,6 +118,8 @@ test("Defined options Spin test", 13, function () {
 		"Option labels of Spin is " + options.labels);
 	equal(spinWidget.option("digits"), options.digits,
 		"Option digits of Spin is " + options.digits);
+	equal(spinWidget.option("dragTarget"), options.dragTarget,
+		"Option dragTarget of Spin is " + options.dragTarget);
 
 	spinWidget.destroy();
 

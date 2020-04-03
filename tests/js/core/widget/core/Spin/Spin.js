@@ -16,7 +16,7 @@
 		}
 	});
 
-	test("Default options Spin test", 16, function () {
+	test("Default options Spin test", 17, function () {
 		var spin = document.getElementById("spin"),
 			spinWidget = tau.engine.instanceWidget(spin, "Spin"),
 			spinClasses = {
@@ -37,7 +37,8 @@
 				moveFactor: 0.4,
 				loop: "enabled",
 				labels: [],
-				digits: 0 // 0 - doesn't complete by zeros
+				digits: 0, // 0 - doesn't complete by zeros,
+				dragTarget: "document"
 			};
 
 		ok(spin.classList.contains(spinClasses.spin),
@@ -67,17 +68,19 @@
 			"Default option loop of Spin is " + defaultoptions.loop);
 		equal(spinWidget.option("digits"), defaultoptions.digits,
 			"Default option digits of Spin is " + defaultoptions.digits);
+		equal(typeof spinWidget.option("dragTarget"), typeof defaultoptions.dragTarget,
+			"Default option dragTarget of Spin is " + typeof defaultoptions.dragTarget);
 		spinWidget.value(5);
 		equal(spinWidget.value(), 5,
 			"Default option value of Spin is " + 5);
 		equal(typeof spinWidget.option("labels"), typeof defaultoptions.labels,
-			"TYpe of Default option labels of Spin is " + typeof defaultoptions.labels);
+			"Type of Default option labels of Spin is " + typeof defaultoptions.labels);
 
 		spinWidget.destroy();
 
 	});
 
-	test("Defined options Spin test", 13, function () {
+	test("Defined options Spin test", 14, function () {
 		var spin = document.getElementById("spin"),
 			options = {
 				min: 3,
@@ -93,7 +96,8 @@
 				moveFactor: 0.1,
 				loop: "disabled",
 				labels: ["Aaa", "Bbb", "Ccc", "Ddd"],
-				digits: 3 // 0 - doesn't complete by zeros
+				digits: 3, // 0 - doesn't complete by zeros
+				dragTarget: "self"
 			},
 			spinWidget = tau.engine.instanceWidget(spin, "Spin", options);
 
@@ -121,6 +125,8 @@
 			"Option labels of Spin is " + options.labels);
 		equal(spinWidget.option("digits"), options.digits,
 			"Option digits of Spin is " + options.digits);
+		equal(spinWidget.option("dragTarget"), options.dragTarget,
+			"Option dragTarget of Spin is " + options.dragTarget);
 
 		spinWidget.destroy();
 
