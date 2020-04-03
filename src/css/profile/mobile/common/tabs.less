@@ -17,10 +17,6 @@
 	header, .ui-header {
 		position: relative;
 	}
-	.ui-tabbar {
-		height: 110 * @unit_base;
-		background-color: @color_tabs_tabbar_bg;
-	}
 	&.ui-tabs-with-title .ui-tabbar-link {
 		height: 52 * @unit_base;
 		.ui-tabbar-text {
@@ -33,6 +29,12 @@
 		overflow: hidden;
 		min-height: 100%;
 		min-width: 100%;
+	}
+
+	.ui-content-area {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		mask-border-width: 0 26 * @px_base 26 * @px_base;
 	}
 
 }

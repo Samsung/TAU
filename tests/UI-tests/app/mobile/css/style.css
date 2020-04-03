@@ -253,17 +253,17 @@
 	padding-bottom: 55px;
 }
 
-.ui-tabbar-with-icon a[data-icon="naviframe-call"]::after {
+.ui-main-tab-with-icon a[data-icon="naviframe-call"]::after {
 	-webkit-mask-image: url("images/00_button_add.png");
 	mask-image: url("images/00_button_add.png");
 }
 
-.ui-tabbar-with-icon a[data-icon="naviframe-favorite"]::after {
+.ui-main-tab-with-icon a[data-icon="naviframe-favorite"]::after {
 	-webkit-mask-image: url("images/00_icon_favorite_bg_72x72.png");
 	mask-image: url("images/00_icon_favorite_bg_72x72.png");
 }
 
-.ui-tabbar-with-icon a[data-icon="naviframe-search"]::after {
+.ui-main-tab-with-icon a[data-icon="naviframe-search"]::after {
 	-webkit-mask-image: url("images/00_icon_search.png");
 	mask-image: url("images/00_icon_search.png");
 }

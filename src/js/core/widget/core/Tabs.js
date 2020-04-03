@@ -19,8 +19,8 @@
  * #Tabs
  * Tabs component shows an unordered list of buttons on the screen wrapped together in a single group.
  *
- * The Tabs component is a controller component for operate closely with tabbar and sectionChanger.
- * So this component should be used with tabbar and sectionChanger.
+ * The Tabs component is a controller component for operate closely with mainTab and sectionChanger.
+ * So this component should be used with mainTab and sectionChanger.
  *
  * ##Default selectors
  * By default, all elements with the class="ui-tabs" or data-role="tabs" attribute are displayed as a tabs components.
@@ -29,7 +29,7 @@
  *
  *      @example
  *      <div id="tabs" class="ui-tabs">
- *          <div class="ui-tabbar">
+ *          <div class="ui-main-tab">
  *              <ul>
  *                  <li><a href="#" class="ui-btn-active">Tab1</a></li>
  *                  <li><a href="#">Tab2</a></li>
@@ -139,7 +139,8 @@
 			function bindTabsEvents(element) {
 				var self = this;
 
-				events.on(element, "tabchange sectionchange", self, false);
+				events.on(element, "sectionchange", self, false);
+				events.on(self._ui.page, "tabchange", self, true);
 				window.addEventListener("resize", self, false);
 			}
 
@@ -154,7 +155,8 @@
 			function unBindTabsEvents(element) {
 				var self = this;
 
-				events.off(element, "tabchange sectionchange", self, false);
+				events.off(element, "sectionchange", self, false);
+				events.off(self._ui.page, "tabchange", self, true);
 				window.removeEventListener("resize", self, false);
 			}
 
@@ -208,10 +210,10 @@
 					ui = self._ui;
 
 				ui.page = selectors.getClosestByClass(element, classes.PAGE);
-				ui.tabbar = element.querySelector("[data-role='tabbar'], .ui-tabbar");
+				ui.mainTab = ui.page.querySelector("[data-role='main-tab'], .ui-main-tab");
 				ui.title = element.getElementsByClassName(classes.TITLE)[0];
 				ui.sectionChanger = element.querySelector("[data-role='section-changer'], .ui-section-changer");
-				self._component.tabbar = ns.widget.TabBar(ui.tabbar);
+				self._component.mainTab = ns.widget.MainTab(ui.mainTab);
 				self._changed = false;
 				self._lastIndex = 0;
 				self._initSectionChanger();
@@ -229,13 +231,12 @@
 					ui = self._ui,
 					sectionChanger = ui.sectionChanger,
 					sectionChangerStyle,
-					tabbarOffsetHeight = ui.tabbar.offsetHeight,
 					title = ui.title;
 
 				if (sectionChanger) {
 					sectionChangerStyle = sectionChanger.style;
 					sectionChangerStyle.width = window.innerWidth + "px";
-					sectionChangerStyle.height = (self.element.offsetHeight - tabbarOffsetHeight -
+					sectionChangerStyle.height = (self.element.offsetHeight -
 						(title ? title.offsetHeight : 0)) + "px";
 					self._component.sectionChanger = engine.instanceWidget(sectionChanger, "SectionChanger");
 				}
@@ -273,13 +274,13 @@
 			prototype._onSectionChange = function (event) {
 				var self = this,
 					index = event.detail.active,
-					tabbar = self._component.tabbar;
+					mainTab = self._component.mainTab;
 
 				if (self._changed) {
 					self._changed = false;
 				} else if (self._lastIndex !== index) {
 					self._changed = true;
-					tabbar.setActive(index);
+					mainTab.setActive(index);
 				}
 				self._lastIndex = index;
 			};
@@ -331,7 +332,7 @@
 					length = self._ui.sectionChanger.getElementsByTagName("section").length;
 
 				if (index < length && !(index < 0)) {
-					self._component.tabbar.setActive(index);
+					self._component.mainTab.setActive(index);
 				} else {
 					ns.warn("You inserted the wrong index value");
 				}

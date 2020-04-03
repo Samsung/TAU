@@ -109,13 +109,13 @@
 					 */
 					HEADER_BUTTON: "ui-header-btn",
 					/**
-					 * Class used to select anchor in tabbar widget
-					 * @property {string} [classes.TABBAR_ANCHOR="ui-tabbar-anchor"] anchor
+					 * Class used to select anchor in MainTab widget
+					 * @property {string} [classes.MAIN_TAB_ANCHOR="ui-main-tab-anchor"] anchor
 					 * @member ns.util.anchorHighlight
 					 * @private
 					 * @static
 					 */
-					TABBAR_ANCHOR: "ui-tabbar-anchor",
+					MAIN_TAB_ANCHOR: "ui-main-tab-anchor",
 					/**
 					 * Class used to select navigation item
 					 * @property {string} [classes.NAVIGATION_BUTTON="ui-navigation-item"] btn

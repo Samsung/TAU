@@ -140,7 +140,7 @@ var TESTS = [
 	"tests/js/profile/mobile/widget/mobile/Listview/Listview.html",
 	"tests/js/profile/mobile/widget/mobile/Listview/mobile/defaultSelectors.html",
 	"tests/js/profile/mobile/widget/mobile/Listview/jqm/list.html",
-	"tests/js/core/widget/core/tab/Tabbar/Tabbar.html",
+	"tests/js/core/widget/core/tab/MainTab/MainTab.html",
 	"tests/js/core/util/DOM/manipulation/manipulation.html",
 	"tests/js/core/util/DOM/manipulation/api/manipulation.html",
 	"tests/js/profile/mobile/widget/mobile/TextInput/TextInput.html",

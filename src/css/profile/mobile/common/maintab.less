@@ -1,0 +1,123 @@
+//**************************************************************************
+//					MainTab
+//**************************************************************************
+
+.ui-main-tab {
+	display: table;
+	width: 100%;
+	height: 60 * @px_base;
+	margin-left: 16 * @px_base;
+	margin-right: 16 * @px_base;
+	background-color: var(--bottom-bar-color);
+
+	a {
+		.font(regular);
+		font-size: 15 * @sp_base;
+		line-height: 22 * @px_base;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+		left: 0;
+		top: 0;
+		height: 100%;
+		text-decoration: none;
+		color: var(--tab-text-color);
+		padding-left: 10 * @px_base;
+		padding-right: 10 * @px_base;
+
+		span {
+			position: relative;
+			order: 1;
+			overflow-x: hidden;
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			padding-bottom: 4 * @px_base; // space for underline
+
+			&::before {
+				content: "";
+				position: absolute;
+				width: 100%;
+				height: 4 * @px_base;
+				border-bottom: 2.5 * @px_base dotted var(--primary-dark-color);
+				bottom: 0.75 * @px_base;
+				box-sizing: border-box;
+				opacity: 0;
+			}
+		}
+		&.ui-tab-active {
+			color: var(--primary-dark-color);
+			.font(medium);
+
+			span::before {
+				opacity: 1;
+			}
+		}
+		&:disabled {
+			color: var(--tab-text-color-dim);
+		}
+
+		&::before {
+			content: "";
+			width: 100%;
+			height: 43 * @px_base;
+			top: 8.5 * @px_base;
+			border-radius: 26 * @px_base;
+			left: 0;
+			position: absolute;
+			opacity: 0;
+			background-color: var(--ripple-color);
+		}
+		&.ui-btn-active {
+			background-color: transparent;
+			&::before {
+				opacity: 1;
+			}
+		}
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		position: relative;
+		height: 100%;
+		white-space: nowrap;
+		font-size: 0;
+		display: flex;
+	}
+
+	li {
+		text-align: center;
+		display: block;
+		position: relative;
+		overflow: hidden;
+		height: 100%;
+		flex: 1;
+	}
+
+	.ui-li-active {
+		a::before {
+			opacity: 1;
+		}
+	}
+
+	//*************************************
+	//				TABS Badge
+	//*************************************
+	// @todo this is copy of old implementation and needs to be updated
+	.ui-tabs-badge {
+		position: absolute;
+		border-radius: 25 * @px_base;
+		min-width: (25 - 13) * @px_base;
+		background-color: var(--accent-badge);
+		color: var(--color-white);
+		top: 1 * @px_base;
+		right: 7 * @px_base;
+		text-align: center;
+		padding: 3.5 * @px_base 7.5 * @px_base;
+		.font(medium);
+		font-size: 11 * @sp_base;
+	}
+}

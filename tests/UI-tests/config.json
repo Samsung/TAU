@@ -516,7 +516,7 @@
 				"height": 640
 			},
 			{
-				"name": "170-tabbar-with-badge",
+				"name": "170-main-tab-with-badge",
 				"time": 0,
 				"width": 360,
 				"height": 640
@@ -1122,7 +1122,7 @@
 				"height": 640
 			},
 			{
-				"name": "ce-170-tabbar-with-badge",
+				"name": "ce-170-main-tab-with-badge",
 				"time": 0,
 				"width": 360,
 				"height": 640
@@ -1959,7 +1959,7 @@
 				"height": 640
 			},
 			{
-				"name": "170-tabbar-with-badge",
+				"name": "170-main-tab-with-badge",
 				"time": 0,
 				"width": 360,
 				"height": 640
@@ -2537,7 +2537,7 @@
 				"height": 640
 			},
 			{
-				"name": "ce-170-tabbar-with-badge",
+				"name": "ce-170-main-tab-with-badge",
 				"time": 0,
 				"width": 360,
 				"height": 640
