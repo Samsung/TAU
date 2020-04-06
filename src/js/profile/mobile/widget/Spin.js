@@ -32,67 +32,43 @@
 		"../../../core/widget/core/Spin",
 		"../../../core/engine",
 		"../../../core/util/object",
-		"../../../core/util/selectors"
 	],
 	function () {
 		//>>excludeEnd("tauBuildExclude");
 		var CoreSpin = ns.widget.core.Spin,
 			CoreSpinPrototype = CoreSpin.prototype,
 			engine = ns.engine,
-			selectors = ns.util.selectors,
-			utilsEvents = ns.event,
 			objectUtil = ns.util.object,
 			classes = objectUtil.copy(CoreSpin.classes),
 			Spin = function () {
-				var self = this;
+				var self = this,
+					options = {
+						scaleFactor: 0,
+						moveFactor: 0.5,
+						dragTarget: "self"
+					};
 
 				CoreSpin.call(self);
+
+				// Merge options from prototype
+				self.options = (!self.options) ?
+					options :
+					objectUtil.fastMerge(self.options, options);
 			},
 			prototype = new CoreSpin();
+
+		prototype._init = function () {
+			var self = this;
+
+			CoreSpinPrototype._init.call(self);
+
+			// Enable the spin by default
+			self.option("enabled", true);
+		}
 
 		Spin.prototype = prototype;
 		Spin.classes = classes,
 		Spin.timing = CoreSpin.timing;
-
-		prototype._vclick = function (event) {
-			var target = event.target;
-
-			if (selectors.getClosestBySelector(target, "." + classes.SPIN) === null) {
-				this.option("enabled", false);
-			} else {
-				if (!this.option("enabled")) {
-					this.option("enabled", true);
-				} else if (target.classList.contains(classes.SELECTED)) {
-					this.option("enabled", false);
-				}
-			}
-		}
-
-		prototype.handleEvent = function (event) {
-			var self = this;
-
-			CoreSpinPrototype.handleEvent.call(self, event);
-
-			if (event.type === "vclick") {
-				self._vclick(event);
-			}
-		}
-
-		prototype._bindEvents = function () {
-			var self = this;
-
-			CoreSpinPrototype._bindEvents.call(self);
-
-			utilsEvents.on(document, "vclick", self);
-		}
-
-		prototype._unbindEvents = function () {
-			var self = this;
-
-			CoreSpinPrototype._unbindEvents.call(self);
-
-			utilsEvents.off(document, "vclick", self);
-		}
 
 		ns.widget.mobile.Spin = Spin;
 
@@ -101,7 +77,8 @@
 			".ui-spin",
 			[],
 			Spin,
-			"mobile"
+			"mobile",
+			true
 		);
 
 		//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);

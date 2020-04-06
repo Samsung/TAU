@@ -33,6 +33,7 @@
 	define([
 		"../core",
 		"../BaseWidget",
+		"../../../core/engine",
 		"../../../core/util/animation/animation",
 		"../../../core/event/gesture"
 	],
@@ -40,6 +41,7 @@
 		//>>excludeEnd("tauBuildExclude");
 		var document = window.document,
 			BaseWidget = ns.widget.BaseWidget,
+			engine = ns.engine,
 			utilsEvents = ns.event,
 			gesture = utilsEvents.gesture,
 
@@ -619,6 +621,14 @@
 
 		Spin.prototype = prototype;
 		ns.widget.core.Spin = Spin;
+
+		engine.defineWidget(
+			"Spin",
+			".ui-spin",
+			[],
+			Spin,
+			"core"
+		);
 
 		//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 		return Spin;
