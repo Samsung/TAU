@@ -18,7 +18,7 @@
 
 	test("Default options Spin test", 17, function () {
 		var spin = document.getElementById("spin"),
-			spinWidget = tau.engine.instanceWidget(spin, "Spin"),
+			spinWidget = tau.engine.instanceWidget(spin, "mobile.Spin"),
 			spinClasses = {
 				spin: "ui-spin",
 				sample: "sample-spin"
@@ -33,12 +33,12 @@
 				rollHeight: "custom", // "container" | "item" | "custom"
 				itemHeight: 38,
 				momentumLevel: 0, // 0 - one item on swipe
-				scaleFactor: 0.4,
-				moveFactor: 0.4,
+				scaleFactor: 0,
+				moveFactor: 0.5,
 				loop: "enabled",
 				labels: [],
 				digits: 0, // 0 - doesn't complete by zeros
-				dragTarget: "document"
+				dragTarget: "self"
 			};
 
 		ok(spin.classList.contains(spinClasses.spin),
@@ -99,7 +99,7 @@
 				digits: 3, // 0 - doesn't complete by zeros
 				dragTarget: "self"
 			},
-			spinWidget = tau.engine.instanceWidget(spin, "Spin", options);
+			spinWidget = tau.engine.instanceWidget(spin, "mobile.Spin", options);
 
 		equal(spinWidget.option("min"), options.min, "Option min of Spin is " + options.min);
 		equal(spinWidget.option("max"), options.max, "Option max of Spin is " + options.max);

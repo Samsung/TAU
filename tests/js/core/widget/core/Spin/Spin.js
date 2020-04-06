@@ -18,7 +18,7 @@
 
 	test("Default options Spin test", 17, function () {
 		var spin = document.getElementById("spin"),
-			spinWidget = tau.engine.instanceWidget(spin, "Spin"),
+			spinWidget = tau.engine.instanceWidget(spin, "core.Spin"),
 			spinClasses = {
 				spin: "ui-spin",
 				sample: "sample-spin"
@@ -99,7 +99,7 @@
 				digits: 3, // 0 - doesn't complete by zeros
 				dragTarget: "self"
 			},
-			spinWidget = tau.engine.instanceWidget(spin, "Spin", options);
+			spinWidget = tau.engine.instanceWidget(spin, "core.Spin", options);
 
 		equal(spinWidget.option("min"), options.min, "Option min of Spin is " + options.min);
 		equal(spinWidget.option("max"), options.max, "Option max of Spin is " + options.max);
@@ -139,7 +139,7 @@
 				max: undefined,
 				duration: undefined
 			},
-			spinWidget = tau.engine.instanceWidget(spin, "Spin", options);
+			spinWidget = tau.engine.instanceWidget(spin, "core.Spin", options);
 
 		spinWidget.value(undefined);
 
@@ -162,7 +162,7 @@
 				loop: "disabled"
 			},
 			testValues = [0, 10, 100, 11],
-			spinWidget = tau.engine.instanceWidget(spin, "Spin", options);
+			spinWidget = tau.engine.instanceWidget(spin, "core.Spin", options);
 
 		spinWidget.value(testValues[0]);
 		equal(spinWidget.value(), testValues[0], "Spin value check (0)");
