@@ -1118,6 +1118,8 @@
 				} else if (optionWrapperClassList.contains(classes.closing) || optionWrapperClassList.contains(classes.opening)) {
 					return;
 				} else {
+					// unfocus element so focus can scroll element properly
+					ui.elSelectWrapper.blur();
 					ui.elSelectWrapper.focus();
 					optionWrapperClassList.add(classes.opening);
 					self._callbacks.showAnimationEnd = showAnimationEndHandler.bind(null, self);

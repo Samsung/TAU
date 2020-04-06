@@ -132,6 +132,7 @@
         "beforecreate",
         "taufocus",
         "taublur",
+        "unfocus",
         "longpress",
         "pinchstart",
         "pinchmove",
