@@ -1031,6 +1031,7 @@
 					// maxHeight,
 					widgetParent = ui.elSelectWrapper.parentNode,
 					widgetParentStyle = window.getComputedStyle(widgetParent),
+					hiddenPart = 0, // hidden part of selected list element
 					maxContainerWidth;
 
 				self._offsetTop = getTopOffsetOfElement(ui.elSelectWrapper, ui.page);
@@ -1051,13 +1052,22 @@
 				}
 
 				if (areaInfo.direction === "top") {
+					// check if we clicked on the element which is partially covered on the bottom of list
+					if (areaInfo.belowArea < 0) {
+						hiddenPart = areaInfo.belowArea;
+					}
 					offsetTop = self._offsetTop - height - scrollTop + ui.elPlaceHolder.offsetHeight;
 					ui.elOptionWrapper.classList.add(classes.top);
 				} else {
+					// check if we clicked on the element which is partially covered on the top of list
+					if (areaInfo.topArea < ui.elPlaceHolder.offsetHeight) {
+						hiddenPart = scrollTop % ui.elPlaceHolder.offsetHeight;
+					}
 					offsetTop = self._offsetTop - scrollTop;
 					ui.elOptionWrapper.classList.add(classes.bottom);
-
 				}
+				// take into account part of clicked list item which is partially hidden
+				offsetTop += hiddenPart;
 
 				// List does not require vertical paddings.
 				if (selectors.getParentsByTag(ui.elSelect, "li").length == 0) {
@@ -1114,7 +1124,6 @@
 					self._callbacks.hideAnimationEnd = hideAnimationEndHandler.bind(null, self);
 					eventUtils.prefixedFastOn(optionContainer, "animationEnd", self._callbacks.hideAnimationEnd, false);
 					self._hide();
-					ui.elSelectWrapper.focus();
 				} else if (optionWrapperClassList.contains(classes.closing) || optionWrapperClassList.contains(classes.opening)) {
 					return;
 				} else {
