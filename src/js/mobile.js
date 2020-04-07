@@ -118,6 +118,7 @@
 			"./profile/mobile/widget/Button",
 			"./profile/mobile/widget/FloatingActions",
 			"./profile/mobile/widget/Spin",
+			"./profile/mobile/widget/TimePicker",
 			"./core/widget/core/ScrollHandler",
 			"./core/widget/core/Tabs",
 			"./profile/mobile/widget/GridView",
