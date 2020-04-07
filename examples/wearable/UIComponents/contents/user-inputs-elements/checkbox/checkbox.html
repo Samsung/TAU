@@ -1,10 +1,9 @@
-<!DOCTYPE html>
 <html>
 
 <head>
 	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
 	<title>
-		Wearable UI
+		Checkbox
 	</title>
 	<link href="../../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
 	<link href="../../../lib/tau/wearable/theme/default/tau.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
@@ -17,41 +16,51 @@
 </head>
 
 <body>
-	<div class="ui-page" data-go-to-top-button="true">
-		<header class="ui-header">
-			<h2 class="ui-title">
-				Data usage
+	<div class="ui-page">
+		<header>
+			<h2>
+				Title
 			</h2>
 		</header>
 		<div class="ui-content">
 			<ul class="ui-listview">
 				<li class="li-has-checkbox">
 					<label>
-						Mobile Data
-						<input type="checkbox" />
+						Check on
+						<input type="checkbox" checked />
 					</label>
 				</li>
 				<li class="li-has-checkbox">
 					<label>
-						Mobile Data
-						<input type="checkbox" />
-					</label>
-				</li>
-				<li class="li-has-checkbox">
-					<label>
-						Mobile Data
-						<input type="checkbox" />
-					</label>
-				</li>
-				<li class="li-has-checkbox">
-					<label>
-						Mobile Data
+						Check off
 						<input type="checkbox" />
 					</label>
 				</li>
 			</ul>
 		</div>
-	</div>
+		<script>
+			var checkboxes = document.querySelectorAll("input[type='checkbox']");
+			checkboxes.forEach(function(checkbox) {
+				checkbox.addEventListener("change", function() {
+					var text = "Check ",
+						label = this.labels[0],
+						marqueeContent = label.querySelector(".ui-marquee-content") || label.querySelector(".ui-marquee");
+
+					text += this.checked ? "on" : "off";
+					if (marqueeContent) {
+						marqueeContent.innerHTML = text;
+					} else {
+						label.firstChild.nodeValue = text;
+					}
+				});
+			});
+		</script>
+	</div> <!-- ui-page -->
+
+	<script src="../../../js/app.js">
+	</script>
+	<script src="../../../js/lowBatteryCheck.js">
+	</script>
 </body>
 
 </html>
