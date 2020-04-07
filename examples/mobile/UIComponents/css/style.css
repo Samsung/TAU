@@ -270,14 +270,14 @@
 }
 #result {
 	font-size: 30px;
-	line-height: 45px;
+	line-height: 56px;
 	width: 72px;
 	text-align: center;
 }
 #result,
 #circle {
 	display: block;
-	margin: 0 auto;
+	margin: 5px auto;
 }
 
 /****************************************************************/
