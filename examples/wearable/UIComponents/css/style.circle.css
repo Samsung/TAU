@@ -668,16 +668,6 @@ li.hide-popup-li {
 	mask-image: url(../contents/assistviews/images/tw_ic_button_delete_holo_dark.png);
 }
 
-.btn-icon-toast-check {
-	margin-bottom: 16px;
-}
-
-.btn-icon-toast-check::after {
-	background-color: rgba(255, 255, 255, 1);
-	-webkit-mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
-	mask-image: url(../contents/assistviews/images/tw_ic_popup_btn_check.png);
-}
-
 /* ----------------------------------Toggle Switch-------------------------------- */
 .ui-toggleswitch {
 	display: block;
@@ -709,14 +699,6 @@ input[type="checkbox"]#checkboxControl {
 .radio-sample-container {
 	width: 100%;
 	text-align: center;
-}
-
-/* --------------------------------Popup------------------------------ */
-.ui-popup.ui-popup-toast.toast-text-only .ui-popup-content {
-	padding-left: 43px;
-	padding-right: 43px;
-	font-size: 28px;
-	line-height: 37px;
 }
 
 /* --------------------------------Processing------------------------------ */

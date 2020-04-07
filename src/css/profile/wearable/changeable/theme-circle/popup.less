@@ -351,14 +351,8 @@
 		}
 
 		.ui-popup-toast-check-icon {
-			mask-image: url("./images/Popup/toast_check.png");
+			mask-image: url("./images/Popup/tw_ic_toast_popup_check.png");
 			mask-repeat: no-repeat;
-			animation-name: toastCheck;
-			animation-duration: 300ms;
-			animation-delay: 300ms;
-			animation-iteration-count: 1;
-			animation-timing-function: step-start;
-			animation-fill-mode: forwards;
 			background-color: @color_popup_toast_check;
 			&::after {
 				content: none;
@@ -368,44 +362,72 @@
 		/****************************************
 		Popup Toast Small
 		****************************************/
+		//toast small animation
+		@keyframes toastSmall {
+			.transition-toastSmall();
+		}
+		.transition-toastSmall() {
+			from {
+				opacity: 0;
+			}
+			100% {
+				opacity: 1;
+			}
+		}
 
 		&.ui-popup-toast-small {
 			height: 160 * @unit_base;
 			min-height: 86 * @unit_base;
 			width: 160 * @unit_base;
 			position: fixed;
-			margin-bottom: 5 * @unit_base;
+			margin-bottom: 7 * @unit_base;
 			background-color: @color_toast_popup_small_bg;
-			border: solid 1 * @unit_base @color_toast_popup_small_stroke;
 			border-radius: 50%;
+			animation: toastSmall 300ms ease-out;
 
 			.ui-popup-wrapper {
 				.ui-popup-content {
-					padding: 0 19 * @unit_base;
-					max-height: 128 * @unit_base;
+					padding: 0 11 * @unit_base;
 					color: @color_toast_popup_small_text;
-					font-size: 24 * @unit_base;
-					line-height: 32 * @unit_base;
+					font-size: 22 * @unit_base;
+					line-height: 26 * @unit_base;
 				}
 			}
 
 			.ui-popup-toast-icon {
-				transform: translateX(-50%) scale(50/82);
-				margin: -16 * @unit_base 0;
+				width: 50 * @unit_base;
+				height: 50 * @unit_base;
 				background-color: @color_toast_popup_icon;
 			}
 
+			.ui-popup-toast-check-icon {
+				mask-image: url("./images/Popup/tw_small_toast_popup_btn_check.png");
+				width: 50 * @unit_base;
+				height: 50 * @unit_base;
+				mask-repeat: no-repeat;
+				background-color: @color_popup_toast_check;
+			}
+
+			&.ui-popup-toast-text-only {
+				height: 78 * @unit_base;
+				width: 216 * @unit_base;
+				border-radius: 0;
+				mask-image: url("./images/Popup/tw_small_toast_popup_bg_01.png");
+				mask-repeat: no-repeat;
+				margin-bottom: 13 * @unit_base;
+			}
+
 			&.ui-popup-toast-graphic-only {
-				width: 86 * @unit_base;
-				height: 86 * @unit_base;
+				width: 82 * @unit_base;
+				height: 82 * @unit_base;
+				padding-top: 16 * @unit_base;
 			}
 
 			&.ui-popup-toast-graphic {
-				.ui-popup-wrapper {
-					.ui-popup-content {
-						padding-bottom: 6 * @unit_base;
-					}
-				}
+				width: 156 * @unit_base;
+				height: 156 * @unit_base;
+				padding-top: 84 * @unit_base;
+				padding-bottom: 70 * @unit_base;
 			}
 		}
 	}
