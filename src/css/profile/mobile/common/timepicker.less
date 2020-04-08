@@ -22,6 +22,28 @@
 		}
 	}
 
+	&[data-format="24"] {
+		.ui-time-picker-container {
+			width: 30%;
+
+			&-hour::after {
+				content: ":";
+				height: 164 * @px_base;
+				width: 40% / 3;
+				font-size: 32 * @sp_base;
+				color: var(--primary-dark-color);
+				position: absolute;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			&-format {
+				display: none;
+			}
+		}
+	}
+
 	.ui-spin {
 		width: 100%;
 		height: 100%;
