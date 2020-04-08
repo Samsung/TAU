@@ -97,6 +97,11 @@
 				self._setValue(new Date());
 
 				self.option("format", options.format);
+
+				// Calculate the spin widget after building the widget
+				Object.keys(self._spins).forEach(function (key) {
+					self._spins[key].refresh();
+				});
 			};
 
 			/**

@@ -180,7 +180,7 @@
 				options = self.options,
 				itemHeight = self._itemHeight,
 				state = self._objectValue,
-				centerY = (self._containerRect.height - itemHeight) / 2;
+				centerY = (self._containerHeight - itemHeight) / 2;
 
 			items.forEach(function (item, index) {
 				var change = transform(state.value, index, centerY, options);
@@ -337,17 +337,17 @@
 
 			// determine item height for scroll
 			if (options.rollHeight === "container") {
-				itemHeight = self._containerRect.height;
+				itemHeight = self._containerHeight;
 			} else if (options.rollHeight === "custom") {
 				itemHeight = options.itemHeight;
 			} else { // item height
 				item = items[0];
 				itemHeight = (item) ?
 					item.getBoundingClientRect().height :
-					self._containerRect.height;
+					self._containerHeight;
 			}
 			self._itemHeight = itemHeight;
-			centerY = (self._containerRect.height - itemHeight) / 2,
+			centerY = (self._containerHeight - itemHeight) / 2,
 
 			// set position;
 			items.forEach(function (item, index) {
@@ -369,7 +369,7 @@
 		prototype._refresh = function () {
 			var self = this;
 
-			self._containerRect = self.element.getBoundingClientRect();
+			self._containerHeight = parseInt(getComputedStyle(self.element).height, 10);
 			self._modifyItems();
 			self._show();
 		};
