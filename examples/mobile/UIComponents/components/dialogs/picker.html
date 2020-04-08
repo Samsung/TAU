@@ -34,7 +34,7 @@
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-inline="true">
+					<a data-position-to="window" data-rel="popup" href="time-picker-dialog-24h">
 						Time picker Dialog (24h)
 					</a>
 				</li>
@@ -75,6 +75,19 @@
 				</div>
 				<div class="ui-popup-content">
 					<div class="ui-time-picker"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
+			<div class="ui-popup" id="time-picker-dialog-24h">
+				<div class="ui-popup-header">
+					Set time
+				</div>
+				<div class="ui-popup-content">
+					<div class="ui-time-picker" data-format="24"></div>
 				</div>
 				<div class="ui-popup-footer">
 					<button class="ui-btn" data-style="flat">Cancel</button>
