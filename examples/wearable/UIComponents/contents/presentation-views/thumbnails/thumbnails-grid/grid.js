@@ -1,5 +1,5 @@
 (function (tau) {
-	var pageElement = document.querySelector(".grid-page"),
+	var pageElement = document.getElementById("grid-page"),
 		gridElement = pageElement.querySelector(".ui-grid"),
 		grid;
 
