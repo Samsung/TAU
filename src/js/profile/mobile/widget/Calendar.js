@@ -43,7 +43,9 @@
 				today = new Date(),
 				todayYear = today.getFullYear(),
 				todayMonth = today.getMonth() + 1,
+				defaultToday = today.getUTCDate(),
 				switchElement,
+				selectDay,
 
 				Calendar = function () {
 					this.options = utilsObject.merge({}, defaultOptions);
@@ -98,8 +100,10 @@
 					nextMonthDate = 1,
 					cell = null,
 					marginRow = calendarElement.insertRow(),
+					divElement = "<div></div>",
 					idx,
-					row;
+					row,
+					div = null;
 
 				marginRow.style.height = "7px";
 
@@ -110,22 +114,33 @@
 						day = day - 1;
 						leftDays = leftDays - 1;
 						cell = row.insertCell();
-						cell.innerHTML = prevLastDate - day;
-						cell.style.opacity = "10%";
+						cell.insertAdjacentHTML("afterbegin", divElement);
+						div = cell.firstChild;
+						div.classList.add("prevDisableDay");
+						div.innerHTML = prevLastDate - day;
 					}
 					while (leftDays != 0) {
 						if (setDays > prevLastDate) { // next disabled days.
 							cell = row.insertCell();
-							cell.innerHTML = nextMonthDate;
-							cell.style.opacity = "40%";
+							cell.insertAdjacentHTML("afterbegin", divElement);
+							div = cell.firstChild;
+							div.classList.add("nextDisableDay");
+							div.innerHTML = nextMonthDate;
 							leftDays = leftDays - 1;
 							nextMonthDate = nextMonthDate + 1;
 						} else { // current enabled days.
 							cell = row.insertCell();
-							cell.innerHTML = setDays;
-							cell.style.opacity = "100%";
+							cell.insertAdjacentHTML("afterbegin", divElement);
+							div = cell.firstChild;
+							div.classList.add("currentEnableDay");
+							div.innerHTML = setDays;
 							setDays = setDays + 1;
 							leftDays = leftDays - 1;
+
+							if (div.innerHTML === defaultToday.toLocaleString()) { // today selected.
+								div.classList.add("selection");
+								selectDay = div;
+							}
 						}
 					}
 					leftDays = 7;
@@ -175,9 +190,24 @@
 					today = new Date(todayYear, todayMonth - 1);
 					prototype._buildCalendar(calendarElement);
 				} else {
-					event.preventDefault();
+					this._selection(event.target);
 				}
 			};
+
+			/**
+			* Selecting a date leaves a mark
+			* @method _selection
+			* @param {HTMLElement} element
+			* @member ns.widget.mobile.Calendar
+			* @protected
+			*/
+			prototype._selection = function (element) {
+				if (selectDay.innerHTML != element.innerHTML) {
+					element.classList.add("selection");
+					selectDay.classList.remove("selection");
+					selectDay = element;
+				}
+			}
 
 			prototype._unBindEvents = function (element) {
 				var self = this;
