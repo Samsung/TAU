@@ -11,6 +11,17 @@ tr {
 		.font(regular); 
 		color: var(--calendar-text-color);
 		padding: 0;
+		div {
+			border-radius: 100%;
+			width: 28 * @px_base;
+			height: 28 * @px_base;
+			line-height: 28 * @px_base;
+			margin: 0 auto;
+		}
+		div.selection {
+			background-color: var(--primary-color);
+  			color: var(--calendar-select-text-color);
+		}
 		&:only-child {
 			width: 100%;
 		}
@@ -52,6 +63,12 @@ tr {
 		}
 		&:nth-child(7) {
 			color: var(--calendar-weekend-day-color);
+		}
+	}
+	td.selection {
+		>div {
+			background-color: var(--primary-color);
+			color: var(--calendar-select-text-color);
 		}
 	}
 }
