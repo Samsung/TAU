@@ -6,27 +6,15 @@
 	flex-direction: column;
 	justify-content: space-around;
 
-	.ui-slider-bar::before {
-		content: '';
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		border-image: url(images/3_Controllers/tw_progress_bar_n.9.png) 3 fill;
-		border-image-width: 1 * @px_base;
-		opacity: 0.3;
-		position: absolute;
-	}
-
 	.ui-slider-bar {
-		position: relative;
+		background-color: var(--slider-bg-color);
 		height: 3 * @px_base;
+		border-radius: 1.5 * @px_base;
 		overflow: hidden;
 
 		.ui-slider-value {
 			height: 100%;
-			border-image: url(images/3_Controllers/tw_progress_bar_n.9.png) 3 fill;
-			border-image-width: 1 * @px_base;
+			background-color: var(--slider-handler-color);
 		}
 	}
 
@@ -83,20 +71,16 @@
 
 	&.ui-disabled {
 		.ui-slider-bar {
-			border-image: url(images/3_Controllers/tw_progress_bar_d.9.png) 3 fill;
-			border-image-width: 1 * @px_base;
-			opacity: 0.15;
-
+			background-color: var(--slider-bg-disabled-color);
 			.ui-slider-value {
-				border-image: url(images/3_Controllers/tw_progress_bar_d.9.png) 3 fill;
-				border-image-width: 1 * @px_base;
+				background-color: var(--slider-handler-disabled-color);
 			}
 		}
-
 		.ui-slider-handler {
 			background-color: var(--slider-handler-disabled-color);
 		}
 	}
+
 	&.ui-slider-level-bar {
 		margin-left: 5 * @px_base;
 		margin-right: 5 * @px_base;
