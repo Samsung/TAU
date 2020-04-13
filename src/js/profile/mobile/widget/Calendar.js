@@ -16,7 +16,11 @@
  */
 /*
  * @example
+ * 1. default
  * <div class="ui-calendar"></div>
+ *
+ * 2. past selection option
+ * <div class="ui-calendar" data-past-selection="true"></div>
  *
  * @since 1.2
  * @class ns.widget.mobile.Calendar
@@ -40,17 +44,55 @@
 				events = ns.event,
 				days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"],
 				fullNameMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-				today = new Date(),
-				todayYear = today.getFullYear(),
-				todayMonth = today.getMonth() + 1,
-				defaultToday = today.getUTCDate(),
-				switchElement,
-				selectDay,
 
-				Calendar = function () {
-					this.options = utilsObject.merge({}, defaultOptions);
+				classes = {
+					PREV_MONTH_DAY: "ui-calendar-prev-month-day",
+					NEXT_MONTH_DAY: "ui-calendar-next-month-day",
+					CURRENT_MONTH_DAY: "ui-calendar-current-month-day",
+
+					DISABLED: "ui-calendar-disabled",
+					ARROW_DISABLED: "ui-calendar-disabled-arrow",
+					SELECTION: "ui-calendar-selection",
+
+					CONTROLLER: "ui-calendar-controller",
+					ARROW: "ui-calendar-arrow",
+					ARROW_RIGHT: "ui-calendar-right-arrow",
+					ARROW_LEFT: "ui-calendar-left-arrow",
+
+					ONE_WEEK: "ui-calendar-one-week",
+					TOP_SPACE: "ui-calendar-top-space",
+
+					SWITCH_VIEW: "ui-calendar-switch",
+					CALENDAR_VIEW: "ui-calendar-view"
 				},
 
+				Calendar = function () {
+					var self = this;
+
+					self.options = utilsObject.merge({}, defaultOptions);
+
+					self._dateData = new Date();
+					self._todayYear = self._dateData.getFullYear();
+					self._todayMonth = self._dateData.getMonth() + 1;
+					self._defaultToday = self._dateData.getUTCDate();
+					self._selectDay = null;
+					self._activeMonth = null;
+					self._fixMonth = null;
+					self._loadTodayFlag = true;
+					self._ui = {
+						switch: null,
+						leftArrow: null,
+						rightArrow: null,
+						calendarView: null
+					};
+				},
+
+				/**
+				* Options for widget
+				* @property {Object} options
+				* @property {boolean} [options.pastSelection=true]
+				* @member ns.widget.mobile.Calendar
+				*/
 				defaultOptions = {
 					pastSelection: false
 				},
@@ -59,6 +101,7 @@
 				prototype = new BaseWidget();
 
 			Calendar.prototype = prototype;
+			Calendar.classes = classes;
 
 			/**
 			* Init widget
@@ -69,19 +112,43 @@
 			* @protected
 			*/
 			prototype._init = function (element) {
-				var self = this,
-					calendarElement = self.element.querySelector(".calendarView");
+				var self = this;
 
-				switchElement = self.element.querySelector(".calendarSwitch");
+				self._ui.calendarView = element.querySelector("." + classes.CALENDAR_VIEW);
+				self._ui.switch = element.querySelector("." + classes.SWITCH_VIEW);
+				self._ui.leftArrow = element.querySelector("." + classes.ARROW_LEFT);
+				self._ui.rightArrow = element.querySelector("." + classes.ARROW_RIGHT);
 
-				if (!element.getAttribute("value")) {
-					element.setAttribute("value", self.options.value);
+				if (!self.options.pastSelection) {
+					self._ui.leftArrow.classList.add(classes.ARROW_DISABLED);
 				}
 
-				self._buildCalendar(calendarElement);
+				if (self._activeMonth === null) {
+					self._fixMonth = self._activeMonth = self._todayMonth;
+				}
+
+				if (self._selectDay === null) {
+					self._selectDay = self._defaultToday;
+				}
+
+				self._buildCalendar(self._ui.calendarView);
 
 				return element;
 			};
+
+			/**
+			* Create and append div element for calendar day
+			* @method createDayInRow
+			* @param {HTMLElement} row
+			* @member ns.widget.mobile.Calendar
+			* @private
+			*/
+			function createDayInRow(row) {
+				var cell = row.insertCell();
+
+				cell.insertAdjacentHTML("afterbegin", "<div></div>");
+				return cell.firstChild;
+			}
 
 			/**
 			* Draw a calendar on the table
@@ -90,17 +157,17 @@
 			* @protected
 			*/
 			prototype._buildCalendar = function (calendarElement) {
-				var firstDate = new Date(todayYear, todayMonth - 1, 0),
-					lastDate = new Date(todayYear, todayMonth, 0),
+				var self = this,
+					ui = self._ui,
+					firstDate = new Date(self._todayYear, self._todayMonth - 1, 0),
+					lastDate = new Date(self._todayYear, self._todayMonth, 0),
 					day = firstDate.getDay(),
 					prevLastDate = lastDate.getDate(),
 					week = Math.ceil(prevLastDate / 7) + 1,
 					leftDays = 7,
 					setDays = 1,
 					nextMonthDate = 1,
-					cell = null,
 					marginRow = calendarElement.insertRow(),
-					divElement = "<div></div>",
 					idx,
 					row,
 					div = null;
@@ -110,44 +177,56 @@
 				for (idx = 1; idx < week + 1; idx++) {
 					row = calendarElement.insertRow();
 
-					while (day != 0) { // prev disabled days.
+					while (day != 0) { // days of previous month
 						day = day - 1;
 						leftDays = leftDays - 1;
-						cell = row.insertCell();
-						cell.insertAdjacentHTML("afterbegin", divElement);
-						div = cell.firstChild;
-						div.classList.add("prevDisableDay");
+						div = createDayInRow(row);
+						div.classList.add(classes.PREV_MONTH_DAY);
 						div.innerHTML = prevLastDate - day;
+						if (self._fixMonth === self._todayMonth && !self.options.pastSelection) {
+							div.classList.add(classes.DISABLED);
+						}
 					}
 					while (leftDays != 0) {
-						if (setDays > prevLastDate) { // next disabled days.
-							cell = row.insertCell();
-							cell.insertAdjacentHTML("afterbegin", divElement);
-							div = cell.firstChild;
-							div.classList.add("nextDisableDay");
+						div = createDayInRow(row);
+						if (setDays > prevLastDate) { // days of next month.
+							div.classList.add(classes.NEXT_MONTH_DAY);
 							div.innerHTML = nextMonthDate;
 							leftDays = leftDays - 1;
 							nextMonthDate = nextMonthDate + 1;
 						} else { // current enabled days.
-							cell = row.insertCell();
-							cell.insertAdjacentHTML("afterbegin", divElement);
-							div = cell.firstChild;
-							div.classList.add("currentEnableDay");
 							div.innerHTML = setDays;
+							div.classList.add(classes.CURRENT_MONTH_DAY);
 							setDays = setDays + 1;
 							leftDays = leftDays - 1;
 
-							if (div.innerHTML === defaultToday.toLocaleString()) { // today selected.
-								div.classList.add("selection");
-								selectDay = div;
+							if (self._defaultToday > parseInt(div.innerHTML, 10)) {
+								if (self._fixMonth === self._todayMonth && !self.options.pastSelection) {
+									div.classList.add(classes.DISABLED);
+								}
+							}
+
+							if (self._loadTodayFlag && div.innerHTML === self._defaultToday.toLocaleString()) { // dateData selected.
+								div.classList.add(classes.SELECTION);
+								self._selectDay = div;
+								self._activeMonth = self._todayMonth;
+								self._loadTodayFlag = false;
+							} else {
+								if (self._activeMonth === self._todayMonth && div.innerHTML === self._selectDay.innerHTML) {
+									div.classList.add(classes.SELECTION);
+									self._selectDay = div;
+								}
 							}
 						}
 					}
 					leftDays = 7;
 				}
 
-				switchElement.innerHTML = fullNameMonth[todayMonth - 1] + " " + todayYear;
-			}
+				if (!self.options.pastSelection) {
+					ui.leftArrow.classList.toggle(classes.DISABLED, self._fixMonth == self._todayMonth);
+				}
+				ui.switch.innerHTML = fullNameMonth[self._todayMonth - 1] + " " + self._todayYear;
+			};
 
 			/**
 			* Moving to another month erases the existing calendar
@@ -159,90 +238,130 @@
 				while (calendarElement.rows.length > 2) {
 					calendarElement.deleteRow(2);
 				}
-			}
+			};
 
 			/**
-			* Click the arrow on the calendar to move to another month
+			* Click handler
 			* @method _onClick
 			* @param {Event} event
 			* @member ns.widget.mobile.Calendar
 			* @protected
 			*/
 			prototype._onClick = function (event) {
-				var calendarElement = this.element.querySelector(".calendarView");
+				var self = this,
+					ui = self._ui,
+					target = event.target,
+					targetClassList = target.classList;
 
-				if (event.srcElement.className === "calendarArrowRight") {
-					todayMonth = todayMonth + 1;
-					if (todayMonth === 13) {
-						todayMonth = 1;
-						todayYear = todayYear + 1;
+				if (!targetClassList.contains(classes.DISABLED)) {
+					if (target === ui.rightArrow) {
+						self._moveMonth("right");
+					} else if (target === ui.leftArrow) {
+						self._moveMonth("left");
+					} else {
+						// Calendar view
+						if (target.tagName === "TD") { // if click on TD instead of DIV
+							target = target.querySelector("div");
+							targetClassList = (target) ? target.classList : null;
+						}
+						if (targetClassList &&
+							!targetClassList.contains(classes.SELECTION) &&
+							!targetClassList.contains(classes.DISABLED)) {
+							if (targetClassList.contains(classes.PREV_MONTH_DAY)) {
+								self._moveMonth("left");
+								self._selection(target.innerHTML);
+							} else if (targetClassList.contains(classes.NEXT_MONTH_DAY)) {
+								self._moveMonth("right");
+								self._selection(target.innerHTML);
+							} else if (targetClassList.contains(classes.CURRENT_MONTH_DAY)) {
+								self._selection(target.innerHTML);
+							}
+						}
 					}
-					prototype._deleteCalendar(calendarElement);
-					today = new Date(todayYear, todayMonth - 1);
-					prototype._buildCalendar(calendarElement);
-				} else if (event.srcElement.className === "calendarArrowLeft") {
-					todayMonth = todayMonth - 1;
-					if (todayMonth === 0) {
-						todayMonth = 12;
-						todayYear = todayYear - 1;
-					}
-					prototype._deleteCalendar(calendarElement);
-					today = new Date(todayYear, todayMonth - 1);
-					prototype._buildCalendar(calendarElement);
-				} else {
-					this._selection(event.target);
 				}
 			};
 
 			/**
 			* Selecting a date leaves a mark
-			* @method _selection
-			* @param {HTMLElement} element
+			* @method _moveMonth
+			* @param {string} direction
 			* @member ns.widget.mobile.Calendar
 			* @protected
 			*/
-			prototype._selection = function (element) {
-				if (selectDay.innerHTML != element.innerHTML) {
-					element.classList.add("selection");
-					selectDay.classList.remove("selection");
-					selectDay = element;
+			prototype._moveMonth = function (direction) {
+				var self = this,
+					calendarView = self._ui.calendarView;
+
+				if (direction === "left") {
+					self._todayMonth = self._todayMonth - 1;
+					if (self._todayMonth === 0) {
+						self._todayMonth = 12;
+						self._todayYear = self._todayYear - 1;
+					}
+				} else {
+					self._todayMonth = self._todayMonth + 1;
+					if (self._todayMonth === 13) {
+						self._todayMonth = 1;
+						self._todayYear = self._todayYear + 1;
+					}
 				}
-			}
+				self._deleteCalendar(calendarView);
+				self._dateData = new Date(self._todayYear, self._todayMonth - 1);
+				self._buildCalendar(calendarView);
+			};
+
+			/**
+			* Selecting a date leaves a mark
+			* @method _selection
+			* @param {HTMLElement} value
+			* @member ns.widget.mobile.Calendar
+			* @protected
+			*/
+			prototype._selection = function (value) {
+				var otherMonthDay,
+					self = this;
+
+				if (value != undefined) {
+					otherMonthDay = self._ui.calendarView.querySelectorAll("div." + classes.CURRENT_MONTH_DAY);
+					otherMonthDay.forEach(function (idx) {
+						if (idx.innerHTML === value) {
+							idx.classList.add(classes.SELECTION);
+							self._selectDay.classList.remove(classes.SELECTION);
+							self._selectDay = idx;
+							self._activeMonth = self._todayMonth;
+						}
+					})
+				}
+			};
 
 			prototype._unBindEvents = function (element) {
-				var self = this;
-
-				events.off(element, "vclick", self, false);
-			}
+				events.off(element, "vclick", this, false);
+			};
 
 			prototype._bindEvents = function (element) {
-				var self = this;
-
-				events.on(element, "vclick", self, false);
+				events.on(element, "vclick", this, false);
 			};
 
 			prototype.handleEvent = function (event) {
-				var self = this;
-
 				if (event.type === "vclick") {
-					self._onClick(event);
+					this._onClick(event);
 				} else {
 					event.preventDefault();
 				}
 			};
 
+			prototype._setPastSelection = function (element, value) {
+				this.options.pastSelection = value;
+				return true;
+			};
+
 			prototype._refresh = function () {
-				var self = this;
-
-				self._setValue(self.options.value);
-			}
-
-			prototype._setValue = function (value) {
 				var self = this,
-					options = self.options;
+					calendarView = self._ui.calendarView;
 
-				options.pastSelection = value;
-			}
+				self._deleteCalendar(calendarView);
+				self._buildCalendar(calendarView);
+			};
 
 			prototype._build = function (element) {
 				var controllerElement = document.createElement("div"),
@@ -261,19 +380,21 @@
 					sunElement = document.createElement("td");
 
 				// Controller
-				controllerElement.classList.add("controller");
-				leftArrowElement.classList.add("calendarArrowLeft");
-				rightArrowElement.classList.add("calendarArrowRight");
-				viewChangeElement.classList.add("calendarSwitch");
+				controllerElement.classList.add(classes.CONTROLLER);
+				leftArrowElement.classList.add(classes.ARROW_LEFT);
+				leftArrowElement.classList.add(classes.ARROW);
+				rightArrowElement.classList.add(classes.ARROW_RIGHT);
+				rightArrowElement.classList.add(classes.ARROW);
+				viewChangeElement.classList.add(classes.SWITCH_VIEW);
 
 				controllerElement.appendChild(leftArrowElement);
 				controllerElement.appendChild(rightArrowElement);
 				controllerElement.appendChild(viewChangeElement);
 
 				// View Container
-				viewTableElement.classList.add("calendarView");
-				spaceElement.classList.add("topSpace");
-				oneWeekElement.classList.add("oneWeek");
+				viewTableElement.classList.add(classes.CALENDAR_VIEW);
+				spaceElement.classList.add(classes.TOP_SPACE);
+				oneWeekElement.classList.add(classes.ONE_WEEK);
 
 				monElement.innerHTML = days[0];
 				oneWeekElement.appendChild(monElement);
@@ -288,7 +409,7 @@
 				satElement.innerHTML = days[5];
 				oneWeekElement.appendChild(satElement);
 				sunElement.innerHTML = days[6];
-				sunElement.classList.add("sunday");
+				sunElement.classList.add("ui-sunday");
 				oneWeekElement.appendChild(sunElement);
 
 				viewTableElement.appendChild(spaceElement);
@@ -305,7 +426,7 @@
 				var self = this;
 
 				self.options = null;
-				self.unBindEvents(self.element);
+				self._unBindEvents(self.element);
 			};
 
 			ns.widget.mobile.Calendar = Calendar;
