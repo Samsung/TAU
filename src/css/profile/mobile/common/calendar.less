@@ -17,10 +17,20 @@ tr {
 			height: 28 * @px_base;
 			line-height: 28 * @px_base;
 			margin: 0 auto;
-		}
-		div.selection {
-			background-color: var(--primary-color);
-  			color: var(--calendar-select-text-color);
+
+			&.prevDisableDay {
+				opacity: 10%;
+			}
+			&.nextDisableDay {
+				opacity: 40%;
+			}
+			&.currentEnableDay {
+				opacity: 100%;
+			}
+			&.selection {
+				background-color: var(--primary-color);
+				color: var(--calendar-select-text-color);
+			}
 		}
 		&:only-child {
 			width: 100%;
