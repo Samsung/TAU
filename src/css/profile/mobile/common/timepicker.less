@@ -19,6 +19,13 @@
 				align-items: center;
 				justify-content: center;
 			}
+
+			&-format {
+				.ui-spin-item {
+					font-size: 24 * @sp_base;
+					line-height: 54 * @px_base;
+				}
+			}
 		}
 	}
 
@@ -47,5 +54,40 @@
 	.ui-spin {
 		width: 100%;
 		height: 164 * @px_base;
+		justify-content: center;
+
+		.ui-time-picker-input {
+			width: 50 * @px_base;
+			height: 50 * @px_base;
+			align-self: center;
+			text-align: center;
+			font-size: 32 * @sp_base;
+			color: transparent;
+			.font(regular);
+			border-width: 0;
+			outline: unset;
+			outline-offset: unset;
+			text-shadow: 0 0 0 var(--primary-dark-color);
+			opacity: 0;
+
+			&:focus {
+				background-color: var(--primary-color-20p);
+			}
+		}
+
+		&-item {
+			.font(regular);
+			line-height: 56 * @px_base;
+		}
+	}
+
+	&-input-active &-container-hour, &-input-active &-container-minute {
+		.ui-spin-item {
+			opacity: 0 !important;
+		}
+
+		.ui-time-picker-input {
+			opacity: 1;
+		}
 	}
 }
