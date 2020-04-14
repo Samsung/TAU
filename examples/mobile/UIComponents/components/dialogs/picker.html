@@ -19,7 +19,7 @@
 		<div data-role="content">
 			<ul class="ui-listview ui-content-area">
 				<li class="ui-li-anchor">
-					<a data-inline="true">
+					<a data-position-to="window" data-rel="popup" href="date-picker-calendar-dialog">
 						Date picker Dialog (Calendar view)
 					</a>
 				</li>
@@ -49,7 +49,7 @@
 					</a>
 				</li>
 				<li class="ui-li-anchor">
-					<a data-inline="true">
+					<a href="./pickers/calendar.html">
 						Date picker (Calendar view)
 					</a>
 				</li>
@@ -69,6 +69,19 @@
 					</a>
 				</li>
 			</ul>
+			<div class="ui-popup" id="date-picker-calendar-dialog">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content ui-date-picker-calendar">
+					<div class="ui-calendar"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
 			<div class="ui-popup" id="time-picker-dialog-12h">
 				<div class="ui-popup-header">
 					Set time
