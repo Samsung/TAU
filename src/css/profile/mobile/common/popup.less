@@ -43,7 +43,6 @@
 
 	.ui-popup-header {
 		width: 100%;
-		min-height: 55 * @px_base;
 		text-align: left;
 		background-color: @color_popup_header_bg;
 		position: sticky;
@@ -87,6 +86,11 @@
 			display: block;
 			margin: 0 auto;
 			padding-bottom: 24 * @unit_base;
+		}
+
+		&.ui-date-picker-calendar {
+			padding-left: 16 * @px_base;
+			padding-right: 16 * @px_base;
 		}
 
 		.ui-listview.ui-content-area {
