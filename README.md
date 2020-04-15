@@ -43,6 +43,14 @@ TAU has automated tests. To run tests execute command:
 
 `npm run test`
 
+Part of tests are run in Karma. To run tests in Karma execute command:
+
+`npm run test:karma`
+
+If you need to run one particular test in Karma you have to modify file `tests/karma/single.conf.path.js` and execute command:
+
+`npm run test:karma-single-test`
+
 ## Debuggging
 
 In order to set additional logging in TAU you need to build TAU with --tau-debug option
