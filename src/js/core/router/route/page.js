@@ -194,7 +194,12 @@
 						}
 					);
 
+					if (options.volatileRecord) {
+						history.enableVolatileMode();
+					}
 					history.replace(state, pageTitle, url);
+
+					history.disableVolatileMode();
 				}
 
 				// write base element

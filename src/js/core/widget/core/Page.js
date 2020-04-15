@@ -251,6 +251,7 @@
 			"../../util/DOM/css",
 			"../BaseWidget",
 			"../core",
+			"./PageContainer",
 			"../BaseKeyboardSupport"
 		],
 		function () {
@@ -263,6 +264,7 @@
 			 * @static
 			 */
 			var BaseWidget = ns.widget.BaseWidget,
+				PageContainer = ns.widget.core.PageContainer,
 				/**
 				 * Alias for {@link ns.util}
 				 * @property {Object} util
@@ -462,7 +464,13 @@
 					header = ui.header,
 					top = 0,
 					bottom = 0,
-					footer = ui.footer;
+					footer = ui.footer,
+					mainTab = ui.mainTab;
+
+				// Main Tab widget can be part of screen
+				if (mainTab) {
+					screenHeight = screenHeight - mainTab.getBoundingClientRect().height;
+				}
 
 				elementStyle.width = screenWidth + "px";
 				elementStyle.height = screenHeight + "px";
@@ -478,7 +486,7 @@
 					}
 
 					if (footer) {
-						bottom = footer.getBoundingClientRect().height;
+						bottom += footer.getBoundingClientRect().height;
 						contentStyle.marginBottom = bottom + "px";
 						contentStyle.paddingBottom = (-bottom) + "px";
 					}
@@ -718,6 +726,21 @@
 					self.options.content = !!self._ui.content;
 				}
 				self._setContent(element, self.options.content);
+			};
+
+			/**
+			 * Method tries to find mainTab
+			 * @method _findMainTab
+			 * @protected
+			 * @member ns.widget.core.Page
+			 */
+			prototype._findMainTab = function () {
+				var self = this,
+					pageContainer = utilSelectors.getClosestBySelector(self.element, "." + PageContainer.classes.pageContainer);
+
+				self._ui.mainTab = self.element.querySelector(".ui-main-tab") || // main tab assigned to page
+					pageContainer && pageContainer.querySelector(".ui-main-tab-visible") || // active main tab assigned to page container
+					null;
 			};
 
 			prototype._buildGoToTopButton = function (element) {
@@ -993,6 +1016,7 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype._refresh = function () {
+				this._findMainTab();
 				this._restoreContentStyle();
 				this._contentFill();
 			};
@@ -1004,6 +1028,7 @@
 			 * @member ns.widget.core.Page
 			 */
 			prototype.layout = function () {
+				this._findMainTab();
 				this._storeContentStyle();
 				this._contentFill();
 			};
@@ -1027,6 +1052,7 @@
 					// add keyboard events
 					self._bindEventKey();
 				}
+
 				self.trigger(EventType.BEFORE_SHOW);
 			};
 

@@ -102,6 +102,7 @@
 			"./profile/mobile/widget/Listview",
 			"./core/widget/core/Marquee",
 			"./core/widget/core/tab/Tabbar",
+			"./core/widget/core/MainTab",
 			"./core/widget/core/OnOffSwitch",
 			"./core/widget/core/MasterOnOffSwitch",
 			"./profile/mobile/widget/TextInput",
@@ -128,6 +129,7 @@
 			// router modules
 			"./core/router/Router",
 			"./core/router/route/page",
+			"./core/router/route/mainTab",
 			"./core/router/route/popup",
 			"./core/router/route/drawer",
 			"./core/router/route/panel",

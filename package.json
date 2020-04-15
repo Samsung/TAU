@@ -10,6 +10,7 @@
     "preinstall": "./install-hooks",
     "test": "grunt test",
     "test:karma": "karma start tests/karma/all.conf.js",
+    "test:karma-single-test": "karma start tests/karma/single.conf.js",
     "lint-check": "lint-diff $TRAVIS_COMMIT_RANGE",
     "spellcheck": "cspell 'src/**/*.js' 'src/**/*.html' 'examples/mobile/UIComponents/**/*.js' 'examples/wearable/UIComponents/**/*.js' 'examples/mobile/UIComponents/**/*.html' 'examples/wearable/UIComponents/**/*.html'"
   },
