@@ -3,7 +3,7 @@
 	/**
 	 * page - Rotary event page element
 	 */
-	var page = document.getElementById("pageRotaryEvent");
+	var page = document.getElementById("pageCircularlyVerticalBar");
 
 	/**
 	 * pagebeforeshow event handler
