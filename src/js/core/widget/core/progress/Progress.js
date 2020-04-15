@@ -51,7 +51,7 @@
 			"../../core", // fetch namespace
 			"../../BaseWidget",
 			"../progress",
-			"./type/activitybar",
+			"./type/indeterminatebar",
 			"./type/activitycircle",
 			"./type/progressbar",
 			"./type/progresscircle",
@@ -80,7 +80,7 @@
 				progressType = {
 					PROGRESS_BAR: "bar",
 					PROGRESS_CIRCLE: "circle",
-					ACTIVITY_BAR: "activitybar",
+					INDETERMINATE_BAR: "indeterminatebar",
 					ACTIVITY_CIRCLE: "activitycircle"
 				},
 

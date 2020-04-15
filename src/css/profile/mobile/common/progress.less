@@ -176,60 +176,36 @@ tau-progress {
 }
 
 // **********************************************************
-//                   Activity Bar type
+//                   Indeterminate Bar type
 // **********************************************************
-.ui-activity-bar {
+.ui-indeterminate-bar {
 	overflow: hidden;
 	position: relative;
-	margin-left: 32 * @unit_base;
-	margin-right: 32 * @unit_base;
-	min-width: 24 * @unit_base;
-	height: 8 * @unit_base;
+	height: 3 * @px_base;
 
-	border-radius: 10 * @unit_base;
+	border-radius: 1.5 * @px_base;
 	background-color: var(--progress-bar-bg-color);
 }
 
-.ui-activity-bar .ui-activity-bar-activity {
+.ui-indeterminate-bar .ui-indeterminate-bar-indeterminate {
 	position: relative;
 	top: 0;
 	height: 100%;
 	padding: 0;
 	background-color: var(--progress-bar-color);
-	.transition(width 100ms);
-	mask-image: url('./images/controls/core_progress_pending_bg.svg');
-	.mask-repeat(repeat-x);
-	border-radius: 10 * @unit_base;
-	.animation(activitybar 1000ms infinite linear);
+	mask-image: url('./images/8_Progress/progress_bar_ind.png');
+	mask-repeat: no-repeat;
+	border-radius: 1.5 * @px_base;
+	animation: indeterminatebar 1200ms infinite linear;
 }
 
-.m-progress-activitybar() {
+@keyframes indeterminatebar {
 	from {
-		.mask-position(0 0);
+		mask-position:-180% 0;
 	}
 	to {
-		.mask-position(50 * @unit_base 0);
+		mask-position: 220% 0;
 	}
-}
-
-@keyframes activitybar {
-	.m-progress-activitybar();
-}
-
-@-moz-keyframes activitybar {
-	.m-progress-activitybar();
-}
-
-@-ms-keyframes activitybar {
-	.m-progress-activitybar();
-}
-
-@-o-keyframes activitybar {
-	.m-progress-activitybar();
-}
-
-@keyframes activitybar {
-	.m-progress-activitybar();
 }
 
 // **********************************************************

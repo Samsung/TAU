@@ -16,10 +16,10 @@
  */
 /*jslint nomen: true, plusplus: true */
 /**
- * #Activity Bar Type
- * activityBar type support for Progress widget.
+ * #Indeterminate Bar Type
+ * indeterminateBar type support for Progress widget.
  * @internal
- * @class ns.widget.core.progress.type.activitybar
+ * @class ns.widget.core.progress.type.indeterminate
  * @extends ns.widget.core.progress.type.interface
  */
 (function (document, ns) {
@@ -38,8 +38,8 @@
 				type = ns.widget.core.progress.type,
 				typeInterface = type.interface,
 				classes = {
-					uiActivitybar: "ui-activity-bar",
-					uiActivitybarActivity: "ui-activity-bar-activity"
+					uiIndeterminatebar: "ui-indeterminate-bar",
+					uiIndeterminatebarIndeterminate: "ui-indeterminate-bar-indeterminate"
 				};
 
 			function paintProgressStyle(progress) {
@@ -47,34 +47,34 @@
 					options = progress.options,
 					percentValue = (options.value * 100) / (options.max - options.min);
 
-				ui.activityBarElement.style.width = percentValue + "%";
+				ui.indeterminateBarElement.style.width = percentValue + "%";
 			}
 
-			type.activitybar = utilsObject.merge({}, typeInterface, {
+			type.indeterminatebar = utilsObject.merge({}, typeInterface, {
 				build: function (progress, element) {
 					var ui = {},
-						activityElement = element,
-						activityBarElement;
+						indeterminateElement = element,
+						indeterminateBarElement;
 
-					activityBarElement = document.createElement("div");
+					indeterminateBarElement = document.createElement("div");
 
-					activityElement.classList.add(classes.uiActivitybar);
-					activityBarElement.classList.add(classes.uiActivitybarActivity);
+					indeterminateElement.classList.add(classes.uiIndeterminatebar);
+					indeterminateBarElement.classList.add(classes.uiIndeterminatebarIndeterminate);
 
-					activityElement.appendChild(activityBarElement);
+					indeterminateElement.appendChild(indeterminateBarElement);
 
-					ui.activityBarElement = activityBarElement;
+					ui.indeterminateBarElement = indeterminateBarElement;
 
 					progress._ui = ui;
 
-					return activityElement;
+					return indeterminateElement;
 				},
 
 				init: function (progress, element) {
 					var ui = progress._ui,
-						activityElement = element;
+						indeterminateElement = element;
 
-					ui.activityBarElement = ui.activityBarElement || activityElement.querySelector("." + classes.uiActivitybarActivity);
+					ui.indeterminateBarElement = ui.indeterminateBarElement || indeterminateElement.querySelector("." + classes.uiIndeterminatebarActivity);
 
 					paintProgressStyle(progress);
 				},

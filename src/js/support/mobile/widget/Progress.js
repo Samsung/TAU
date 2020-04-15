@@ -157,7 +157,7 @@
 			 */
 			ProgressExtra.prototype._build = function (element) {
 				if (this.options.style === "pending") {
-					this.options.type = "activitybar";
+					this.options.type = "indeterminatebar";
 				}
 				if (this.options.style === "circle") {
 					this.options.type = "activitycircle";
