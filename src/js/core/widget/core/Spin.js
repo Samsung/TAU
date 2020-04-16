@@ -351,7 +351,7 @@
 
 			// set position;
 			items.forEach(function (item, index) {
-				var change = transform(self.value, index, centerY, options);
+				var change = transform(self.options.value, index, centerY, options);
 
 				// set item position
 				item.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
@@ -365,6 +365,20 @@
 			value = (typeof value === "string") ? parseInt(value.replace("px").trim(), 10) : value;
 			this.options.itemHeight = value;
 		};
+
+		/**
+		 * Update items
+		 * @method _updateItems
+		 * @member ns.widget.core.Spin
+		 * @protected
+		 */
+		prototype._updateItems = function () {
+			var self = this;
+
+			self._removeSelectedLayout();
+			self._modifyItems();
+			self._addSelectedLayout();
+		}
 
 		prototype._refresh = function () {
 			var self = this;
