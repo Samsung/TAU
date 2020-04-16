@@ -32,7 +32,7 @@
 			ns.setConfig("loader", false, true);
 			ns.setConfig("pageContainerBody", true, true);
 			ns.setConfig("popupTransition", "slideup", true);
-			ns.setConfig("pageTransition", "slide", true);
+			ns.setConfig("pageTransition", "none", true);
 			ns.setConfig("enablePageScroll", false, true);
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns;

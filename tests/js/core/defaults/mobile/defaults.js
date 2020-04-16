@@ -17,10 +17,10 @@
 			equal(defaults.dynamicBaseEnabled, false, "defaults.dynamicBaseEnabled after change");
 			defaults.dynamicBaseEnabled = true;
 
-			equal(defaults.pageTransition, "slide", "defaults.pageTransition");
+			equal(defaults.pageTransition, "none", "defaults.pageTransition");
 			defaults.pageTransition = "slidedown";
 			equal(defaults.pageTransition, "slidedown", "defaults.pageTransition after change");
-			defaults.pageTransition = "slide";
+			defaults.pageTransition = "none";
 
 			equal(defaults.popupTransition, "slideup", "defaults.popupTransition");
 			defaults.popupTransition = "slidedown";
