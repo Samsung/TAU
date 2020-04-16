@@ -17,14 +17,22 @@
 			</h1>
 		</div>
 		<div class="ui-content">
-			<ul class="ui-listview">
-				<li class="ui-li-flex">
-					<label class="ui-li-area ui-li-area-a" for="light">light</label>
-					<input class="ui-li-area-b" id="light" name="theme-choice" type="radio" value="light" />
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-divider ui-li-has-radio">
+					<input id="light" name="theme-choice" type="radio" value="light" />
+					<div class="ui-li-text">
+						<span class="ui-li-text-title" for="light">
+							light
+						</span>
+					</div>
 				</li>
-				<li class="ui-li-flex">
-					<label class="ui-li-area ui-li-area-a" for="dark">dark</label>
-					<input class="ui-li-area-b" id="dark" name="theme-choice" type="radio" value="dark" />
+				<li class="ui-li-divider ui-li-has-radio">
+					<input id="dark" name="theme-choice" type="radio" value="dark" />
+					<div class="ui-li-text">
+						<span class="ui-li-area ui-li-area-a" for="dark">
+							dark
+						</span>
+					</div>
 				</li>
 			</ul>
 		</div>
