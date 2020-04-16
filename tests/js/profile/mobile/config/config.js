@@ -8,7 +8,7 @@ function runTests(tau) {
 		equal(tau.getConfig("loader"), false, "loader is set correct");
 		equal(tau.getConfig("pageContainerBody"), true, "pageContainerBody is set correct");
 		equal(tau.getConfig("popupTransition"), "slideup", "popupTransition is set correct");
-		equal(tau.getConfig("pageTransition"), "slide", "pageTransition is set correct");
+		equal(tau.getConfig("pageTransition"), "none", "pageTransition is set correct");
 	});
 }
 
