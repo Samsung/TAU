@@ -107,7 +107,8 @@
 					IS_NOT_CHECKED: ".ui-listview li > input[type='checkbox']:not(:checked)"
 				},
 				defaults = {
-					titleType: "singleLine" // "multiline", "subtitle"
+					titleType: "singleLine", // "multiline", "subtitle"
+					expandingEnabled: true
 				};
 
 			Appbar.prototype = prototype;
@@ -206,7 +207,10 @@
 				ns.event.enableGesture(self._ui.page,
 					new ns.event.gesture.Drag());
 
-				utilsEvents.on(self._ui.page, "scrollboundary drag dragstart dragend scrollstart change pagebeforeshow", self);
+				utilsEvents.on(
+					self._ui.page,
+					"scrollboundary drag dragstart dragend scrollstart change pagebeforeshow popupshow popuphide",
+					self);
 			};
 
 			/**
@@ -241,6 +245,12 @@
 					case "pagebeforeshow":
 						self._onPageBeforeShow();
 						break;
+					case "popupshow":
+						self._onPopupShow();
+						break;
+					case "popuphide":
+						self._onPopupHide();
+						break;
 				}
 			};
 
@@ -261,6 +271,26 @@
 					}
 					self._updateTitle();
 				}
+			};
+
+			/**
+			 * PopupShow event handler
+			 * @method _onPopupShow
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._onPopupShow = function () {
+				this.options.expandingEnabled = false;
+			};
+
+			/**
+			 * PopupHide event handler
+			 * @method _onPopupHide
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._onPopupHide = function () {
+				this.options.expandingEnabled = true;
 			};
 
 			/**
@@ -296,8 +326,9 @@
 			prototype._onDragStart = function (event) {
 				var self = this;
 
-				if ((event.detail.direction === "down" && self._appbarState == states.COLLAPSED && self._scrolledToTop) ||
-					(event.detail.direction === "up" && self._appbarState == states.EXPANDED)) {
+				if (self.options.expandingEnabled && (
+					(event.detail.direction === "down" && self._appbarState == states.COLLAPSED && self._scrolledToTop) ||
+					(event.detail.direction === "up" && self._appbarState == states.EXPANDED))) {
 					self._appbarState = states.DRAGGING;
 					self.element.classList.add(classes.dragging);
 					self._dragStartingHeight = self.element.getBoundingClientRect().height;
@@ -328,26 +359,29 @@
 			 */
 			prototype._onDragEnd = function () {
 				var self = this,
+					threshold
+
+				if (self.options.expandingEnabled) {
 					threshold = (nominalHeights.COLLAPSED + nominalHeights.EXPANDED) / 2;
+					self.element.classList.remove(classes.dragging);
 
-				self.element.classList.remove(classes.dragging);
+					self.element.style.height = "";
 
-				self.element.style.height = "";
+					if (self._currentHeight > threshold) {
+						self.element.classList.add(classes.expanded);
+						self._appbarState = states.EXPANDED;
+						self._setTitlesOpacity(1);
+						utilsEvents.trigger(self.element, "appbarexpanded");
+					} else {
+						self.element.classList.remove(classes.expanded);
+						self._appbarState = states.COLLAPSED;
+						self._setTitlesOpacity(0);
+						utilsEvents.trigger(self.element, "appbarcollapsed");
+					}
 
-				if (self._currentHeight > threshold) {
-					self.element.classList.add(classes.expanded);
-					self._appbarState = states.EXPANDED;
-					self._setTitlesOpacity(1);
-					utilsEvents.trigger(self.element, "appbarexpanded");
-				} else {
-					self.element.classList.remove(classes.expanded);
-					self._appbarState = states.COLLAPSED;
-					self._setTitlesOpacity(0);
-					utilsEvents.trigger(self.element, "appbarcollapsed");
+					// trigger appbarDragStart Event - page should enable scrolling back again
+					// appbar resized event should be triggered (in order to inform Page about content height change)
 				}
-
-				// trigger appbarDragStart Event - page should enable scrolling back again
-				// appbar resized event should be triggered (in order to inform Page about content height change)
 			};
 
 			/**
@@ -487,7 +521,10 @@
 			prototype._unbindEvents = function () {
 				var self = this;
 
-				utilsEvents.off(self._ui.page, "scrollboundary drag dragstart dragend scrollstart change", self);
+				utilsEvents.off(
+					self._ui.page,
+					"scrollboundary drag dragstart dragend scrollstart change pagebeforeshow popupshow popuphide",
+					self);
 			};
 
 			/**
