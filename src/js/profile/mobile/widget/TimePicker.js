@@ -168,6 +168,7 @@
 				} else if (name === "minute") {
 					options.min = 0;
 					options.max = 59;
+					options.digits = 2;
 					spinContainer.classList.add(TimePicker.classes.MINUTE_CONTAINER);
 				}
 
