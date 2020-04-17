@@ -188,9 +188,34 @@
 				&.ui-li-grid-full {
 					justify-content: space-between;
 
-					div {
-						text-align: inherit;
+					// List divider "|" between text area and control button.
+					div > div {
+						text-align: center;
 
+						&.ui-marquee {
+							display: flex;
+							flex-direction: row;
+							max-width: 222 * @px_base;
+							max-height: 42 * @px_base;
+
+							&::after {
+								opacity: 1;
+								content: "";
+								position: relative;
+								width: 2 * @px_base;
+								height: 50 * @px_base;
+								top: 0;
+								right: 0;
+								margin-left: 14 * @px_base;
+								margin-right: 19 * @px_base;
+								background: @color_grid_list_divider_bg;
+								transform: none;
+							}
+						}
+					}
+
+					// Hide list divider from listview implementation.
+					div {
 						&::after {
 							opacity: 0;
 						}
