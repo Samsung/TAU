@@ -162,6 +162,7 @@
 					firstDate = new Date(self._todayYear, self._todayMonth - 1, 0),
 					lastDate = new Date(self._todayYear, self._todayMonth, 0),
 					day = firstDate.getDay(),
+					prevFirstDate = firstDate.getDate(),
 					prevLastDate = lastDate.getDate(),
 					week = Math.ceil(prevLastDate / 7) + 1,
 					leftDays = 7,
@@ -182,7 +183,7 @@
 						leftDays = leftDays - 1;
 						div = createDayInRow(row);
 						div.classList.add(classes.PREV_MONTH_DAY);
-						div.innerHTML = prevLastDate - day;
+						div.innerHTML = prevFirstDate - day;
 						if (self._fixMonth === self._todayMonth && !self.options.pastSelection) {
 							div.classList.add(classes.DISABLED);
 						}
