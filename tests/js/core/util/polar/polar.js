@@ -146,10 +146,8 @@ function polarTests(polar) {
 
 		if (!window.navigator.userAgent.match("PhantomJS")) {
 			ok(path.classList.contains("ui-animated"), "animated class on path is correct set");
-			equal(path.style.transformOrigin, "120px 140px 0px", "style transform origin on path is correct set");
-		} else {
-			equal(path.style.transformOrigin, "120px 140px", "style transform origin on path is correct set");
 		}
+		equal(path.style.transformOrigin, "120px 140px", "style transform origin on path is correct set");
 		equal(path.style.transform, "rotate(100deg)", "transform on path is correct set");
 	});
 }

@@ -38,7 +38,7 @@ testPaths = [
 	"core/util/DOM/attributes",
 	"core/util/DOM/manipulation",
 	"core/util/easing",
-	//"core/util/polar",
+	"core/util/polar",
 	"core/util/data",
 	"core/util/date",
 	"core/util/string",
