@@ -7,7 +7,9 @@
 		color: var(--text-color);
 		font-size: 18 * @sp_base;
 		font-weight: normal;
-		padding: 14 * @px_base 0;
+		padding-top: 15 * @px_base;
+		padding-bottom: 16 * @px_base;
+		line-height: 21 * @px_base;
 		margin: 0;
 		position: relative;
 
@@ -30,7 +32,7 @@
 			&::after {
 				content: "";
 				position: absolute;
-				right: 4 * @px_base;
+				right: 0;
 				top: calc(~"50% - "16 * @px_base);
 				mask-image: url("images/6_Lists/tw_expander_close_mtrl.svg");
 				mask-repeat: no-repeat;
@@ -69,7 +71,9 @@
 
 			li {
 				color: var(--expandable-text-color);
-				padding: 14 * @px_base 0;
+				padding-top: 15 * @px_base;
+				padding-bottom: 16 * @px_base;
+				line-height: 21 * @px_base;
 				margin: 0;
 			}
 		}
