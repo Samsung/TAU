@@ -53,6 +53,37 @@
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var utilsObject = ns.util.object,
+				MODE_INTERMITTENT = "intermittent",
+				MODE_CONTINUOUS = "continuous",
+
+				xAxis = "x",
+				yAxis = "y",
+
+				TIME_AXIS_X = xAxis,
+				TIME_AXIS_Y = yAxis,
+				TIME_AXIS_NONE = "none",
+
+				graphTypes = {
+					stackedBar: "stacked-bar",
+					line: "line",
+					stackedArea: "stacked-area",
+					scatterplot: "scatterplot",
+					bar: "bar"
+				},
+
+				defaults = {
+					graph: graphTypes.line,
+					color: "#0097D8",
+					xlabel: "",
+					ylabel: "",
+					axisXType: "time",
+					axisYType: "linear",
+					mode: MODE_INTERMITTENT,
+					value: [],
+					timeAxis: TIME_AXIS_X, // only when one value supplied
+					groupKey: "label",
+					legend: false
+				},
 
 				Graph = function () {
 					var self = this;
@@ -96,42 +127,9 @@
 
 				addLibText = "Please, include tauCharts library (https://www.taucharts.com/).",
 
-				MODE_INTERMITTENT = "intermittent",
-				MODE_CONTINUOUS = "continuous",
-
-				xAxis = "x",
-				yAxis = "y",
-
-				TIME_AXIS_X = xAxis,
-				TIME_AXIS_Y = yAxis,
-				TIME_AXIS_NONE = "none",
-
-				graphTypes = {
-					stackedBar: "stacked-bar",
-					line: "line",
-					stackedArea: "stacked-area",
-					scatterplot: "scatterplot",
-					bar: "bar"
-				},
-
-				defaults = {
-					graph: graphTypes.line,
-					color: "#0097D8",
-					xlabel: "",
-					ylabel: "",
-					axisXType: "time",
-					axisYType: "linear",
-					mode: MODE_INTERMITTENT,
-					value: [],
-					timeAxis: TIME_AXIS_X, // only when one value supplied
-					groupKey: "label",
-					legend: false
-				},
-
 				classes = {
 					graphContainer: "ui-graph"
 				},
-
 
 				BaseWidget = ns.widget.BaseWidget,
 				prototype = new BaseWidget();
