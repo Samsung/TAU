@@ -66,6 +66,16 @@
 					CALENDAR_VIEW: "ui-calendar-view"
 				},
 
+				/**
+				* Options for widget
+				* @property {Object} options
+				* @property {boolean} [options.pastSelection=true]
+				* @member ns.widget.mobile.Calendar
+				*/
+				defaultOptions = {
+					pastSelection: false
+				},
+
 				Calendar = function () {
 					var self = this;
 
@@ -85,16 +95,6 @@
 						rightArrow: null,
 						calendarView: null
 					};
-				},
-
-				/**
-				* Options for widget
-				* @property {Object} options
-				* @property {boolean} [options.pastSelection=true]
-				* @member ns.widget.mobile.Calendar
-				*/
-				defaultOptions = {
-					pastSelection: false
 				},
 
 				BaseWidget = ns.widget.BaseWidget,
