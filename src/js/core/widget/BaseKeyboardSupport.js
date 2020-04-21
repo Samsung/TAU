@@ -39,6 +39,7 @@
 				prototype = {
 					_supportKeyboard: false
 				},
+				selectorsString = "",
 				BaseKeyboardSupport = function () {
 					var self = this,
 						options = self.options || {};
@@ -119,7 +120,6 @@
 					count: 1
 				}
 				],
-				selectorsString = "",
 				/**
 				* @property {Array} Array containing number of registrations of each selector
 				* @member ns.widget.tv.BaseKeyboardSupport
