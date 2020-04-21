@@ -1135,6 +1135,7 @@
 						}
 						return filteredElementOffset.left >= elementOffset.right;
 				}
+				return false;
 			}
 
 			prototype._onHWKey = function (event) {
