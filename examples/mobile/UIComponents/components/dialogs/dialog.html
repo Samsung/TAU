@@ -88,6 +88,11 @@
 						Slider Dialog
 					</a>
 				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#progressbar-dialog">
+						Progress bar Dialog
+					</a>
+				</li>
 			</ul>
 			<div class="ui-popup" id="2-btn-dialog">
 				<div class="ui-popup-header">
@@ -466,11 +471,31 @@
 					Dialog header
 				</div>
 				<div class="ui-popup-content">
-					<div class="ui-popup-slider-text">
+					<div class="ui-popup-container-text">
 						<div class="text-left">Left</div>
 						<div class="text-right">Right</div>
 					</div>
 					<input class="ui-slider" max="100" min="0" type="range" value="50" />
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Action 1</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Action 2</button>
+				</div>
+			</div>
+			<div class="ui-popup" id="progressbar-dialog">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					<div class="ui-popup-container-text">
+						<div class="text-left">File name.jpg</div>
+					</div>
+					<div class="ui-progress" value="0" id="progressbar"></div>
+					<div class="ui-popup-container-text">
+						<div class="text-left" id="fileCount">1/1</div>
+						<div class="text-right" id="percent">0%</div>
+					</div>
 				</div>
 				<div class="ui-popup-footer">
 					<button class="ui-btn" data-style="flat">Action 1</button>
