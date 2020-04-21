@@ -110,7 +110,9 @@
 
 				inputElement.focus();
 
-				inputElement.selectionStart = inputElement.value.length;
+				if (inputElement.hasOwnProperty("selectionStart")) {
+					inputElement.selectionStart = inputElement.value.length;
+				}
 
 				utilEvent.on(inputElement, "blur", self._hideInputPaneBound, true);
 				utilEvent.on(window, "resize", self._windowResizeBound, true);
@@ -162,8 +164,10 @@
 				}
 
 				// setting caret position at the end
-				element.selectionStart = currentValueLength;
-				element.selectionEnd = currentValueLength;
+				if (element.hasOwnProperty("selectionStart")) {
+					element.selectionStart = currentValueLength;
+					element.selectionEnd = currentValueLength;
+				}
 			};
 
 			prototype._onWindowResize = function () {
