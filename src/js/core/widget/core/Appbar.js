@@ -41,6 +41,11 @@
 				Page = ns.widget.core.Page,
 				min = Math.min,
 				max = Math.max,
+				states = {
+					EXPANDED: "EXPANDED",
+					COLLAPSED: "COLLAPSED",
+					DRAGGING: "DRAGGING"
+				},
 				Appbar = function () {
 					var self = this;
 
@@ -75,11 +80,6 @@
 					selectAll: "ui-label-select-all",
 					bottomBar: "ui-bottom-bar",
 					hidden: "ui-hidden"
-				},
-				states = {
-					EXPANDED: "EXPANDED",
-					COLLAPSED: "COLLAPSED",
-					DRAGGING: "DRAGGING"
 				},
 				nominalHeights = {
 					COLLAPSED: 56,
