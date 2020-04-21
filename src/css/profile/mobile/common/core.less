@@ -134,6 +134,11 @@
 	overflow-y: visible;
 	overflow-x: hidden;
 	flex-shrink: 1;
+	mask-border: url(images/0_Round_corner/round.svg) 77;
+	mask-border-width: 26 * @px_base;
+	border-radius: 26 * @px_base;
+	box-sizing: border-box;
+	box-shadow: 0 0 0 0.25 * @px_base var(--content-area-line-color) inset;
 
 	&.ui-content-padding {
 		&, &.ui-scrollview-clip {
@@ -162,6 +167,12 @@
 		padding-bottom: 5 * @px_base;
 		margin-top: -4.25 * @px_base;
 		margin-left: 24 * @px_base;
+	}
+}
+
+body.ui-theme-dark {
+	.ui-content-area {
+		box-shadow: unset;
 	}
 }
 
