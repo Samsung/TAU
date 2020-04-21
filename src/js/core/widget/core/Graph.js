@@ -235,13 +235,13 @@
 			prototype._build = function (element) {
 				var self = this;
 
-				if (window.tauCharts) {
-					self._createDivElement(
-						element, classes.graphContainer);
-					return element;
-				} else {
+				if (!window.tauCharts) {
 					console.warn(addLibText);
+					return null;
 				}
+
+				self._createDivElement(element, classes.graphContainer);
+				return element;
 			};
 
 			prototype._addData = function (value) {
