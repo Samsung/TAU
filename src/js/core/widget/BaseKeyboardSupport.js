@@ -662,11 +662,11 @@
 						// corner cases, when element positions overlap
 						if (focusableElement.distance === 0) {
 							if (direction === EVENT_POSITION.down) {
-								return currentLink.compareDocumentPosition(typeof focusableElement === element ? focusableElement : focusableElement.element) &
-										Node.DOCUMENT_POSITION_CONTAINED_BY;
+								return !!(currentLink.compareDocumentPosition(typeof focusableElement === element ? focusableElement : focusableElement.element) &
+										Node.DOCUMENT_POSITION_CONTAINED_BY);
 							} else if (direction === EVENT_POSITION.up) {
-								return currentLink.compareDocumentPosition(typeof focusableElement === element ? focusableElement : focusableElement.element) &
-										Node.DOCUMENT_POSITION_PRECEDING;
+								return !!(currentLink.compareDocumentPosition(typeof focusableElement === element ? focusableElement : focusableElement.element) &
+										Node.DOCUMENT_POSITION_PRECEDING);
 							}
 							return false;
 						}
