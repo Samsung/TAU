@@ -643,7 +643,7 @@
 						focusableElements.push({
 							element: focusableElement,
 							angle: getRelativeAngle(focusableElementRect, elementRect),
-							direction: getDirection(elementRect, focusableElementRect, direction, focusableElement),
+							direction: getDirection(elementRect, focusableElementRect, direction),
 							distance: getDistanceLeftTopCorner(elementRect, focusableElementRect),
 							distanceByDirection: distanceByDirection,
 							distanceByCenter: getDistanceByCenter(focusableElementRect, elementRect),
