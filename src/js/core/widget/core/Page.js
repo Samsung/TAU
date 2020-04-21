@@ -474,7 +474,7 @@
 					//>>excludeEnd("tauDebug");
 
 					if (header) {
-						top = utilsDOM.getElementHeight(header);
+						top = utilsDOM.getElementHeight(header, null, false, true);
 					}
 
 					if (footer) {
