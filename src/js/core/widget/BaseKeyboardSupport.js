@@ -596,6 +596,7 @@
 						distanceRest: distances.bottomRest
 					};
 				}
+				return null;
 			}
 
 			/**
