@@ -20,8 +20,12 @@
         "checkboxes",
         "flipster"
     ],
+    "ignorePaths" : [
+        "**/jquery.js"
+    ],
     "ignoreWords": [
         //common words and short forms
+        "gltf",
         "tizen",
         "webui",
         "webkitui",
