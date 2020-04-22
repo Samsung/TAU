@@ -213,6 +213,7 @@
 						}
 					}
 				}
+				return false;
 			}
 
 			prototype._setValue = function (element, value) {
