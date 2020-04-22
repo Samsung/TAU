@@ -11,7 +11,7 @@
     "test": "grunt test",
     "test:karma": "karma start tests/karma/all.conf.js",
     "lint-check": "lint-diff $TRAVIS_COMMIT_RANGE",
-    "spellcheck": "cspell 'src/**/*.js'"
+    "spellcheck": "cspell 'src/**/*.js' 'src/**/*.html' 'examples/mobile/UIComponents/**/*.js' 'examples/wearable/UIComponents/**/*.js' 'examples/mobile/UIComponents/**/*.html' 'examples/wearable/UIComponents/**/*.html'"
   },
   "devDependencies": {
     "async": "^0.9.2",
@@ -77,7 +77,7 @@
     "cheerio": "^1.0.0-rc.2",
     "easyimage": "2.1.0",
     "escomplex": "^2.0.0-alpha",
-    "eslint": "^3.11.1",
+    "eslint": "^4.18.2",
     "eslint-plugin-html": "^1.7.0",
     "eslint-plugin-jsdoc": "^2.4.0",
     "grunt-karma": "^2.0.0",

@@ -1,13 +1,13 @@
 /*global tau*/
 (function () {
 	var page = document.getElementById("static-graph-page"),
-		garphEl = document.getElementById("graph"),
+		graphEl = document.getElementById("graph"),
 		titleMarquee = page.querySelector("header .ui-marquee"),
 		graphWidget,
 		marquee;
 
 	page.addEventListener("pagebeforeshow", function () {
-		graphWidget = tau.widget.Graph(garphEl);
+		graphWidget = tau.widget.Graph(graphEl);
 	});
 	page.addEventListener("pageshow", function () {
 		marquee = tau.widget.Marquee(titleMarquee, {
