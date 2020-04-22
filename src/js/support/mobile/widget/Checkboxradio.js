@@ -53,12 +53,9 @@
 				var inputType = element.getAttribute("type"),
 					elementClassList = element.classList;
 
-				if (inputType !== "checkbox" && inputType !== "radio") {
-					//_build should always return element
-					return element;
+				if (inputType === "checkbox" || inputType === "radio") {
+					elementClassList.add(classes.UI_PREFIX + inputType);
 				}
-
-				elementClassList.add(classes.UI_PREFIX + inputType);
 
 				return element;
 			};
