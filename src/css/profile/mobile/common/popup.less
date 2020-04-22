@@ -109,7 +109,17 @@
 		}
 
 		.ui-popup-body-checkbox {
-			margin-top: 8px;
+			margin-top: 8 * @px_base;
+			height: 32 * @px_base;
+			display: flex;
+
+			input[type="Checkbox"] {
+				margin: 0 12 * @px_base 0 -4 * @px_base;
+			}
+
+			span {
+				margin-top: 5 * @px_base;
+			}
 		}
 
 		ul .ui-li-has-checkbox {
