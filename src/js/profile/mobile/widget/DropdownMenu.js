@@ -700,6 +700,7 @@
 						return element;
 					}
 				}
+				return null;
 			}
 
 			prototype._getContainer = function () {
