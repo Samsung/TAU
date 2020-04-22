@@ -315,6 +315,8 @@
 					a2 = referenceRect.top + referenceRect.height;
 					b1 = contextRect.top;
 					b2 = contextRect.top + contextRect.height;
+				} else {
+					return result;
 				}
 
 				result = ((a1 > b1) && (a1 < b2)) || // at the left
