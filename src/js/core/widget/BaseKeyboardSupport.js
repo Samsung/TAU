@@ -1189,16 +1189,14 @@
 			prototype._onShortPress = function (event) {
 				var self = this;
 
-				if (!ns.getConfig("keyboardSupport", false)) {
-					return false;
+				if (ns.getConfig("keyboardSupport", false)) {
+					// set focus on next element
+					focusOnNeighborhood(self, self.keyboardElement || self.element, {
+						current: activeElement || getFocusedLink(),
+						event: event,
+						key: event.keyCode
+					});
 				}
-
-				// set focus on next element
-				focusOnNeighborhood(self, self.keyboardElement || self.element, {
-					current: activeElement || getFocusedLink(),
-					event: event,
-					key: event.keyCode
-				});
 			};
 
 			/**
