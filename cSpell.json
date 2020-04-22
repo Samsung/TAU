@@ -19,6 +19,9 @@
         "focusable",
         "checkboxes"
     ],
+    "ignorePaths" : [
+        "**/jquery.js"
+    ],
     "ignoreWords": [
         //common words and short forms
         "tizen",
