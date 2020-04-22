@@ -44,7 +44,7 @@
 				previous = previous.previousElementSibling;
 			}
 			if (previous.classList.contains("ui-group-index")) {
-				// store group index chekcbox to variable
+				// store group index checkbox to variable
 				groupIndexCheckbox = previous.querySelector("input[type=checkbox]");
 			}
 			// now check elements below selected checkbox
