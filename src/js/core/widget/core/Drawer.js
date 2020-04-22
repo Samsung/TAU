@@ -512,7 +512,7 @@
 					detail = event.detail;
 
 				if (options.enable && self._isDrag) {
-					if (options.position === "left" || options.position === "left") {
+					if (options.position === "left" || options.position === "right") {
 						if (Math.abs(detail.deltaX) > options.width / 2) {
 							self.open();
 						} else if (self._state !== STATE.SETTLING) {
