@@ -25,6 +25,7 @@
     ],
     "ignoreWords": [
         //common words and short forms
+        "gltf",
         "tizen",
         "webui",
         "webkitui",
