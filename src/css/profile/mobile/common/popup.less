@@ -105,7 +105,7 @@
 		}
 
 		.ui-popup-body-text {
-			margin-top: 12 * @px_base;
+			margin-top: 8 * @px_base;
 		}
 
 		.ui-popup-body-checkbox {
@@ -123,13 +123,13 @@
 		}
 
 		ul .ui-li-has-checkbox {
-			& .ui-li-text span {
-				font-size: 16 * @px_base;
-				line-height: 23 * @px_base;
+			.ui-li-text span {
+				font-size: 18 * @sp_base;
 			}
-			& input {
-				margin-left: 20 * @px_base;
-				margin-right: 12 * @px_base;
+
+			input {
+				margin-left: 18 * @px_base;
+				margin-right: 18 * @px_base;
 			}
 		}
 
@@ -187,10 +187,9 @@
 			content: "";
 			position: absolute;
 			width: @px_base;
-			height: 22 * @px_base;
-			top: 7 * @px_base;
-			background-color: var(--on-off-switch-divider-color);
-			opacity: var(--on-off-switch-divider-opacity);
+			height: 16 * @px_base;
+			top: 10 * @px_base;
+			background-color: var(--popup-footer-divider-color);
 		}
 
 		.ui-popup-stack .ui-btn {
