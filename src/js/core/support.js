@@ -54,7 +54,8 @@
 				opera = window.opera,
 				operamini = window.operamini && ({}).toString.call(window.operamini) === "[object OperaMini]",
 				blackBerry,
-				testDivStyle = testDiv.style;
+				testDivStyle = testDiv.style,
+				ieVersion;
 
 			testDiv.id = "jquery-mediatest";
 			fakeBody.appendChild(testDiv);
@@ -222,6 +223,17 @@
 				return div.getBoundingClientRect !== undefined;
 			}
 
+			ieVersion = (function getIEVersion() {
+				var v = 3,
+					div = document.createElement("div"),
+					a = div.all || [];
+
+				do {
+					div.innerHTML = "<!--[if gt IE " + (++v) + "]><br><![endif]-->";
+				} while (a[0]);
+				return v;
+			})();
+
 			ns.support = {
 				media: media,
 				/**
@@ -318,16 +330,7 @@
 				 * @static
 				 */
 				browser: {
-					ie: (function () {
-						var v = 3,
-							div = document.createElement("div"),
-							a = div.all || [];
-
-						do {
-							div.innerHTML = "<!--[if gt IE " + (++v) + "]><br><![endif]-->";
-						} while (a[0]);
-						return v > 4 ? v : !v;
-					}())
+					ie: ieVersion > 4
 				},
 				/**
 				 * Informs that browser pass all tests for run framework
@@ -337,7 +340,7 @@
 				 * @return {boolean}
 				 */
 				gradeA: function () {
-					return ((this.mediaquery || (this.browser.ie && this.browser.ie >= 7)) &&
+					return ((this.mediaquery || (this.browser.ie && ieVersion >= 7)) &&
 					(this.boundingRect || ((window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery.match(/1\.[0-7+]\.[0-9+]?/)) !== null)));
 				},
 				/**
