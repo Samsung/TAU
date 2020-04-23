@@ -140,25 +140,34 @@ tau-expandable {
 			}
 		}
 
-		&.ui-li-has-icon {
-			margin-left: 12 * @px_base;
-		}
-
 		// Text
 		.ui-li-text {
 			display: inline-flex;
 			flex-direction: column;
-			padding: 14 * @px_base 0;
+			padding: 15 * @px_base 0;
 			margin-right: 24 * @px_base;
 
 			.ui-li-text-title {
 				font-size: 18 * @sp_base;
 				color: var(--text-color);
+				line-height: 21 * @px_base;
+
+				&:only-child {
+					padding-bottom: @px_base;
+				}
+
+				// line height between title and sub
+				&+.ui-li-text-sub::before {
+					content: "";
+					display: block;
+					height: 4 * @px_base;
+				}
 			}
 
 			.ui-li-text-sub {
-				font-size: @font_size_list_secondary_text;
+				font-size: 13 * @sp_base;
 				color: var(--text-secondary-color);
+				line-height: 15 * @px_base;
 
 				img {
 					width: 15 * @px_base;
