@@ -15,14 +15,14 @@
 			spin = tau.widget.Spin(spinElement);
 
 		if (spin) {
-			// Disable spin on click on selected item
+			// disable spin on click on selected item
 			if (!spin.option("enabled")) {
 				spin.option("enabled", true);
 			} else if (target.classList.contains("ui-spin-item-selected")) {
 				spin.option("enabled", false);
 			}
 
-			// disble previous enbled spin
+			// disable previously enabled spin
 			spins.forEach(function (toDisable) {
 				if (toDisable !== spin) {
 					toDisable.option("enabled", false);

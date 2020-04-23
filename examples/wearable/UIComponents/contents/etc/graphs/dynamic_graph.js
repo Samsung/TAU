@@ -1,7 +1,7 @@
 /*global tau*/
 (function () {
 	var page = document.getElementById("dynamic-graph-page"),
-		garphEl = document.getElementById("graph"),
+		graphEl = document.getElementById("graph"),
 		buttonEl = document.getElementById("button"),
 		titleMarquee = page.querySelector("header .ui-marquee"),
 		graphWidget,
@@ -15,7 +15,7 @@
 	}
 
 	page.addEventListener("pagebeforeshow", function () {
-		graphWidget = tau.widget.Graph(garphEl);
+		graphWidget = tau.widget.Graph(graphEl);
 		buttonWidget = tau.widget.Button(buttonEl);
 
 		buttonEl.addEventListener("click", function () {
