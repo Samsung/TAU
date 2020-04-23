@@ -14,38 +14,40 @@
 </head>
 
 <body>
-    <div class="ui-page">
+    <div class="ui-page" id="radio-demo">
         <header class="ui-header">
             <h2 class="ui-title">Radio</h2>
         </header>
         <div class="ui-content">
             <ul class="ui-listview">
                 <li class="li-has-radio">
-                    <label>
+                    <label id="radio-text-1">
                         Radio on
-                        <input type="radio" checked="checked" name="radio-el"/>
+                        <input type="radio" id="radio-1" checked="checked" name="radio-el"/>
                     </label>
                 </li>
                 <li class="li-has-radio">
-                    <label>
+                    <label id="radio-text-2"> 
                         Radio off
-                        <input type="radio" name="radio-el" />
+                        <input type="radio" id="radio-2" name="radio-el" />
                     </label>
                 </li>
                 <li class="li-has-radio">
                     <label>
-                        Radio on
-                        <input type="radio" checked="checked" name="radio-dim" disabled />
+                        Radio on disabled
+                        <input type="radio" checked="checked" name="radio-dim" disabled/>
                     </label>
                 </li>
                 <li class="li-has-radio">
                     <label>
-                        Radio off
-                        <input type="radio" name="radio-dim" disabled />
+                        Radio off disabled
+                        <input type="radio" name="radio-dim" disabled/>
                     </label>
                 </li>
             </ul>
         </div>
+        <script src="radio.js">
+        </script>
     </div>
 </body>
 
