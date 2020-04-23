@@ -25,7 +25,8 @@ input[type="radio"].ui-radio {
 		height: 100%;
 		width: 100%;
 		bottom: 0;
-		background-color: var(--control-active-color);
+		opacity: 0.8;
+		background-color: var(--control-inactive-color);
 		mask-image: url("images/3_Controllers/Radio/sem_btn_radio_to_on_mtrl_000.svg");
 		mask-size: 100%;
 		mask-position: center;
@@ -33,6 +34,8 @@ input[type="radio"].ui-radio {
 	}
 
 	&:checked::after {
+		opacity: 1;
+		background-color: var(--control-active-color);
 		mask-image: url("images/3_Controllers/Radio/sem_btn_radio_to_on_mtrl_026.svg");
 	}
 
