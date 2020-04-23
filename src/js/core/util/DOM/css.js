@@ -350,10 +350,10 @@
 
 			/**
 			 * Returns style value for css property with browsers prefixes
-			 * @method getPrefixedStyle
+			 * @method getPrefixedStyleValue
 			 * @param {HTMLStyle} styles
 			 * @param {string} property
-			 * @return {Object}
+			 * @return {string|undefined}
 			 * @member ns.util.DOM
 			 * @static
 			 */
@@ -366,7 +366,7 @@
 					if (prefixedProperties.hasOwnProperty(key)) {
 						value = styles[prefixedProperties[key]];
 						if (value && value !== "none") {
-							return value;
+							break;
 						}
 					}
 				}
