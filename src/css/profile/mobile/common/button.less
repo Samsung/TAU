@@ -287,6 +287,10 @@ a.ui-btn {
 			width: 208 * @unit_base;
 		}
 
+		&::after {
+			background-color: var(--button-icon-color);
+		}
+
 		&.ui-btn-active {
 			&::after {
 				background-color: @color_button_icon_press;
