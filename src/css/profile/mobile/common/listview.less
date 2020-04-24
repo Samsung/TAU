@@ -202,7 +202,7 @@ tau-expandable {
 				position: absolute;
 				width: calc(~"100%" - 40 * @px_base);
 				left: 20 * @px_base;
-				bottom: 0;
+				bottom: -0.75 * @px_base;
 				height: 0.75 * @px_base;
 				background-color: var(--divider-color);
 				opacity: var(--divider-opacity);
@@ -219,6 +219,10 @@ tau-expandable {
 			}
 		}
 
+		&+li.ui-li-divider {
+			margin-top: 0.75 * @px_base;
+		}
+
 		.ui-li-divider {
 			display: flex;
 			align-items: center;
@@ -228,10 +232,9 @@ tau-expandable {
 			&::after {
 				content: "";
 				position: absolute;
-				width: @px_base;
+				width: 0.5 * @px_base;
 				height: 22 * @px_base;
 				background-color: var(--on-off-switch-divider-color);
-				opacity: var(--on-off-switch-divider-opacity);
 			}
 		}
 
@@ -242,7 +245,6 @@ tau-expandable {
 			white-space: nowrap;
 
 			.ui-on-off-switch-container {
-				margin-left: 16 * @px_base;
 				margin-right: 24 * @px_base;
 			}
 		}
