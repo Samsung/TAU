@@ -1,4 +1,4 @@
-/*global window, ns, define, localStorage, ns */
+/*global ns, define, ns */
 /*jslint nomen: true */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
@@ -48,7 +48,8 @@
 				CONST = {
 					REVERSE: "slide-reverse"
 				},
-				routePanel = {};
+				routePanel = {},
+				COOKIE_MAX_AGE = 24 * 60 * 60; // one day;
 
 			routePanel.orderNumber = 10;
 
@@ -81,6 +82,28 @@
 				self._panelChangerComponent = panelChangerComponent;
 			};
 
+			function writeToCookie(storageName, value) {
+				value = window.encodeURIComponent(value);
+				document.cookie = storageName + "=" + value +
+					";expires=" + (new Date(Date.now() + COOKIE_MAX_AGE)).toUTCString();
+			}
+
+			function readFromCookie(storageName) {
+				var entries = document.cookie.split(";"),
+					value = "";
+
+				value = entries.filter(function (entry) {
+					return entry.indexOf(storageName + "=") > -1;
+				})[0];
+
+				if (value) {
+					value = window.decodeURIComponent(
+						value.trim().replace(storageName + "=", "")
+					);
+				}
+				return value;
+			}
+
 			/**
 			 * This method handles hash change.
 			 * @method onHashChange
@@ -94,13 +117,14 @@
 			routePanel.onHashChange = function (url, options, prev) {
 				var self = this,
 					storageName = panelChanger.default.STORAGE_NAME,
-					panelHistory = JSON.parse(localStorage[storageName] || "[]"),
+					panelHistory = JSON.parse(readFromCookie(storageName) || "[]"),
 					panelChangerComponent = self._panelChangerComponent,
 					activePanel = panelHistory[panelHistory.length - 1];
 
 				if (!self.active || !panelChangerComponent) {
 					return false;
-				} if (self._panelChangerElement.querySelector("#" + activePanel).classList.contains(panelChanger.classes.PRE_IN) ||
+				}
+				if (self._panelChangerElement.querySelector("#" + activePanel).classList.contains(panelChanger.classes.PRE_IN) ||
 						panelHistory.length === 0) {
 					history.replace(prev, prev.stateTitle, prev.stateUrl);
 					return true;
@@ -108,7 +132,7 @@
 				panelHistory.pop();
 				if (panelChangerComponent.options.manageHistory && panelHistory.length > 0) {
 					history.replace(prev, prev.stateTitle, prev.stateUrl);
-					localStorage[storageName] = JSON.stringify(panelHistory);
+					writeToCookie(storageName, JSON.stringify(panelHistory));
 					panelChangerComponent.changePanel("#" + panelHistory.pop(), CONST.REVERSE, "back");
 					return true;
 				}
@@ -124,13 +148,13 @@
 			routePanel.tauback = function (event) {
 				var self = this,
 					storageName = panelChanger.default.STORAGE_NAME,
-					panelHistory = JSON.parse(localStorage[storageName] || "[]"),
+					panelHistory = JSON.parse(readFromCookie(storageName) || "[]"),
 					panelChangerComponent = self._panelChangerComponent;
 
 				if (panelChangerComponent) {
 					panelHistory.pop();
 					if (panelChangerComponent.options && panelChangerComponent.options.manageHistory && panelHistory.length > 0) {
-						localStorage[storageName] = JSON.stringify(panelHistory);
+						writeToCookie(storageName, JSON.stringify(panelHistory));
 						panelChangerComponent.changePanel("#" + panelHistory.pop(), CONST.REVERSE, "back");
 						event.stopPropagation();
 					}
