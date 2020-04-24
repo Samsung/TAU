@@ -11,16 +11,16 @@
 	background-color: @color_popup_bg;
 	border-radius: 26 * @px_base;;
 
-	@media (orientation: portrait) and (max-width: 479px) {
+	@media (max-width: 479px) {
 		width: 100%;
 	}
-	@media (orientation: landscape) and (max-height: 479px) {
+	@media (min-width: 480px) and (max-width: 672px) {
+		width: 63%;
+	}
+	@media (min-width: 673px) and (max-width: 985px) {
 		width: 55%;
 	}
-	@media (orientation: portrait) and (min-width: 673px) {
-		width: 55%;
-	}
-	@media (orientation: landscape) and (min-width: 986px) {
+	@media (min-width: 986px) and (max-width: 1919px) {
 		width: 35%;
 	}
 
@@ -91,17 +91,6 @@
 		&.ui-date-picker-calendar {
 			padding-left: 16 * @px_base;
 			padding-right: 16 * @px_base;
-		}
-
-		.ui-listview.ui-content-area {
-			margin-bottom: 0;
-
-			& li .ui-li-text .ui-li-text-title {
-				height: 24 * @px_base;
-			}
-			& li .ui-li-text .ui-li-text-sub {
-				height: 18 * @px_base;
-			}
 		}
 
 		.ui-popup-body-text {
