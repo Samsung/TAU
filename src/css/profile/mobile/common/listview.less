@@ -173,6 +173,13 @@ tau-expandable {
 				color: var(--text-secondary-color);
 				line-height: 15 * @px_base;
 
+				// line height between title and sub
+				&+.ui-li-text-title::before {
+					content: "";
+					display: block;
+					height: 4 * @px_base;
+				}
+
 				img {
 					width: 15 * @px_base;
 					height: 15 * @px_base;
