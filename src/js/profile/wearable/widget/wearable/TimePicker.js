@@ -142,6 +142,18 @@
 					*/
 					ACTIVE_LABEL_ANIMATION: WIDGET_CLASS + "-active-label-animation",
 					/**
+					* Show PM in time picker widget (without animation)
+					* @style ui-time-picker-show-pm-without-animation
+					* @member ns.widget.wearable.TimePicker
+					*/
+					SHOW_PM: WIDGET_CLASS + "-show-pm-without-animation",
+					/**
+					* Hide PM in time picker widget (without animation)
+					* @style ui-time-picker-hide-pm-without-animation
+					* @member ns.widget.wearable.TimePicker
+					*/
+					HIDE_PM: WIDGET_CLASS + "-hide-pm-without-animation",
+					/**
 					* Set animation for showing PM in time picker widget
 					* @style ui-time-picker-show-pm
 					* @member ns.widget.wearable.TimePicker
@@ -437,15 +449,7 @@
 					window.setTimeout(function () {
 						uiAmPmContainer.classList.remove(classes.AMPM_PRESSED);
 					}, AMPM_PRESS_EFFECT_DURATION);
-					if (self.options.amOrPm === "AM") {
-						uiAmPmContainer.firstElementChild.classList.remove(classes.HIDE_PM_ANIMATION);
-						uiAmPmContainer.firstElementChild.classList.add(classes.SHOW_PM_ANIMATION);
-						self.options.amOrPm = "PM";
-					} else {
-						uiAmPmContainer.firstElementChild.classList.remove(classes.SHOW_PM_ANIMATION);
-						uiAmPmContainer.firstElementChild.classList.add(classes.HIDE_PM_ANIMATION);
-						self.options.amOrPm = "AM";
-					}
+					self._setAmPm(self.options.amOrPm === "AM" ? "PM" : "AM", true /* do animation */);
 				} else if (eventTargetElement.classList.contains("ui-number-picker-set")) {
 					self.trigger("change", {
 						value: self.value()
@@ -620,6 +624,24 @@
 				});
 			};
 
+			prototype._setAmPm = function (value, doAnimation) {
+				var self = this,
+					ui = self._ui,
+					uiAmPmContainer = ui.amOrPmContainer;
+
+				if (value === "PM") {
+					uiAmPmContainer.firstElementChild.classList.remove(classes.HIDE_PM);
+					uiAmPmContainer.firstElementChild.classList.remove(classes.HIDE_PM_ANIMATION);
+					uiAmPmContainer.firstElementChild.classList.add(doAnimation ? classes.SHOW_PM_ANIMATION : classes.SHOW_PM);
+					self.options.amOrPm = "PM";
+				} else if (value === "AM") {
+					uiAmPmContainer.firstElementChild.classList.remove(classes.SHOW_PM);
+					uiAmPmContainer.firstElementChild.classList.remove(classes.SHOW_PM_ANIMATION);
+					uiAmPmContainer.firstElementChild.classList.add(doAnimation ? classes.HIDE_PM_ANIMATION : classes.HIDE_PM);
+					self.options.amOrPm = "AM";
+				}
+			}
+
 			prototype._setDateValue = function (value) {
 				var self = this,
 					ui = self._ui,
@@ -631,9 +653,9 @@
 				if (self.options.format === "h") {
 					if (hours > 12) {
 						hours -= 12;
-						self.options.amOrPm = "PM";
+						self._setAmPm("PM", false /* without animation */);
 					} else {
-						self.options.amOrPm = "AM";
+						self._setAmPm("AM", false /* without animation */);
 					}
 				}
 				ui.numberPickerHoursInput.setAttribute("value", hours);
