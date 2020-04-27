@@ -413,19 +413,15 @@
 			function onVmousedownRefresh(self, event) {
 				var element = self.element;
 
-				if (self.options.disabled) {
-					return false;
+				if (!self.options.disabled) {
+					self._dragging = true;
+					self._userModified = false;
+					self._mouseMoved = false;
+					if (element.nodeName.toLowerCase() === "select") {
+						self._beforeStart = element.selectedIndex;
+					}
+					refresh(self, event);
 				}
-
-				self._dragging = true;
-				self._userModified = false;
-				self._mouseMoved = false;
-				//element.nodeName.toLowerCase()
-				if (element.nodeName.toLowerCase() === "select") {
-					self._beforeStart = element.selectedIndex;
-				}
-				refresh(self, event);
-				return false;
 			}
 
 			/**
