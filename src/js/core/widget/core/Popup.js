@@ -630,7 +630,33 @@
 					// set state of popup
 					self.state = states.CLOSED;
 				}
+
+				if (self._ui.content.scrollHeight > self._ui.content.clientHeight) {
+					self._ui.footer.classList.add("bottomDivider");
+				}
 			};
+
+			/**
+			 * Scroll event
+			 * @method _onScroll
+			 * @protected
+			 * @member ns.widget.core.Popup
+			 */
+			prototype._onScroll = function () {
+				var self = this,
+					content = self._ui.content;
+
+				if (content.scrollTop === 0) {
+					self._ui.header.classList.remove("topDivider");
+					self._ui.footer.classList.add("bottomDivider");
+				} else if (content.scrollHeight - content.clientHeight === content.scrollTop) {
+					self._ui.header.classList.add("topDivider");
+					self._ui.footer.classList.remove("bottomDivider");
+				} else {
+					self._ui.header.classList.add("topDivider");
+					self._ui.footer.classList.add("bottomDivider");
+				}
+			}
 
 			/**
 			 * Bind events
@@ -644,6 +670,7 @@
 				eventUtils.on(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.on(window, "resize", self, false);
 				eventUtils.on(document, "vclick", self, false);
+				eventUtils.on(self._ui.content, "scroll", self, false);
 			};
 
 
@@ -659,6 +686,7 @@
 				eventUtils.off(self._ui.page, "pagebeforehide", self, false);
 				eventUtils.off(window, "resize", self, false);
 				eventUtils.off(document, "vclick", self, false);
+				eventUtils.off(self._ui.content, "scroll", self, false);
 			};
 
 			/**
@@ -913,6 +941,9 @@
 						if (event.target === self._ui.overlay) {
 							self._onClickOverlay(event);
 						}
+						break;
+					case "scroll":
+						self._onScroll(event);
 						break;
 				}
 			};
