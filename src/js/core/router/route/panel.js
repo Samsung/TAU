@@ -31,6 +31,7 @@
 			"../../util/path",
 			"../../util/selectors",
 			"../../util/object",
+			"../../util/cookie",
 			"../route",
 			"../../history",
 			"../../widget/core/Panel",
@@ -40,6 +41,7 @@
 			//>>excludeEnd("tauBuildExclude");
 			var panelChanger = ns.widget.core.PanelChanger,
 				selectors = ns.util.selectors,
+				cookie = ns.util.cookie,
 				history = ns.history,
 				engine = ns.engine,
 				classes = {
@@ -48,8 +50,7 @@
 				CONST = {
 					REVERSE: "slide-reverse"
 				},
-				routePanel = {},
-				COOKIE_MAX_AGE = 24 * 60 * 60; // one day;
+				routePanel = {};
 
 			routePanel.orderNumber = 10;
 
@@ -82,28 +83,6 @@
 				self._panelChangerComponent = panelChangerComponent;
 			};
 
-			function writeToCookie(storageName, value) {
-				value = window.encodeURIComponent(value);
-				document.cookie = storageName + "=" + value +
-					";expires=" + (new Date(Date.now() + COOKIE_MAX_AGE)).toUTCString();
-			}
-
-			function readFromCookie(storageName) {
-				var entries = document.cookie.split(";"),
-					value = "";
-
-				value = entries.filter(function (entry) {
-					return entry.indexOf(storageName + "=") > -1;
-				})[0];
-
-				if (value) {
-					value = window.decodeURIComponent(
-						value.trim().replace(storageName + "=", "")
-					);
-				}
-				return value;
-			}
-
 			/**
 			 * This method handles hash change.
 			 * @method onHashChange
@@ -117,7 +96,7 @@
 			routePanel.onHashChange = function (url, options, prev) {
 				var self = this,
 					storageName = panelChanger.default.STORAGE_NAME,
-					panelHistory = JSON.parse(readFromCookie(storageName) || "[]"),
+					panelHistory = JSON.parse(cookie.readFromCookie(storageName) || "[]"),
 					panelChangerComponent = self._panelChangerComponent,
 					activePanel = panelHistory[panelHistory.length - 1];
 
@@ -132,7 +111,7 @@
 				panelHistory.pop();
 				if (panelChangerComponent.options.manageHistory && panelHistory.length > 0) {
 					history.replace(prev, prev.stateTitle, prev.stateUrl);
-					writeToCookie(storageName, JSON.stringify(panelHistory));
+					cookie.writeToCookie(storageName, JSON.stringify(panelHistory));
 					panelChangerComponent.changePanel("#" + panelHistory.pop(), CONST.REVERSE, "back");
 					return true;
 				}
@@ -148,13 +127,13 @@
 			routePanel.tauback = function (event) {
 				var self = this,
 					storageName = panelChanger.default.STORAGE_NAME,
-					panelHistory = JSON.parse(readFromCookie(storageName) || "[]"),
+					panelHistory = JSON.parse(cookie.readFromCookie(storageName) || "[]"),
 					panelChangerComponent = self._panelChangerComponent;
 
 				if (panelChangerComponent) {
 					panelHistory.pop();
 					if (panelChangerComponent.options && panelChangerComponent.options.manageHistory && panelHistory.length > 0) {
-						writeToCookie(storageName, JSON.stringify(panelHistory));
+						cookie.writeToCookie(storageName, JSON.stringify(panelHistory));
 						panelChangerComponent.changePanel("#" + panelHistory.pop(), CONST.REVERSE, "back");
 						event.stopPropagation();
 					}
