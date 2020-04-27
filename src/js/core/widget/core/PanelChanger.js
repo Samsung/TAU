@@ -37,6 +37,7 @@
 			"../../event",
 			"../../util/selectors",
 			"../../util/object",
+			"../../util/cookie",
 			"../../history/manager",
 			"../BaseWidget",
 			"../core",
@@ -48,6 +49,7 @@
 			var BaseWidget = ns.widget.BaseWidget,
 				selectors = ns.util.selectors,
 				object = ns.util.object,
+				cookie = ns.util.cookie,
 				engine = ns.engine,
 				page = ns.widget.core.Page,
 				panel = ns.widget.core.Panel,
@@ -135,9 +137,9 @@
 				}
 				ui.activePanel.style.display = "block";
 				self._direction = "forward";
-				localStorage[DEFAULT.STORAGE_NAME] = [];
+				cookie.writeToCookie(DEFAULT.STORAGE_NAME, JSON.stringify([]));
 				self.history.push(ui.activePanel.id);
-				localStorage[DEFAULT.STORAGE_NAME] = JSON.stringify(self.history);
+				cookie.writeToCookie(DEFAULT.STORAGE_NAME, JSON.stringify(self.history));
 				self._animationType = self.options.animationType;
 				this._initLayout();
 				return element;
@@ -252,16 +254,16 @@
 				panelStyle.display = "none";
 				panelStyle.transform = transformCacheValue;
 
-				self.history = JSON.parse(localStorage[DEFAULT.STORAGE_NAME] || "[]");
+				self.history = JSON.parse(cookie.readFromCookie(DEFAULT.STORAGE_NAME) || "[]");
 				if (direction === "forward") {
 					self.history.push(panel.getAttribute("id"));
-					localStorage[DEFAULT.STORAGE_NAME] = JSON.stringify(self.history);
+					cookie.writeToCookie(DEFAULT.STORAGE_NAME, JSON.stringify(self.history));
 				} else {
 					len = self.history.length - 1;
 					for (i = self.history.indexOf(panel.id); i < len; i++) {
 						self.history.pop();
 					}
-					localStorage[DEFAULT.STORAGE_NAME] = JSON.stringify(self.history);
+					cookie.writeToCookie(DEFAULT.STORAGE_NAME, JSON.stringify(self.history));
 				}
 
 				self._show();
