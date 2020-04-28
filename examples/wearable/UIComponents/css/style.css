@@ -375,14 +375,13 @@ li.static::before {
 	margin-right: 20px;
 }
 
-.app-icon-add::before {
-	background-image: url(../contents/list/images/tw_list_add_holo_dark.png);
+.list-button-color::before {
 }
-.app-icon-delete::before {
-	background-image: url(../contents/list/images/tw_list_delete_holo_dark.png);
-}
-.app-icon-setting::before {
-	background-image: url(../contents/list/images/tw_list_setting_holo_dark.png);
+
+.app-icon::before {
+	/* TODO: replace this icon with IC icon according to the guide */
+	background-image: url(images/b_more_option_human_icon.png);
+	background-color: rgba(255, 0, 255, 0.50);
 }
 
 .li-has-action-icon .li-action-icon-button.li-action-delete {
@@ -974,3 +973,4 @@ input[type="checkbox"]#checkboxControl {
 	margin-bottom: 0px;
 	padding-bottom: 0px;
 }
+
