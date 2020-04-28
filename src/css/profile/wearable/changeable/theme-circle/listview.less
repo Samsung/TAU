@@ -184,6 +184,7 @@
 
 			&.ui-li-grid {
 				flex-direction: row;
+				padding: 0;
 
 				&.ui-li-grid-full {
 					justify-content: space-between;
@@ -239,20 +240,22 @@
 
 				> * {
 					&.ui-btn {
+						border: 0;
 						padding: 0;
-						margin: 0 18 * @unit_base 0 0;
+						margin: 0 18 * @px_base 0 0;
 						flex: none;
+						border: 0;
 
-							&.ui-btn-no-bg.ui-btn-icon {
-								&::before {
-									border-radius: 50%;
-								}
+						&.ui-btn-no-bg.ui-btn-icon {
+							&::before {
+								border-radius: 50%;
 							}
-
+						}
 
 						&.ui-btn-circle {
 							border-radius: 50%;
-							width: 88 * @unit_base;
+							width: 88 * @px_base;
+							height: 88 * @px_base;
 
 							&.ui-btn-active {
 								animation: btn-circle-opacity-press linear 567ms;
@@ -270,11 +273,12 @@
 
 					&.ui-btn-description {
 						transform: none;
-						margin: 0;
-						width: auto;
+						margin: 0 0 0 2 * @px_base;
+						width: 180 * @px_base;
 					}
 				}
 			}
+
 
 			.ui-li-sub-text {
 				color: @color_listview_sub_text;
