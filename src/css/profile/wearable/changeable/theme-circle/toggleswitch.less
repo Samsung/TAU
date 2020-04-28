@@ -15,9 +15,10 @@
 
 .ui-toggleswitch {
 	position: relative;
-    display: inline-block;
-    width: 76 * @unit_base;
-    height: 51 * @unit_base;
+	display: inline-block;
+	width: 76 * @px_base;
+	height: 48 * @px_base;
+	overflow: visible;
 
 	&.ui-toggleswitch-large {
 		width: @fixed_toggleswitch_width;
@@ -25,21 +26,21 @@
 	}
 
 	input.ui-switch-input {
-		border: 2 * @unit_base solid @color_toggle_off_bg;
+		border: 2 * @px_base solid @color_toggle_off_bg;
 		background-color: transparent;
-		border-radius: 47 * @unit_base;
-        width: 76 * @unit_base;
-        height: 47 * @unit_base;
-        appearance: none;
-        outline: 0;
-        top: 2 * @unit_base;
-        mask-image: none;
-        backface-visibility: hidden;
+		border-radius: 24.5 * @px_base;
+		width: 76 * @px_base;
+		height: 48 * @px_base;
+		appearance: none;
+		outline: 0;
+		top: 2 * @px_base;
+		mask-image: none;
+		backface-visibility: hidden;
 
-        &:checked {
+		&:checked {
 			background-color: @color_toggle_on_bg;
 			border: 0;
-        }
+		}
 
 		mask-image: none;
 		.mask-size(100% 100%);
@@ -81,11 +82,11 @@
 			position: absolute;
 			content: '';
 			transform: scale(1);
-			height: 51 * @unit_base;
-			width: 51 * @unit_base;
-			border: 2 * @unit_base solid @color_toggle_off_handler;
+			height: 52 * @px_base;
+			width: 51 * @px_base;
+			border: 2 * @px_base solid @color_toggle_off_handler;
 			left: 0;
-			top: 0;
+			top: -2 * @px_base;
 			background-color: @color_toggle_handler_bg;
 			transition-property: transform;
 			transition-duration: 300ms;
@@ -113,9 +114,9 @@
 			background-color: transparent;
 			transform: none;
 			&::before {
-				transform: translateX(25 * @unit_base);
+				transform: translateX(25 * @px_base);
 				background-color: @color_toggle_handler_bg;
-				border: 2 * @unit_base solid @color_toggle_on_handler;
+				border: 2 * @px_base solid @color_toggle_on_handler;
 			}
 			&::after {
 				content: none;
