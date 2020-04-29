@@ -160,7 +160,7 @@
 					this.options.type = "indeterminatebar";
 				}
 				if (this.options.style === "circle") {
-					this.options.type = "activitycircle";
+					this.options.type = "indeterminatecircle";
 				}
 				element.classList.add(classes.uiProgressPendingRunning);
 				return parentBuild.call(this, element);

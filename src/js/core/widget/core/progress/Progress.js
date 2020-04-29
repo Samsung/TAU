@@ -52,7 +52,7 @@
 			"../../BaseWidget",
 			"../progress",
 			"./type/indeterminatebar",
-			"./type/activitycircle",
+			"./type/indeterminatecircle",
 			"./type/progressbar",
 			"./type/progresscircle",
 			"../Page"
@@ -81,10 +81,11 @@
 					PROGRESS_BAR: "bar",
 					PROGRESS_CIRCLE: "circle",
 					INDETERMINATE_BAR: "indeterminatebar",
-					ACTIVITY_CIRCLE: "activitycircle"
+					INDETERMINATE_CIRCLE: "indeterminatecircle"
 				},
 
 				circleSize = {
+					SMALL_HEADER: "small-header",
 					SMALL: "small",
 					MEDIUM: "medium",
 					LARGE: "large",

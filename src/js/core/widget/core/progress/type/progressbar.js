@@ -1,4 +1,4 @@
-/*global window, define, ns */
+/*global define, ns */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -137,7 +137,7 @@
 						element.querySelectorAll(".ui-progress-bar-label-right-top"));
 					labelsBottom = [].slice.call(
 						element.querySelectorAll(".ui-progress-bar-label-left-bottom, .ui-progress-bar-label-right-bottom")
-						);
+					);
 					// try to find labels from outside widget (old api)
 					labelsTop = labelsTop.concat([].slice.call(
 						element.parentElement.querySelectorAll(".ui-progress ~ .ui-progress-bar-label-right-top")));
