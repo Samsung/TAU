@@ -51,17 +51,6 @@ tau-gridview {
 			width: 100%;
 			height: 100%;
 
-			&.ui-selection {
-				&::before {
-					content: "";
-					width: 100%;
-					height: 100%;
-					position: absolute;
-					top: 0;
-					left: 0;
-					background-color: var(--grid-selection-color);
-				}
-			} 
 			> input[type="checkbox"] {
 				position: absolute;
 				margin: 8 * @px_base 0 0 8 * @px_base;
@@ -71,15 +60,9 @@ tau-gridview {
 				opacity: 1;
 				&:checked {
 					background-image: url(images/3_Controllers/gallery_btn_check_bg_mtrl.svg);
-					&::after {
-						mask-image: url("images/3_Controllers/Checkbox/sem_checkedtextview_check_to_on_mtrl_026.svg");
-					}
 				}
 				&::after {
 					background-color: var(--color-white);
-					width: 100%;
-					height: 100%;
-					mask-image: url("images/3_Controllers/Checkbox/sem_checkedtextview_check_to_on_mtrl_000.svg");
 				}
 				&:disabled {
 					opacity: 0.4;
