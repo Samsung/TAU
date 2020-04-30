@@ -447,6 +447,16 @@
 			};
 
 			/**
+			 * Method return heigh of space available for page content
+			 * @method getContentHeight
+			 * @return {number}
+			 * @member ns.widget.core.Page
+			 */
+			prototype.getContentHeight = function () {
+				return this._contentHeight;
+			};
+
+			/**
 			 * Setup size of element to 100% of screen
 			 * @method _contentFill
 			 * @protected
@@ -475,24 +485,27 @@
 				elementStyle.width = screenWidth + "px";
 				elementStyle.height = screenHeight + "px";
 
+				if (footer) {
+					bottom += footer.getBoundingClientRect().height;
+				}
+				if (header) {
+					top = utilsDOM.getElementHeight(header, null, false, true);
+				}
+				self._contentHeight = screenHeight - top - bottom;
+
 				if (content && !element.classList.contains("ui-page-flex")) {
 					contentStyle = content.style;
 					//>>excludeStart("tauDebug", pragmas.tauDebug);
 					ns.log("Page (contentFill) on ", self.id, " styles was recalculated");
 					//>>excludeEnd("tauDebug");
 
-					if (header) {
-						top = utilsDOM.getElementHeight(header, null, false, true);
-					}
-
 					if (footer) {
-						bottom += footer.getBoundingClientRect().height;
 						contentStyle.marginBottom = bottom + "px";
 						contentStyle.paddingBottom = (-bottom) + "px";
 					}
 
 					if (!self.options.enablePageScroll) {
-						contentStyle.height = (screenHeight - top - bottom) + "px";
+						contentStyle.height = self._contentHeight + "px";
 					}
 				}
 

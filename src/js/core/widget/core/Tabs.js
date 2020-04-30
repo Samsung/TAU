@@ -197,6 +197,19 @@
 			};
 
 			/**
+			 * Init height of the Tabs component
+			 * @method _initHeight
+			 * @protected
+			 * @member ns.widget.core.Tabs
+			 */
+			prototype._initHeight = function () {
+				var self = this,
+					page = ns.widget.Page(self._ui.page);
+
+				self.element.style.height = page.getContentHeight() + "px";
+			};
+
+			/**
 			 * Init the Tabs component
 			 * @method _init
 			 * @protected
@@ -214,6 +227,7 @@
 				self._component.subtab = ns.widget.SubTab(ui.subtab);
 				self._changed = false;
 				self._lastIndex = 0;
+				self._initHeight();
 				self._initSectionChanger();
 				return element;
 			};
