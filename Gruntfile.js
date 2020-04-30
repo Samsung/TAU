@@ -1409,6 +1409,42 @@ module.exports = function (grunt) {
 
 			},
 
+			"svg-sprites": {
+				mobile: {
+					sources: [
+						{
+							"src": "src/css/profile/mobile/theme-changeable/images/3_Controllers/Checkbox/",
+							"dest": "dist/mobile/theme/changeable/images/3_Controllers/Checkbox/sprites/",
+							"fileMask": "_[0-9]+\\.svg$"
+						},
+						{
+							"src": "src/css/profile/mobile/theme-changeable/images/3_Controllers/Radio/",
+							"dest": "dist/mobile/theme/changeable/images/3_Controllers/Radio/sprites/",
+							"fileMask": "_[0-9]+\\.svg$"
+						}
+					],
+					config: {
+						"shape": {
+							"id": {
+								"generator": "icon_%s"
+							}
+						},
+						"svg": {
+							"namespaceIDs": false,
+							"namespaceClassnames": false
+						},
+						"mode": {
+							"css": {
+								"dest": ".",
+								"layout": "horizontal",
+								"prefix": "",
+								"bust": false
+							}
+						}
+					}
+				}
+			},
+
 			debug: {
 				options: {
 					open: true
@@ -1690,6 +1726,7 @@ module.exports = function (grunt) {
 		//"themeConverter:tv",
 		"cssmin",
 		"image-changeable",
+		"svg-sprites",
 		"fonts",
 		"symlink",
 		"postcss",
@@ -1701,6 +1738,7 @@ module.exports = function (grunt) {
 		"less:mobile",
 		"cssmin",
 		"copy:mobileImages",
+		"svg-sprites",
 		"copy:mobileFonts",
 		"symlink:mobileDefaultTheme",
 		"postcss"

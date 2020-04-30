@@ -68,7 +68,8 @@
 				classes = {
 					checkbox: "ui-checkbox",
 					focus: "ui-checkbox-focus",
-					active: "ui-checkbox-active"
+					active: "ui-checkbox-active",
+					backwardAnimation: "ui-checkbox-backward-animation"
 				},
 				prototype = new BaseWidget();
 
@@ -206,6 +207,10 @@
 				}
 			}
 
+			prototype._onAnimationEnd = function (event) {
+				event.target.classList.toggle(classes.backwardAnimation, event.target.checked);
+			};
+
 			/**
 			 * Bind events to widgets
 			 * @method _bindEvents
@@ -227,6 +232,7 @@
 				element.addEventListener("keyup", self._keyupCallbackBound, false);
 				element.addEventListener("vmousedown", self._onTouchStart, false);
 				element.addEventListener("vmouseup", self._onTouchEnd, false);
+				eventUtils.on(element, "animationend animationEnd webkitAnimationEnd", self._onAnimationEnd, false);
 			}
 
 			/**

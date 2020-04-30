@@ -9,6 +9,16 @@ input[type="checkbox"].ui-checkbox:not(.ui-toggle-switch) {
 	margin: 0 18 * @px_base;
 }
 
+@keyframes checkbox-in {
+	from {mask-position: 0 0}
+	to {mask-position: 100% 0}
+}
+
+@keyframes checkbox-out {
+	from {mask-position: 100% 0}
+	to {mask-position: 0 0}
+}
+
 input[type="checkbox"].ui-checkbox {
 
 	&::before {
@@ -31,15 +41,22 @@ input[type="checkbox"].ui-checkbox {
 		bottom: 0;
 		opacity: 0.8;
 		background-color: var(--control-inactive-color);
-		mask-image: url("images/3_Controllers/Checkbox/sem_checkedtextview_check_to_on_mtrl_000.svg");
-		mask-size: 100%;
-		mask-position: center;
+		animation-duration: 250ms;
+		animation-fill-mode: both;
+		animation-timing-function: steps(26);
+		width: 100%;
+		height: 100%;
+		mask-image: url("images/3_Controllers/Checkbox/sprites/sem_checkedtextview_check_to_on_mtrl_sprites.svg");
+		mask-size: auto 100%;
+		mask-repeat: no-repeat;
+		mask-position: 0 0;
 	}
-
+	&.ui-checkbox-backward-animation::after {
+		animation-name: checkbox-out;
+	}
 	&:checked::after {
-		opacity: 1;
 		background-color: var(--control-active-color);
-		mask-image: url("images/3_Controllers/Checkbox/sem_checkedtextview_check_to_on_mtrl_026.svg");
+		animation-name: checkbox-in;
 	}
 
 	&:active::before {

@@ -55,7 +55,8 @@
 					 * @member ns.widget.core.Radio
 					 */
 					radio: "ui-radio",
-					focus: "ui-radio-focus"
+					focus: "ui-radio-focus",
+					backwardAnimation: "ui-radio-backward-animation"
 				},
 				events = ns.event,
 				prototype = new BaseWidget();
@@ -141,8 +142,17 @@
 					case "keyup":
 						self._onKeyUp(event);
 						break;
+					case "animationend":
+					case "animationEnd":
+					case "webkitAnimationEnd":
+						self._onAnimationEnd(event);
+						break;
 				}
 			}
+
+			prototype._onAnimationEnd = function (event) {
+				event.target.classList.toggle(classes.backwardAnimation, event.target.checked);
+			};
 
 			/**
 			 * Binds events to a Radio widget
@@ -151,7 +161,7 @@
 			 * @protected
 			 */
 			prototype._bindEvents = function (element) {
-				events.on(element, "focus blur keyup", this, false);
+				events.on(element, "focus blur keyup animationend animationEnd webkitAnimationEnd", this, false);
 			}
 
 			/**
@@ -161,7 +171,7 @@
 			 * @protected
 			 */
 			prototype._unbindEvents = function (element) {
-				events.off(element, "focus blur keyup", this, false);
+				events.off(element, "focus blur keyup animationend animationEnd webkitAnimationEnd", this, false);
 			};
 
 			/**
