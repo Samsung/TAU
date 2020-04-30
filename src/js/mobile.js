@@ -101,7 +101,7 @@
 			"./profile/mobile/widget/Expandable",
 			"./profile/mobile/widget/Listview",
 			"./core/widget/core/Marquee",
-			"./core/widget/core/tab/Tabbar",
+			"./core/widget/core/tab/SubTab",
 			"./core/widget/core/MainTab",
 			"./core/widget/core/OnOffSwitch",
 			"./core/widget/core/MasterOnOffSwitch",

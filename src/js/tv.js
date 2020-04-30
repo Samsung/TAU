@@ -99,7 +99,7 @@
 			"./profile/mobile/widget/Scrollview",
 			"./profile/mobile/widget/Expandable",
 			"./profile/mobile/widget/Listview",
-			"./core/widget/core/tab/Tabbar",
+			"./core/widget/core/tab/SubTab",
 			"./profile/mobile/widget/TextInput",
 			"./profile/mobile/widget/DropdownMenu",
 			"./profile/mobile/widget/TextEnveloper",
