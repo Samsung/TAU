@@ -109,13 +109,13 @@
 					 */
 					HEADER_BUTTON: "ui-header-btn",
 					/**
-					 * Class used to select anchor in tabbar widget
-					 * @property {string} [classes.TABBAR_ANCHOR="ui-tabbar-anchor"] anchor
+					 * Class used to select anchor in sub-tab widget
+					 * @property {string} [classes.SUBTAB_ANCHOR="ui-sub-tab-anchor"] anchor
 					 * @member ns.util.anchorHighlight
 					 * @private
 					 * @static
 					 */
-					TABBAR_ANCHOR: "ui-tabbar-anchor",
+					SUBTAB_ANCHOR: "ui-sub-tab-anchor",
 					/**
 					 * Class used to select navigation item
 					 * @property {string} [classes.NAVIGATION_BUTTON="ui-navigation-item"] btn
@@ -239,7 +239,7 @@
 				return selectors.getClosestByClass(target, classes.BUTTON) ||
 					selectors.getClosestByClass(target, classes.HEADER_BUTTON) ||
 					selectors.getClosestByClass(target, classes.NAVIGATION_BUTTON) ||
-					selectors.getClosestByClass(target, classes.TABBAR_ANCHOR);
+					selectors.getClosestByClass(target, classes.SUBTAB_ANCHOR);
 			}
 
 			/**

@@ -16,8 +16,8 @@
  */
 /*jslint nomen: true, plusplus: true */
 /**
- * # Tab Bar Widget
- * The tabbar widget shows an unordered list of tabs on the screen wrapped
+ * # Sub Tab Widget
+ * The subTab widget shows an unordered list of tabs on the screen wrapped
  * together in a single group.
  *
  * This widget can be placed in at top of page inside Tabs widget.
@@ -25,115 +25,7 @@
  * ## Default selectors
  * In default elements matches to:
  *
- *  - HTML elements with data-role="tabbar"
- *  - HTML elements with class ui-tabbar
- *
- * ###HTML Examples
- *
- * ####Create simple tab bar in header
- *
- *        @example
- *        <div data-role="page">
- *            <div data-role="header">
- *                <div data-role="tabbar">
- *                    <ul>
- *                        <li><a data-icon="naviframe-edit">Tabbar1</a></li>
- *                        <li><a data-icon="naviframe-cancel">Tabbar2</a></li>
- *                        <li><a data-icon="naviframe-call">Tabbar3</a></li>
- *                    </ul>
- *                </div>
- *            </div>
- *            <div data-role="content">
- *                Content
- *            </div>
- *        </div>
- *
- * ####Create simple tab bar in footer
- *
- *        @example
- *        <div data-role="page">
- *            <div data-role="content">Content</div>
- *            <div data-role="footer">
- *                <div data-role="tabbar">
- *                    <ul>
- *                        <li><a data-icon="naviframe-edit">Tabbar1</a></li>
- *                        <li><a data-icon="naviframe-cancel">Tabbar2</a></li>
- *                        <li><a data-icon="naviframe-call">Tabbar3</a></li>
- *                    </ul>
- *                </div>
- *            </div>
- *        </div>
- *
- * ## Manual constructor
- * For manual creation of search bar widget you can use constructor of widget from
- * **tau** namespace:
- *
- *        @example
- *        <div data-role="page" id="tab-bar-page">
- *            <div data-role="header">
- *                <div id="ready-for-tab-bar">
- *                    <ul>
- *                        <li><a data-icon="naviframe-edit">Tabbar1</a></li>
- *                        <li><a data-icon="naviframe-cancel">Tabbar2</a></li>
- *                        <li><a data-icon="naviframe-call">Tabbar3</a></li>
- *                    </ul>
- *                </div>
- *            </div>
- *            <div data-role="content">Content</div>
- *      </div>
- *        <script>
- *            (function (document) {
- *				var pageElement = document.getElementById("tab-bar-page"),
- *					tabBarElement = document.getElementById("ready-for-tab-bar"),
- *					tabBar;
- *
- *				function createPageHandle() {
- *					tabBar = tau.widget.TabBar(tabBarElement);
- *				}
- *
- *				pageElement.addEventListener("pagecreate", createPageHandle);
- *			}(document));
- *        </script>
- *
- * Constructor has one require parameter **element** which are base
- * **HTMLElement** to create widget. We recommend get this element by method
- * *document.getElementById*. Second parameter is **options** and it is a object
- * with options for widget.
- *
- * If jQuery library is loaded, its method can be used:
- *
- *        @example
- *        <div data-role="page" id="tab-bar-page">
- *            <div data-role="header">
- *                <div id="ready-for-tab-bar">
- *                    <ul>
- *                        <li><a data-icon="naviframe-edit">Tabbar1</a></li>
- *                        <li><a data-icon="naviframe-cancel">Tabbar2</a></li>
- *                        <li><a data-icon="naviframe-call">Tabbar3</a></li>
- *                    </ul>
- *                </div>
- *            </div>
- *            <div data-role="content">Content</div>
- *        </div>
- *        <script>
- *            (function (document) {
- *				function createPageHandle() {
- *					$("#ready-for-tab-bar").tabbar();
- *				}
- *
- *				$("#tab-bar-page").on("pagecreate", createPageHandle);
- *			}(document));
- *        </script>
- *
- * jQuery Mobile constructor has one optional parameter is **options** and it is
- * a object with options for widget.
- *
- * ##Options for tab bar widget
- *
- * Options for widget can be defined as _data-..._ attributes or give as
- * parameter in constructor.
- *
- * You can change option for widget using method **option**.
+ *  - HTML elements with class ui-sub-tab
  *
  * ##Methods
  *
@@ -143,20 +35,20 @@
  *
  *        @example
  *        <script>
- *        var tabBarElement = document.getElementById("tab-bar"),
- *            tabBar = tau.widget.TabBar(TabBarElement);
+ *        var subTabElement = document.getElementById("sub-tab"),
+ *            subTab = tau.widget.SubTab(SubTabElement);
  *
- *        tabBar.methodName(methodArgument1, methodArgument2, ...);
+ *        subTab.methodName(methodArgument1, methodArgument2, ...);
  *        </script>
  *
  * Second API is jQuery Mobile API and for call _methodName_ you can use:
  *
  *        @example
  *        <script>
- *        $(".selector").tabbar("methodName", methodArgument1, methodArgument2, ...);
+ *        $(".selector").subTab("methodName", methodArgument1, methodArgument2, ...);
  *        </script>
  *
- * @class ns.widget.core.TabBar
+ * @class ns.widget.core.SubTab
  * @extends ns.widget.BaseWidget
  */
 (function (document, ns) {
@@ -185,11 +77,10 @@
 			var Tab = ns.widget.core.Tab,
 				TabPrototype = Tab.prototype,
 				engine = ns.engine,
-				Page = ns.widget.core.Page,
 				domUtils = ns.util.DOM,
 				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 
-				TabBar = function () {
+				SubTab = function () {
 					var self = this;
 
 					BaseKeyboardSupport.call(this);
@@ -209,7 +100,7 @@
 					 * @property {Object} options
 					 * @property {string} [options.active="0"] Number of activated tab.
 					 * @property {string} [options.autoChange=true] Defined if widget should set
-					 * @member ns.widget.core.TabBar
+					 * @member ns.widget.core.SubTab
 					 */
 					self.options = {
 						active: 0,
@@ -224,27 +115,23 @@
 					};
 					self._actualActiveTab = null;
 				},
-				CLASS_PREFIX = "ui-tabbar",
+				CLASS_PREFIX = "ui-sub-tab",
 				/**
 				 * Object with class dictionary
 				 * @property {Object} classes
 				 * @static
-				 * @member ns.widget.core.TabBar
+				 * @member ns.widget.core.SubTab
 				 * @readonly
 				 */
 				classes = {
-					TABBAR: CLASS_PREFIX,
+					SUBTAB: CLASS_PREFIX,
 					TAB_ACTIVE: "ui-tab-active",
 					TAB_NO_TEXT: "ui-tab-no-text",
 					TITLE: "ui-title",
-					TABS_WITH_TITLE: "ui-tabs-with-title",
-					TABBAR_WITH_TITLE: CLASS_PREFIX + "-with-title",
-					TABBAR_BEFORE_TITLE: CLASS_PREFIX + "-before-title",
-					TABBAR_WITH_ICON: CLASS_PREFIX + "-with-icon",
-					TABBAR_PORTRAIT: CLASS_PREFIX + "-portrait",
-					TABBAR_LANDSCAPE: CLASS_PREFIX + "-landscape",
-					TABBAR_TEXT: CLASS_PREFIX + "-text",
-					TABBAR_STATIC: CLASS_PREFIX + "-static",
+					SUBTAB_PORTRAIT: CLASS_PREFIX + "-portrait",
+					SUBTAB_LANDSCAPE: CLASS_PREFIX + "-landscape",
+					SUBTAB_TEXT: CLASS_PREFIX + "-text",
+					SUBTAB_STATIC: CLASS_PREFIX + "-static",
 					ANCHOR: CLASS_PREFIX + "-anchor",
 					INACTIVE_TOO_LONG_TEXT: CLASS_PREFIX + "-inactive-text-overflow"
 				},
@@ -260,22 +147,10 @@
 				},
 				prototype = new Tab();
 
-			TabBar.prototype = prototype;
-			TabBar.classes = classes;
-
-			function findTitle(element) {
-				var parentNode = element.parentNode,
-					title;
-
-				while (parentNode && !parentNode.classList.contains(Page.classes.uiPage)) {
-					title = parentNode.querySelector("." + classes.TITLE);
-					if (title) {
-						return title;
-					}
-					parentNode = parentNode.parentNode;
-				}
-				return 0;
-			}
+			SubTab.prototype = prototype;
+			SubTab.classes = classes;
+			SubTab.selector = "." + CLASS_PREFIX +
+				",[data-role='tabbar'],.ui-tabbar"; // deprecated selector
 
 			/**
 			 * Configure widget options, detect active item based on classes
@@ -283,7 +158,7 @@
 			 * @param {HTMLElement} element
 			 * @return {HTMLElement}
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._configure = function (element) {
 				var links = element.querySelectorAll("li a"),
@@ -300,39 +175,12 @@
 			};
 
 			/**
-			 * Detect structure and add base classes for element
-			 * @method _detectType
-			 * @param {HTMLElement} element
-			 * @protected
-			 * @member ns.widget.core.TabBar
-			 */
-			prototype._detectType = function (element) {
-				var self = this,
-					type = self._type,
-					title = findTitle(element),
-					link = element.querySelector("li a");
-
-				if (title) {
-					title.parentNode.classList.add(classes.TABS_WITH_TITLE);
-					element.classList.add(classes.TABBAR_WITH_TITLE);
-					type.withTitle = true;
-				}
-				if (element.nextElementSibling === title || element.nextElementSibling === title.parentNode) {
-					element.classList.add(classes.TABBAR_BEFORE_TITLE);
-				}
-				if (link && link.hasAttribute("data-icon")) {
-					element.classList.add(classes.TABBAR_WITH_ICON);
-					type.withIcon = true;
-				}
-			};
-
-			/**
 			 * Build tabs and links, add classes, create span labels
 			 * @method _buildTabsAndLinks
 			 * @param {HTMLElement} element
 			 * @return {boolean}
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._buildTabsAndLinks = function (element) {
 				var self = this,
@@ -352,7 +200,7 @@
 					links = element.querySelectorAll("li div");
 				}
 				if (links.length === 0) {
-					ns.warn("There is no tab element, TabBar wasn't build.");
+					ns.warn("There is no tab element, SubTab wasn't build.");
 					return false;
 				}
 				for (i = 0, linksLength = links.length; i < linksLength; i++) {
@@ -360,7 +208,7 @@
 					text = link.firstChild;
 					if (text) {
 						innerText = document.createElement("span");
-						innerText.classList.add(classes.TABBAR_TEXT);
+						innerText.classList.add(classes.SUBTAB_TEXT);
 						innerText.appendChild(link.firstChild);
 						link.appendChild(innerText);
 
@@ -390,18 +238,16 @@
 			 * @param {HTMLElement} element
 			 * @return {HTMLElement|null}
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._build = function (element) {
 				var self = this;
 
-				element.classList.add(classes.TABBAR);
+				element.classList.add(classes.SUBTAB);
 
 				if (!self._buildTabsAndLinks(element)) {
 					return null;
 				}
-
-				self._detectType(element);
 
 				return element;
 			};
@@ -410,7 +256,7 @@
 			 * Method read current orientation and set state of widget for correct state;
 			 * @param {HTMLElement} element
 			 * @method _initOrientation
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 * @protected
 			 */
 			prototype._initOrientation = function (element) {
@@ -418,12 +264,12 @@
 					classList = element.classList;
 
 				if (window.innerWidth < window.innerHeight) {
-					classList.remove(classes.TABBAR_LANDSCAPE);
-					classList.add(classes.TABBAR_PORTRAIT);
+					classList.remove(classes.SUBTAB_LANDSCAPE);
+					classList.add(classes.SUBTAB_PORTRAIT);
 					type.orientation = "portrait";
 				} else {
-					classList.remove(classes.TABBAR_PORTRAIT);
-					classList.add(classes.TABBAR_LANDSCAPE);
+					classList.remove(classes.SUBTAB_PORTRAIT);
+					classList.add(classes.SUBTAB_LANDSCAPE);
 					type.orientation = "landscape";
 				}
 			};
@@ -447,7 +293,7 @@
 				// check that element is visible
 				if (offsetWidth) {
 					// get from class
-					isStatic = element.classList.contains(classes.TABBAR_STATIC);
+					isStatic = element.classList.contains(classes.SUBTAB_STATIC);
 
 					// check if we have enough elements to make the list dynamic again
 					if (!isStatic && tabs[0]) {
@@ -480,7 +326,7 @@
 			 * Init method
 			 * @method _init
 			 * @param {HTMLElement} element
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 * @protected
 			 */
 			prototype._init = function (element) {
@@ -501,7 +347,7 @@
 			 * Bind events for widget
 			 * @method _bindEvents
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._bindEvents = function () {
 				var self = this,
@@ -521,7 +367,7 @@
 			 * Unbind events for widget
 			 * @method _bindEvents
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._unBindEvents = function () {
 				var self = this,
@@ -541,7 +387,7 @@
 			 * Handle events
 			 * @method handleEvent
 			 * @param {Event} event
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype.handleEvent = function (event) {
 				var self = this;
@@ -562,12 +408,12 @@
 			};
 
 			/**
-			 * translate tabbar element
+			 * translate subTab element
 			 * @method _translate
 			 * @param {number} x position
 			 * @param {number} duration of animation
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._translate = function (x, duration) {
 				var self = this,
@@ -587,7 +433,7 @@
 			 * @method _onClick
 			 * @param {Event} event
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._onClick = function (event) {
 				var self = this,
@@ -616,7 +462,7 @@
 			 * @method _onDrag
 			 * @protected
 			 * @param {Event} event
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._onDrag = function (event) {
 				var self = this,
@@ -634,7 +480,7 @@
 			 * Dragend event handler
 			 * @method _onDragEnd
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._onDragEnd = function () {
 				var self = this;
@@ -647,7 +493,7 @@
 			 * @method _setActive
 			 * @param {number} index
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._setActive = function (index) {
 				var self = this,
@@ -666,7 +512,7 @@
 				// disable previous link
 				link = ui.links[options.active]
 				link.classList.remove(classes.TAB_ACTIVE);
-				text = link.querySelector("." + classes.TABBAR_TEXT);
+				text = link.querySelector("." + classes.SUBTAB_TEXT);
 				if (text) {
 					marquee = ns.engine.getBinding(text);
 					if (marquee) {
@@ -688,7 +534,7 @@
 
 				// enable Marquee widget on text content for active tab
 				// if text content is longer then link
-				text = link.querySelector("." + classes.TABBAR_TEXT);
+				text = link.querySelector("." + classes.SUBTAB_TEXT);
 				if (text) {
 					prevStyleValue = text.style.overflowX;
 					textWidth = text.getBoundingClientRect().width;
@@ -702,42 +548,42 @@
 					}
 				}
 
-				self._setTabbarPosition();
+				self._setSubTabPosition();
 				TabPrototype._setActive.call(self, index);
 				self._actualActiveTab = index;
 			};
 
 			/**
-			 * set Tabbar position automatically
-			 * @method _setTabbarPosition
+			 * set SubTab position automatically
+			 * @method _setSubTabPosition
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
-			prototype._setTabbarPosition = function () {
+			prototype._setSubTabPosition = function () {
 				var self = this,
 					activeIndex = self.options.active,
 					tabs = self._ui.tabs,
-					tabBarRect = self.element.getBoundingClientRect(),
+					subTabRect = self.element.getBoundingClientRect(),
 					parentElementWidth = self.element.parentElement.offsetWidth,
 					previousElementLeftPos,
 					transformX;
 
-				if (tabBarRect.width >= parentElementWidth) {
+				if (subTabRect.width >= parentElementWidth) {
 					if (activeIndex <= 1) {
 						self._translate(0, DEFAULT_NUMBER.DURATION);
 					} else if (activeIndex >= (tabs.length - 2)) {
 						// Show last element on the right edge.
-						self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+						self._translate(parentElementWidth - subTabRect.width, DEFAULT_NUMBER.DURATION);
 					} else {
 						previousElementLeftPos = tabs[activeIndex - 1].getBoundingClientRect().left;
-						transformX = previousElementLeftPos - tabBarRect.left;
+						transformX = previousElementLeftPos - subTabRect.left;
 
-						if (tabBarRect.width - transformX >= parentElementWidth) {
+						if (subTabRect.width - transformX >= parentElementWidth) {
 							self._translate(-transformX, DEFAULT_NUMBER.DURATION);
 						} else {
-							// Rest of the elements too narrow to cover whole tabbar.
+							// Rest of the elements too narrow to cover whole subTab.
 							// Set scroll to show last element on the right edge.
-							self._translate(parentElementWidth - tabBarRect.width, DEFAULT_NUMBER.DURATION);
+							self._translate(parentElementWidth - subTabRect.width, DEFAULT_NUMBER.DURATION);
 						}
 					}
 				}
@@ -746,7 +592,7 @@
 			 * Destroy widget
 			 * @method _destroy
 			 * @protected
-			 * @member ns.widget.core.TabBar
+			 * @member ns.widget.core.SubTab
 			 */
 			prototype._destroy = function () {
 				var self = this;
@@ -757,18 +603,18 @@
 				self.options = null;
 			};
 
-			ns.widget.core.TabBar = TabBar;
+			ns.widget.core.SubTab = SubTab;
 			engine.defineWidget(
-				"TabBar",
-				"[data-role='tabbar'], ." + CLASS_PREFIX,
+				"SubTab",
+				SubTab.selector,
 				[
 					"setActive",
 					"getActive"
 				],
-				TabBar
+				SubTab
 			);
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
-			return ns.widget.core.TabBar;
+			return ns.widget.core.SubTab;
 		}
 	);
 	//>>excludeEnd("tauBuildExclude");

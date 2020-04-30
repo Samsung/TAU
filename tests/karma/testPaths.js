@@ -53,7 +53,7 @@ testPaths = [
 	"core/event/gesture/Swipe",
 	"profile/wearable/router/route/grid",
 	"core/router/Router",
-	"core/widget/core/tab/Tabbar",
+	"core/widget/core/tab/SubTab",
 	"profile/wearable/widget/wearable/Grid",
 	"profile/wearable/widget/wearable/CircleIndicator",
 	"profile/wearable/widget/wearable/NumberPicker",
