@@ -1032,6 +1032,7 @@
 					// maxHeight,
 					widgetParent = ui.elSelectWrapper.parentNode,
 					widgetParentStyle = window.getComputedStyle(widgetParent),
+					widgetParentRect = widgetParent.getBoundingClientRect(),
 					hiddenPart = 0, // hidden part of selected list element
 					maxContainerWidth;
 
@@ -1042,7 +1043,7 @@
 				height = optionHeight;
 
 				// This part decides the location and direction of option list.
-				offsetLeft = self._horizontalPosition === "right" ? window.screen.width - width : 0;
+				offsetLeft = self._horizontalPosition === "right" ? widgetParentRect.right - width : widgetParentRect.left;
 				optionStyle = "left: " + offsetLeft + "px; ";
 
 				if (options.inline === true) {
