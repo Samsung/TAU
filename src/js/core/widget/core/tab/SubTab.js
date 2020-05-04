@@ -66,7 +66,6 @@
 			"../../../event/vmouse",
 			"../../../event",
 			"../../../event/gesture/Instance",
-			"../../../event/gesture/Drag",
 			"../Scrollview",
 			"../Tab",
 			"../Page",
@@ -109,7 +108,7 @@
 					};
 					self._marqueeOptions = {
 						ellipsisEffect: "none",
-						marqueeStyle: "scroll",
+						marqueeStyle: "endToEnd",
 						iteration: "infinite",
 						delay: 1000
 					};
@@ -136,15 +135,6 @@
 					INACTIVE_TOO_LONG_TEXT: CLASS_PREFIX + "-inactive-text-overflow"
 				},
 				events = ns.event,
-				DEFAULT_NUMBER = {
-					PORTRAIT_LIMIT_LENGTH: 3,
-					PORTRAIT_DEVIDE_NUMBER: 3.7,
-					LANDSCAPE_LIMIT_LENGTH: 4,
-					LANDSCAPE_DEVIDE_NUMBER: 4.7,
-					WITH_ICON_WITH_TITLE: 2,
-					WITH_ICON_NO_TITLE: 4,
-					DURATION: 250
-				},
 				prototype = new Tab();
 
 			SubTab.prototype = prototype;
@@ -351,14 +341,8 @@
 			 */
 			prototype._bindEvents = function () {
 				var self = this,
-					element = self.element,
 					tabs = self._ui.tabs;
 
-				events.enableGesture(
-					element,
-					new events.gesture.Drag()
-				);
-				events.on(element, "drag dragend", self, false);
 				events.on(tabs, "vclick", self, false);
 				window.addEventListener("resize", self, false);
 			};
@@ -371,14 +355,8 @@
 			 */
 			prototype._unBindEvents = function () {
 				var self = this,
-					element = self.element,
 					tabs = self._ui.tabs;
 
-				events.disableGesture(
-					element,
-					new events.gesture.Drag()
-				);
-				events.off(element, "drag dragend", self, false);
 				events.off(tabs, "vclick", self, false);
 				window.removeEventListener("resize", self, false);
 			};
@@ -393,39 +371,12 @@
 				var self = this;
 
 				switch (event.type) {
-					case "drag":
-						self._onDrag(event);
-						break;
-					case "dragend":
-						self._onDragEnd(event);
-						break;
 					case "vclick":
 						self._onClick(event);
 						break;
 					case "resize":
 						self._init(self.element);
 				}
-			};
-
-			/**
-			 * translate subTab element
-			 * @method _translate
-			 * @param {number} x position
-			 * @param {number} duration of animation
-			 * @protected
-			 * @member ns.widget.core.SubTab
-			 */
-			prototype._translate = function (x, duration) {
-				var self = this,
-					element = this.element;
-
-				if (duration) {
-					domUtils.setPrefixedStyle(element, "transition", domUtils.getPrefixedValue("transform " + duration / 1000 + "s ease-out"));
-				}
-
-				domUtils.setPrefixedStyle(element, "transform", "translate3d(" + x + "px, 0px, 0px)");
-
-				self._lastX = x;
 			};
 
 			/**
@@ -455,37 +406,6 @@
 				if (options.autoChange) {
 					self._setActive(index);
 				}
-			};
-
-			/**
-			 * Drag event handler
-			 * @method _onDrag
-			 * @protected
-			 * @param {Event} event
-			 * @member ns.widget.core.SubTab
-			 */
-			prototype._onDrag = function (event) {
-				var self = this,
-					element = self.element;
-
-				self._translate(
-					Math.max(
-						element.parentNode.offsetWidth - element.offsetWidth,
-						Math.min(self._translatedX + event.detail.deltaX, 0)
-					),
-					0
-				);
-			};
-			/**
-			 * Dragend event handler
-			 * @method _onDragEnd
-			 * @protected
-			 * @member ns.widget.core.SubTab
-			 */
-			prototype._onDragEnd = function () {
-				var self = this;
-
-				self._translatedX = self._lastX;
 			};
 
 			/**
@@ -548,46 +468,10 @@
 					}
 				}
 
-				self._setSubTabPosition();
 				TabPrototype._setActive.call(self, index);
 				self._actualActiveTab = index;
 			};
 
-			/**
-			 * set SubTab position automatically
-			 * @method _setSubTabPosition
-			 * @protected
-			 * @member ns.widget.core.SubTab
-			 */
-			prototype._setSubTabPosition = function () {
-				var self = this,
-					activeIndex = self.options.active,
-					tabs = self._ui.tabs,
-					subTabRect = self.element.getBoundingClientRect(),
-					parentElementWidth = self.element.parentElement.offsetWidth,
-					previousElementLeftPos,
-					transformX;
-
-				if (subTabRect.width >= parentElementWidth) {
-					if (activeIndex <= 1) {
-						self._translate(0, DEFAULT_NUMBER.DURATION);
-					} else if (activeIndex >= (tabs.length - 2)) {
-						// Show last element on the right edge.
-						self._translate(parentElementWidth - subTabRect.width, DEFAULT_NUMBER.DURATION);
-					} else {
-						previousElementLeftPos = tabs[activeIndex - 1].getBoundingClientRect().left;
-						transformX = previousElementLeftPos - subTabRect.left;
-
-						if (subTabRect.width - transformX >= parentElementWidth) {
-							self._translate(-transformX, DEFAULT_NUMBER.DURATION);
-						} else {
-							// Rest of the elements too narrow to cover whole subTab.
-							// Set scroll to show last element on the right edge.
-							self._translate(parentElementWidth - subTabRect.width, DEFAULT_NUMBER.DURATION);
-						}
-					}
-				}
-			};
 			/**
 			 * Destroy widget
 			 * @method _destroy
