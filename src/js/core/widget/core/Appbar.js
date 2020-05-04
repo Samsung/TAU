@@ -46,6 +46,7 @@
 					COLLAPSED: "COLLAPSED",
 					DRAGGING: "DRAGGING"
 				},
+				SCREEN_HEIGHT_LIMIT_FOR_EXPANDING = 579,
 				Appbar = function () {
 					var self = this;
 
@@ -57,7 +58,7 @@
 						page: null,
 						selectAll: null,
 						bottomBar: null
-					},
+					};
 					self._appbarState = states.COLLAPSED;
 					self._dragStartingHeight = 0;
 					self._currentHeight = 0;
@@ -78,6 +79,7 @@
 					dragging: classPrefix + "-dragging",
 					controlsContainer: classPrefix + "-controls-container",
 					expandedTitleContainer: classPrefix + "-expanded-title-container",
+					animationFast: classPrefix + "-animation-fast",
 					selectAll: "ui-label-select-all",
 					bottomBar: "ui-bottom-bar",
 					hidden: "ui-hidden"
@@ -109,7 +111,8 @@
 				},
 				defaults = {
 					titleType: "singleLine", // "multiline", "subtitle"
-					expandingEnabled: true
+					expandingEnabled: true,
+					animation: true
 				};
 
 			Appbar.prototype = prototype;
@@ -121,7 +124,10 @@
 
 				self._initExpandedContainer(element);
 
+				self._setAnimation(element, self.options.animation);
 				self._appbarState = states.COLLAPSED;
+				self._validateExpanding();
+
 				self._ui.page = utilSelectors.getClosestBySelector(element, Page.selector);
 				self._ui.selectAll = element.querySelector("." + classes.selectAll + " input[type='checkbox']");
 				self._ui.bottomBar = self._ui.page.querySelector("." + classes.bottomBar);
@@ -253,6 +259,7 @@
 					self._ui.page,
 					"scrollboundary drag dragstart dragend scrollstart change pagebeforeshow popupshow popuphide",
 					self);
+				window.addEventListener("resize", self, false);
 			};
 
 			/**
@@ -292,6 +299,9 @@
 						break;
 					case "popuphide":
 						self._onPopupHide();
+						break;
+					case "resize":
+						self._onResize();
 						break;
 				}
 			};
@@ -383,6 +393,13 @@
 				}
 			};
 
+			/**
+			 * Set opacity level of title during the drag of content
+			 * @method _setTitlesOpacity
+			 * @param {boolean} expandLevel
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
 			prototype._setTitlesOpacity = function (expandLevel) {
 				var self = this,
 					ui = self._ui,
@@ -391,6 +408,61 @@
 
 				mainTitle.style.opacity = 1 - expandLevel;
 				expandedTitle.style.opacity = expandLevel;
+			};
+
+			/**
+			 * Expand AppBar
+			 * @method expand
+			 * @member ns.widget.core.Appbar
+			 * @public
+			 */
+			prototype.expand = function () {
+				var self = this,
+					element = self.element;
+
+				element.style.height = "";
+				element.classList.add(classes.expanded);
+				self._appbarState = states.EXPANDED;
+				self._setTitlesOpacity(1);
+				utilsEvents.trigger(element, "appbarexpanded");
+			};
+
+			/**
+			 * Animation transition end event handler
+			 * @method _onTransitionEnd
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._onTransitionEnd = function () {
+				/**
+				 * After the AppBar expanding or collapsing
+				 * the size of Page content will be changed
+				 * so Page should be refreshed to better fit
+				 * to new available space.
+				 */
+				ns.engine.getBinding(this._ui.page, "Page").refresh();
+			};
+
+			/**
+			 * Collapse AppBar
+			 * @method collapse
+			 * @member ns.widget.core.Appbar
+			 * @public
+			 */
+			prototype.collapse = function () {
+				var self = this,
+					element = self.element;
+
+				element.style.height = "";
+				self._currentHeight = 0;
+				element.classList.remove(classes.expanded);
+				self._appbarState = states.COLLAPSED;
+				self._setTitlesOpacity(0);
+				utilsEvents.trigger(element, "appbarcollapsed");
+
+				utilsEvents.one(element,
+					"transitionend transitionEnd webkitTransitionEnd",
+					self._onTransitionEnd.bind(self), false);
 			};
 
 			/**
@@ -407,18 +479,10 @@
 					threshold = (nominalHeights.COLLAPSED + nominalHeights.expanded) / 2;
 					self.element.classList.remove(classes.dragging);
 
-					self.element.style.height = "";
-
 					if (self._currentHeight > threshold) {
-						self.element.classList.add(classes.expanded);
-						self._appbarState = states.EXPANDED;
-						self._setTitlesOpacity(1);
-						utilsEvents.trigger(self.element, "appbarexpanded");
+						self.expand();
 					} else {
-						self.element.classList.remove(classes.expanded);
-						self._appbarState = states.COLLAPSED;
-						self._setTitlesOpacity(0);
-						utilsEvents.trigger(self.element, "appbarcollapsed");
+						self.collapse();
 					}
 
 					// trigger appbarDragStart Event - page should enable scrolling back again
@@ -429,6 +493,7 @@
 			/**
 			 * Drag event handler
 			 * @method _onDrag
+			 * @param {Event} event
 			 * @member ns.widget.core.Appbar
 			 * @protected
 			 */
@@ -453,6 +518,34 @@
 						self._setTitlesOpacity(0);
 					}
 				}
+			};
+
+			/**
+			 * Verification and enable/disable AppBar expanding
+			 * depending on the screen height
+			 * @method _validateExpanding
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._validateExpanding = function () {
+				var self = this;
+
+				if (window.screen.height <= SCREEN_HEIGHT_LIMIT_FOR_EXPANDING) {
+					self.option("expandingEnabled", false);
+				} else {
+					self.option("expandingEnabled", true);
+				}
+			}
+
+			/**
+			 * Resize event handler
+			 * Widget has to check if new screen height allows to widget expanding
+			 * @method _onResize
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._onResize = function () {
+				this._validateExpanding();
 			};
 
 			/**
@@ -567,6 +660,7 @@
 					self._ui.page,
 					"scrollboundary drag dragstart dragend scrollstart change pagebeforeshow popupshow popuphide",
 					self);
+				window.removeEventListener("resize", self, false);
 			};
 
 			/**
@@ -624,6 +718,38 @@
 					case "singleLine":
 						break;
 				}
+			};
+
+			/**
+			 * Set expanding option
+			 * @method _setExpandingEnabled
+			 * @param {HTMLElement} element
+			 * @param {boolean} enabled
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._setExpandingEnabled = function (element, enabled) {
+				var self = this;
+
+				if (self.options.expandingEnabled !== enabled) {
+					self.options.expandingEnabled = enabled;
+					if (!enabled && self._appbarState !== states.COLLAPSED) {
+						self.collapse();
+					}
+				}
+			};
+
+			/**
+			 * Set animation option
+			 * @method _setAnimation
+			 * @param {HTMLElement} element
+			 * @param {boolean} enabled
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._setAnimation = function (element, enabled) {
+				this.options.animation = enabled;
+				element.classList.toggle(classes.animationFast, !enabled);
 			};
 
 			ns.widget.core.Appbar = Appbar;
