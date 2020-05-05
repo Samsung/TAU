@@ -44,7 +44,6 @@
 		&.ui-btn-icon {
 			background-color: transparent;
 			position: relative;
-			top: 16 * @px_base;
 
 			width: 24 * @px_base;
 			height: 24 * @px_base;
@@ -82,6 +81,9 @@
 			&.ui-btn-flat {
 				min-height: 24 * @px_base;
 				display: block;
+				margin-top: auto;
+				margin-bottom: auto;
+
 				&::after {
 					mask-size: 100%;
 					width: 24 * @px_base;
@@ -109,15 +111,20 @@
 		flex-direction: row;
 		align-items: flex-start;
 
+		position: absolute;
+		bottom: 0;
+
 		.ui-appbar-left-icons-container {
-			height: 100%;
 			flex-shrink: 0;
 			min-width: 24 * @px_base;
+			margin-top: auto;
+			margin-bottom: auto;
 		}
 
 		.ui-appbar-title-container {
-			height: 100%;
+			height: 56 * @px_base;
 			display: flex;
+			margin: auto 0;
 
 			overflow: hidden;
 			flex-direction: column;
@@ -154,6 +161,9 @@
 			height: 100%;
 			flex-shrink: 0;
 			margin-left: auto;
+			min-width: 24 * @px_base;
+			margin-top: auto;
+			margin-bottom: auto;
 
 			display: flex;
 			flex-direction: row;
@@ -189,11 +199,15 @@
 			line-height: 54 * @px_base;
 			font-size: 38 * @px_base;
 			.font(light);
+			margin-left: 24 * @px_base;
+			margin-right: 24 * @px_base;
+			text-align: center;
 		}
 
 		.ui-appbar-subtitle {
 			line-height: 20 * @px_base;
 			font-size: 15 * @px_base;
+			text-align: center;
 		}
 	}
 
@@ -212,7 +226,8 @@
 	}
 
 	&.ui-appbar-expanded {
-		height: 280 * @px_base;
+		// default orientation: portrait
+		height: calc(~"39.67% - "12 * @px_base);
 
 		.ui-appbar-expanded-title-container {
 			opacity: 1;
@@ -239,6 +254,21 @@
 		
 		input[type="checkbox"].ui-checkbox {
 			margin: 0 0 -3px 0;
+		}
+	}
+}
+
+@media all and (min-height: 580px) and (orientation: landscape) {
+	.ui-appbar {
+		&.ui-appbar-expanded {
+			height: calc(~"30% - "12 * @px_base);
+		}
+	}
+}
+@media all and (min-height: 960px) {
+	.ui-appbar {
+		&.ui-appbar-expanded {
+			height: calc(~"25% - "12 * @px_base);
 		}
 	}
 }
