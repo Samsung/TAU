@@ -62,6 +62,7 @@
 					self._dragStartingHeight = 0;
 					self._currentHeight = 0;
 					self._scrolledToTop = true;
+					self._calculateExtendedHight();
 				},
 				BaseWidget = ns.widget.BaseWidget,
 				prototype = new BaseWidget(),
@@ -83,7 +84,7 @@
 				},
 				nominalHeights = {
 					COLLAPSED: 56,
-					EXPANDED: 280
+					expanded: 56
 				},
 				containersProperties = {
 					leftIconsContainer: {
@@ -117,6 +118,8 @@
 
 			prototype._init = function (element) {
 				var self = this;
+
+				self._initExpandedContainer(element);
 
 				self._appbarState = states.COLLAPSED;
 				self._ui.page = utilSelectors.getClosestBySelector(element, Page.selector);
@@ -152,6 +155,54 @@
 			};
 
 			/**
+			 * Method calculates and set nominal height of extended AppBar
+			 * depend of screen height.
+			 * Height of expanded AppBar is needed by handler of drag event
+			 * @method _calculateExtendedHight
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._calculateExtendedHight = function () {
+				var screenHeight = window.screen.height,
+					screenWidth = window.screen.width,
+					bottomMarginHeight = 12;
+
+				if (screenHeight >= 580 && screenHeight < 960 && screenWidth > screenHeight) { // lanscape
+					nominalHeights.expanded = screenHeight * 0.3 - bottomMarginHeight;
+				} else if (screenHeight >= 580 && screenHeight < 960 && screenWidth < screenHeight) { // portrait
+					nominalHeights.expanded = screenHeight * 0.3967 - bottomMarginHeight;
+				} else if (screenHeight >= 960) {
+					nominalHeights.expanded = screenHeight * 0.25 - bottomMarginHeight;
+				}
+			};
+
+			/**
+			 * Init expanded container
+			 * Find expanded container or create if not exists yet
+			 * @method _initExpandedContainer
+			 * @param {HTMLElement} element
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._initExpandedContainer = function (element) {
+				var ui = this._ui,
+					expandedTitleContainer = element.querySelector("." + classes.expandedTitleContainer);
+
+				if (!expandedTitleContainer) {
+					expandedTitleContainer = document.createElement("div")
+					expandedTitleContainer.classList.add(classes.expandedTitleContainer);
+
+					// clone titles to expanded container if not existed before
+					[].slice.call(ui.titleContainer.children).forEach(function (node) {
+						expandedTitleContainer.appendChild(node.cloneNode(true));
+					});
+				}
+
+				ui.expandedTitleContainer = expandedTitleContainer;
+				element.insertBefore(expandedTitleContainer, ui.controlsContainer);
+			};
+
+			/**
 			 * Method that creates containers (or finds ones if already exists)
 			 * for different sections of appbar widgets
 			 * @method _createContainers
@@ -160,12 +211,7 @@
 			 * @protected
 			 */
 			prototype._createContainers = function (element) {
-				var self = this,
-					ui = self._ui;
-
-				ui.expandedTitleContainer = document.createElement("div")
-				ui.expandedTitleContainer.classList.add(classes.expandedTitleContainer);
-				element.appendChild(ui.expandedTitleContainer);
+				var ui = this._ui;
 
 				ui.controlsContainer = document.createElement("div")
 				ui.controlsContainer.classList.add(classes.controlsContainer);
@@ -188,10 +234,6 @@
 					return containersProperties[a].position - containersProperties[b].position;
 				}).forEach(function (key) {
 					ui.controlsContainer.appendChild(ui[key]);
-				});
-
-				[].slice.call(ui.titleContainer.children).forEach(function (node) {
-					ui.expandedTitleContainer.appendChild(node.cloneNode(true));
 				});
 			};
 
@@ -362,7 +404,7 @@
 					threshold
 
 				if (self.options.expandingEnabled) {
-					threshold = (nominalHeights.COLLAPSED + nominalHeights.EXPANDED) / 2;
+					threshold = (nominalHeights.COLLAPSED + nominalHeights.expanded) / 2;
 					self.element.classList.remove(classes.dragging);
 
 					self.element.style.height = "";
@@ -397,7 +439,7 @@
 					totalMovement = 0;
 
 				if (self._appbarState === states.DRAGGING) {
-					totalHeight = min(totalHeight, nominalHeights.EXPANDED);
+					totalHeight = min(totalHeight, nominalHeights.expanded);
 					totalHeight = max(totalHeight, nominalHeights.COLLAPSED);
 
 					self._currentHeight = totalHeight;
@@ -406,7 +448,7 @@
 					totalMovement = totalHeight - nominalHeights.COLLAPSED;
 
 					if (totalMovement > self._expandedTitleHeight) {
-						self._setTitlesOpacity(totalMovement / (nominalHeights.EXPANDED - nominalHeights.COLLAPSED));
+						self._setTitlesOpacity(totalMovement / (nominalHeights.expanded - nominalHeights.COLLAPSED));
 					} else {
 						self._setTitlesOpacity(0);
 					}
