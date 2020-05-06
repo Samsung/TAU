@@ -96,6 +96,21 @@
 		}
 
 		&.li-has-multiline.ui-arc-listview-selected {
+			a {
+				padding: 8 * @px_base 13 * @px_base 8 * @px_base 13 * @px_base;
+
+				:first-child {
+					height: 50 * @px_base;
+				}
+
+				.ui-li-sub-text {
+					width: 100%;
+					height: 32 * @px_base;
+					text-overflow: ellipsis;
+					display: inline-block;
+					overflow: hidden;
+				}
+			}
 
 			&.li-has-2line-sub {
 				padding-top: 9 * @unit_base;
@@ -302,10 +317,6 @@
 					text-overflow: ellipsis;
 					overflow: hidden;
 					max-width: 300 * @unit_base;
-				}
-
-				.ui-li-sub-text:last-child:not(:first-child) {
-					padding-top: 2 * @unit_base;
 				}
 
 				&.ui-li-active {
