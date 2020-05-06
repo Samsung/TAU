@@ -223,7 +223,7 @@
 				return div.getBoundingClientRect !== undefined;
 			}
 
-			ieVersion = (function getIEVersion() {
+			ieVersion = (function () {
 				var v = 3,
 					div = document.createElement("div"),
 					a = div.all || [];
