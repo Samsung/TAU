@@ -36,11 +36,11 @@ We recommend to run "npx grunt eslint" before uploading a pull request.
 ## Contributing code
 
 * **Use your own fork of TAU** repository in order to prepare pull request (PR).
-* If you prepare PR which is **not ready for review** yet, please add **"in progress"** label
-* If your PR is **ready for review**, plase add **"in review"** label
-* Assign TAU Maintainers for each PR which is ready to review
+* If you prepare PR which is **not ready for review** yet, please use **"[Convert to draft](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/changing-the-stage-of-a-pull-request)"** github feature
+* If your PR is **ready for review**, please assign to review TAU Maintainers
 * In order to assure review and verification of your PR, **one of reviewers should be put as "Assignees"**.
   You may assign Reviewer as "Assignee" after getting his agreement.
+* After review, reviewer should assign PR owner in "Assignees" so PR can be improved or merged (if approved)
 
 ## Review policy for TAU Maintainers
 
