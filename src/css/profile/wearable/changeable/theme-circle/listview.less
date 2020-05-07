@@ -96,9 +96,12 @@
 		}
 
 		&.li-has-multiline.ui-arc-listview-selected {
-			a {
-				padding: 8 * @px_base 13 * @px_base 8 * @px_base 13 * @px_base;
+			width: auto;
+			min-height: auto;
+			overflow: auto;
+			padding: 13 * @px_base;
 
+			a {
 				:first-child {
 					height: 50 * @px_base;
 				}
@@ -106,15 +109,20 @@
 				.ui-li-sub-text {
 					width: 100%;
 					height: 32 * @px_base;
+					box-sizing: content-box;
 					text-overflow: ellipsis;
 					display: inline-block;
 					overflow: hidden;
+					&:last-child:not(:first-of-type) {
+						padding-top: 3 * @px_base;
+					}
 				}
+
 			}
 
 			&.li-has-2line-sub {
-				padding-top: 9 * @unit_base;
-				padding-bottom: 8 * @unit_base;
+				padding-top: 6 * @px_base;
+				padding-bottom: 7 * @px_base;
 			}
 
 			&.li-has-3line-sub {
@@ -437,6 +445,7 @@
 						text-overflow: ellipsis;
 						display: inline-block;
 						overflow: hidden;
+
 					}
 				}
 
