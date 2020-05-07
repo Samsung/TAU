@@ -1,3 +1,14 @@
+@keyframes move-to-off {
+    to {
+        transform: translateX(0);
+    }
+}
+@keyframes move-to-on {
+    to {
+        transform: translateX(17 * @px_base);
+    }
+}
+
 .ui-on-off-switch {
     &-container {
         position: relative;
@@ -53,7 +64,7 @@
         left: 0;
         pointer-events: none;
         z-index: 1;
-        transition: transform ease-in 100ms;
+        transition: transform cubic-bezier(.6,.6,.8,1.49) 250ms;
         transform: translate3d(0, 0, 0);
         &::before {
             content: "";
@@ -65,6 +76,20 @@
             top: -3 * @px_base;
             border-radius: 100%;
             background-color: var(--ripple-color);
+        }
+        &-on-drag {
+            transition: none;
+            &::before {
+                opacity: 1;
+            }
+        }
+        &-move-to-off {
+            animation: move-to-off 100ms ease-in-out 0s 1 normal both;
+            transition: none;
+        }
+        &-move-to-on {
+            animation: move-to-on 100ms ease-in-out 0s 1 normal both;
+            transition: none;
         }
     }
 
@@ -83,7 +108,7 @@
         }
         & ~ .ui-on-off-switch-button {
             border-color: var(--primary-color);
-            transform: translate3d(16 * @px_base, 0, 0);
+            transform: translate3d(17 * @px_base, 0, 0);
         }
     }
 }
