@@ -1024,7 +1024,10 @@
 					ui = self._ui,
 					optionHeight = ui.elOptionContainer.offsetHeight,
 					listItemWidthOffsets = [].slice.call(ui.elOptionContainer.children).map(mapItemWidth),
-					biggestListItemWidth = Math.max.apply(Math, listItemWidthOffsets),
+					optionContainerStyle = window.getComputedStyle(ui.elOptionContainer),
+					biggestListItemWidth = Math.max.apply(Math, listItemWidthOffsets) +
+						parseInt(optionContainerStyle.borderLeftWidth, 10) +
+						parseInt(optionContainerStyle.borderRightWidth, 10),
 					wrapperMinWidth = parseInt(window.getComputedStyle(ui.elOptionWrapper).minWidth, 10),
 					options = self.options,
 					scrollTop = ui.elOptionWrapper.parentNode.querySelector(".ui-scrollview-clip").scrollTop,
@@ -1044,6 +1047,11 @@
 
 				// This part decides the location and direction of option list.
 				offsetLeft = self._horizontalPosition === "right" ? widgetParentRect.right - width : widgetParentRect.left;
+				// if drop down menu goes out screen eg. more menu
+				// left position has to be corrected
+				if (offsetLeft + width > window.screen.width) {
+					offsetLeft -= offsetLeft + width - window.screen.width;
+				}
 				optionStyle = "left: " + offsetLeft + "px; ";
 
 				if (options.inline === true) {
@@ -1077,6 +1085,7 @@
 				}
 
 				optionStyle += "top: " + offsetTop + "px; width: " + width + "px; max-height: " + height + "px;";
+
 				return optionStyle;
 			};
 
