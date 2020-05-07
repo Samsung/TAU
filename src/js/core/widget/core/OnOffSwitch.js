@@ -101,8 +101,13 @@
 					 */
 					self.options = {
 						appearance: "slider"
-					},
+					};
 					self._ui = {};
+					self._callbacks = {};
+					self._transform = {
+						bgColor: {from: {r: 0, g: 0, b: 0, a: 0}, to: {r: 3, g: 129, b: 254, a: 1}},
+						borderColor: {from: {r: 143, g: 143, b: 143, a: 1}, to: {r: 0, g: 0, b: 0, a: 0}}
+					};
 				},
 				BaseWidget = ns.widget.BaseWidget,
 				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
@@ -132,6 +137,13 @@
 					 * @member ns.widget.core.OnOffSwitch
 					 */
 					toggleInput: widgetClass + "-input",
+					/**
+					 * Set class for handler during drag
+					 * @member ns.widget.core.OnOffSwitch
+					 */
+					onDrag: widgetClass + "-button-on-drag",
+					moveToOff: widgetClass + "-button-move-to-off",
+					moveToOn: widgetClass + "-button-move-to-on",
 					/**
 					 * Set class for focused state (keyboard support)
 					 * @member ns.widget.core.OnOffSwitch
@@ -301,6 +313,7 @@
 				divHandler.className = classes.toggleHandler;
 
 				this._type = controlType;
+				this._ui.handler = divHandler;
 				this._ui.toggleContainer = toggleContainer;
 
 				return element;
@@ -386,6 +399,136 @@
 
 				if (self._type === "select") {
 					element.selectedIndex = value;
+					self._ui.input.checked = !!value;
+				}
+			};
+
+			OnOffSwitch.prototype._onDragStart = function () {
+				var self = this,
+					ui = self._ui,
+					checkbox = ui.input,
+					handler = ui.handler,
+					checkboxRect = checkbox.getBoundingClientRect(),
+					handlerRect = handler.getBoundingClientRect(),
+					checkboxStyle = window.getComputedStyle(checkbox);
+
+				self._moveWidth = checkboxRect.width - handlerRect.width +
+					parseInt(checkboxStyle.borderLeftWidth, 10) +
+					parseInt(checkboxStyle.borderRightWidth, 10);
+
+				handler.classList.add(classes.onDrag);
+			}
+
+			OnOffSwitch.prototype._onDragEnd = function (event) {
+				var self = this,
+					ui = self._ui,
+					checkbox = ui.input,
+					handler = ui.handler,
+					moveWidth = self._moveWidth,
+					initialPos = checkbox.checked ? moveWidth : 0,
+					currentPos,
+					checkedByPosition;
+
+				currentPos = initialPos + event.detail.deltaX;
+				currentPos = Math.min(Math.max(currentPos, 0), moveWidth);
+
+				handler.classList.remove(classes.onDrag);
+
+				checkedByPosition = currentPos > (moveWidth / 2);
+
+				// add animation
+				if (checkedByPosition) {
+					handler.classList.add(classes.moveToOn);
+				} else {
+					handler.classList.add(classes.moveToOff);
+				}
+				// remove temporary styles from drag
+				ui.input.style.backgroundColor = null;
+				ui.input.style.borderColor = null;
+				ui.input.style.borderWidth = null;
+
+				if (checkedByPosition !== checkbox.checked) {
+					// toggle on-off switch
+					self._setValue(checkedByPosition ? 1 : 0);
+
+					// trigger change event
+					onChangeValue(self);
+				}
+			}
+
+			function calculateColor(data, progress) {
+				var from = data.from,
+					to = data.to;
+
+				return [
+					progress * Math.abs(to.r - from.r),
+					progress * Math.abs(to.g - from.g),
+					progress * Math.abs(to.b - from.b),
+					progress * Math.abs(to.a - from.a)
+				];
+			}
+
+			OnOffSwitch.prototype._onDrag = function (event) {
+				var self = this,
+					ui = self._ui,
+					moveWidth = self._moveWidth,
+					initialPos = ui.input.checked ? moveWidth : 0,
+					currentPos,
+					progress;
+
+				currentPos = initialPos + event.detail.deltaX;
+				currentPos = Math.min(Math.max(currentPos, 0), moveWidth);
+
+				ui.handler.style.transform = "translateX(" + currentPos + "px)";
+
+				progress = moveWidth ? currentPos / moveWidth : 1;
+				ui.input.style.backgroundColor = "rgba(" +
+					calculateColor(self._transform.bgColor, progress).join(",") +
+					")";
+				ui.input.style.borderColor = "rgba(" +
+					calculateColor(self._transform.borderColor, 1 - progress).join(",") +
+					")";
+				ui.input.style.borderWidth = (1 - progress) + "px";
+			};
+
+			OnOffSwitch.prototype._onAnimationEnd = function (event) {
+				var targetClassList = event.target.classList;
+
+				targetClassList.remove(classes.moveToOff);
+				targetClassList.remove(classes.moveToOn);
+				this._ui.handler.style.transform = null;
+			};
+
+			OnOffSwitch.prototype.handleEvent = function (event) {
+				var self = this;
+
+				switch (event.type) {
+					case "change":
+						onChangeValue(self);
+						break;
+					case "focus":
+						self._focus(event);
+						break;
+					case "blur":
+						self._blur(event);
+						break;
+					case "keyup":
+						self._keyUp(event);
+						break;
+					case "drag":
+						self._onDrag(event);
+						break;
+					case "dragstart":
+						self._onDragStart(event);
+						break;
+					case "dragend":
+						self._onDragEnd(event);
+						break;
+					case "animationend":
+					case "animationEnd":
+					case "webkitAnimationEnd":
+						self._onAnimationEnd(event);
+						break;
 				}
 			};
 
@@ -398,16 +541,43 @@
 			 */
 			OnOffSwitch.prototype._bindEvents = function () {
 				var self = this,
-					input = self._ui.input,
-					onChangeBound = onChangeValue.bind(null, self),
-					onFocusBound = self._focus.bind(self),
-					onBlurBound = self._blur.bind(self),
-					onKeyUpBound = self._keyUp.bind(self);
+					input = self._ui.input;
 
-				input.addEventListener("change", onChangeBound, true);
-				input.addEventListener("focus", onFocusBound, true);
-				input.addEventListener("blur", onBlurBound, true);
-				input.addEventListener("keyup", onKeyUpBound, true);
+				ns.event.enableGesture(input,
+					new ns.event.gesture.Drag({
+						threshold: 0
+					}));
+
+				input.addEventListener("change", self, true);
+				input.addEventListener("focus", self, true);
+				input.addEventListener("blur", self, true);
+				input.addEventListener("keyup", self, true);
+				input.addEventListener("dragstart", self, true);
+				input.addEventListener("drag", self, true);
+				input.addEventListener("dragend", self, true);
+				events.on(self._ui.handler, "animationend animationEnd webkitAnimationEnd", self, false);
+			};
+
+			/**
+			 * Unbinds events from widget
+			 * @method _unbindEvents
+			 * @protected
+			 * @member ns.widget.core.OnOffSwitch
+			 */
+			OnOffSwitch.prototype._unbindEvents = function () {
+				var self = this,
+					input = self._ui.input;
+
+				input.removeEventListener("change", self, true);
+				input.removeEventListener("focus", self, true);
+				input.removeEventListener("blur", self, true);
+				input.removeEventListener("keyup", self, true);
+				input.removeEventListener("drag", self, true);
+				input.removeEventListener("dragstart", self, true);
+				input.removeEventListener("dragend", self, true);
+				events.off(self._ui.handler, "animationend animationEnd webkitAnimationEnd", self, false);
+
+				ns.event.disableGesture(input);
 			};
 
 			/**
