@@ -1,0 +1,105 @@
+.ui-datetime-picker {
+	display: flex;
+	height: 164 * @px_base;
+	margin-left: 4%;
+	margin-right: 6%;
+	padding-top: 60 * @px_base;
+	padding-bottom: 81 * @px_base;
+
+	&-container {
+		flex: 1;
+		font-size: 22 * @sp_base;
+
+		&-separator {
+			position: relative;
+			&::after {
+				content: ":";
+				height: 100%;
+				width: auto;
+				color: var(--primary-dark-color);
+				position: absolute;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				right: 0;
+			}
+		}
+	}
+
+	&[data-format="12"] {
+		.ui-datetime-picker-container {
+			&-date {
+				min-width: 47%;
+			}
+			&-hour {
+				min-width: 14%;
+			}
+			&-minute {
+				min-width: 14%;
+			}
+			&-format {
+				min-width: 13%;
+			}	
+		}
+	}
+
+	&[data-format="24"] {
+		.ui-datetime-picker-container {
+			&-date {
+				min-width: 47%;
+			}
+			&-hour {
+				min-width: 14%;
+			}
+			&-minute {
+				min-width: 14%;
+			}
+			&-format {
+				display: none;
+			}	
+		}
+	}
+
+
+	.ui-spin {
+		width: 100%;
+		height: 164 * @px_base;
+		justify-content: center;
+		white-space: nowrap;
+		font-size: 22 * @sp_base;
+
+		.ui-datetime-picker-input {
+			width: 50 * @px_base;
+			height: 50 * @px_base;
+			align-self: center;
+			text-align: center;
+			font-size: 22 * @sp_base;
+			color: transparent;
+			.font(regular);
+			border-width: 0;
+			outline: unset;
+			outline-offset: unset;
+			text-shadow: 0 0 0 var(--primary-dark-color);
+			opacity: 0;
+
+			&:focus {
+				background-color: var(--primary-color-20p);
+			}
+		}
+
+		&-item {
+			.font(regular);
+			line-height: 54 * @px_base;
+		}
+	}
+
+	&-input-active &-container-hour, &-input-active &-container-minute {
+		.ui-spin-item {
+			opacity: 0 !important;
+		}
+
+		.ui-datetime-picker-input {
+			opacity: 1;
+		}
+	}
+}
