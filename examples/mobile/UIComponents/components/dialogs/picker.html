@@ -43,6 +43,11 @@
 						Date picker (Wheel view)
 					</a>
 				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="date-time-picker-wheel">
+						Date Time picker (Wheel view)
+					</a>
+				</li>
 			</ul>
 			<div class="ui-popup" id="date-picker-calendar-dialog">
 				<div class="ui-popup-header">
@@ -86,6 +91,16 @@
 			<div class="ui-popup" id="date-picker-wheel">
 				<div class="ui-popup-content ui-popup-has-date-picker">
 					<div class="ui-date-picker" data-view="wheel"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
+			<div class="ui-popup" id="date-time-picker-wheel">
+				<div class="ui-popup-content ui-popup-has-date-picker">
+					<div class="ui-datetime-picker" data-view="wheel" data-format="12" data-value="2020-03-12 14:46:20"></div>
 				</div>
 				<div class="ui-popup-footer">
 					<button class="ui-btn" data-style="flat">Cancel</button>

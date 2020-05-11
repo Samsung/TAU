@@ -121,6 +121,7 @@
 			"./profile/mobile/widget/Spin",
 			"./profile/mobile/widget/TimePicker",
 			"./profile/mobile/widget/DatePicker",
+			"./profile/mobile/widget/DateTimePicker",
 			"./core/widget/core/ScrollHandler",
 			"./core/widget/core/Tabs",
 			"./profile/mobile/widget/GridView",
