@@ -1,3 +1,47 @@
+.content-area {
+	padding: 22px;
+	margin-bottom: 10px;
+}
+
+.content-header, .content-footer {
+	line-height: 17px;
+	font-size: 13px;
+	width: 100%;
+}
+
+.content-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+}
+
+.hour-container {
+	display: flex;
+	align-items: baseline;
+}
+
+.hour-value {
+	font-size: 38px;
+	font-family: 'Roboto-Light';
+}
+
+.hour-signature {
+	margin-left: 4px;
+}
+
+.action-container {
+	display: flex;
+}
+
+.content-footer {
+	color: #909090;
+}
+
+.date-text {
+	font-size: 12px;
+	margin: auto 12px;
+}
+
 .popup-list a{
 	text-decoration: none;
 }
