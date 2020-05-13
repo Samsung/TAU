@@ -232,17 +232,16 @@
 				var self = this,
 					callbacks = self._callbacks;
 
-				callbacks.onClick = onClick.bind(self);
-				CoreAssistPanel.prototype._bindEvents.call(this);
+				callbacks.onClick = onClick.bind(null, self);
+				CoreAssistPanel.prototype._bindEvents.call(self);
 
-				this._ui.indicator.addEventListener("vclick", callbacks.onClick);
+				self._ui.indicator.addEventListener("vclick", callbacks.onClick);
 			};
 
 			prototype._unbindEvents = function () {
-				var self = this,
-					callbacks = self._callbacks;
+				var self = this;
 
-				this._ui.indicator.removeEventListener("vclick", callbacks.onClick);
+				self._ui.indicator.removeEventListener("vclick", self._callbacks.onClick);
 			};
 
 			prototype._destroy = function () {
