@@ -85,14 +85,44 @@
 		li {
 			/* below style is not prefixed "ui-" for backward compatibility */
 			&.li-has-thumb {
+				// Common styles for both left and right icons.
+				&-left, &-right {
+					.ui-li-thumb-left, .ui-li-thumb-right {
+						width: 76 * @px_base;
+						height: 76 * @px_base;
+						top: 50%;
+						box-sizing: content-box;
+						border-radius: 0;
+					}
+				}
+
 				&-left {
-					padding-left: 100 * @unit_base;
+					& > * {
+						left:  78 * @px_base;
+						margin-right: 92 * @px_base; // to set width element 222px
+						height: 50 * @px_base;
+					}
+
+					.ui-li-thumb-left {
+						left: 16 * @px_base;
+						margin-right: 16 * @px_base;
+					}
 				}
 
 				&-right {
-					padding-right: 100 * @unit_base;
+					& > * {
+						right:  78 * @px_base;
+						margin-left: 92 * @px_base; // to set width element 222px
+						height: 50 * @px_base;
+					}
+
+					.ui-li-thumb-right {
+						right: 16 * @px_base;
+						margin-left: 16 * @px_base;
+					}
 				}
 			}
+
 			&.ui-li-grid {
 				.ui-arc-listview-text-content {
 					margin-left: 0;
