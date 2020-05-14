@@ -749,7 +749,7 @@ module.exports = function (grunt) {
 			postcss: {
 				options: {
 					processors: [
-						autoprefixer({browsers: "last 10 Samsung versions, last 10 versions, last 10 ChromeAndroid versions"})
+						autoprefixer({browsers: "last 12 Samsung versions, last 12 versions, last 12 ChromeAndroid versions"})
 					]
 				},
 				dist: {
