@@ -59,6 +59,7 @@
 						selectAll: null,
 						bottomBar: null
 					};
+					self._expandedHeight = nominalHeights.EXPANDED;
 					self._appbarState = states.COLLAPSED;
 					self._dragStartingHeight = 0;
 					self._currentHeight = 0;
@@ -86,7 +87,7 @@
 				},
 				nominalHeights = {
 					COLLAPSED: 56,
-					expanded: 56
+					EXPANDED: 56
 				},
 				containersProperties = {
 					leftIconsContainer: {
@@ -169,16 +170,19 @@
 			 * @protected
 			 */
 			prototype._calculateExtendedHight = function () {
-				var screenHeight = window.screen.height,
+				var self = this,
+					screenHeight = window.screen.height,
 					screenWidth = window.screen.width,
 					bottomMarginHeight = 12;
 
 				if (screenHeight >= 580 && screenHeight < 960 && screenWidth > screenHeight) { // lanscape
-					nominalHeights.expanded = screenHeight * 0.3 - bottomMarginHeight;
+					self._expandedHeight = screenHeight * 0.3 - bottomMarginHeight;
 				} else if (screenHeight >= 580 && screenHeight < 960 && screenWidth < screenHeight) { // portrait
-					nominalHeights.expanded = screenHeight * 0.3967 - bottomMarginHeight;
+					self._expandedHeight = screenHeight * 0.3967 - bottomMarginHeight;
 				} else if (screenHeight >= 960) {
-					nominalHeights.expanded = screenHeight * 0.25 - bottomMarginHeight;
+					self._expandedHeight = screenHeight * 0.25 - bottomMarginHeight;
+				} else {
+					self._expandedHeight = nominalHeights.EXPANDED;
 				}
 			};
 
@@ -381,6 +385,7 @@
 				if (self.options.expandingEnabled && (
 					(event.detail.direction === "down" && self._appbarState == states.COLLAPSED && self._scrolledToTop) ||
 					(event.detail.direction === "up" && self._appbarState == states.EXPANDED))) {
+
 					self._appbarState = states.DRAGGING;
 					self.element.classList.add(classes.dragging);
 					self._dragStartingHeight = self.element.getBoundingClientRect().height;
@@ -440,7 +445,7 @@
 				 * so Page should be refreshed to better fit
 				 * to new available space.
 				 */
-				ns.engine.getBinding(this._ui.page, "Page").refresh();
+				utilsEvents.trigger(this.element, "appbartransitionend");
 			};
 
 			/**
@@ -476,7 +481,7 @@
 					threshold
 
 				if (self.options.expandingEnabled) {
-					threshold = (nominalHeights.COLLAPSED + nominalHeights.expanded) / 2;
+					threshold = (nominalHeights.COLLAPSED + self._expandedHeight) / 2;
 					self.element.classList.remove(classes.dragging);
 
 					if (self._currentHeight > threshold) {
@@ -504,18 +509,20 @@
 					totalMovement = 0;
 
 				if (self._appbarState === states.DRAGGING) {
-					totalHeight = min(totalHeight, nominalHeights.expanded);
+					totalHeight = min(totalHeight, self._expandedHeight);
 					totalHeight = max(totalHeight, nominalHeights.COLLAPSED);
 
-					self._currentHeight = totalHeight;
-					self.element.style.height = totalHeight + "px";
+					if (self._currentHeight !== totalHeight) {
+						self._currentHeight = totalHeight;
+						self.element.style.height = totalHeight + "px";
 
-					totalMovement = totalHeight - nominalHeights.COLLAPSED;
+						totalMovement = totalHeight - nominalHeights.COLLAPSED;
 
-					if (totalMovement > self._expandedTitleHeight) {
-						self._setTitlesOpacity(totalMovement / (nominalHeights.expanded - nominalHeights.COLLAPSED));
-					} else {
-						self._setTitlesOpacity(0);
+						if (totalMovement > self._expandedTitleHeight) {
+							self._setTitlesOpacity(totalMovement / (self._expandedHeight - nominalHeights.COLLAPSED));
+						} else {
+							self._setTitlesOpacity(0);
+						}
 					}
 				}
 			};
