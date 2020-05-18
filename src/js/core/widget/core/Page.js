@@ -397,6 +397,7 @@
 					uiScroller: "ui-scroller",
 					uiArcListview: "ui-arc-listview",
 					uiContentUnderPopup: "ui-content-under-popup",
+					uiPageFlex: "ui-page-flex",
 					//appbar temporary classes
 					uiAppbar: "ui-appbar",
 					uiAppbarTitle: "ui-appbar-title",
@@ -493,7 +494,7 @@
 				}
 				self._contentHeight = screenHeight - top - bottom;
 
-				if (content && !element.classList.contains("ui-page-flex")) {
+				if (content && !element.classList.contains(classes.uiPageFlex)) {
 					contentStyle = content.style;
 					//>>excludeStart("tauDebug", pragmas.tauDebug);
 					ns.log("Page (contentFill) on ", self.id, " styles was recalculated");
@@ -908,6 +909,7 @@
 				var self = this;
 
 				element.classList.add(classes.uiPage);
+				element.classList.add(classes.uiPageFlex);
 				self._buildHeader(element);
 				self._buildFooter(element);
 				self._buildContent(element);
