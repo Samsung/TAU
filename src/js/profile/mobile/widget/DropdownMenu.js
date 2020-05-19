@@ -781,6 +781,7 @@
 				selectWrapperElement.className = classes.selectWrapper;
 				selectWrapperElement.id = element.id + "-dropdownmenu";
 				selectWrapperElement.setAttribute("tabindex", "0");
+				selectWrapperElement.setAttribute("data-role", "none");
 
 				domUtils.insertNodesBefore(element, selectWrapperElement);
 
