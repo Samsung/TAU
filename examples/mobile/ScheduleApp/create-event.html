@@ -6,8 +6,9 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<title>Scheduling App</title>
 	<link href="lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
-	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js">
-	</script>
+	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js"></script>
+	<link href="css/DayOfWeekPicker.css" rel="stylesheet" />
+	<script src="js/DayOfWeekPicker.js"></script>
 </head>
 
 <body>
@@ -47,10 +48,7 @@
 			<ul class="ui-listview ui-content-area">
 				<li>
 					<div class="ui-li-text">
-						<!--@ToDo: day of week component -->
-						<span class="ui-li-text-title">
-							S M T W T F S
-						</span>
+						<div class="ui-day-of-week-picker" data-value="2,3,4"></div>
 						<span class="ui-li-text-sub">
 							Turn device on setting
 						</span>

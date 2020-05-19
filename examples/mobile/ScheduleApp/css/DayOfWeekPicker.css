@@ -1,0 +1,63 @@
+.ui-day-of-week-picker {
+    height: 30px;
+    width: 100%;
+    display: flex;
+    margin: 24px auto;
+}
+
+.ui-day-of-week-picker input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    background-color: transparent;
+    outline: none;
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    border-radius: 100%;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+.ui-day-of-week-picker input ~ input {
+    margin-left: 18px;
+}
+.ui-day-of-week-picker input::after {
+    content: "M";
+    font-size: 13px;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+}
+.ui-day-of-week-picker input:checked {
+    color: var(--primary-dark-color);
+    font-weight: bold;
+    border-color: var(--primary-dark-color);
+}
+.ui-day-of-week-picker input:nth-child(1)::after {
+    content: "S";
+    color: #d92442;
+}
+.ui-day-of-week-picker input:nth-child(1):checked::after {
+    color: var(--primary-dark-color);
+}
+.ui-day-of-week-picker input:nth-child(2)::after {
+    content: "M";
+}
+.ui-day-of-week-picker input:nth-child(3)::after {
+    content: "T";
+}
+.ui-day-of-week-picker input:nth-child(4)::after {
+    content: "W";
+}
+.ui-day-of-week-picker input:nth-child(5)::after {
+    content: "T";
+}
+.ui-day-of-week-picker input:nth-child(6)::after {
+    content: "F";
+}
+.ui-day-of-week-picker input:nth-child(7)::after {
+    content: "S";
+}

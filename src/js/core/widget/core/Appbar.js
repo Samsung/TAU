@@ -612,19 +612,21 @@
 			prototype._onChange = function (event) {
 				var target = event.target,
 					self = this,
+					ui = self._ui,
 					page = self._ui.page;
 
-				if (target.tagName === "INPUT") {
-					if (target === self._ui.selectAll) {
+				// update bottom bar visibility if options selectAll in AppBar exists
+				if (ui.selectAll && target.tagName === "INPUT") {
+					if (target === ui.selectAll) {
 						self._triggerSelectAll();
 					} else {
 						self._toggleSelectAll(!page.querySelector(selectors.IS_NOT_CHECKED));
 					}
 
-					if (self._ui.bottomBar) {
+					if (ui.bottomBar) {
 						self._toggleBottomBar(!!page.querySelector(selectors.IS_CHECKED));
 					}
-					if (self._ui.selectAll) {
+					if (ui.selectAll) {
 						self._updateTitle();
 					}
 				}
