@@ -35,7 +35,8 @@
 		"../BaseWidget",
 		"../../../core/engine",
 		"../../../core/util/animation/animation",
-		"../../../core/event/gesture"
+		"../../../core/event/gesture",
+		"../../../core/util/selectors"
 	],
 	function () {
 		//>>excludeEnd("tauBuildExclude");
@@ -44,6 +45,7 @@
 			engine = ns.engine,
 			utilsEvents = ns.event,
 			gesture = utilsEvents.gesture,
+			utilSelectors = ns.util.selectors,
 
 			Animation = ns.util.Animate,
 
@@ -62,6 +64,8 @@
 			 * @static
 			 */
 			Spin = function () {
+				var self = this;
+
 				/**
 				 * Object with default options
 				 * @property {Object} options
@@ -88,7 +92,7 @@
 				 * @property {string} [options.dragTarget="document"] set target element for drag gesture
 				 * @member ns.widget.core.Spin
 				 */
-				this.options = {
+				self.options = {
 					min: 0,
 					max: 9,
 					step: 1,
@@ -107,9 +111,12 @@
 					value: 0,
 					dragTarget: "document" // "document" | "self"
 				};
-				this._ui = {};
-				this.length = this.options.max - this.options.min + 1;
-				this._prevValue = null; // this property has to be "null" on start
+				self._ui = {
+					scrollableParent: null
+				};
+				self.length = self.options.max - self.options.min + 1;
+				self._prevValue = null; // self property has to be "null" on start
+				self._overflowYBeforeDrag = null;
 			},
 
 			WIDGET_CLASS = "ui-spin",
@@ -508,7 +515,7 @@
 				}, ENABLING_DURATION);
 				element.classList.add(classes.ENABLED);
 				utilsEvents.on(self.dragTarget, "drag dragend", self);
-
+				utilsEvents.on(self.dragTarget, "vmousedown vmouseup", self);
 			} else {
 				element.classList.add(classes.ENABLING);
 				window.setTimeout(function () {
@@ -517,6 +524,7 @@
 				}, ENABLING_DURATION);
 				element.classList.remove(classes.ENABLED);
 				utilsEvents.off(self.dragTarget, "drag dragend", self);
+				utilsEvents.off(self.dragTarget, "vmousedown vmouseup", self);
 				// disable animation
 				self._animation.stop();
 			}
@@ -549,7 +557,40 @@
 					}
 				}
 			}
+		};
 
+		/**
+		 * Handler for mouse down / touch start event
+		 * The method is intended to block the scroll during drag event on Spin widget
+		 * @protected
+		 * @method _vmouseDown
+		 * @member ns.widget.core.Spin
+		 */
+		prototype._vmouseDown = function () {
+			var self = this,
+				ui = self._ui;
+
+			ui.scrollableParent = utilSelectors.getScrollableParent(self.element);
+			if (ui.scrollableParent) {
+				self._overflowYBeforeDrag = ui.scrollableParent.style.overflowY;
+				ui.scrollableParent.style.overflowY = "hidden";
+			}
+		};
+
+		/**
+		 * Handler for mouse up / touch end event
+		 * The method is intended to unblock the scroll after drag event on Spin widget
+		 * @protected
+		 * @method _vmouseDown
+		 * @member ns.widget.core.Spin
+		 */
+		prototype._vmouseUp = function () {
+			var self = this,
+				ui = self._ui;
+
+			if (ui.scrollableParent) {
+				ui.scrollableParent.style.overflowY = self._overflowYBeforeDrag;
+			}
 		};
 
 		prototype._dragEnd = function () {
@@ -583,6 +624,12 @@
 			switch (event.type) {
 				case "drag":
 					this._drag(event);
+					break;
+				case "vmousedown":
+					this._vmouseDown(event);
+					break;
+				case "vmouseup":
+					this._vmouseUp(event);
 					break;
 				case "dragend":
 					this._dragEnd(event);
