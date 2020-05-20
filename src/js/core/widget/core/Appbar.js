@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*global window, define, ns */
+/*global define, ns */
 /**
  *
  * @since 1.2
@@ -64,6 +64,7 @@
 					self._dragStartingHeight = 0;
 					self._currentHeight = 0;
 					self._scrolledToTop = true;
+					self._lockExpanding = false;
 					self._calculateExtendedHight();
 				},
 				BaseWidget = ns.widget.BaseWidget,
@@ -119,6 +120,7 @@
 			Appbar.prototype = prototype;
 			Appbar.defaults = defaults;
 			Appbar.classes = classes;
+			Appbar.selector = ".ui-appbar,.ui-header,header,[data-role='header']";
 
 			prototype._init = function (element) {
 				var self = this;
@@ -382,7 +384,7 @@
 			prototype._onDragStart = function (event) {
 				var self = this;
 
-				if (self.options.expandingEnabled && (
+				if (!self._lockExpanding && self.options.expandingEnabled && (
 					(event.detail.direction === "down" && self._appbarState == states.COLLAPSED && self._scrolledToTop) ||
 					(event.detail.direction === "up" && self._appbarState == states.EXPANDED))) {
 
@@ -471,6 +473,19 @@
 			};
 
 			/**
+			 * Lock/Unlock AppBar expanding
+			 * Developer can temporarily locks AppBar expanding,
+			 * eg. when a widget in page content requires it
+			 * @method lockExpanding
+			 * @param {boolean} lock
+			 * @member ns.widget.core.Appbar
+			 * @public
+			 */
+			prototype.lockExpanding = function (lock) {
+				this._lockExpanding = !!lock;
+			};
+
+			/**
 			 * Dragend event handler
 			 * @method _onDragEnd
 			 * @member ns.widget.core.Appbar
@@ -480,7 +495,7 @@
 				var self = this,
 					threshold
 
-				if (self.options.expandingEnabled) {
+				if (!self._lockExpanding && self.options.expandingEnabled) {
 					threshold = (nominalHeights.COLLAPSED + self._expandedHeight) / 2;
 					self.element.classList.remove(classes.dragging);
 
@@ -508,7 +523,7 @@
 					totalHeight = self._dragStartingHeight + ((deltaY !== undefined) ? deltaY : 0),
 					totalMovement = 0;
 
-				if (self._appbarState === states.DRAGGING) {
+				if (!self._lockExpanding && self._appbarState === states.DRAGGING) {
 					totalHeight = min(totalHeight, self._expandedHeight);
 					totalHeight = max(totalHeight, nominalHeights.COLLAPSED);
 
@@ -764,7 +779,7 @@
 			ns.widget.core.Appbar = Appbar;
 			ns.engine.defineWidget(
 				"Appbar",
-				".ui-appbar,.ui-header,header,[data-role='header']",
+				Appbar.selector,
 				[],
 				Appbar,
 				"core"

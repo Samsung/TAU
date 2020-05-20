@@ -36,12 +36,16 @@
 		"../../../core/engine",
 		"../../../core/util/animation/animation",
 		"../../../core/event/gesture",
-		"../../../core/util/selectors"
+		"../../../core/util/selectors",
+		"./Page",
+		"./Appbar"
 	],
 	function () {
 		//>>excludeEnd("tauBuildExclude");
 		var document = window.document,
 			BaseWidget = ns.widget.BaseWidget,
+			Page = ns.widget.core.Page,
+			Appbar = ns.widget.core.Appbar,
 			engine = ns.engine,
 			utilsEvents = ns.event,
 			gesture = utilsEvents.gesture,
@@ -112,7 +116,9 @@
 					dragTarget: "document" // "document" | "self"
 				};
 				self._ui = {
-					scrollableParent: null
+					scrollableParent: null,
+					page: null,
+					appbar: null
 				};
 				self.length = self.options.max - self.options.min + 1;
 				self._prevValue = null; // self property has to be "null" on start
@@ -575,13 +581,20 @@
 				self._overflowYBeforeDrag = ui.scrollableParent.style.overflowY;
 				ui.scrollableParent.style.overflowY = "hidden";
 			}
+			ui.page = utilSelectors.getClosestBySelector(self.element, Page.selector);
+			if (ui.page) {
+				ui.appbar = ui.page.querySelector(Appbar.selector);
+				if (ui.appbar) {
+					ns.widget.Appbar(ui.appbar).lockExpanding(true);
+				}
+			}
 		};
 
 		/**
 		 * Handler for mouse up / touch end event
 		 * The method is intended to unblock the scroll after drag event on Spin widget
 		 * @protected
-		 * @method _vmouseDown
+		 * @method _vmouseUp
 		 * @member ns.widget.core.Spin
 		 */
 		prototype._vmouseUp = function () {
@@ -590,6 +603,9 @@
 
 			if (ui.scrollableParent) {
 				ui.scrollableParent.style.overflowY = self._overflowYBeforeDrag;
+			}
+			if (ui.appbar) {
+				ns.widget.Appbar(ui.appbar).lockExpanding(false);
 			}
 		};
 
