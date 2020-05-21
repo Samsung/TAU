@@ -126,8 +126,8 @@
 			overflow: auto;
 			padding: 13 * @px_base;
 
-			a {
-				:first-child {
+			a, div {
+				.ui-marquee {
 					height: 50 * @px_base;
 				}
 
@@ -138,7 +138,7 @@
 					text-overflow: ellipsis;
 					display: inline-block;
 					overflow: hidden;
-					&:last-child:not(:first-of-type) {
+					&:last-child:not(:first-of-type):not(.ui-li-sub-text-no-padding) {
 						padding-top: 3 * @px_base;
 					}
 				}
@@ -238,27 +238,52 @@
 					justify-content: space-between;
 
 					// List divider "|" between text area and control button.
-					div > div {
-						text-align: center;
+					&:not(.li-has-multiline) {
+						div > div {
+							text-align: center;
 
-						&.ui-marquee {
-							display: flex;
-							flex-direction: row;
-							max-width: 222 * @px_base;
-							max-height: 42 * @px_base;
+							&.ui-marquee {
+								display: flex;
+								flex-direction: row;
+								max-width: 222 * @px_base;
+								max-height: 42 * @px_base;
+
+								&::after {
+									opacity: 1;
+									content: "";
+									position: relative;
+									width: 2 * @px_base;
+									height: 50 * @px_base;
+									top: 0;
+									right: 0;
+									margin-left: 14 * @px_base;
+									margin-right: 19 * @px_base;
+									background: @color_grid_list_divider_bg;
+									transform: none;
+								}
+							}
+						}
+					}
+
+					// List divider for multiline.
+					&.li-has-multiline {
+						min-height: 108 * @unit_base;
+
+						* {
+							text-align: center;
+						}
+
+						& > div:first-child {
+							display: grid;
+							width: 222 * @px_base;
+							margin-left: 14 * @px_base;
+							flex-grow: 0;
+							flex-shrink: 0;
 
 							&::after {
 								opacity: 1;
-								content: "";
-								position: relative;
-								width: 2 * @px_base;
 								height: 50 * @px_base;
-								top: 0;
-								right: 0;
-								margin-left: 14 * @px_base;
-								margin-right: 19 * @px_base;
-								background: @color_grid_list_divider_bg;
-								transform: none;
+								right: 111 * @px_base;
 							}
 						}
 					}
