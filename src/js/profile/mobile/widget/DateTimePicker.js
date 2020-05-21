@@ -237,7 +237,6 @@
 				spinContainer.classList.add(classes.CONTAINER);
 				spinContainer.classList.add(classes.DATE_CONTAINER);
 
-
 				options.labels = [];
 				while (date.getFullYear() === year) {
 					options.labels.push(
@@ -260,6 +259,8 @@
 
 				spinWidget = ns.widget.Spin(spin, options);
 				self._spins["date"] = spinWidget;
+
+				self._year = year;
 
 				return spinContainer;
 			};
@@ -420,8 +421,8 @@
 			* @protected
 			*/
 			prototype._getValue = function () {
-				var time = new Date(0),
-					self = this,
+				var self = this,
+					time = new Date(self.options.value),
 					spins = self._spins,
 					hours = parseInt(spins.hour.value(), 10);
 
@@ -459,7 +460,7 @@
 					self._focusInput("minute");
 				} else if (parentContainer && parentContainer.classList.contains(classes.DATE_CONTAINER) &&
 					getClosestByClass(eventTargetElement, Spin.classes.SELECTED)) {
-					utilsEvents.trigger(self.element, events.SELECTED, {datetime: self.options.value});
+					utilsEvents.trigger(self.element, events.SELECTED, {datetime: self._getValue()});
 				} else {
 					element.classList.remove(classes.TIME_INPUT_ACTIVE);
 					minuteContainer.classList.remove(classes.ACTIVE_CONTAINER);
@@ -545,8 +546,23 @@
 					self._setInputValue("hour", event.detail.value, false);
 				} else if (parentContainer && parentContainer.classList.contains(classes.MINUTE_CONTAINER)) {
 					self._setInputValue("minute", event.detail.value, false);
+				} else if (parentContainer && parentContainer.classList.contains(classes.DATE_CONTAINER)) {
+					self._setDate(new Date(self._year, 0, event.detail.value + 1));
 				}
 			};
+
+			prototype._setDate = function (date) {
+				var currentValue = this.options.value;
+
+				if (typeof date === "string") {
+					date = new Date(date);
+				}
+				if (date instanceof Date) {
+					currentValue.setFullYear(date.getFullYear());
+					currentValue.setMonth(date.getMonth());
+					currentValue.setDate(date.getDate());
+				}
+			}
 
 			/**
 			* Handle events
@@ -586,6 +602,7 @@
 				utilsEvents.on(ui.minuteInput, "input", self);
 				utilsEvents.on(ui.hourSpin, "spinchange", self);
 				utilsEvents.on(ui.minuteSpin, "spinchange", self);
+				utilsEvents.on(ui.dateSpin, "spinchange", self);
 			};
 
 			/**
@@ -603,6 +620,7 @@
 				utilsEvents.off(ui.minuteInput, "input", self);
 				utilsEvents.off(ui.hourSpin, "spinchange", self);
 				utilsEvents.off(ui.minuteSpin, "spinchange", self);
+				utilsEvents.off(ui.dateSpin, "spinchange", self);
 			};
 
 			/**

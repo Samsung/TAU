@@ -73,15 +73,17 @@
 				* @member ns.widget.mobile.Calendar
 				*/
 				defaultOptions = {
-					pastSelection: false
+					pastSelection: false,
+					closeOnSelect: false
 				},
 
 				Calendar = function () {
 					var self = this;
 
 					self.options = utilsObject.merge({}, defaultOptions);
+					self._value = new Date();
 
-					self._dateData = new Date();
+					self._dateData = self._value;
 					self._todayYear = self._dateData.getFullYear();
 					self._todayMonth = self._dateData.getMonth() + 1;
 					self._defaultToday = self._dateData.getUTCDate();
@@ -89,6 +91,14 @@
 					self._activeMonth = null;
 					self._fixMonth = null;
 					self._loadTodayFlag = true;
+					/**
+					 * time properties are not used by calendar but
+					 * there are required when change view to DateTimePicker
+					 */
+					self._hours = self._dateData.getHours();
+					self._minutes = self._dateData.getMinutes();
+					self._seconds = self._dateData.getSeconds();
+
 					self._ui = {
 						switch: null,
 						leftArrow: null,
@@ -256,9 +266,11 @@
 
 				if (!targetClassList.contains(classes.DISABLED)) {
 					if (target === ui.rightArrow) {
-						self._moveMonth("right");
+						self._moveMonth(1);
 					} else if (target === ui.leftArrow) {
-						self._moveMonth("left");
+						self._moveMonth(-1);
+					} else if (target === ui.switch) {
+						events.trigger(self.element, "calendarswitch", {date: self._getValue()});
 					} else {
 						// Calendar view
 						if (target.tagName === "TD") { // if click on TD instead of DIV
@@ -269,13 +281,23 @@
 							!targetClassList.contains(classes.SELECTION) &&
 							!targetClassList.contains(classes.DISABLED)) {
 							if (targetClassList.contains(classes.PREV_MONTH_DAY)) {
-								self._moveMonth("left");
+								self._moveMonth(-1);
 								self._selection(target.innerHTML);
+								if (self.options.closeOnSelect) {
+									events.trigger(self.element, "calendarswitch", {date: self._getValue()});
+								}
 							} else if (targetClassList.contains(classes.NEXT_MONTH_DAY)) {
-								self._moveMonth("right");
+								self._moveMonth(1);
 								self._selection(target.innerHTML);
-							} else if (targetClassList.contains(classes.CURRENT_MONTH_DAY)) {
+								if (self.options.closeOnSelect) {
+									events.trigger(self.element, "calendarswitch", {date: self._getValue()});
+								}
+							}
+							if (targetClassList.contains(classes.CURRENT_MONTH_DAY)) {
 								self._selection(target.innerHTML);
+								if (self.options.closeOnSelect) {
+									events.trigger(self.element, "calendarswitch", {date: self._getValue()});
+								}
 							}
 						}
 					}
@@ -283,31 +305,105 @@
 			};
 
 			/**
-			* Selecting a date leaves a mark
-			* @method _moveMonth
-			* @param {string} direction
+			* Set the value of Calendar
+			* @method _setValue
+			* @param {Date} value
 			* @member ns.widget.mobile.Calendar
 			* @protected
 			*/
-			prototype._moveMonth = function (direction) {
-				var self = this,
-					calendarView = self._ui.calendarView;
+			prototype._setValue = function (value) {
+				var self = this;
 
-				if (direction === "left") {
-					self._todayMonth = self._todayMonth - 1;
+				// change string to date eg. "1995-12-17T03:24:00"
+				if (typeof value === "string") {
+					value = new Date(value);
+				}
+
+				if (value instanceof Date) {
+					self._value = value;
+
+					self._hours = value.getHours();
+					self._minutes = value.getMinutes();
+					self._seconds = value.getSeconds();
+
+					self._setMonth(value.getMonth() + 1);
+					self._selection(value.getDate());
+				}
+			};
+
+			prototype._getValue = function () {
+				return new Date(this._value);
+			};
+
+			/**
+			* Selecting a date leaves a mark
+			* @method _moveMonth
+			* @param {number} change
+			* @member ns.widget.mobile.Calendar
+			* @protected
+			*/
+			prototype._moveMonth = function (change) {
+				var self = this;
+
+				if (change !== 0) {
+					self._todayMonth = self._todayMonth + change;
 					if (self._todayMonth === 0) {
 						self._todayMonth = 12;
 						self._todayYear = self._todayYear - 1;
 					}
-				} else {
-					self._todayMonth = self._todayMonth + 1;
 					if (self._todayMonth === 13) {
 						self._todayMonth = 1;
 						self._todayYear = self._todayYear + 1;
 					}
 				}
+				self._updateCalendar();
+			};
+
+			/**
+			* Set year
+			* @method _setYear
+			* @param {number} year
+			* @member ns.widget.mobile.Calendar
+			* @protected
+			*/
+			prototype._setYear = function (year) {
+				var self = this;
+
+				if (self._todayYear !== year) {
+					self._todayYear = year;
+					self._updateCalendar();
+				}
+			};
+
+			/**
+			* Set month
+			* @method _setMonth
+			* @param {number} month
+			* @member ns.widget.mobile.Calendar
+			* @protected
+			*/
+			prototype._setMonth = function (month) {
+				var self = this;
+
+				if (self._todayMonth !== month) {
+					self._todayMonth = month;
+					self._updateCalendar();
+				}
+			};
+
+			/**
+			* Selecting a date leaves a mark
+			* @method _updateCalendar
+			* @member ns.widget.mobile.Calendar
+			* @protected
+			*/
+			prototype._updateCalendar = function () {
+				var self = this,
+					calendarView = self._ui.calendarView;
+
 				self._deleteCalendar(calendarView);
-				self._dateData = new Date(self._todayYear, self._todayMonth - 1);
+				self._dateData = new Date(self._todayYear, self._todayMonth - 1, 0,
+					self._hours, self._minutes, self._seconds);
 				self._buildCalendar(calendarView);
 			};
 
@@ -320,18 +416,23 @@
 			*/
 			prototype._selection = function (value) {
 				var otherMonthDay,
+					strValue,
 					self = this;
 
 				if (value != undefined) {
+					strValue = value.toString();
 					otherMonthDay = self._ui.calendarView.querySelectorAll("div." + classes.CURRENT_MONTH_DAY);
 					otherMonthDay.forEach(function (idx) {
-						if (idx.innerHTML === value) {
-							idx.classList.add(classes.SELECTION);
+						if (idx.innerHTML === strValue) {
 							self._selectDay.classList.remove(classes.SELECTION);
+							idx.classList.add(classes.SELECTION);
 							self._selectDay = idx;
 							self._activeMonth = self._todayMonth;
 						}
-					})
+					});
+					// set widget value
+					self._value = new Date(self._todayYear, self._todayMonth - 1, value,
+						self._hours, self._minutes, self._seconds);
 				}
 			};
 
