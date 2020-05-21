@@ -10,10 +10,12 @@
 	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js"></script>
 	<link href="css/DayOfWeekPicker.css" rel="stylesheet" />
 	<script src="js/DayOfWeekPicker.js"></script>
+	<script src="js/app.js"></script>
+
 </head>
 
 <body>
-	<div class="ui-page">
+	<div class="ui-page" id="create-event-page">
 		<header>
 			<div class="ui-appbar-left-icons-container">
 				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back">
@@ -36,12 +38,14 @@
 			</div>
 			<div class="ui-content-area">
 				<div id="date-on" class="ui-datetime-picker" data-view="wheel" data-format="12"></div>
+				<div id="calendar-on" class="ui-calendar app-hidden" data-past-selection="true" data-close-on-select="true"></div>
 			</div>
 			<div class="ui-content-subheader">
 				Device off
 			</div>
 			<div class="ui-content-area">
 				<div id="date-off" class="ui-datetime-picker" data-view="wheel" data-format="12"></div>
+				<div id="calendar-off" class="ui-calendar app-hidden" data-past-selection="true" data-close-on-select="true"></div>
 			</div>
 			<div class="ui-content-subheader">
 				Repeat weekly

@@ -82,3 +82,7 @@
 	top: 1px;
 	margin: auto;
 }
+
+.app-hidden {
+	display: none;
+}
