@@ -71,6 +71,7 @@
 		element.classList.add(classes.WIDGET);
 		for (i = 0; i < 7; i++) {
 			checkbox = document.createElement("input");
+			checkbox.setAttribute("data-role", "none");
 			checkbox.setAttribute("type", "checkbox");
 			fragment.appendChild(checkbox);
 			ui.days[i] = checkbox;
