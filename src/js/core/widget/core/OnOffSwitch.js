@@ -230,6 +230,7 @@
 				var inputElement = createElement("input");
 
 				inputElement.type = "checkbox";
+				inputElement.setAttribute("data-role", "none");
 				return inputElement;
 			}
 
