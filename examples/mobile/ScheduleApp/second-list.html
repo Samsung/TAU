@@ -14,10 +14,10 @@
 </head>
 
 <body>
-	<div class="ui-page ui-page-active" id="main">
+	<div class="ui-page ui-page-active" id="second-list">
 		<header>
 			<div class="ui-appbar-left-icons-container">
-				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+				<a href="#main" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat"></a>
 			</div>
 			<div class="ui-appbar-title-container">
 				<span class="ui-appbar-title">Schedule</span>
@@ -86,6 +86,31 @@
 					<div class="hour-container">
 						<span class="ui-text hour-value">
 							7:00
+						</span>
+						<span class="ui-text hour-signature">
+							AM
+						</span>
+					</div>
+					<div class="ui-li-action action-container">
+						<day-indicator active="0 1 5 6"></day-indicator>
+						<select class="ui-on-off-switch">
+							<option value="off"></option>
+							<option value="on" selected></option>
+						</select>
+					</div>
+				</div>
+				<div class="content-footer">
+					Cool / 18°C / High
+				</div>
+			</div>
+			<div class="ui-content-area content-area">
+				<div class="ui-text content-header">
+					Turn device on
+				</div>
+				<div class="content-container">
+					<div class="hour-container">
+						<span class="ui-text hour-value">
+							7:06
 						</span>
 						<span class="ui-text hour-signature">
 							AM
