@@ -23,7 +23,9 @@
 	});
 
 	document.addEventListener("pagebeforeshow", function (event) {
-		var page = event.target;
+		var page = event.target,
+			themeChanger = document.querySelector("#theme-selector"),
+			themeChangerButton = document.querySelector("#selector-opener");
 
 		if (page.id === "create-event-page") {
 			page.addEventListener("selected", function (event) {
@@ -59,5 +61,14 @@
 				}
 			});
 		}
+		themeChanger.addEventListener("change", function (event) {
+			tau.theme.setTheme(event.target.value);
+		});
+
+		themeChangerButton.addEventListener("click", function () {
+			var dropdownmenuWidget = tau.widget.DropdownMenu(themeChanger);
+
+			dropdownmenuWidget.open();
+		});
 	}, true);
 }());
