@@ -168,7 +168,9 @@
 					spin = document.createElement("div"),
 					spinInput = document.createElement("input"),
 					spinContainer = document.createElement("div"),
-					options = {},
+					options = {
+						momentumLevel: 1
+					},
 					spinWidget;
 
 				spin.classList.add(Spin.classes.SPIN);
@@ -250,7 +252,7 @@
 				options.min = 0;
 				options.max = options.labels.length - 1;
 				options.loop = false;
-				options.momentum = 2;
+				options.momentumLevel = 1;
 
 				spinContainer.appendChild(spin);
 
@@ -329,7 +331,7 @@
 				ui.minuteInput.value = minutes;
 
 				firstDayOfYear = new Date(value.getFullYear(), 0, 1);
-				spins.date.value((value - firstDayOfYear) / DAY_MILLISECONDS);
+				spins.date.value(Math.floor((value - firstDayOfYear) / DAY_MILLISECONDS));
 
 				spins.hour.value(hours);
 				spins.minute.value(minutes);
@@ -552,7 +554,7 @@
 			};
 
 			prototype._setDate = function (date) {
-				var currentValue = this.options.value;
+				var currentValue = new Date(this.options.value);
 
 				if (typeof date === "string") {
 					date = new Date(date);
@@ -561,6 +563,7 @@
 					currentValue.setFullYear(date.getFullYear());
 					currentValue.setMonth(date.getMonth());
 					currentValue.setDate(date.getDate());
+					this.options.value = currentValue;
 				}
 			}
 

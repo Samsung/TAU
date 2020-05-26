@@ -48,6 +48,7 @@
 				var self = this;
 
 				CoreSpin.call(self);
+				self.options.dragTarget = "self";
 			},
 			prototype = new CoreSpin();
 
@@ -56,9 +57,10 @@
 		Spin.timing = CoreSpin.timing;
 
 		prototype._setEnabled = function (element, value) {
-			var self = this;
+			var self = this,
+				result;
 
-			CoreSpinPrototype._setEnabled.call(self, element, value);
+			result = CoreSpinPrototype._setEnabled.call(self, element, value);
 
 			if (self.options.enabled) {
 				// disable tau rotaryScroller the widget has own support for rotary event
@@ -67,6 +69,8 @@
 				// enable tau rotaryScroller the widget has own support for rotary event
 				ns.util.rotaryScrolling && ns.util.rotaryScrolling.unlock();
 			}
+
+			return result;
 		}
 
 		ns.widget.wearable.Spin = Spin;
@@ -76,7 +80,8 @@
 			".ui-spin",
 			[],
 			Spin,
-			"wearable"
+			"wearable",
+			true
 		);
 
 		//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);

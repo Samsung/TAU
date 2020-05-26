@@ -1,4 +1,4 @@
-/* global requestAnimationFrame, define, ns */
+/* global define, ns */
 /**
  * Main file of applications, which connect other parts
  */
@@ -9,453 +9,496 @@
 	define([
 		"../../../../../libs/BezierCurve"
 	],
-		function (bezierCurve) {
-		//>>excludeEnd("tauBuildExclude");
-			var utils = ns.util,
-				requestAnimationFrame = utils.requestAnimationFrame,
+	function (bezierCurve) {
+	//>>excludeEnd("tauBuildExclude");
+		var utils = ns.util,
+			requestAnimationFrame = utils.requestAnimationFrame,
 			/**
-				 * Util to change value of object property in given time
-				 * @class Animation
-				 */
-				Animate = function (object) {
-					var self = this;
-
-					self._object = object;
-					self._animate = {
-						chain: [],
-						chainIndex: 0
-					};
-					// This is used to keep track of elapsed time of paused animation
-					self._pausedTimeDiff = null;
-					self._animateConfig = null;
-				},
-				linear = function (x, a, b) {
-					a = (a === undefined) ? 1 : a;
-					b = (b === undefined) ? 0 : b;
-					return x * (a || 0) + (b || 0);
-				},
-				inverseTiming = function (x) {
-					return 1 - x;
-				},
-				prototype = {};
-
-			utils.bezierCurve = utils.bezierCurve || bezierCurve;
-
-			Animate.prototype = prototype;
-
-			Animate.timing = {
-				linear: linear,
-				ease: utils.bezierCurve.ease.get,
-				easeInOut: utils.bezierCurve.easeInOut.get
-			};
-
-			function firstDefined() {
-				var args = [].slice.call(arguments),
-					i = 0,
-					length = args.length,
-					arg;
-
-				for (; i < length; i++) {
-					arg = args[i];
-					if (arg !== undefined) {
-						return arg;
-					}
-				}
-				return null;
-			}
-
-			prototype.destroy = function () {
+			 * Util to change value of object property in given time
+			 * @class Animation
+			 */
+			Animate = function (object) {
 				var self = this;
 
-				self._object = null;
-				self._animate = null;
+				self._object = object;
+				self._animate = {
+					chain: [],
+					chainIndex: 0
+				};
+				// This is used to keep track of elapsed time of paused animation
+				self._pausedTimeDiff = 0;
 				self._animateConfig = null;
-			};
+			},
+			linear = function (x, a, b) {
+				a = (a === undefined) ? 1 : a;
+				b = (b === undefined) ? 0 : b;
+				return x * (a || 0) + (b || 0);
+			},
+			inverseTiming = function (x) {
+				return 1 - x;
+			},
+			prototype = {};
 
-			function calculateSteps(option, currentPoint) {
-				var percent,
-					step,
-					steps = option.steps,
-					from = option.from,
-					to = null,
-					percentStart = 0,
-					percentStop = 100,
-					floatPoint;
+		utils.bezierCurve = utils.bezierCurve || bezierCurve;
 
-				for (percent in steps) {
-					if (steps.hasOwnProperty(percent)) {
-						step = steps[percent];
-						floatPoint = percent / 100;
-						if (currentPoint >= floatPoint) {
-							from = step;
-							percentStart = floatPoint;
-						} else if (to === null) {
-							to = step;
-							percentStop = floatPoint;
-						}
+		Animate.prototype = prototype;
+
+		Animate.timing = {
+			linear: linear,
+			ease: utils.bezierCurve.ease.get,
+			easeInOut: utils.bezierCurve.easeInOut.get,
+			easeIn: utils.bezierCurve.easeIn.get,
+			easeOut: utils.bezierCurve.easeOut.get
+		};
+
+		function firstDefined() {
+			var args = [].slice.call(arguments),
+				i = 0,
+				length = args.length,
+				arg;
+
+			for (; i < length; i++) {
+				arg = args[i];
+				if (arg !== undefined) {
+					return arg;
+				}
+			}
+			return null;
+		}
+
+		prototype.destroy = function () {
+			var self = this;
+
+			self._object = null;
+			self._animate = null;
+			self._animateConfig = null;
+		};
+
+		function calculateSteps(option, currentPoint) {
+			var percent,
+				step,
+				steps = option.steps,
+				from = option.from,
+				to = null,
+				percentStart = 0,
+				percentStop = 100,
+				floatPoint;
+
+			for (percent in steps) {
+				if (steps.hasOwnProperty(percent)) {
+					step = steps[percent];
+					floatPoint = percent / 100;
+					if (currentPoint >= floatPoint) {
+						from = step;
+						percentStart = floatPoint;
+					} else if (to === null) {
+						to = step;
+						percentStop = floatPoint;
 					}
 				}
-				return from + (currentPoint - percentStart) / (percentStop - percentStart) *
-					(to - from);
+			}
+			return from + (currentPoint - percentStart) / (percentStop - percentStart) *
+				(to - from);
+		}
+
+		function eachOption(config, animateConfig, option) {
+			var propertyObject,
+				from,
+				steps = option.steps || config.steps;
+
+			option.duration = firstDefined(option.duration, config.duration);
+			option.delay = firstDefined(option.delay, config.delay, 0);
+			propertyObject = firstDefined(option.object, this._object);
+			option.simpleProperty = option.property;
+			option.property.split(".").forEach(function (property) {
+				if (typeof propertyObject[property] === "object" && propertyObject[property] !== null) {
+					propertyObject = propertyObject[property];
+					option.propertyObject = propertyObject;
+				} else {
+					option.simpleProperty = property;
+				}
+			});
+			option.propertyObject = propertyObject;
+			if (steps) {
+				option.calculate = calculateSteps.bind(null, option);
+				steps[0] = firstDefined(steps[0], option.from, propertyObject[option.simpleProperty]);
+				option.from = steps["0"];
+				option.to = firstDefined(steps["100"], option.to);
+				option.diff = 0;
+				option.current = steps[0];
+				option.direction = option.from < option.to ? 1 : -1;
+			} else {
+				option.calculate = option.calculate || linear;
+				from = firstDefined(option.from, propertyObject[option.simpleProperty]);
+				option.from = from;
+				option.diff = (option.to - from);
+				option.current = from;
+				option.direction = from < option.to ? 1 : -1;
 			}
 
-			function eachOption(config, animateConfig, option) {
-				var propertyObject,
-					from,
-					steps = option.steps || config.steps;
+			// calculate value change in full time
+			option.startTime = Date.now() + option.delay;
 
-				option.duration = firstDefined(option.duration, config.duration);
-				option.delay = firstDefined(option.delay, config.delay, 0);
-				propertyObject = firstDefined(option.object, this._object);
-				option.simpleProperty = option.property;
-				option.property.split(".").forEach(function (property) {
-					if (typeof propertyObject[property] === "object" && propertyObject[property] !== null) {
-						propertyObject = propertyObject[property];
-						option.propertyObject = propertyObject;
+			if (this._pausedTimeDiff > 0) {
+				option.startTime = Date.now() - this._pausedTimeDiff;
+				this._pausedTimeDiff = 0;
+			}
+			// save last time of recalculate options
+			option.lastCalculationTime = option.startTime;
+			// set timing function
+			option.timing = firstDefined(option.timing, config.timing, linear);
+
+			animateConfig.push(option);
+		}
+
+		prototype.setProgress = function (progress) {
+			var self = this,
+				animate = self._animate,
+				chain;
+
+			if (animate.chainIndex > 0) {
+				chain = animate.chain[animate.chainIndex - 1];
+			} else {
+				chain = animate.chain[0];
+			}
+			if (chain) {
+				chain.forEach(function (option) {
+					option.progress = progress;
+					if (self._pausedTimeDiff === 0) {
+						option.startTime = Date.now() - option.duration * progress;
 					} else {
-						option.simpleProperty = property;
+						self._pausedTimeDiff = option.duration * progress;
 					}
 				});
-				option.propertyObject = propertyObject;
-				if (steps) {
-					option.calculate = calculateSteps.bind(null, option);
-					steps[0] = firstDefined(steps[0], option.from, propertyObject[option.simpleProperty]);
-					option.from = steps["0"];
-					option.to = firstDefined(steps["100"], option.to);
-					option.diff = 0;
-					option.current = steps[0];
-					option.direction = option.from < option.to ? 1 : -1;
-				} else {
-					option.calculate = option.calculate || linear;
-					from = firstDefined(option.from, propertyObject[option.simpleProperty]);
-					option.from = from;
-					option.diff = (option.to - from);
-					option.current = from;
-					option.direction = from < option.to ? 1 : -1;
-				}
+			}
+		};
 
-				// calculate value change in full time
-				option.startTime = Date.now() + option.delay;
+		prototype.getProgress = function () {
+			var self = this,
+				animate = self._animate,
+				chain;
 
-				if (this._pausedTimeDiff) {
-					option.startTime = Date.now() - this._pausedTimeDiff;
-					this._pausedTimeDiff = 0;
-				}
-				// save last time of recalculate options
-				option.lastCalculationTime = option.startTime;
-				// set timing function
-				option.timing = firstDefined(option.timing, config.timing, linear);
-
-				animateConfig.push(option);
+			if (animate.chainIndex > 0) {
+				chain = animate.chain[animate.chainIndex - 1];
+			} else {
+				chain = animate.chain[0];
 			}
 
-			prototype._initAnimate = function () {
-				var self = this,
-					animateConfig = [],
-					options = self._animate.chain[self._animate.chainIndex++];
-
-				if (options) {
-					options.forEach(eachOption.bind(self, self._config, animateConfig));
-					self._animateConfig = animateConfig;
-				} else {
-					self._animateConfig = null;
-				}
-			};
-
-			function animateLoopCallback(self, copiedArgs) {
-				if (self._animate) {
-					self._animate.chain = [].slice.call(copiedArgs);
-					self.start();
-				}
+			if (chain) {
+				return chain[0].progress;
 			}
+			return 0;
+		};
 
-			function animateRevertCallback(self, copiedArgs) {
-				var chain = [].slice.call(copiedArgs),
-					newChain = [];
+		prototype._initAnimate = function () {
+			var self = this,
+				animateConfig = [],
+				options = self._animate.chain[self._animate.chainIndex++];
 
-				chain.forEach(function (options) {
-					newChain.unshift(options);
-					options.forEach(function (option) {
-						option.timing = inverseTiming;
-					});
-				});
-				self._animate.chain = newChain;
-				self._animate.callback = null;
+			if (options) {
+				options.forEach(eachOption.bind(self, self._config, animateConfig));
+				self._animateConfig = animateConfig;
+			} else {
+				self._animateConfig = null;
+			}
+		};
+
+		function animateLoopCallback(self, copiedArgs) {
+			if (self._animate) {
+				self._animate.chain = [].slice.call(copiedArgs);
 				self.start();
 			}
+		}
 
-			/**
-			 * Set animate
-			 * @param {Object...} options list of animations configs
-			 * @return {Animate}
-			 */
-			prototype.set = function (options) {
-				var self = this,
-					config,
+		function animateRevertCallback(self, copiedArgs) {
+			var chain = [].slice.call(copiedArgs),
+				newChain = [];
+
+			chain.forEach(function (options) {
+				newChain.unshift(options);
+				options.forEach(function (option) {
+					option.timing = inverseTiming;
+				});
+			});
+			self._animate.chain = newChain;
+			self._animate.callback = null;
+			self.start();
+		}
+
+		/**
+		 * Set animate
+		 * @param {Object...} options list of animations configs
+		 * @return {Animate}
+		 */
+		prototype.set = function (options) {
+			var self = this,
+				config,
 				// converts arguments to array
-					args = [].slice.call(arguments),
-					copiedArgs;
+				args = [].slice.call(arguments),
+				copiedArgs;
 
-				// we get last argument
-				config = args.pop();
+			// we get last argument
+			config = args.pop();
 
-				if (!Array.isArray(config)) {
-				// if last arguments is object then we use it as global animation config
-					self._animate.config = config;
+			if (!Array.isArray(config)) {
+			// if last arguments is object then we use it as global animation config
+				self._animate.config = config;
+			} else {
+			// otherwise this is description of one animation loop and back to args array
+				args.push(config);
+				config = null;
+			}
+
+			self._config = config;
+
+			// copy array to be sure that we have new reference objects
+			copiedArgs = [].slice.call(args);
+
+			if (config) {
+				if (config.loop && config.duration > 0) {
+				// when animation is in loop then we create callback on animation and to restart animation
+					self._animate.callback = animateLoopCallback.bind(null, self, copiedArgs);
+				} else if (config.withRevert) {
+					self._animate.callback = animateRevertCallback.bind(null, self, copiedArgs);
 				} else {
-				// otherwise this is description of one animation loop and back to args array
-					args.push(config);
-					config = null;
+				// otherwise we use callback from options
+					self._animate.callback = options.callback || config.callback;
 				}
+			}
 
-				self._config = config;
+			// cache options in object
+			self._animate.chain = args;
 
-				// copy array to be sure that we have new reference objects
-				copiedArgs = [].slice.call(args);
+			return self;
+		};
 
-				if (config) {
-					if (config.loop && config.duration > 0) {
-					// when animation is in loop then we create callback on animation and to restart animation
-						self._animate.callback = animateLoopCallback.bind(null, self, copiedArgs);
-					} else if (config.withRevert) {
-						self._animate.callback = animateRevertCallback.bind(null, self, copiedArgs);
-					} else {
-					// otherwise we use callback from options
-						self._animate.callback = options.callback || config.callback;
-					}
-				}
+		/**
+		 * Start animation
+		 * @param {Function} [callback] function called after finish animation
+		 */
+		prototype.start = function (callback) {
+			var self = this;
 
-				// cache options in object
-				self._animate.chain = args;
-
-				return self;
-			};
-
-			/**
-			 * Start animation
-			 * @param {Function} [callback] function called after finish animation
-			 */
-			prototype.start = function (callback) {
-				var self = this;
-
-				self.active = true;
+			self.active = true;
 			// init animate options
-				self._initAnimate();
+			self._initAnimate();
 
 			// setting callback function
-				callback = self._animate.callback || callback;
+			self._animate.callback = self._animate.callback || callback;
+			callback = self._animate.callback;
 
-				if (self._animate.chainIndex < self._animate.chain.length) {
-				// if we have many animations in chain that we set callback
-				// to start next animation from chain after finish current
-				// animation
-					self._animationTimeout = self._calculateAnimate.bind(self, self.start.bind(self, callback));
-				} else {
-					self._animationTimeout = self._calculateAnimate.bind(self, callback);
-				}
-				self._animationId = Math.random() + Date.now();
-				self._animationTimeout.animationId = self._animationId;
-				self._calculateAnimate(callback);
-				return self;
-			};
+			if (self._animate.chainIndex < self._animate.chain.length) {
+			// if we have many animations in chain that we set callback
+			// to start next animation from chain after finish current
+			// animation
+				self._animationTimeout = self._calculateAnimate.bind(self, self.start.bind(self, callback));
+			} else {
+				self._animationTimeout = self._calculateAnimate.bind(self, callback);
+			}
+			self._animationId = Math.random() + Date.now();
+			self._animationTimeout.animationId = self._animationId;
+			self._calculateAnimate(callback);
+			return self;
+		};
 
-			/**
-			 * Stop animations
-			 */
-			prototype.stop = function () {
-				var self = this;
+		/**
+		 * Stop animations
+		 */
+		prototype.stop = function () {
+			var self = this;
 
-				self.active = false;
-				// reset index of animations chain
-				self._animate.chainIndex = 0;
-				// reset current animation config
-				self._animateConfig = null;
+			self.active = false;
+			// reset index of animations chain
+			self._animate.chainIndex = 0;
+			// reset current animation config
+			self._animateConfig = null;
 
-				ns.util.cancelAnimationFrames(self._animationId);
-				// clear timeout
-				self._animationTimeout = null;
-				return self;
-			};
+			ns.util.cancelAnimationFrames(self._animationId);
+			// clear timeout
+			self._animationTimeout = null;
+			return self;
+		};
 
-			prototype.pause = function () {
-				var self = this;
+		prototype.pause = function () {
+			var self = this;
 
-				self.active = false;
-				if (self._animateConfig) {
-					self._pausedTimeDiff = Date.now() - self._animateConfig[0].startTime;
-					self.stop();
-				}
-			};
+			self.active = false;
+			if (self._animateConfig) {
+				self._pausedTimeDiff = Date.now() - self._animateConfig[0].startTime;
+				self.stop();
+			}
+		};
 
-			/**
-			 * Method resets startTime for each animations to current time
-			 * @private
-			 * @param {*} animateConfig
-			 */
-			function resetStartTimeForAnimateConfig(animateConfig) {
-				var i,
-					len;
+		/**
+		 * Method resets startTime for each animations to current time
+		 * @private
+		 * @param {*} animateConfig
+		 */
+		function resetStartTimeForAnimateConfig(animateConfig) {
+			var i,
+				len;
 
-				if (animateConfig) {
-					len = animateConfig.length;
-					for (i = 0; i < len; i++) {
-						animateConfig[i].startTime = Date.now();
-					}
+			if (animateConfig) {
+				len = animateConfig.length;
+				for (i = 0; i < len; i++) {
+					animateConfig[i].startTime = Date.now();
 				}
 			}
+		}
 
-			/**
-			 * Reset animations to initial position
-			 */
-			prototype.reset = function () {
-				var self = this,
-					restart = self.active;
+		/**
+		 * Reset animations to initial position
+		 */
+		prototype.reset = function () {
+			var self = this,
+				restart = self.active;
 
-				if (restart) {
-					self.stop();
-				}
-
-				self._initAnimate();
-				resetStartTimeForAnimateConfig(self._animateConfig);
-				self._pausedTimeDiff = 0;
-				self._animate.chainIndex = 0;
-
-				self._calculateAnimate();
-
-				if (restart) {
-					self.start();
-				}
+			if (restart) {
+				self.stop();
 			}
 
-			function calculateOption(option, time) {
-				var timeDiff,
-					current = null;
+			self._initAnimate();
+			resetStartTimeForAnimateConfig(self._animateConfig);
+			self._pausedTimeDiff = 0;
+			self._animate.chainIndex = 0;
 
-				if (option && option.startTime <= time) {
-				// if option is not delayed
-					timeDiff = time - option.startTime;
+			self._calculateAnimate();
 
-					if (timeDiff >= option.duration) {
-						// if current is bigger then end we finish loop and we take next animate from chain
-						timeDiff = option.duration;
-						if (option.callback) {
-							option.callback();
-						}
+			if (restart) {
+				self.start();
+			}
+		}
+
+		function calculateOption(option, time) {
+			var timeDiff,
+				current = null;
+
+			if (option && option.startTime <= time) {
+			// if option is not delayed
+				timeDiff = time - option.startTime;
+
+				if (timeDiff >= option.duration) {
+					// if current is bigger then end we finish loop and we take next animate from chain
+					timeDiff = option.duration;
+					if (option.callback) {
+						option.callback();
 					}
+				}
 
-					if (option.duration > 0) {
-						current = option.calculate(
-							option.timing(timeDiff / option.duration),
-							option.diff,
-							option.from,
-							option.current
-						);
-					}
+				if (option.duration > 0) {
+					option.progress = timeDiff / option.duration;
+					current = option.calculate(
+						option.timing(timeDiff / option.duration),
+						option.diff,
+						option.from,
+						option.current
+					);
+				}
 
-					if (current !== null) {
-						option.current = current;
-						// we set next calculation time
-						option.propertyObject[option.simpleProperty] = option.current;
-						if (timeDiff >= option.duration) {
-							// inform about remove animation config
-							return 2;
-						}
-						// inform widget about redraw
-						return 1;
-					}
-
+				if (current !== null) {
+					option.current = current;
+					// we set next calculation time
+					option.propertyObject[option.simpleProperty] = option.current;
 					if (timeDiff >= option.duration) {
 						// inform about remove animation config
 						return 2;
 					}
+					// inform widget about redraw
+					return 1;
 				}
-				return 0;
+
+				if (timeDiff >= option.duration) {
+					// inform about remove animation config
+					return 2;
+				}
 			}
-
-			/**
-			 * Method called in loop to calculate current state of animation
-			 * @param {Function} callback
-			 * @private
-			 */
-			prototype._calculateAnimate = function (callback) {
-				var self = this,
-					// current animation config
-					animateConfig = self._animateConfig,
-					// number of animations which is not finished
-					notFinishedAnimationsCount,
-					// flag inform that redraw is necessary
-					redraw = false,
-					i = 0,
-					length,
-					time = Date.now(),
-					calculatedOption;
-
-				if (animateConfig) {
-					notFinishedAnimationsCount = animateConfig.length;
-					length = animateConfig.length;
-
-					// calculating options changed in animation
-					while (i < length) {
-						if (animateConfig[i].duration > 0) {
-							calculatedOption = calculateOption(animateConfig[i], time);
-							if (calculatedOption === 2) {
-								notFinishedAnimationsCount--;
-								// remove current config and recalculate loop arguments
-								animateConfig.splice(i, 1);
-								length--;
-								i--;
-								redraw = true;
-							} else if (calculatedOption === 1) {
-								redraw = true;
-							}
-						} else {
-							notFinishedAnimationsCount--;
-						}
-						i++;
-					}
-					// redraw is necessary
-					if (redraw && self._tickFunction) {
-						self._tickFunction(self._object);
-					}
-					if (notFinishedAnimationsCount) {
-						// setting next loop state
-						if (self._animationTimeout) {
-							requestAnimationFrame(self._animationTimeout);
-						}
-					} else {
-						// Animation state can be change to "stopped"
-						self.stop();
-						// animation is finished
-						if (callback) {
-							callback();
-						}
-					}
-				}
-			};
+			return 0;
+		}
 
 		/**
-			 * Set function which will be called after animation change property of object
-			 * @param {Function} tickFunction
-			 * @return {Animation}
-			 */
-			prototype.tick = function (tickFunction) {
-				var oldTickFunction = this._tickFunction;
+		 * Method called in loop to calculate current state of animation
+		 * @param {Function} callback
+		 * @private
+		 */
+		prototype._calculateAnimate = function (callback) {
+			var self = this,
+				// current animation config
+				animateConfig = self._animateConfig,
+				// number of animations which is not finished
+				notFinishedAnimationsCount,
+				// flag inform that redraw is necessary
+				redraw = false,
+				i = 0,
+				length,
+				time = Date.now(),
+				calculatedOption;
 
-				if (oldTickFunction) {
-					this._tickFunction = function (object) {
-						oldTickFunction(object);
-						tickFunction(object);
-					};
-				} else {
-					this._tickFunction = tickFunction;
+			if (animateConfig) {
+				notFinishedAnimationsCount = animateConfig.length;
+				length = animateConfig.length;
+
+				// calculating options changed in animation
+				while (i < length) {
+					if (animateConfig[i].duration > 0) {
+						calculatedOption = calculateOption(animateConfig[i], time);
+						if (calculatedOption === 2) {
+							notFinishedAnimationsCount--;
+							// remove current config and recalculate loop arguments
+							animateConfig.splice(i, 1);
+							length--;
+							i--;
+							redraw = true;
+						} else if (calculatedOption === 1) {
+							redraw = true;
+						}
+					} else {
+						notFinishedAnimationsCount--;
+					}
+					i++;
 				}
-				return this;
-			};
+				// redraw is necessary
+				if (redraw && self._tickFunction) {
+					self._tickFunction(self._object);
+				}
+				if (notFinishedAnimationsCount) {
+					// setting next loop state
+					if (self._animationTimeout) {
+						requestAnimationFrame(self._animationTimeout);
+					}
+				} else {
+					// Animation state can be change to "stopped"
+					self.stop();
+					// animation is finished
+					if (callback) {
+						callback();
+					}
+				}
+			}
+		};
 
-			utils.Animate = Animate;
+		/**
+		 * Set function which will be called after animation change property of object
+		 * @param {Function} tickFunction
+		 * @return {Animation}
+		 */
+		prototype.tick = function (tickFunction) {
+			var oldTickFunction = this._tickFunction;
+
+			if (oldTickFunction) {
+				this._tickFunction = function (object) {
+					oldTickFunction(object);
+					tickFunction(object);
+				};
+			} else {
+				this._tickFunction = tickFunction;
+			}
+			return this;
+		};
+
+		utils.Animate = Animate;
 		//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
-			return Animate;
-		});
+		return Animate;
+	});
 	//>>excludeEnd("tauBuildExclude");
 }(window, window.document, ns));
 

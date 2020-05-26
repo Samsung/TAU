@@ -1,7 +1,7 @@
 (function (window) {
 	"use strict";
 
-	var page = document.getElementById("default-spin-page"),
+	var page = document.getElementById("no-loop-spin-page"),
 		descriptions = document.getElementById("descriptions"),
 		content = page.querySelector(".ui-content"),
 		element = page.querySelector(".ui-spin"),
@@ -11,16 +11,16 @@
 	function onClickChange() {
 		switch (stage) {
 			case 0 :
-				descriptions.innerHTML = ".value(1905)";
-				spin.value(1905);
+				descriptions.innerHTML = ".value(9) limited to 6";
+				spin.value(9);
 				break;
 			case 1 :
-				descriptions.innerHTML = ".value(2048)";
-				spin.value(2048);
+				descriptions.innerHTML = ".value(5)";
+				spin.value(5);
 				break;
 			case 2 :
-				descriptions.innerHTML = ".value(2020)";
-				spin.value(2020);
+				descriptions.innerHTML = ".value(0)";
+				spin.value(0);
 				break;
 		}
 		if (++stage > 2) {
@@ -83,10 +83,6 @@
 				    has changed by .value()
 				 */
 				descriptions.innerHTML = "on spinchange: " + spin.value();
-			});
-
-			element.addEventListener("spinstep", function () {
-				//console.log("spinstep");
 			});
 
 			// Spin widget doesn't have inner support for rotary event

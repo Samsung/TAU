@@ -31,7 +31,7 @@ test("Default options Spin test", 17, function () {
 			loop: "enabled",
 			labels: [],
 			digits: 0, // 0 - doesn't complete by zeros
-			dragTarget: "document"
+			dragTarget: "self"
 		};
 
 	ok(spin.classList.contains(spinClasses.spin),

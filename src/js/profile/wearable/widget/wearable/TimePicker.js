@@ -201,6 +201,7 @@
 				self.rotaryControler = 0;
 				self._rotation = 0;
 				self._spins = null;
+				self._spinNames = ["Hours", "Minutes"];
 
 				NumberPicker.call(self);
 			}
@@ -582,7 +583,7 @@
 			prototype._buildNumberPicker = function () {
 				var self = this,
 					ui = self._ui,
-					names = ["Hours", "Minutes"],
+					names = self._spinNames,
 					options;
 
 				self._spins = {};
@@ -597,6 +598,7 @@
 								max: self.options.format === "H" ? parseInt(input.max, 10) - 1 : parseInt(input.max, 10),
 								loop: "enabled",
 								rollHeight: "custom",
+								dragTarget: "self",
 								itemHeight: 50,
 								duration: 300,
 								digits: 2,
@@ -611,6 +613,7 @@
 								max: 59,
 								loop: "enabled",
 								rollHeight: "custom",
+								dragTarget: "self",
 								itemHeight: 50,
 								duration: 300,
 								digits: 2,
@@ -763,6 +766,11 @@
 
 				// destroy widgets
 				self._circleIndicator.destroy();
+
+				// destroy spins
+				self._spinNames.forEach(function (spinName) {
+					self._spins[spinName].destroy();
+				});
 
 				// recovery DOM structure
 				while (element.firstChild) {

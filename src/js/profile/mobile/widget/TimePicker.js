@@ -150,7 +150,9 @@
 					spin = document.createElement("div"),
 					spinInput = document.createElement("input"),
 					spinContainer = document.createElement("div"),
-					options = {},
+					options = {
+						momentumLevel: 1
+					},
 					spinWidget;
 
 				spin.classList.add(Spin.classes.SPIN);

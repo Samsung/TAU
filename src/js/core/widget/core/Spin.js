@@ -57,8 +57,7 @@
 			ROLL_DURATION = 600,
 			DELTA_Y = 100,
 			DRAG_STEP_TO_VALUE = 60,
-			VIBRATION_DURATION = 10,
-			lastDragValueChange = 0,
+			NUMBER_OF_CAROUSEL_ITEMS = 7,
 
 			/**
 			 * Alias for class Spin
@@ -81,12 +80,12 @@
 				 *  // with range 0-9 will be show as 2 (12 % 10)
 				 * @property {string} [options.shortPath="enabled"] spin rotate with short path
 				 *  // eg. when value will be 1 and then will change to 8
-				 *  // the spin will rotate by 1 -> 0 -> 9 -> 0
+				 *  // the spin will rotate by 1 -> 0 -> 9 -> 8
 				 * @property {number} [options.duration=ROLL_DURATION] time of rotate to indicated value
 				 * @property {string} [options.direction="up"] direction of spin rotation
 				 * @property {string} [options.rollHeight="custom"] size of frame to rotate one item
 				 * @property {number} [options.itemHeight=38] size of frame for "custom" rollHeight
-				 * @property {number} [options.momentumLevel=0] define moementum level on drag
+				 * @property {number} [options.momentumLevel=0] define momentum level on drag
 				 * @property {number} [options.scaleFactor=0.4] second / next items scale factor
 				 * @property {number} [options.moveFactor=0.4] second / next items move factor from center
 				 * @property {number} [options.loop="enabled"] when the spin reaches max value then loops to min value
@@ -106,36 +105,46 @@
 					direction: "up",
 					rollHeight: "custom", // "container" | "item" | "custom"
 					itemHeight: 38,
-					momentumLevel: 0, // 0 - one item on swipe
+					momentumLevel: 0, // 0 - one item on swipe,
+					momentumDuration: 800,
 					scaleFactor: 0.4,
 					moveFactor: 0.4,
 					loop: "enabled",
 					labels: [],
 					digits: 0, // 0 - doesn't complete by zeros
 					value: 0,
-					dragTarget: "document" // "document" | "self"
+					dragTarget: "document", // "document" | "self",
+					enabled: false
 				};
 				self._ui = {
 					scrollableParent: null,
 					page: null,
 					appbar: null
 				};
-				self.length = self.options.max - self.options.min + 1;
+				self._carouselItems = [];
+				self._numberOfCarouselItems = NUMBER_OF_CAROUSEL_ITEMS;
+				self.length = self.options.max - self.options.min + self.options.step;
 				self._prevValue = null; // self property has to be "null" on start
 				self._overflowYBeforeDrag = null;
+				self._lastCurrentIndex = null;
+				self._currentCentralCarouseItem = 0;
+				self._count = 0;
 			},
 
 			WIDGET_CLASS = "ui-spin",
 
 			classes = {
 				SPIN: WIDGET_CLASS,
+				PREFIX: WIDGET_CLASS + "-",
 				ITEM: WIDGET_CLASS + "-item",
 				SELECTED: WIDGET_CLASS + "-item-selected",
 				NEXT: WIDGET_CLASS + "-item-next",
 				PREV: WIDGET_CLASS + "-item-prev",
 				ENABLED: "enabled",
 				ENABLING: WIDGET_CLASS + "-enabling",
-				PLACEHOLDER: WIDGET_CLASS + "-placeholder"
+				PLACEHOLDER: WIDGET_CLASS + "-placeholder",
+				CAROUSEL: WIDGET_CLASS + "-carousel",
+				CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item"
 			},
 
 			prototype = new BaseWidget();
@@ -143,36 +152,80 @@
 		Spin.classes = classes;
 		Spin.timing = Animation.timing;
 
-		function transform(value, index, centerY, options) {
+		prototype._fillCarouselByCount = function (count) {
+			var self = this,
+				itemToAppend,
+				i;
+
+			count = Math.round(count);
+			// remove all items
+			for (i = 0; i < self._numberOfCarouselItems; i++) {
+				if (self._carouselItems[i].element.firstElementChild) {
+					self._carouselItems[i].element.removeChild(self._carouselItems[i].element.firstElementChild);
+				}
+			}
+			// append new items
+			for (i = 0; i < self._numberOfCarouselItems; i++) {
+				itemToAppend = self._itemByCount(count + i - self._carouselCenterIndex);
+				if (itemToAppend) {
+					self._carouselItems[self._carouselItemByCount(count + i - self._carouselCenterIndex)]
+						.element.appendChild(itemToAppend);
+				}
+			}
+		};
+
+		prototype._rollItems = function (delta, count) {
+			var self = this,
+				direction = delta > 0 ? 1 : -1,
+				borderItem,
+				newItemToPlace;
+
+			delta = Math.abs(delta);
+			if (delta === 1) { // move one item
+				borderItem = self._carouselItems[
+					self._carouselItemByCount(count + direction * self._carouselCenterIndex)
+				];
+				newItemToPlace = self._itemByCount(count + direction * self._carouselCenterIndex);
+
+				if (borderItem.element.firstElementChild) {
+					borderItem.element.removeChild(borderItem.element.firstElementChild);
+				}
+				if (newItemToPlace) {
+					borderItem.element.appendChild(newItemToPlace);
+				}
+			} else if (delta > 1) {
+				self._fillCarouselByCount(count);
+			}
+		}
+
+		function transform(value, index, centerY, options, self) {
 			var diff,
 				direction,
 				diffAbs,
 				scale,
 				moveY,
 				opacity,
-				delta = options.max - options.min + options.step,
-				numberOfItems = delta / options.step,
-				currentIndex = Math.round((value - options.min) / options.step);
+				count = value,
+				currentIndex = self._carouselItemByCount(count);
 
-			if (options.loop === "enabled") {
-				if (value >= options.max - 2 * options.step) {
-					if (numberOfItems - currentIndex < 3) {
-						if (index < 3) {
-							index = index + numberOfItems;
-						}
-					}
-				} else if (value <= options.min + 2 * options.step) {
-					if (currentIndex < 3) {
-						if (index > numberOfItems - 3) {
-							index = index - numberOfItems;
-						}
-					}
+			// change carousel items content on change current index
+			if (self._lastCurrentIndex !== Math.round(value)) {
+				if (self._lastCurrentIndex !== null) {
+					self._rollItems(Math.round(value) - self._lastCurrentIndex, Math.round(value));
 				}
+				self._lastCurrentIndex = Math.round(value);
 			}
 
-			diff = value - options.min - index * options.step;
-			direction = diff < 0 ? 1 : -1;
+			diff = index - currentIndex;
+			if (diff < -self._carouselCenterIndex) {
+				diff += self._numberOfCarouselItems;
+			} else if (diff > self._carouselCenterIndex) {
+				diff -= self._numberOfCarouselItems;
+			}
+
+			direction = diff < 0 ? -1 : 1;
 			diffAbs = Math.abs(diff);
+
 			scale = 1 - options.scaleFactor * diffAbs;
 			moveY = 1 - options.moveFactor * diffAbs;
 			opacity = 1 - ((options.enabled) ? options.scaleFactor : 1) * diffAbs;
@@ -188,54 +241,32 @@
 			}
 		}
 
+
 		function showAnimationTick(self) {
-			var items = self._ui.items,
+			var carouselItems = self._carouselItems,
 				options = self.options,
 				itemHeight = self._itemHeight,
 				state = self._objectValue,
 				centerY = (self._containerHeight - itemHeight) / 2;
 
-			items.forEach(function (item, index) {
-				var change = transform(state.value, index, centerY, options);
+			carouselItems.forEach(function (carouselItem, index) {
+				var change = transform(state.value, index, centerY, options, self);
 
-				// set item position
+				// set carouselItem position
 				if (change.opacity > 0) {
-					item.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
+					carouselItem.element.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
 				} else {
-					item.style.transform = "translateY(-1000px)"; // move item from active area
+					carouselItem.element.style.transform = "translateY(-1000px)"; // move carouselItem from active area
 				}
-				item.style.opacity = change.opacity;
-				item.style.height = itemHeight + "px";
+				carouselItem.element.style.opacity = change.opacity;
 			});
+
 			ns.event.trigger(self.element, "spinstep", parseInt(state.value, 10));
-		}
-
-		function getStartValue(self) {
-			var prevValue = (self._prevValue === null) ? self.options.value : self._prevValue,
-				startValue = prevValue,
-				diff = self.options.value - prevValue,
-				rest = 0,
-				int = 0;
-
-			if (self.options.moduloValue === "enabled") {
-				int = diff / self.length | 0;
-				if (Math.abs(diff) >= self.length) {
-					startValue = prevValue + self.length * int;
-				}
-				rest = diff % self.length;
-				if (self.options.shortPath === "enabled" &&
-					Math.abs(rest) > self.length / 2) {
-					int += (rest < 0) ? -1 : 1;
-					startValue = prevValue + self.length * int;
-				}
-			}
-
-			return startValue;
 		}
 
 		prototype._valueToIndex = function (value) {
 			var options = this.options,
-				delta = options.max - options.min + 1;
+				delta = options.max - options.min + options.step;
 
 			value = value - options.min;
 			while (value < options.min) {
@@ -246,30 +277,32 @@
 			}
 
 			return parseInt(value, 10) % this.length;
-		}
+		};
 
 		prototype._removeSelectedLayout = function () {
-			var self = this;
+			var self = this,
+				item = self._itemByCount(self._previousCount);
 
-			if (self._prevValue !== null) {
-				self._ui.items[self._valueToIndex(self._prevValue)]
-					.classList.remove(classes.SELECTED);
+			if (item) {
+				item.classList.remove(classes.SELECTED);
 			}
-		}
+		};
 
 		prototype._addSelectedLayout = function () {
 			var self = this,
-				index = self._valueToIndex(self.options.value);
+				item = self._itemByCount(self._count);
 
-			self._ui.items[index].classList.add(classes.SELECTED);
-		}
+			if (item) {
+				item.classList.add(classes.SELECTED);
+			}
+		};
 
 		prototype._show = function (triggerChangeEvent) {
 			var self = this,
 				animation = new Animation({}),
 				state = null,
 				objectValue = {
-					value: getStartValue(self)
+					value: self._previousCount
 				};
 
 			self._removeSelectedLayout();
@@ -278,7 +311,7 @@
 				animation: [{
 					object: objectValue,
 					property: "value",
-					to: self.options.value
+					to: self._count
 				}],
 				animationConfig: {
 					// when widget is disabled then duration of animation should be minimal
@@ -309,9 +342,12 @@
 				options = self.options,
 				element = self.element,
 				itemHeight = 0,
-				items = [].slice.call(element.querySelectorAll("." + classes.ITEM)),
-				len = options.max - options.min + 1,
+				items = self._ui.items ||
+					[].slice.call(element.querySelectorAll("." + classes.ITEM)),
+				len = Math.abs(options.max - options.min) / options.step + 1,
 				diff = len - items.length,
+				index = 0,
+				textValue = "",
 				centerY,
 				item = null,
 				i = 0;
@@ -321,32 +357,34 @@
 				for (; i < diff; i++) {
 					item = document.createElement("div");
 					item.classList.add(classes.ITEM);
-					element.appendChild(item);
 					items.push(item);
 				}
 			} else if (diff < 0) {
-				diff = -diff;
-				for (; i < diff; i++) {
-					element.removeChild(items.pop());
+				for (; i < -diff; i++) {
+					items.pop();
 				}
 			}
 
-			// set content;
-			items.forEach(function (item, index) {
-				var textValue = "";
+			// set content for new items
+			if (diff > 0) {
+				for (i = 0; i < diff; i++) {
+					index = len - diff + i;
+					item = items[index];
+					textValue = "";
 
-				if (self.options.labels.length) {
-					textValue = self.options.labels[index];
-				} else {
-					textValue += (options.min + index);
-					if (options.digits > 0) {
-						while (textValue.length < options.digits) {
-							textValue = "0" + textValue;
+					if (self.options.labels.length) {
+						textValue = self.options.labels[index];
+					} else {
+						textValue += (options.min + index * options.step);
+						if (options.digits > 0) {
+							while (textValue.length < options.digits) {
+								textValue = "0" + textValue;
+							}
 						}
 					}
+					item.innerHTML = textValue;
 				}
-				item.innerHTML = textValue
-			});
+			}
 
 			// determine item height for scroll
 			if (options.rollHeight === "container") {
@@ -360,15 +398,15 @@
 					self._containerHeight;
 			}
 			self._itemHeight = itemHeight;
-			centerY = (self._containerHeight - itemHeight) / 2,
+			centerY = (self._containerHeight - itemHeight) / 2;
 
-			// set position;
-			items.forEach(function (item, index) {
-				var change = transform(self.options.value, index, centerY, options);
+			// set position of carousel items;
+			self._carouselItems.forEach(function (carouselItem, index) {
+				var change = transform(self._valueToCount(options.value), index, centerY, options, self);
 
-				// set item position
-				item.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
-				item.style.opacity = change.opacity;
+				// set carouselItem position
+				carouselItem.element.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
+				carouselItem.element.style.opacity = change.opacity;
 			});
 
 			self._ui.items = items;
@@ -394,10 +432,12 @@
 		}
 
 		prototype._refresh = function () {
-			var self = this;
+			var self = this,
+				computedHeight = getComputedStyle(self.element).height || 0;
 
-			self._containerHeight = parseInt(getComputedStyle(self.element).height, 10);
+			self._containerHeight = parseInt(computedHeight, 10);
 			self._modifyItems();
+			self._fillCarouselByCount(self._count);
 			self._show();
 		};
 
@@ -415,76 +455,160 @@
 			options.min = (options.min !== undefined) ? parseInt(options.min, 10) : 0;
 			options.max = (options.max !== undefined) ? parseInt(options.max, 10) : 0;
 			options.value = (options.value !== undefined) ? parseInt(options.value, 10) : 0;
+			options.step = (options.step !== undefined) ? parseInt(options.step, 10) : 1;
 			options.duration = (options.duration !== undefined) ? parseInt(options.duration, 10) : 0;
 			options.labels = (Array.isArray(options.labels)) ? options.labels : options.labels.split(",");
 
-			self.length = options.max - options.min + 1;
+			self.length = options.max - options.min + options.step;
+			self._count = (options.value - options.min) / options.step || 0;
+
 			self.dragTarget = (options.dragTarget === "document") ? document : self.element;
 
 			self._refresh();
 		};
 
+		prototype._buildCarousel = function (count) {
+			// create carousel
+			var self = this,
+				carousel = document.createElement("div"),
+				carouselElement,
+				fragment = document.createDocumentFragment(),
+				i = 0;
+
+			self._carouselItems = [];
+			self._numberOfCarouselItems = count;
+			self._carouselCenterIndex = Math.floor(count / 2)
+
+			carousel.classList.add(classes.CAROUSEL, classes.PREFIX + count);
+			for (; i < count; i++) {
+				carouselElement = document.createElement("div");
+				carouselElement.id = "cel-" + i;
+				carouselElement.classList.add(classes.CAROUSEL_ITEM);
+				self._carouselItems[i] = {
+					element: carouselElement
+				};
+				fragment.appendChild(carouselElement);
+			}
+			carousel.appendChild(fragment);
+			return carousel;
+		};
+
 		prototype._build = function (element) {
-			var placeholder = document.createElement("div");
+			var placeholder = document.createElement("div"),
+				carousel = null;
 
 			element.classList.add(classes.SPIN);
+
 			placeholder.classList.add(classes.PLACEHOLDER);
 			element.appendChild(placeholder);
 
+			carousel = this._buildCarousel(NUMBER_OF_CAROUSEL_ITEMS);
+			element.appendChild(carousel);
+
+			this._ui.carousel = carousel;
 			this._ui.placeholder = placeholder;
 			return element;
 		};
 
-		prototype._setValue = function (value, enableChangeEvent) {
-			var self = this,
-				animation;
+		prototype._valueToCount = function (value) {
+			var self = this;
 
-			value = window.parseInt(value, 10);
+			return (value - self.options.min) / self.options.step || 0;
+		};
+
+		prototype._setValue = function (value, enableChangeEvent) {
+			var self = this;
+
+			value = window.parseFloat(value, 10);
+			// @todo: for spin with labels the textContent should contains label by value;
 			self._ui.placeholder.textContent = value;
 
 			if (isNaN(value)) {
 				ns.warn("Spin: value is not a number");
 			} else if (value !== self.options.value) {
 				if (value >= self.options.min && value <= self.options.max || self.options.loop === "enabled") {
-					self._prevValue = self.options.value;
-					if (self.options.loop === "enabled") {
-						if (value > self.options.max) {
-							value = self.options.min;
-						} else if (value < self.options.min) {
-							value = self.options.max;
-						}
-					}
+
+					self._previousCount = self._count;
+					self._count = self._valueToCount(value);
+
 					self.options.value = value;
 					// set data-value on element
 					self.element.dataset.value = value;
 
 					// stop previous animation
-					animation = self.state.animation[0];
-					if (animation !== null && animation.to !== animation.current) {
-						self._animation.stop();
-					}
+					self._stopAnimation();
+
 					// update status of widget
 					self._show(enableChangeEvent);
 				}
 			}
 		};
 
+		prototype._stopAnimation = function () {
+			var self = this,
+				animation = self.state.animation[0];
+
+			if (animation !== null && animation.to !== animation.current) {
+				self._animation.stop();
+			}
+		};
+
+		prototype._carouselItemByCount = function (count) {
+			var centerIndex = this._carouselCenterIndex,
+				carouselItemIndex = (count + centerIndex) % this._numberOfCarouselItems;
+
+			if (carouselItemIndex < 0) {
+				carouselItemIndex += this._numberOfCarouselItems;
+			}
+
+			return carouselItemIndex;
+		};
+
+		prototype._getValueByCount = function (count) {
+			var value,
+				self = this,
+				options = self.options,
+				rest;
+
+			if (options.loop !== "enabled") {
+				value = count * options.step + options.min;
+			} else {
+				if (count >= 0) {
+					value = (count % self.length) * options.step + options.min;
+				} else {
+					rest = count % self.length || 0;
+					if (rest < 0) {
+						rest += self.length;
+					}
+					value = rest * options.step + options.min;
+				}
+			}
+			return value;
+		};
+
 		prototype._getValue = function () {
-			return this.options.value;
+			var self = this,
+				options = self.options,
+				value = self._getValueByCount(self._count);
+
+			if (self.options.loop !== "enabled") {
+				self._objectValue.value = Math.min(Math.max(value, options.min), options.max);
+			}
+			return value;
 		};
 
 		prototype._setMax = function (element, max) {
 			var options = this.options;
 
 			options.max = (max !== undefined) ? parseInt(max, 10) : 0;
-			this.length = options.max - options.min + 1;
+			this.length = options.max - options.min + options.step;
 		};
 
 		prototype._setMin = function (element, min) {
 			var options = this.options;
 
 			options.min = (min !== undefined) ? parseInt(min, 10) : 0;
-			this.length = options.max - options.min + 1;
+			this.length = options.max - options.min + options.step;
 		};
 
 		prototype._setLabels = function (element, value) {
@@ -520,7 +644,7 @@
 					element.classList.remove(classes.ENABLING);
 				}, ENABLING_DURATION);
 				element.classList.add(classes.ENABLED);
-				utilsEvents.on(self.dragTarget, "drag dragend", self);
+				utilsEvents.on(self.dragTarget, "drag dragend dragstart", self);
 				utilsEvents.on(self.dragTarget, "vmousedown vmouseup", self);
 			} else {
 				element.classList.add(classes.ENABLING);
@@ -529,7 +653,7 @@
 					self.refresh();
 				}, ENABLING_DURATION);
 				element.classList.remove(classes.ENABLED);
-				utilsEvents.off(self.dragTarget, "drag dragend", self);
+				utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
 				utilsEvents.off(self.dragTarget, "vmousedown vmouseup", self);
 				// disable animation
 				self._animation.stop();
@@ -544,25 +668,64 @@
 		};
 
 		prototype._drag = function (e) {
-			var self = this,
-				dragValue,
-				value;
+			var self = this;
 
 			// if element is detached from DOM then event listener should be removed
 			if (document.getElementById(self.element.id) === null) {
-				utilsEvents.off(self.dragTarget, "drag dragend", self);
+				utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
 			} else {
 				if (self.options.enabled) {
-					value = self.value();
-					dragValue = e.detail.deltaY - lastDragValueChange;
-
-					if (Math.abs(dragValue) > DRAG_STEP_TO_VALUE) {
-						self._setValue(value - Math.round(dragValue / DRAG_STEP_TO_VALUE), true);
-						lastDragValueChange = e.detail.deltaY;
-						window.navigator.vibrate(VIBRATION_DURATION);
+					self._objectValue.value = this._startDragCount - e.detail.deltaY / DRAG_STEP_TO_VALUE;
+					if (self.options.loop !== "enabled") {
+						self._objectValue.value = Math.min(Math.max(self._objectValue.value, 0), self.length - 1);
 					}
+					showAnimationTick(self);
 				}
 			}
+		};
+
+		prototype._dragStart = function () {
+			var self = this;
+
+			self._animation.pause();
+			self._startDragCount = self._count;
+			self._previousCount = self._count;
+			self._removeSelectedLayout();
+		};
+
+		prototype._dragEnd = function (e) {
+			var self = this,
+				chain = self._animation._animate.chain[0],
+				momentum = 0,
+				duration = self.options.duration;
+
+			if (self.options.momentumLevel > 0 &&
+				e.detail.velocityY > 0.7 &&
+				e.detail.distance) {
+
+				momentum = self.options.momentumLevel * Math.round(e.detail.distance / 20);
+				if (e.detail.direction === "up") {
+					momentum = -momentum;
+				}
+				self._count = Math.round(self._objectValue.value) - momentum || 0;
+				if (self.options.loop !== "enabled") {
+					self._count = Math.min(Math.max(self._count, 0), self.length - 1);
+				}
+				duration = self.options.momentumDuration;
+				chain[0].timing = Spin.timing.easeOut;
+			} else {
+				self._count = Math.round(self._objectValue.value) || 0;
+				if (self.options.loop !== "enabled") {
+					self._count = Math.min(Math.max(self._count, 0), self.length - 1);
+				}
+				duration = Math.abs(self._count - self._objectValue.value) * duration;
+			}
+
+			chain[0].from = self._objectValue.value;
+			// @todo: move to nearest
+			chain[0].to = self._count;
+			chain[0].duration = duration;
+			self._animation.start(self._animation._animate.callback);
 		};
 
 		/**
@@ -609,49 +772,62 @@
 			}
 		};
 
-		prototype._dragEnd = function () {
-			lastDragValueChange = 0;
+		prototype._itemIndexByValue = function (value) {
+			var options = this.options;
+
+			return Math.round((value - options.min) / options.step);
+		};
+
+		prototype._itemByCount = function (count) {
+			var self = this,
+				value = self._getValueByCount(count);
+
+			return self._ui.items[self._itemIndexByValue(value)];
 		};
 
 		prototype._click = function (e) {
 			var target = e.target,
 				self = this,
 				items = self._ui.items,
-				value = self.value(),
-				targetIndex = items.indexOf(target),
-				currentIndex = self._valueToIndex(value);
+				count = self._count,
+				targetIndex = items.indexOf(target);
 
-			if (targetIndex > -1 && targetIndex !== currentIndex) {
-				if (currentIndex === items.length - 1 && targetIndex == 0) {
-					// loop - current index is 12/12 and event target has index 0/12
-					self._setValue(value + 1, true);
-				} else if (currentIndex === 0 && targetIndex == items.length - 1) {
-					// loop - current index is 0/12 and event target has index 12/12
-					self._setValue(value - 1, true);
-				} else if (targetIndex < currentIndex) {
-					self._setValue(value - 1, true);
-				} else if (targetIndex > currentIndex) {
-					self._setValue(value + 1, true);
+			if (!self.element.classList.contains(classes.ENABLING) &&
+				targetIndex > -1) {
+				self._previousCount = count;
+
+				if (target === self._itemByCount(count - 1)) {
+					self._count--;
+				} else if (target === self._itemByCount(count + 1)) {
+					self._count++;
+				}
+				if (self._previousCount !== self._count) {
+					self._show(true);
 				}
 			}
 		}
 
 		prototype.handleEvent = function (event) {
+			var self = this;
+
 			switch (event.type) {
 				case "drag":
-					this._drag(event);
+					self._drag(event);
 					break;
 				case "vmousedown":
-					this._vmouseDown(event);
+					self._vmouseDown(event);
 					break;
 				case "vmouseup":
-					this._vmouseUp(event);
+					self._vmouseUp(event);
 					break;
 				case "dragend":
-					this._dragEnd(event);
+					self._dragEnd(event);
+					break;
+				case "dragstart":
+					self._dragStart(event);
 					break;
 				case "click":
-					this._click(event);
+					self._click(event);
 					break;
 			}
 		};
@@ -661,7 +837,8 @@
 
 			// enabled drag gesture for document
 			utilsEvents.enableGesture(self.dragTarget, new gesture.Drag({
-				blockHorizontal: true
+				blockHorizontal: true,
+				threshold: 7 // minimal allowed value from Drag module
 			}));
 
 			utilsEvents.on(self.element, "click", self);
@@ -672,7 +849,7 @@
 
 			utilsEvents.disableGesture(self.dragTarget);
 
-			utilsEvents.off(self.dragTarget, "drag dragend", self);
+			utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
 			utilsEvents.off(self.element, "click", self);
 		};
 
@@ -690,8 +867,14 @@
 
 			self._unbindEvents();
 			ui.items.forEach(function (item) {
-				item.parentNode.removeChild(item);
+				if (item.parentNode) {
+					item.parentNode.removeChild(item);
+				}
 			});
+			self._carouselItems.forEach(function (carouselItem) {
+				carouselItem.element.parentNode.removeChild(carouselItem.element);
+			});
+			element.removeChild(ui.carousel);
 			element.removeChild(ui.placeholder);
 			element.classList.remove(classes.SPIN);
 		};

@@ -11,6 +11,20 @@
 	&-item {
 		align-items: center;
 		background-color: transparent;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		color: var(--primary-dark-color);
+		opacity: var(--spin-item-opacity) !important;
+		user-select: none;
+		.font(medium);
+
+		&-selected {
+			opacity: 1 !important;
+		}
+	}
+	&-carousel-item {
 		position: absolute;
 		left: 0;
 		top: 0;
@@ -18,13 +32,6 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		color: var(--primary-dark-color);
-		opacity: var(--spin-item-opacity) !important;
-		.font(medium);
-
-		&-selected {
-			opacity: 1 !important;
-		}
 	}
 	&-enabling {
 		.ui-spin-item {
@@ -35,5 +42,6 @@
 		opacity: 0;
 		pointer-events: none;
 		position: absolute;
+		display: none;
 	}
 }
