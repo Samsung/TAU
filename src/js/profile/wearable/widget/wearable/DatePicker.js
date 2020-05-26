@@ -233,6 +233,7 @@
 								loop: "enabled",
 								labels: MONTH_NAMES.join(","),
 								rollHeight: "custom",
+								dragTarget: "self",
 								itemHeight: 50,
 								duration: 300,
 								value: 2
@@ -244,6 +245,7 @@
 								max: 31,
 								loop: "enabled",
 								rollHeight: "custom",
+								dragTarget: "self",
 								itemHeight: 50,
 								duration: 300,
 								value: 1
@@ -256,6 +258,7 @@
 								max: MAX_YEAR,
 								loop: "enabled",
 								rollHeight: "custom",
+								dragTarget: "self",
 								itemHeight: 50,
 								duration: 300,
 								value: 1

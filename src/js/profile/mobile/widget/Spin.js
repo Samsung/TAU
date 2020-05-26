@@ -45,6 +45,7 @@
 					options = {
 						scaleFactor: 0,
 						moveFactor: 0.5,
+						itemHeight: 54,
 						dragTarget: "self"
 					};
 
@@ -67,7 +68,7 @@
 		}
 
 		Spin.prototype = prototype;
-		Spin.classes = classes,
+		Spin.classes = classes;
 		Spin.timing = CoreSpin.timing;
 
 		ns.widget.mobile.Spin = Spin;

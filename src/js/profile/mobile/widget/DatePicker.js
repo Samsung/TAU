@@ -119,7 +119,9 @@
 					ui = self._ui,
 					spin = document.createElement("div"),
 					spinContainer = document.createElement("div"),
-					options = {},
+					options = {
+						momentumLevel: 1
+					},
 					spinWidget;
 
 				spin.classList.add(Spin.classes.SPIN);
@@ -128,7 +130,8 @@
 				if (name === "day") {
 					options = {
 						min: 1,
-						max: 31
+						max: 31,
+						momentumLevel: 1
 					};
 					spinContainer.classList.add(DatePicker.classes.DAY_CONTAINER);
 				} else if (name === "month") {
@@ -137,14 +140,16 @@
 						max: MONTH_NAMES.length,
 						labels: MONTH_NAMES.map(function (value) {
 							return value.toUpperCase().substring(0, 3);
-						}).join(",")
+						}).join(","),
+						momentumLevel: 1
 					};
 					spinContainer.classList.add(DatePicker.classes.MONTH_CONTAINER);
 				} else if (name === "year") {
 					options = {
 						min: MIN_YEAR,
 						max: MAX_YEAR,
-						value: 2020
+						value: 2020,
+						momentumLevel: 1
 					}
 					spinContainer.classList.add(DatePicker.classes.YEAR_CONTAINER);
 				}

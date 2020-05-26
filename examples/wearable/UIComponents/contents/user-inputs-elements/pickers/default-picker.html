@@ -7,10 +7,10 @@
 
 	<link rel="stylesheet"
 			href="../../../lib/tau/wearable/theme/default/tau.css">
-	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
+	<link rel="stylesheet"
 			href="../../../lib/tau/wearable/theme/default/tau.circle.min.css">
 	<link rel="stylesheet" href="../../../css/style.css">
-	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
+	<link rel="stylesheet"
 			href="../../../css/style.circle.css">
 </head>
 
@@ -21,23 +21,25 @@
 			.default-spin {
 				height: 120px;
 				font-size: 50px;
+				width: 7em;
 			}
 			.default-spin .ui-spin-item-selected {
 				font-size: 50px;
 			}
 		</style>
-  	    <header class="ui-header ui-header-smaller">
+		<header class="ui-header ui-header-smaller">
 			<h2 class="ui-title">Spin</h2>
 		</header>
 		<div class="ui-content">
 			<div id="descriptions">default</div>
 			<div class="ui-spin default-spin"
-				data-min="0"
-				data-max="9"
-				data-value="3"
+				data-min="1902"
+				data-max="2050"
+				data-value="1903"
 				data-loop="enabled"
 				data-roll-height="custom"
-				data-item-height="30"
+				data-item-height="50"
+				data-momentum-level="1"
 				data-duration="500">
 			</div>
 		</div>

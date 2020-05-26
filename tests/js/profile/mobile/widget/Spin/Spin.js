@@ -31,7 +31,7 @@
 				duration: 600,
 				direction: "up",
 				rollHeight: "custom", // "container" | "item" | "custom"
-				itemHeight: 38,
+				itemHeight: 54,
 				momentumLevel: 0, // 0 - one item on swipe
 				scaleFactor: 0,
 				moveFactor: 0.5,
