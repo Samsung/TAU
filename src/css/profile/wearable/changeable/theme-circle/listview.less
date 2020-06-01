@@ -236,55 +236,29 @@
 
 				&.ui-li-grid-full {
 					justify-content: space-between;
+					min-height: 108 * @px_base;
 
-					// List divider "|" between text area and control button.
-					&:not(.li-has-multiline) {
-						div > div {
-							text-align: center;
-
-							&.ui-marquee {
-								display: flex;
-								flex-direction: row;
-								max-width: 222 * @px_base;
-								max-height: 42 * @px_base;
-
-								&::after {
-									opacity: 1;
-									content: "";
-									position: relative;
-									width: 2 * @px_base;
-									height: 50 * @px_base;
-									top: 0;
-									right: 0;
-									margin-left: 14 * @px_base;
-									margin-right: 19 * @px_base;
-									background: @color_grid_list_divider_bg;
-									transform: none;
-								}
-							}
-						}
+					* {
+						text-align: center;
 					}
 
-					// List divider for multiline.
-					&.li-has-multiline {
-						min-height: 108 * @unit_base;
+					& > div:first-child {
+						display: grid;
+						width: 222 * @px_base;
+						margin-left: 14 * @px_base;
+						flex-grow: 0;
+						flex-shrink: 0;
 
-						* {
-							text-align: center;
+						.ui-marquee {
+							height: 50 * @px_base;
 						}
 
-						& > div:first-child {
-							display: grid;
-							width: 222 * @px_base;
-							margin-left: 14 * @px_base;
-							flex-grow: 0;
-							flex-shrink: 0;
-
-							&::after {
-								opacity: 1;
-								height: 50 * @px_base;
-								right: 111 * @px_base;
-							}
+						// List divider "|".
+						&::after {
+							opacity: 1;
+							height: 50 * @px_base;
+							right: 111 * @px_base;
+							background: @color_grid_list_divider_bg;
 						}
 					}
 
