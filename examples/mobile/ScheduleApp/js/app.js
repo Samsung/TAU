@@ -86,7 +86,6 @@
 			themeChanger = page.querySelector("#theme-selector"),
 			themeChangerButton = page.querySelector("#selector-opener");
 
-
 		themeChanger.addEventListener("change", function (event) {
 			tau.theme.setTheme(event.target.value);
 		});
@@ -96,9 +95,9 @@
 
 			dropdownmenuWidget.open();
 		});
-		// @todo read data from storage
-		// @todo fill page content
-		// @todo refresh page
+
+		this._buildEventList(page.querySelector(".ui-content"));
+		tau.engine.createWidgets(page);
 	};
 
 	prototype._eventDoneClick = function () {
@@ -143,6 +142,66 @@
 				break;
 		}
 	};
+
+	prototype._buildEventList = function (container) {
+		container.innerHTML = "";
+		this._store.forEach(function (item) {
+			var timeOn = item.on.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
+				timeOff = item.off.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
+				HTMLTemplate = `<div class="ui-content-area content-area">
+			<div class="ui-text content-header">
+				Turn device on
+			</div>
+			<div class="content-container">
+				<div class="hour-container">
+					<span class="ui-text hour-value">
+						${timeOn[0]}
+					</span>
+					<span class="ui-text hour-signature">
+						${timeOn[1]}
+					</span>
+				</div>
+				<div class="ui-li-action action-container">
+					<day-indicator active="${item.dayOfWeek.join(" ")}"></day-indicator>
+					<select class="ui-on-off-switch">
+						<option value="off"></option>
+						<option value="on" selected></option>
+					</select>
+				</div>
+			</div>
+			<div class="content-footer">
+				Cool / 18°C / High
+			</div>
+		</div>
+		<div class="ui-content-area content-area">
+			<div class="ui-text content-header">
+				Turn device off
+			</div>
+			<div class="content-container">
+				<div class="hour-container">
+					<span class="ui-text hour-value">
+						${timeOff[0]}
+					</span>
+					<span class="ui-text hour-signature">
+						${timeOff[1]}
+					</span>
+				</div>
+				<div class="ui-li-action action-container">
+					<day-indicator active="${item.dayOfWeek.join(" ")}"></day-indicator>
+					<select class="ui-on-off-switch">
+						<option value="off"></option>
+						<option value="on" selected></option>
+					</select>
+				</div>
+			</div>
+			<div class="content-footer">
+				Cool / 18°C / High
+			</div>
+		</div>`
+
+			container.innerHTML += HTMLTemplate;
+		});
+	}
 
 	/**
 	 * Common event handler for App
