@@ -19,7 +19,7 @@
 <body>
 	<div class="ui-page" id="page">
 		<div class="ui-content">
-			<ul class="ui-arc-listview">
+			<ul class="ui-listview">
 				<li>
 					Wake-up gesture
 				</li>
@@ -40,10 +40,12 @@
 				var page = document.getElementById("page");
 
 				page.addEventListener("pagebeforeshow", function () {
-					var element = page.querySelector(".ui-arc-listview"),
-						widget = tau.widget.ArcListview(element);
+					var element = page.querySelector(".ui-listview"),
+						widget = tau.widget.Listview(element);
 
-					widget.scrollToPosition(1);
+					if (widget) {
+						widget.scrollToPosition(1);
+					}
 				});
 			</script>
 		</div>
