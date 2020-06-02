@@ -55,13 +55,30 @@
 		&.ui-listview-divider, &.ui-li-group-index {
 			min-height: 32 * @px_base;
 			max-height: 32 * @px_base;
-			margin-left: 36 * @px_base;
-			margin-right: 36 * @px_base;
+			font-size: 24 * @px_base;
+			margin-bottom: 16 * @px_base;
 			padding: 0;
-			font-size: 24 * @sp_base;
-			color: #CCCCCC;
-			overflow: hidden;
+			color: @color_list_divider_text;
+			text-align: center;
+			background-color: transparent;
+			display: flex;
+			flex-direction: row;
+
+			&::before, &::after {
+				content: "";
+				height: 1 * @px_base;
+				width: auto;
+				background: @color_list_divider_bg;
+				flex: 1
+			}
+			&::before {
+				margin-right: 10 * @px_base;
+			}
+			&::after {
+				margin-left: 10 * @px_base;
+			}
 		}
+
 		&.ui-li-btn {
 			padding: 0;
 			.ui-btn {
