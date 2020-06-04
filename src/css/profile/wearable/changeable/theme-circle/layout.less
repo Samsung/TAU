@@ -192,17 +192,35 @@ body {
 	}
 
 	background: @color_bg;
+
+	.content-padding {
+		font-stretch: ultra-condensed;
+		padding-left: 24 * @px_base;
+		padding-right: 24 * @px_base;
+	}
+
 	.ui-content {
 		text-align: center;
 		font-size: 32 * @px_base;
 		line-height: 42 * @unit_base;
 
 		&.ui-content-padding {
-			font-stretch: ultra-condensed;
-			padding-left: 33 * @unit_base;
-			padding-right: 33 * @unit_base;
+			.content-padding;
 		}
+
+		.ui-group-index {
+			.group-index;
+
+			&:not(:first-of-type) {
+				margin-top: 16 * @px_base;
+			}
+		}
+
+		.ui-group-content {
+			.content-padding;
+		};
 	}
+
 	.ui-footer.ui-bottom-button {
 		position: fixed !important;
 		bottom: 6 * @unit_base;
@@ -299,3 +317,35 @@ body {
 		margin-top: -85 * @unit_base;
 	}
 }
+
+/***************************************************************************
+                  Group Index (common for listview and content)
+***************************************************************************/
+.group-index() {
+	min-height: 32 * @px_base;
+	max-height: 32 * @px_base;
+	font-size : 24 * @px_base;
+	margin-bottom: 16 * @px_base;
+	padding: 0;
+	color: @color_list_divider_text;
+	text-align: center;
+	background-color: transparent;
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+
+	&::before, &::after {
+		content: "";
+		height: 1 * @px_base;
+		width: auto;
+		background: @color_list_divider_bg;
+		flex: 1
+	}
+	&::before {
+		margin-right: 10 * @px_base;
+	}
+	&::after {
+		margin-left: 10 * @px_base;
+	}
+}
+

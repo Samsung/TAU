@@ -53,30 +53,7 @@
 		align-items: center;
 
 		&.ui-listview-divider, &.ui-li-group-index {
-			min-height: 32 * @px_base;
-			max-height: 32 * @px_base;
-			font-size: 24 * @px_base;
-			margin-bottom: 16 * @px_base;
-			padding: 0;
-			color: @color_list_divider_text;
-			text-align: center;
-			background-color: transparent;
-			display: flex;
-			flex-direction: row;
-
-			&::before, &::after {
-				content: "";
-				height: 1 * @px_base;
-				width: auto;
-				background: @color_list_divider_bg;
-				flex: 1
-			}
-			&::before {
-				margin-right: 10 * @px_base;
-			}
-			&::after {
-				margin-left: 10 * @px_base;
-			}
+			.group-index;
 		}
 
 		&.ui-li-btn {
