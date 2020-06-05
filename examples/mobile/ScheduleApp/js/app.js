@@ -29,42 +29,6 @@
 		}
 	});
 
-	// @todo this feature should be part of TAU
-	prototype._onDateSelected = function (event) {
-		var calendarEl,
-			calendar;
-
-		if (event.target.id === "date-on") {
-			calendarEl = document.getElementById("calendar-on");
-		} else if (event.target.id === "date-off") {
-			calendarEl = document.getElementById("calendar-off");
-		}
-		if (calendarEl) {
-			calendar = tau.widget.Calendar(calendarEl);
-			calendar.value(event.detail.datetime);
-			calendar.element.classList.remove("app-hidden");
-			event.target.classList.add("app-hidden");
-		}
-	};
-
-	// @todo this feature should be part of TAU
-	prototype._onCalendarSwitch = function (event) {
-		var dateEl,
-			date;
-
-		if (event.target.id === "calendar-on") {
-			dateEl = document.getElementById("date-on");
-		} else if (event.target.id === "calendar-off") {
-			dateEl = document.getElementById("date-off");
-		}
-		if (dateEl) {
-			date = tau.widget.DateTimePicker(dateEl);
-			date.value(event.detail.date);
-			date.element.classList.remove("app-hidden");
-			event.target.classList.add("app-hidden");
-		}
-	};
-
 	prototype._beforeShowCreateEvent = function (event) {
 		var page = event.target,
 			ui = this._ui;
@@ -76,9 +40,6 @@
 		ui.dayOfWeek = page.querySelector(".ui-day-of-week-picker");
 
 		ui.doneButton.addEventListener("vclick", this, false);
-
-		page.addEventListener("selected", this, false);
-		page.addEventListener("calendarswitch", this, false);
 	};
 
 	prototype._beforeShowMain = function () {
@@ -216,12 +177,6 @@
 				break;
 			case "vclick":
 				self._onClick(event);
-				break;
-			case "selected":
-				self._onDateSelected(event);
-				break;
-			case "calendarswitch":
-				self._onCalendarSwitch(event);
 				break;
 		}
 	};
