@@ -15,13 +15,13 @@
  */
 /* global define */
 /**
- * # DateTimePicker Widget
+ * # DateTimePickerWheel Widget
  * Shows a control that can be used to set hours and minutes.
  * It support 12/24 hours format. It contains two inputs which control the values
  *
  * ## Default selectors
  *
- * Default selector for timepicker is class *ui-datetime-picker*
+ * Default selector for timepicker is class *ui-datetime-picker-wheel*
  *
  * ### HTML Examples
  *
@@ -29,18 +29,18 @@
  * To add a timepicker widget to the application, use the following code:
  *
  *      @example
- *      <div class="ui-datetime-picker" data-format="12">
+ *      <div class="ui-datetime-picker-wheel" data-format="12">
  *
  * #### 24 hours format
  * To add a timepicker widget to the application, use the following code:
  *
  *      @example
- *      <div class="ui-datetime-picker" data-format="24">
+ *      <div class="ui-datetime-picker-wheel" data-format="24">
  *
- * @class ns.widget.mobile.DateTimePicker
+ * @class ns.widget.mobile.DateTimePickerWheel
  * @since 1.2
- * @component-selector .ui-datetime-picker
- * @extends ns.widget.mobile.DateTimePicker
+ * @component-selector .ui-datetime-picker-wheel
+ * @extends ns.widget.mobile.DateTimePickerWheel
  * @author Tomasz Lukawski <t.lukawski@samsung.com>
  */
 (function (window, document, ns) {
@@ -62,7 +62,7 @@
 				utilsEvents = ns.event,
 				getClosestByClass = ns.util.selectors.getClosestByClass,
 				Spin = ns.widget.mobile.Spin,
-				WIDGET_CLASS = "ui-datetime-picker",
+				WIDGET_CLASS = "ui-datetime-picker-wheel",
 				classes = {
 					CONTAINER: WIDGET_CLASS + "-container",
 					HOUR_CONTAINER: WIDGET_CLASS + "-container-hour",
@@ -77,7 +77,7 @@
 				WIDGET_SELECTOR = "." + WIDGET_CLASS,
 				DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 				MONTH_NAMES_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-				DateTimePicker = function () {
+				DateTimePickerWheel = function () {
 					this.options = {
 						format: "12",
 						value: (new Date()).toUTCString()
@@ -104,12 +104,12 @@
 				},
 				prototype = new BaseWidget();
 
-			DateTimePicker.classes = classes;
+			DateTimePickerWheel.classes = classes;
 
 			/**
 			* Init method
 			* @method _init
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._init = function () {
@@ -133,14 +133,14 @@
 			* @method _build
 			* @param {HTMLElement} element
 			* @return {HTMLElement} Builded element
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._build = function (element) {
 				var self = this,
 					datePicker = self._buildDatePicker(),
-					hourPicker = self._buildDateTimePicker("hour"),
-					minutePicker = self._buildDateTimePicker("minute"),
+					hourPicker = self._buildDateTimePickerWheel("hour"),
+					minutePicker = self._buildDateTimePickerWheel("minute"),
 					formatPicker = self._buildFormat(),
 					separator = document.createElement("div");
 
@@ -156,13 +156,13 @@
 
 			/**
 			* Build Spin Widget for the time
-			* @method _buildDateTimePicker
+			* @method _buildDateTimePickerWheel
 			* @param {string} name
 			* @return {HTMLElement} container for time spin
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
-			prototype._buildDateTimePicker = function (name) {
+			prototype._buildDateTimePickerWheel = function (name) {
 				var self = this,
 					ui = self._ui,
 					spin = document.createElement("div"),
@@ -216,7 +216,7 @@
 			* @method _buildDatePicker
 			* @param {Date} selectedDate
 			* @return {HTMLElement} container for time spin
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._buildDatePicker = function (selectedDate) {
@@ -271,7 +271,7 @@
 			* Build Spin Widget for the format
 			* @method _buildFormat
 			* @return {HTMLElement} container for format spin
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._buildFormat = function () {
@@ -301,7 +301,7 @@
 			* Set the value for Date object
 			* @method _setDateValue
 			* @param {Date} value
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._setDateValue = function (value) {
@@ -345,7 +345,7 @@
 			* @param {string} name
 			* @param {number} value
 			* @param {boolean} state
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._setInputValue = function (name, value, state) {
@@ -371,7 +371,7 @@
 			* Focus input element
 			* @method _focusInput
 			* @param {string} name
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._focusInput = function (name) {
@@ -396,10 +396,10 @@
 			}
 
 			/**
-			* Set the value of DateTimePicker
+			* Set the value of DateTimePickerWheel
 			* @method _setValue
 			* @param {Date} value
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._setValue = function (value) {
@@ -416,10 +416,10 @@
 			};
 
 			/**
-			* Get the value of DateTimePicker
+			* Get the value of DateTimePickerWheel
 			* @method _getValue
 			* @return {Date} current time of time picker
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._getValue = function () {
@@ -442,7 +442,7 @@
 			* Handle the click event
 			* @method _onClick
 			* @param {Event} event
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._onClick = function (event) {
@@ -484,7 +484,7 @@
 			* Change the value of input element included in Spin
 			* @method _onInputChange
 			* @param {Event} event
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._onInputChange = function (event) {
@@ -534,10 +534,10 @@
 			};
 
 			/**
-			* Change the value of spin included in DateTimePicker
+			* Change the value of spin included in DateTimePickerWheel
 			* @method _onSpinChange
 			* @param {Event} event
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._onSpinChange = function (event) {
@@ -571,7 +571,7 @@
 			* Handle events
 			* @method handleEvent
 			* @param {Event} event
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @public
 			*/
 			prototype.handleEvent = function (event) {
@@ -593,7 +593,7 @@
 			/**
 			* Bind widget event handlers
 			* @method _bindEvents
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._bindEvents = function () {
@@ -611,7 +611,7 @@
 			/**
 			* Unbind widget event handlers
 			* @method _unbindEvents
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._unbindEvents = function () {
@@ -627,9 +627,9 @@
 			};
 
 			/**
-			* Destory DateTimePicker widget
+			* Destory DateTimePickerWheel widget
 			* @method _destory
-			* @member ns.widget.mobile.DateTimePicker
+			* @member ns.widget.mobile.DateTimePickerWheel
 			* @protected
 			*/
 			prototype._destory = function () {
@@ -637,26 +637,27 @@
 					spins = self._spins;
 
 				Object.keys(spins).forEach(function (key) {
+					// @todo change "_destroy()" to "destroy()"
 					spins[key]._destory();
 				});
 
 				self._unbindEvents();
 			};
 
-			DateTimePicker.prototype = prototype;
+			DateTimePickerWheel.prototype = prototype;
 
 			// definition
-			ns.widget.mobile.DateTimePicker = DateTimePicker;
+			ns.widget.mobile.DateTimePickerWheel = DateTimePickerWheel;
 			engine.defineWidget(
-				"DateTimePicker",
+				"DateTimePickerWheel",
 				WIDGET_SELECTOR,
 				[],
-				DateTimePicker,
+				DateTimePickerWheel,
 				"mobile"
 			);
 
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
-			return DateTimePicker;
+			return DateTimePickerWheel;
 		}
 	);
 	//>>excludeEnd("tauBuildExclude");
