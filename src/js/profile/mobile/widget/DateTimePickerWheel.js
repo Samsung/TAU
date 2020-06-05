@@ -64,6 +64,7 @@
 				Spin = ns.widget.mobile.Spin,
 				WIDGET_CLASS = "ui-datetime-picker-wheel",
 				classes = {
+					WIDGET: WIDGET_CLASS,
 					CONTAINER: WIDGET_CLASS + "-container",
 					HOUR_CONTAINER: WIDGET_CLASS + "-container-hour",
 					MINUTE_CONTAINER: WIDGET_CLASS + "-container-minute",
@@ -100,7 +101,8 @@
 					 * Event will be triggered when user tap/click selected date
 					 * @event
 					 */
-					SELECTED: "selected"
+					SELECTED: "datetimepickerwheelselected",
+					CHANGE: "datetimepickerwheelchange"
 				},
 				prototype = new BaseWidget();
 
@@ -144,6 +146,7 @@
 					formatPicker = self._buildFormat(),
 					separator = document.createElement("div");
 
+				element.classList.add(classes.WIDGET);
 				separator.classList.add(classes.SEPARATOR);
 				element.appendChild(datePicker);
 				element.appendChild(hourPicker);
@@ -551,6 +554,7 @@
 				} else if (parentContainer && parentContainer.classList.contains(classes.DATE_CONTAINER)) {
 					self._setDate(new Date(self._year, 0, event.detail.value + 1));
 				}
+				ns.event.trigger(self.element, "datetimepickerwheelchange", {date: self._getValue()});
 			};
 
 			prototype._setDate = function (date) {

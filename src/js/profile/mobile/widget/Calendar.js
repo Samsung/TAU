@@ -46,6 +46,8 @@
 				fullNameMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 
 				classes = {
+					WIDGET: "ui-calendar",
+
 					PREV_MONTH_DAY: "ui-calendar-prev-month-day",
 					NEXT_MONTH_DAY: "ui-calendar-next-month-day",
 					CURRENT_MONTH_DAY: "ui-calendar-current-month-day",
@@ -480,6 +482,8 @@
 					friElement = document.createElement("td"),
 					satElement = document.createElement("td"),
 					sunElement = document.createElement("td");
+
+				element.classList.add(classes.WIDGET);
 
 				// Controller
 				controllerElement.classList.add(classes.CONTROLLER);

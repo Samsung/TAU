@@ -297,7 +297,7 @@
 			}
 		};
 
-		prototype._show = function (triggerChangeEvent) {
+		prototype._show = function () {
 			var self = this,
 				animation = new Animation({}),
 				state = null,
@@ -327,12 +327,13 @@
 			animation.tick(showAnimationTick.bind(null, self));
 			animation.start(function () {
 				self._addSelectedLayout();
-				if (triggerChangeEvent) {
-					ns.event.trigger(self.element, "spinchange", {
-						value: parseInt(self.options.value, 10),
-						dValue: parseInt(self.options.value, 10) - parseInt(self._prevValue, 10)
-					});
-				}
+				self._prevValue = self.options.value;
+				self.options.value = self._getValueByCount(self._count);
+
+				ns.event.trigger(self.element, "spinchange", {
+					value: parseInt(self.options.value, 10),
+					dValue: parseInt(self.options.value, 10) - parseInt(self._prevValue, 10)
+				});
 			});
 
 		};
@@ -460,7 +461,7 @@
 			options.labels = (Array.isArray(options.labels)) ? options.labels : options.labels.split(",");
 
 			self.length = options.max - options.min + options.step;
-			self._count = (options.value - options.min) / options.step || 0;
+			self._count = self._valueToCount(options.value);
 
 			self.dragTarget = (options.dragTarget === "document") ? document : self.element;
 
@@ -516,7 +517,7 @@
 			return (value - self.options.min) / self.options.step || 0;
 		};
 
-		prototype._setValue = function (value, enableChangeEvent) {
+		prototype._setValue = function (value) {
 			var self = this;
 
 			value = window.parseFloat(value, 10);
@@ -539,7 +540,7 @@
 					self._stopAnimation();
 
 					// update status of widget
-					self._show(enableChangeEvent);
+					self._show();
 				}
 			}
 		};
@@ -802,7 +803,7 @@
 					self._count++;
 				}
 				if (self._previousCount !== self._count) {
-					self._show(true);
+					self._show();
 				}
 			}
 		}
