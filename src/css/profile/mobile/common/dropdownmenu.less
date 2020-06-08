@@ -1,4 +1,4 @@
-@dropdown-options-margin: 6 * @px_base;
+@dropdown-options-margin: 3 * @px_base;
 
 .ui-dropdownmenu-overlay {
 	opacity: 0;
@@ -182,6 +182,8 @@
 	z-index: 1201;
 	min-width: 168px;
 	max-width: 100vw;
+	padding: 3 * @px_base;
+
 	&.ui-dropdownmenu-options-vertical-margins {
 		margin-top: @dropdown-options-margin;
 		margin-bottom: @dropdown-options-margin;
@@ -190,15 +192,7 @@
 		visibility: visible;
 		overflow-y: auto;
 	}
-	&.ui-dropdownmenu-options-opened {
-		border-top: 1 * @px_base solid @color_dropdownmenu_list_group_stroke;
-		border-bottom: 1 * @px_base solid @color_dropdownmenu_list_group_stroke;
-	}
-	// top, bottom classes just describes direction in which menu is animated.
-	&.ui-dropdownmenu-options-top {
-	}
-	&.ui-dropdownmenu-options-bottom {
-	}
+
 	&.ui-dropdownmenu-options-opening.ui-dropdownmenu-options-top .ui-dropdownmenu-options {
 		.animation(open-to-top 300ms);
 	}
