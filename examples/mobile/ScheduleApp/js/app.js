@@ -4,18 +4,24 @@
 			this._store = [];
 			this._ui = {}
 		},
+		tempDate = new Date(),
+		defaultStore = [{
+			on: tempDate.getTime(),
+			off: tempDate.getTime() + 3900 * 1000, // + 1h 5m
+			dayOfWeek: [1, 2, 3]
+		}],
 		prototype = App.prototype,
 		app,
 		tau = window.tau;
 
-	window.addEventListener("tizenhwkey", function (ev) {
+	prototype._onHWKey = function (ev) {
 		var activePopup = null,
 			page = null,
 			pageId = "";
 
 		if (ev.keyName === "back") {
 			activePopup = document.querySelector(".ui-popup-active");
-			page = document.getElementsByClassName("ui-page-active")[0];
+			page = document.querySelector(".ui-page-active");
 			pageId = page ? page.id : "";
 
 			if (pageId === "main" && !activePopup) {
@@ -27,7 +33,17 @@
 				window.history.back();
 			}
 		}
-	});
+	};
+
+	// reset app storage
+	prototype._resetApp = function () {
+		var page = document.querySelector(".ui-page-active");
+
+		// deep copy of object
+		this._store = JSON.parse(JSON.stringify(defaultStore));
+		this._buildEventList(page.querySelector(".ui-content"));
+		tau.engine.createWidgets(page);
+	};
 
 	prototype._beforeShowCreateEvent = function (event) {
 		var page = event.target,
@@ -42,22 +58,31 @@
 		ui.doneButton.addEventListener("vclick", this, false);
 	};
 
-	prototype._beforeShowMain = function () {
-		var page = event.target,
+	prototype._beforeShowMain = function (event) {
+		var self = this,
+			ui = self._ui,
+			page = event.target,
 			themeChanger = page.querySelector("#theme-selector"),
 			themeChangerButton = page.querySelector("#selector-opener");
+
+		ui.mainBackButton = page.querySelector("header .ui-btn-icon-back");
+
+		if (self._store.length === 0) {
+			self._store = JSON.parse(JSON.stringify(defaultStore));
+		}
 
 		themeChanger.addEventListener("change", function (event) {
 			tau.theme.setTheme(event.target.value);
 		});
 
-		themeChangerButton.addEventListener("click", function () {
+		themeChangerButton.addEventListener("vclick", function () {
 			var dropdownmenuWidget = tau.widget.DropdownMenu(themeChanger);
 
 			dropdownmenuWidget.open();
 		});
+		ui.mainBackButton.addEventListener("vclick", self, false);
 
-		this._buildEventList(page.querySelector(".ui-content"));
+		self._buildEventList(page.querySelector(".ui-content"));
 		tau.engine.createWidgets(page);
 	};
 
@@ -68,8 +93,8 @@
 			router;
 
 		// collect data from UI
-		eventData.on = tau.widget.DateTimePicker(ui.dateOn).value();
-		eventData.off = tau.widget.DateTimePicker(ui.dateOff).value();
+		eventData.on = tau.widget.DateTimePicker(ui.dateOn).value().getTime();
+		eventData.off = tau.widget.DateTimePicker(ui.dateOff).value().getTime();
 		eventData.dayOfWeek = tau.widget.DayOfWeekPicker(ui.dayOfWeek).value();
 
 		// save data to app._store
@@ -88,8 +113,8 @@
 		// done button
 		if (target === ui.doneButton) {
 			self._eventDoneClick();
-		} else if (target === ui.cancelButton) {
-			// @todo handler for cancel button
+		} else if (target === ui.mainBackButton) {
+			self._resetApp();
 		}
 	};
 
@@ -107,8 +132,8 @@
 	prototype._buildEventList = function (container) {
 		container.innerHTML = "";
 		this._store.forEach(function (item) {
-			var timeOn = item.on.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
-				timeOff = item.off.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
+			var timeOn = (new Date(item.on)).toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
+				timeOff = (new Date(item.off)).toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
 				HTMLTemplate = `<div class="ui-content-area content-area">
 			<div class="ui-text content-header">
 				Turn device on
@@ -178,11 +203,15 @@
 			case "vclick":
 				self._onClick(event);
 				break;
+			case "tizenhwkey":
+				self._onHWKey(event);
+				break;
 		}
 	};
 
 	prototype.init = function () {
 		document.addEventListener("pagebeforeshow", this, true);
+		window.addEventListener("tizenhwkey", this, false);
 	};
 
 	// application instance
