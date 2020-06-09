@@ -288,6 +288,7 @@
 			function addButtonInactiveClass() {
 				if (anchorHighlight._buttonTarget) {
 					anchorHighlight._buttonTarget.classList.add(classes.INACTIVE_BTN);
+					anchorHighlight._buttonTarget.classList.remove(classes.ACTIVE_BTN);
 				}
 			}
 
