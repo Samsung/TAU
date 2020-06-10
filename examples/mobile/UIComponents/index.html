@@ -15,9 +15,20 @@
 <body>
 	<div class="ui-page ui-page-active" id="main">
 		<header>
-			<h1>
-				Tizen Web UI
-			</h1>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">UIComponents</span>
+			</div>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" id="selector-opener" data-style="flat"></button>
+				<select data-native-menu="false" id="theme-selector" style="display: none">
+					<option value="light">
+						Light Theme
+					</option>
+					<option value="dark" class="ui-dropdown-two-lines">
+						Dark Theme
+					</option>
+				</select>
+			</div>
 		</header>
 		<div class="ui-content">
 			<ul class="ui-listview ui-content-area">

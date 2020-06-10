@@ -1,4 +1,10 @@
+/*global tau*/
+
 (function () {
+
+	var themeChanger = document.querySelector("#theme-selector"),
+		themeChangerButton = document.querySelector("#selector-opener");
+
 	window.addEventListener("tizenhwkey", function (ev) {
 		var activePopup = null,
 			page = null,
@@ -19,4 +25,25 @@
 			}
 		}
 	});
+
+	function onMenuChange(event) {
+		tau.theme.setTheme(event.target.value);
+	}
+
+	function onMenuClick() {
+		var dropDownMenuWidget = tau.widget.DropdownMenu(themeChanger);
+
+		dropDownMenuWidget.open();
+	}
+
+	document.addEventListener("pagebeforeshow", function () {
+		themeChanger.addEventListener("change", onMenuChange);
+		themeChangerButton.addEventListener("click", onMenuClick);
+	});
+
+	document.addEventListener("pagebeforehide", function () {
+		themeChanger.removeEventListener("change", onMenuChange);
+		themeChangerButton.removeEventListener("click", onMenuClick);
+	});
+
 }());
