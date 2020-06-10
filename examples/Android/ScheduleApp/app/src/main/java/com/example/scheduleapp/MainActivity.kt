@@ -32,4 +32,12 @@ class MainActivity : AppCompatActivity() {
 
         webView.loadUrl("file:///android_asset/ScheduleApp/index.html")
     }
+
+    override fun onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
