@@ -582,7 +582,7 @@
 				var self = this;
 
 				switch (event.type) {
-					case "click":
+					case "vclick":
 						self._onClick(event);
 						break;
 					case "input":
@@ -604,7 +604,7 @@
 				var self = this,
 					ui = self._ui;
 
-				utilsEvents.on(self.element, "click", self);
+				utilsEvents.on(self.element, "vclick", self);
 				utilsEvents.on(ui.hourInput, "input", self);
 				utilsEvents.on(ui.minuteInput, "input", self);
 				utilsEvents.on(ui.hourSpin, "spinchange", self);
@@ -622,7 +622,7 @@
 				var self = this,
 					ui = self._ui;
 
-				utilsEvents.off(self.element, "click", self);
+				utilsEvents.off(self.element, "vclick", self);
 				utilsEvents.off(ui.hourInput, "input", self);
 				utilsEvents.off(ui.minuteInput, "input", self);
 				utilsEvents.off(ui.hourSpin, "spinchange", self);
