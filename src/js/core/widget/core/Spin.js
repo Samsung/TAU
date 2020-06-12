@@ -57,7 +57,7 @@
 			ROLL_DURATION = 600,
 			DELTA_Y = 100,
 			DRAG_STEP_TO_VALUE = 60,
-			NUMBER_OF_CAROUSEL_ITEMS = 7,
+			NUMBER_OF_CAROUSEL_ITEMS = 11,
 
 			/**
 			 * Alias for class Spin
@@ -508,6 +508,7 @@
 
 			this._ui.carousel = carousel;
 			this._ui.placeholder = placeholder;
+
 			return element;
 		};
 
@@ -787,8 +788,8 @@
 		};
 
 		prototype._click = function (e) {
-			var target = e.target,
-				self = this,
+			var self = this,
+				target = e.target,
 				items = self._ui.items,
 				count = self._count,
 				targetIndex = items.indexOf(target);
@@ -827,7 +828,7 @@
 				case "dragstart":
 					self._dragStart(event);
 					break;
-				case "click":
+				case "vclick":
 					self._click(event);
 					break;
 			}
@@ -842,7 +843,7 @@
 				threshold: 7 // minimal allowed value from Drag module
 			}));
 
-			utilsEvents.on(self.element, "click", self);
+			utilsEvents.on(self.element, "vclick", self);
 		};
 
 		prototype._unbindEvents = function () {
@@ -851,7 +852,7 @@
 			utilsEvents.disableGesture(self.dragTarget);
 
 			utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
-			utilsEvents.off(self.element, "click", self);
+			utilsEvents.off(self.element, "vclick", self);
 		};
 
 		/**
