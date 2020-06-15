@@ -30,6 +30,7 @@
 		[
 			"../../../../core/engine",
 			"../../../../core/event",
+			"../../../../core/event/gesture/Drag",
 			"../../../../core/util/array",
 			"../../../../core/util/easing",
 			"../../../../core/util/selectors",
@@ -44,6 +45,7 @@
 			//>>excludeEnd("tauBuildExclude");
 
 			var nsWidget = ns.widget,
+				gesture = ns.event.gesture,
 				Listview = nsWidget.core.Listview,
 				Page = nsWidget.core.Page,
 				Popup = nsWidget.core.Popup,
@@ -68,6 +70,7 @@
 				// half of screen height - center element height (112)
 				BOTTOM_MARGIN = (window.innerHeight - 112) / 2,
 				STARTING_Y_POSITION = 10,
+				PERCENT_REGEXP = /[0-9]+%/,
 
 				// Focused title parameters
 				OVERSCROLL_TOP = 108,
@@ -245,7 +248,8 @@
 					SELECTED: "ui-arc-listview-selected",
 					HIDDEN_CAROUSEL_ITEM: WIDGET_CLASS + "-carousel-item-hidden",
 					DUMMY_ELEMENT: WIDGET_CLASS + "-dummy-element",
-					HEADER_FOCUSED: "ui-header-focused"
+					HEADER_FOCUSED: "ui-header-focused",
+					LI_SWIPE_LEFT: "ui-li-swipe-left"
 				},
 				events = {
 					CHANGE: "change"
@@ -261,7 +265,8 @@
 								", input[type='email']" +
 								", input[type='url']" +
 								", input[type='tel']" +
-								", input[type='search']"
+								", input[type='search']",
+					SWIPE_ICON: ".ui-swipe-icon"
 				},
 
 				prototype = new Listview(),
@@ -273,6 +278,7 @@
 				momentum = 0,
 				startTouchTime = 0,
 				lastTouchTime = 0,
+				lastDragDeltaX = 0,
 				factorsX = [],
 
 				lastTouchX = 0,
@@ -1386,6 +1392,11 @@
 					}
 				}
 
+				// Enable Swipe.
+				if (selectedElement.classList.contains(classes.LI_SWIPE_LEFT)) {
+					this._enableSwipe(selectedElement);
+				}
+
 				if (selectedElement.classList.contains(classes.SELECTED)) {
 					showHighlight(ui.arcListviewSelection, selectedElement);
 				} else {
@@ -1432,9 +1443,54 @@
 								marqueeWidget.reset();
 							}
 						}
+
 					}
 				}
-			};
+			}
+
+			prototype._enableSwipe = function (element) {
+				ns.event.enableGesture(
+					element,
+
+					new gesture.Drag({
+						threshold: 10,
+						blockVertical: true
+					})
+				);
+
+				element.addEventListener("dragstart", this._itemDragStart);
+				element.addEventListener("drag", this._itemDragging);
+			}
+
+			// TODO: this should be called on selection change.
+			prototype._disableSwipe = function (element) {
+				element.removeEventListener("dragstart", this._itemDragStart);
+				element.removeEventListener("drag", this._itemDragging);
+			}
+
+			prototype._itemDragStart = function () {
+				lastDragDeltaX = 0;
+			}
+
+			prototype._itemDragging = function (event) {
+				var target = event.target,
+					gesture = event.detail,
+					swipeIcon = target.querySelector(selectors.SWIPE_ICON),
+					currentClipPath,
+					newClipPath;
+
+				if (swipeIcon) {
+					currentClipPath = getComputedStyle(swipeIcon).clipPath.match(PERCENT_REGEXP);
+					if (currentClipPath) {
+						currentClipPath = parseInt(currentClipPath[0], 10);
+						// Clamp the new clip path to [0, 100] range.
+						newClipPath = Math.min(Math.max(currentClipPath + (gesture.estimatedDeltaX - lastDragDeltaX), 0), 100);
+						swipeIcon.style.clipPath = "inset(0 0 0 " + newClipPath + "%)";
+
+						lastDragDeltaX = gesture.estimatedDeltaX;
+					}
+				}
+			}
 
 			/**
 			 * Handler for transitionend event of active element
