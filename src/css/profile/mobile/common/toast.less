@@ -6,7 +6,7 @@
 	.ui-popup-content {
 		background-color: @color_toast_bg;
 		position: relative;
-		margin-bottom: 64 * @unit_base;
+		margin-bottom: 64 * @px_base;
 		margin-top: 20 * @unit_base;
 		width: auto;
 		max-width: 620 * @unit_base;
@@ -16,7 +16,7 @@
 		border: 2 * @unit_base solid @color_toast_stroke;
 		border-radius: 22 * @px_base;
 
-		padding: 11 * @unit_base 28 * @unit_base;
+		padding: 12 * @px_base 20 * @px_base;
 		line-height: 20 * @px_base;
 		color: @color_toast_text;
 		font-size: @font_size_toast_text;
@@ -25,10 +25,10 @@
 		&.ui-popup-toast-has-button {
 			text-align: left;
 			min-width: 532 * @unit_base;
-			padding-right: 0;
+			padding: 12 * @px_base 20 * @px_base;
 
 			.ui-btn {
-				padding: 8 * @unit_base 42 * @unit_base 8 * @unit_base 46 * @unit_base;
+				padding: 4 * @px_base 20 * @px_base 4 * @px_base 0 * @px_base;
 				color: @color_toast_button_text;
 				font-size: @font_size_toast_button_text;
 				.font(medium);
