@@ -17,10 +17,10 @@
 		border-radius: 22 * @px_base;
 
 		padding: 11 * @unit_base 28 * @unit_base;
-		line-height: 41 * @unit_base;
+		line-height: 20 * @px_base;
 		color: @color_toast_text;
 		font-size: @font_size_toast_text;
-		font-stretch: ultra-condensed;
+		.font(regular);
 
 		&.ui-popup-toast-has-button {
 			text-align: left;
@@ -31,12 +31,13 @@
 				padding: 8 * @unit_base 42 * @unit_base 8 * @unit_base 46 * @unit_base;
 				color: @color_toast_button_text;
 				font-size: @font_size_toast_button_text;
+				.font(medium);
 				background-color: transparent;
 				display: inline;
 				width: auto;
 				height: auto;
 				min-height: 41 * @unit_base;
-				line-height: 41 * @unit_base;
+				line-height: 36 * @px_base;
 				margin: -8 * @unit_base 8 * @unit_base -8 * @unit_base 12 * @unit_base;
 				float: right;
 				overflow: visible;
