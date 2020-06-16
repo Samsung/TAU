@@ -57,7 +57,8 @@
 			ROLL_DURATION = 600,
 			DELTA_Y = 100,
 			DRAG_STEP_TO_VALUE = 60,
-			NUMBER_OF_CAROUSEL_ITEMS = 11,
+			NUMBER_OF_CAROUSEL_ITEMS = 13,
+			EVENT_DRAG_END_TIMEOUT = 500,
 
 			/**
 			 * Alias for class Spin
@@ -129,6 +130,7 @@
 				self._lastCurrentIndex = null;
 				self._currentCentralCarouseItem = 0;
 				self._count = 0;
+				self._dragTimeoutHandler = null;
 			},
 
 			WIDGET_CLASS = "ui-spin",
@@ -677,13 +679,26 @@
 				utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
 			} else {
 				if (self.options.enabled) {
-					self._objectValue.value = this._startDragCount - e.detail.deltaY / DRAG_STEP_TO_VALUE;
+					self._objectValue.value = self._startDragCount - e.detail.deltaY / DRAG_STEP_TO_VALUE;
 					if (self.options.loop !== "enabled") {
 						self._objectValue.value = Math.min(Math.max(self._objectValue.value, 0), self.length - 1);
 					}
 					showAnimationTick(self);
 				}
 			}
+			// set timeout in case of drag outside screen
+			window.clearTimeout(self._dragTimeoutHandler);
+			self._dragTimeoutHandler = window.setTimeout(function () {
+				self._dragEnd({
+					detail: {
+						velocityY: e.velocityY,
+						distance: e.distance,
+						direction: e.direction
+					}
+				});
+				self._dragTimeoutHandler = null;
+				ns.event.gesture.Manager.getInstance().resetDetecting();
+			}, EVENT_DRAG_END_TIMEOUT);
 		};
 
 		prototype._dragStart = function () {
@@ -700,6 +715,8 @@
 				chain = self._animation._animate.chain[0],
 				momentum = 0,
 				duration = self.options.duration;
+
+			window.clearTimeout(self._dragTimeoutHandler);
 
 			if (self.options.momentumLevel > 0 &&
 				e.detail.velocityY > 0.7 &&

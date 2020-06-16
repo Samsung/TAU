@@ -213,7 +213,7 @@
 					detectors = [];
 
 				if (!self._isReadyDetecting) {
-					self._resetDetecting();
+					self.resetDetecting();
 					self._bindEvents();
 
 					startEvent = self._createDefaultEventData(gesture.Event.START, event);
@@ -287,7 +287,7 @@
 						this.unregister(_instance);
 					}, self);
 
-					self._resetDetecting();
+					self.resetDetecting();
 					self._blockMouseEvent = false;
 				}
 			},
@@ -314,7 +314,7 @@
 					this.unregister(_instance);
 				}, self);
 
-				self._resetDetecting();
+				self.resetDetecting();
 				self._blockMouseEvent = false;
 			},
 
@@ -380,11 +380,11 @@
 
 			/**
 			 * Reset of gesture manager detector
-			 * @method _resetDetecting
+			 * @method resetDetecting
 			 * @member ns.event.gesture.Manager
-			 * @protected
+			 * @public
 			 */
-			_resetDetecting: function () {
+			resetDetecting: function () {
 				var self = this;
 
 				self._isReadyDetecting = false;
@@ -596,7 +596,7 @@
 			_destroy: function () {
 				var self = this;
 
-				self._resetDetecting();
+				self.resetDetecting();
 				self.instances.length = 0;
 				self.unregisterBlockList.length = 0;
 				self._blockMouseEvent = false;
