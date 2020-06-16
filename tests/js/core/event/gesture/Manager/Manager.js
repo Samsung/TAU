@@ -626,8 +626,8 @@
 				return event;
 			};
 
-			manager._resetDetecting = function () {
-				ok(true, "_resetDetecting was called");
+			manager.resetDetecting = function () {
+				ok(true, "resetDetecting was called");
 			};
 
 			manager._bindEvents = function () {
@@ -664,8 +664,8 @@
 
 			manager.gestureDetectors = [];
 
-			manager._resetDetecting = function () {
-				ok(true, "_resetDetecting was called");
+			manager.resetDetecting = function () {
+				ok(true, "resetDetecting was called");
 			};
 
 			manager._createDefaultEventData = function (type, _event) {
@@ -704,8 +704,8 @@
 					touches: []
 				};
 
-			manager._resetDetecting = function () {
-				ok(true, "_resetDetecting was called");
+			manager.resetDetecting = function () {
+				ok(true, "resetDetecting was called");
 			};
 
 			manager._createDefaultEventData = function (type, _event) {
@@ -770,8 +770,8 @@
 		test("_destroy", 4, function () {
 			var manager = new Manager();
 
-			manager._resetDetecting = function () {
-				ok(true, "_resetDetecting was called");
+			manager.resetDetecting = function () {
+				ok(true, "resetDetecting was called");
 			};
 
 			manager._destroy();
