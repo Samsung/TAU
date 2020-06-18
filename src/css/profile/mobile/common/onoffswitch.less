@@ -25,11 +25,11 @@
     &-input {
         position: absolute;
         width: 37 * @px_base;
-        height: 20.5 * @px_base;
+        height: 18.5 * @px_base;
         border-radius: 9.25 * @px_base;
         -webkit-appearance: none;
         display: block;
-        margin: 3.25 * @px_base 3 * @px_base;
+        margin: 4.25 * @px_base 3 * @px_base;
         border: 1 * @px_base solid var(--on-off-switch-off-button-border);
         background-color: var(--on-off-switch-off-track-background);
         outline: none;
@@ -95,13 +95,12 @@
 
     &-input:checked {
         background-color: var(--primary-color);
-        border-width: 0;
+        border-color: var(--primary-color);
         width: 37 * @px_base;
         height: 18.5 * @px_base;
         margin: 4.25 * @px_base 3 * @px_base;
         &:disabled {
             background-color: var(--on-off-switch-on-disabled-track-background);
-            border-width: 0;
             & ~ .ui-on-off-switch-button {
                 border-color: var(--on-off-switch-on-disabled-button-border);
             }
