@@ -558,7 +558,7 @@ a.ui-btn {
 
 @media all and (min-width: 673px) and (min-height: 411px) {
 	.ui-btn {
-		&.ui-btn-contained:not(.ui-btn-inline) {
+		&.ui-btn-contained:not(.ui-btn-inline):not(&.ui-popup-toast-has-button) {
 			max-width: 60%;
 			min-width: 240 * @px_base;
 		}
