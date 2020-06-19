@@ -86,7 +86,7 @@
 		tau.engine.createWidgets(page);
 	};
 
-	prototype._eventDoneClick = function () {
+	prototype._eventDoneClick = function (target) {
 		var eventData = {},
 			self = this,
 			ui = self._ui,
@@ -96,6 +96,7 @@
 		eventData.on = tau.widget.DateTimePicker(ui.dateOn).value().getTime();
 		eventData.off = tau.widget.DateTimePicker(ui.dateOff).value().getTime();
 		eventData.dayOfWeek = tau.widget.DayOfWeekPicker(ui.dayOfWeek).value();
+		eventData.type = target.getAttribute("data-type");
 
 		// save data to app._store
 		self._store.push(eventData);
@@ -112,7 +113,7 @@
 
 		// done button
 		if (target === ui.doneButton) {
-			self._eventDoneClick();
+			self._eventDoneClick(target);
 		} else if (target === ui.mainBackButton) {
 			self._resetApp();
 		}
@@ -134,7 +135,8 @@
 		this._store.forEach(function (item) {
 			var timeOn = (new Date(item.on)).toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
 				timeOff = (new Date(item.off)).toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
-				HTMLTemplate = `<div class="ui-content-area content-area">
+				type = item.type,
+				HTMLTemplateOn = `<div class="ui-content-area content-area">
 			<div class="ui-text content-header">
 				Turn device on
 			</div>
@@ -158,8 +160,8 @@
 			<div class="content-footer">
 				Cool / 18°C / High
 			</div>
-		</div>
-		<div class="ui-content-area content-area">
+		</div>`,
+				HTMLTemplateOff = `<div class="ui-content-area content-area">
 			<div class="ui-text content-header">
 				Turn device off
 			</div>
@@ -185,7 +187,20 @@
 			</div>
 		</div>`
 
-			container.innerHTML += HTMLTemplate;
+			switch (type) {
+				case "on":
+					container.innerHTML += HTMLTemplateOn;
+					break;
+				case "off":
+					container.innerHTML += HTMLTemplateOff;
+					break;
+				case "onoff":
+					container.innerHTML += HTMLTemplateOn;
+					container.innerHTML += HTMLTemplateOff;
+					break;
+				default:
+					break;
+			}
 		});
 	}
 
