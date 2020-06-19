@@ -1,6 +1,6 @@
 (function (document, tau) {
 	var page = document.getElementById("demo-picker-page"),
-		buttons = document.querySelectorAll(".ui-btn"),
+		buttons = document.querySelectorAll(".ui-btn:not(.ui-btn-icon-back)"),
 		idx;
 
 	function onClick() {
