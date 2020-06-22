@@ -409,15 +409,20 @@
 					ui = self._ui,
 					checkbox = ui.input,
 					handler = ui.handler,
-					checkboxRect = checkbox.getBoundingClientRect(),
-					handlerRect = handler.getBoundingClientRect(),
-					checkboxStyle = window.getComputedStyle(checkbox);
+					checkboxRect,
+					handlerRect,
+					checkboxStyle;
 
-				self._moveWidth = checkboxRect.width - handlerRect.width +
+				if (!self.element.disabled) {
+					checkboxRect = checkbox.getBoundingClientRect();
+					handlerRect = handler.getBoundingClientRect();
+					checkboxStyle = window.getComputedStyle(checkbox);
+					self._moveWidth = checkboxRect.width - handlerRect.width +
 					parseInt(checkboxStyle.borderLeftWidth, 10) +
 					parseInt(checkboxStyle.borderRightWidth, 10);
 
-				handler.classList.add(classes.onDrag);
+					handler.classList.add(classes.onDrag);
+				}
 			}
 
 			OnOffSwitch.prototype._onDragEnd = function (event) {
@@ -430,30 +435,32 @@
 					currentPos,
 					checkedByPosition;
 
-				currentPos = initialPos + event.detail.deltaX;
-				currentPos = Math.min(Math.max(currentPos, 0), moveWidth);
+				if (!self.element.disabled) {
+					currentPos = initialPos + event.detail.deltaX;
+					currentPos = Math.min(Math.max(currentPos, 0), moveWidth);
 
-				handler.classList.remove(classes.onDrag);
+					handler.classList.remove(classes.onDrag);
 
-				checkedByPosition = currentPos > (moveWidth / 2);
+					checkedByPosition = currentPos > (moveWidth / 2);
 
-				// add animation
-				if (checkedByPosition) {
-					handler.classList.add(classes.moveToOn);
-				} else {
-					handler.classList.add(classes.moveToOff);
-				}
-				// remove temporary styles from drag
-				ui.input.style.backgroundColor = null;
-				ui.input.style.borderColor = null;
-				ui.input.style.borderWidth = null;
+					// add animation
+					if (checkedByPosition) {
+						handler.classList.add(classes.moveToOn);
+					} else {
+						handler.classList.add(classes.moveToOff);
+					}
+					// remove temporary styles from drag
+					ui.input.style.backgroundColor = null;
+					ui.input.style.borderColor = null;
+					ui.input.style.borderWidth = null;
 
-				if (checkedByPosition !== checkbox.checked) {
-					// toggle on-off switch
-					self._setValue(checkedByPosition ? 1 : 0);
+					if (checkedByPosition !== checkbox.checked) {
+						// toggle on-off switch
+						self._setValue(checkedByPosition ? 1 : 0);
 
-					// trigger change event
-					onChangeValue(self);
+						// trigger change event
+						onChangeValue(self);
+					}
 				}
 			}
 
@@ -477,19 +484,21 @@
 					currentPos,
 					progress;
 
-				currentPos = initialPos + event.detail.deltaX;
-				currentPos = Math.min(Math.max(currentPos, 0), moveWidth);
+				if (!self.element.disabled) {
+					currentPos = initialPos + event.detail.deltaX;
+					currentPos = Math.min(Math.max(currentPos, 0), moveWidth);
 
-				ui.handler.style.transform = "translateX(" + currentPos + "px)";
+					ui.handler.style.transform = "translateX(" + currentPos + "px)";
 
-				progress = moveWidth ? currentPos / moveWidth : 1;
-				ui.input.style.backgroundColor = "rgba(" +
-					calculateColor(self._transform.bgColor, progress).join(",") +
-					")";
-				ui.input.style.borderColor = "rgba(" +
-					calculateColor(self._transform.borderColor, 1 - progress).join(",") +
-					")";
-				ui.input.style.borderWidth = (1 - progress) + "px";
+					progress = moveWidth ? currentPos / moveWidth : 1;
+					ui.input.style.backgroundColor = "rgba(" +
+						calculateColor(self._transform.bgColor, progress).join(",") +
+						")";
+					ui.input.style.borderColor = "rgba(" +
+						calculateColor(self._transform.borderColor, 1 - progress).join(",") +
+						")";
+					ui.input.style.borderWidth = (1 - progress) + "px";
+				}
 			};
 
 			OnOffSwitch.prototype._onAnimationEnd = function (event) {
