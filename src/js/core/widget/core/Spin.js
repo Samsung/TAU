@@ -157,6 +157,8 @@
 		prototype._fillCarouselByCount = function (count) {
 			var self = this,
 				itemToAppend,
+				diff,
+				restDiff,
 				i;
 
 			count = Math.round(count);
@@ -166,8 +168,17 @@
 					self._carouselItems[i].element.removeChild(self._carouselItems[i].element.firstElementChild);
 				}
 			}
+
+			// for case of count of items is less then carousel items
+			diff = self._numberOfCarouselItems - self.length;
+			if (diff < 0) {
+				diff = 0;
+			}
+
 			// append new items
-			for (i = 0; i < self._numberOfCarouselItems; i++) {
+			i = Math.floor(diff / 2);
+			restDiff = diff - i;
+			for (; i < self._numberOfCarouselItems - restDiff; i++) {
 				itemToAppend = self._itemByCount(count + i - self._carouselCenterIndex);
 				if (itemToAppend) {
 					self._carouselItems[self._carouselItemByCount(count + i - self._carouselCenterIndex)]
@@ -343,50 +354,41 @@
 		prototype._modifyItems = function () {
 			var self = this,
 				options = self.options,
-				element = self.element,
 				itemHeight = 0,
-				items = self._ui.items ||
-					[].slice.call(element.querySelectorAll("." + classes.ITEM)),
+				items = [],
 				len = Math.abs(options.max - options.min) / options.step + 1,
-				diff = len - items.length,
 				index = 0,
 				textValue = "",
 				centerY,
 				item = null,
 				i = 0;
 
-			// add or remove item from spin widget
-			if (diff > 0) {
-				for (; i < diff; i++) {
-					item = document.createElement("div");
-					item.classList.add(classes.ITEM);
-					items.push(item);
-				}
-			} else if (diff < 0) {
-				for (; i < -diff; i++) {
-					items.pop();
-				}
+			// remove previous
+			self._ui.items = items;
+
+			// add new items
+			for (; i < len; i++) {
+				item = document.createElement("div");
+				item.classList.add(classes.ITEM);
+				items.push(item);
 			}
 
 			// set content for new items
-			if (diff > 0) {
-				for (i = 0; i < diff; i++) {
-					index = len - diff + i;
-					item = items[index];
-					textValue = "";
+			for (index = 0; index < len; index++) {
+				item = items[index];
+				textValue = "";
 
-					if (self.options.labels.length) {
-						textValue = self.options.labels[index];
-					} else {
-						textValue += (options.min + index * options.step);
-						if (options.digits > 0) {
-							while (textValue.length < options.digits) {
-								textValue = "0" + textValue;
-							}
+				if (self.options.labels.length) {
+					textValue = self.options.labels[index];
+				} else {
+					textValue += (options.min + index * options.step);
+					if (options.digits > 0) {
+						while (textValue.length < options.digits) {
+							textValue = "0" + textValue;
 						}
 					}
-					item.innerHTML = textValue;
 				}
+				item.innerHTML = textValue;
 			}
 
 			// determine item height for scroll
@@ -411,8 +413,6 @@
 				carouselItem.element.style.transform = "translateY(" + change.moveY + "px) scale(" + change.scale + ")";
 				carouselItem.element.style.opacity = change.opacity;
 			});
-
-			self._ui.items = items;
 		};
 
 		prototype._setItemHeight = function (element, value) {
@@ -498,18 +498,19 @@
 
 		prototype._build = function (element) {
 			var placeholder = document.createElement("div"),
-				carousel = null;
+				carousel = null,
+				self = this;
 
 			element.classList.add(classes.SPIN);
 
 			placeholder.classList.add(classes.PLACEHOLDER);
 			element.appendChild(placeholder);
 
-			carousel = this._buildCarousel(NUMBER_OF_CAROUSEL_ITEMS);
+			carousel = self._buildCarousel(self._numberOfCarouselItems);
 			element.appendChild(carousel);
 
-			this._ui.carousel = carousel;
-			this._ui.placeholder = placeholder;
+			self._ui.carousel = carousel;
+			self._ui.placeholder = placeholder;
 
 			return element;
 		};
