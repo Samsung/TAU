@@ -105,6 +105,7 @@
 					link = selectorUtils.getClosestBySelector(target, LINK_SELECTOR),
 					href,
 					useDefaultUrlHandling,
+					result = true,
 					options, // this should be empty object but some utils that work on it
 					rel; // require hasOwnProperty :(
 
@@ -130,17 +131,19 @@
 							options.link = link;
 						}
 						history.disableVolatileMode();
+						// mark as handled for back button
+						if (rel === "back") {
+							eventUtils.preventDefault(event);
+							result = false;
+						}
 						if (!triggerStateChange(options)) {
 							// mark as handled
-							// but not on back
-							if (!rel || (rel !== "back")) {
-								eventUtils.preventDefault(event);
-								return false;
-							}
+							eventUtils.preventDefault(event);
+							result = false;
 						}
 					}
 				}
-				return true;
+				return result;
 			}
 
 
