@@ -131,7 +131,33 @@
 	};
 
 	prototype._buildEventList = function (container) {
-		container.innerHTML = "";
+		var HTMLDefault = `<div class="ui-content-area content-area">
+			<div class="ui-text content-header">
+				Turn device on
+			</div>
+			<div class="content-container">
+				<div class="hour-container">
+					<span class="ui-text hour-value">
+						12:00
+					</span>
+					<span class="ui-text hour-signature">
+						PM
+					</span>
+				</div>
+				<div class="ui-li-action action-container">
+					<day-indicator active="1"></day-indicator>
+					<select class="ui-on-off-switch">
+						<option value="off"></option>
+						<option value="on" selected></option>
+					</select>
+				</div>
+			</div>
+			<div class="content-footer">
+			Cool / 18°C / High
+			</div>
+		</div>`
+		
+		container.innerHTML = HTMLDefault;
 		this._store.forEach(function (item) {
 			var timeOn = (new Date(item.on)).toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
 				timeOff = (new Date(item.off)).toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true }).split(" "),
