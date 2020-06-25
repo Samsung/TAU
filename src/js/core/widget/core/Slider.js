@@ -368,7 +368,7 @@
 					percentValue;
 
 				// position of handle element
-				percentValue = value / (self._max - self._min) * 100;
+				percentValue = (value - self._min) / (self._max - self._min) * 100;
 				ui.beforeSpace.style["width"] = percentValue + "%";
 				ui.afterSpace.style["width"] = (100 - percentValue) + "%";
 				ui.valueElement.style["width"] = percentValue + "%";
