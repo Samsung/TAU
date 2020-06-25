@@ -2,8 +2,9 @@
 
 (function () {
 
-	var themeChanger = document.querySelector("#theme-selector"),
-		themeChangerButton = document.querySelector("#selector-opener");
+	var themeChanger,
+		themeChangerButton,
+		themeChangerWidget;
 
 	window.addEventListener("tizenhwkey", function (ev) {
 		var activePopup = null,
@@ -36,14 +37,31 @@
 		dropDownMenuWidget.open();
 	}
 
-	document.addEventListener("pagebeforeshow", function () {
-		themeChanger.addEventListener("change", onMenuChange);
-		themeChangerButton.addEventListener("click", onMenuClick);
-	});
+	function onPageShow() {
+		themeChanger = document.querySelector(".ui-page-active .theme-changer"),
+		themeChangerButton = document.querySelector(".ui-page-active .ui-btn-icon-more");
 
-	document.addEventListener("pagebeforehide", function () {
-		themeChanger.removeEventListener("change", onMenuChange);
-		themeChangerButton.removeEventListener("click", onMenuClick);
-	});
+		if (themeChanger && themeChangerButton) {
+			themeChanger.value = tau.theme.getTheme();
+			themeChanger.addEventListener("change", onMenuChange);
+			themeChangerWidget = tau.engine.getBinding(themeChanger);
+			themeChangerWidget.refresh();
+		}
+		if (themeChangerButton) {
+			themeChangerButton.addEventListener("click", onMenuClick);
+		}
+	}
+
+	function onPageHide() {
+		if (themeChanger) {
+			themeChanger.removeEventListener("change", onMenuChange);
+		}
+		if (themeChangerButton) {
+			themeChangerButton.removeEventListener("click", onMenuClick);
+		}
+	}
+
+	document.addEventListener("pageshow", onPageShow);
+	document.addEventListener("pagehide", onPageHide);
 
 }());
