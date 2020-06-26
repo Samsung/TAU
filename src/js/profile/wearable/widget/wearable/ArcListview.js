@@ -1845,8 +1845,12 @@
 				var len = this._items.length,
 					i = 0;
 
-				for (i = 0; i < count; i++) {
-					this.addItem("", i + len);
+				for (i = len; i < len + count; i++) {
+					if (i >= this.options.dataLength) {
+						break;
+					}
+
+					this.addItem("", i);
 				}
 			}
 
