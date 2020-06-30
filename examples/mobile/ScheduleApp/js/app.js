@@ -8,6 +8,7 @@
 		defaultStore = [{
 			on: tempDate.getTime(),
 			off: tempDate.getTime() + 3900 * 1000, // + 1h 5m
+			type: "onoff",
 			dayOfWeek: [1, 2, 3]
 		}],
 		prototype = App.prototype,
