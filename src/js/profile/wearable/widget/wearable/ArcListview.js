@@ -1782,11 +1782,6 @@
 					marqueeWidget = null;
 
 				self._unbindEvents();
-
-				self._items.forEach(function (li) {
-					self.element.appendChild(li);
-					li.setAttribute("style", "");
-				});
 				self._items = [];
 
 				// Destroy marquee.
