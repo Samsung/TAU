@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<title>Home Tv App</title>
+	<link href="lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="manifest" href="./manifest.webmanifest">
+	<link rel="shortcut icon" href="images/Icon.png">
+	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js"></script>
+	<script src="js/app.js"></script>
+</head>
+<body>
+	<div class="ui-page ui-page-active" id="main">
+		<header>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">HomeTV App</span>
+			</div>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" id="selector-opener" data-style="flat"></button>
+				<select data-native-menu="false" id="theme-selector" style="display: none;">
+					<option value="light">
+						Light Theme
+					</option>
+					<option value="dark">
+						Dark Theme
+					</option>
+				</select>
+			</div>
+		</header>
+		<div class="ui-content">
+			<div class="ui-content-area">
+				Weather Widget
+			</div>
+			<div class="ui-content-area">
+				News Widget
+			</div>
+			<div class="ui-content-area">
+				Now on TV
+			</div>
+			<div class="ui-content-area">
+				Apps
+			</div>
+		</div>
+	</div>
+</body>
+</html>
