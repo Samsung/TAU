@@ -1,0 +1,15 @@
+.app-image-grid {
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 100px [col-start]);
+    grid-template-rows: auto;
+    gap: 10px;
+    justify-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.app-icon-img {
+    width: 100px;
+    height: 100px;
+}
