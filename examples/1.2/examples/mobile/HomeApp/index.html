@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<title>Home Tv App</title>
+	<link href="lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="manifest" href="./manifest.webmanifest">
+	<link rel="shortcut icon" href="images/Icon.png">
+	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js"></script>
+	<script src="js/app.js"></script>
+</head>
+<body>
+	<div class="ui-page ui-page-active" id="main">
+		<header>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">HomeTV App</span>
+			</div>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon app-btn-icon-burger" data-style="flat"></a>
+			</div>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" id="selector-opener" data-style="flat"></button>
+				<select data-native-menu="false" id="theme-selector" style="display: none;">
+					<option value="light">
+						Light Theme
+					</option>
+					<option value="dark">
+						Dark Theme
+					</option>
+				</select>
+			</div>
+		</header>
+		<div class="ui-content">
+			<div class="ui-content-subheader">
+				Weather Forecast
+			</div>
+			<div class="ui-content-area">
+				<a style="border-radius: 26px" class="weatherwidget-io" href="https://forecast7.com/en/37d57126d98/seoul/" data-label_1="Seoul" data-label_2="South Korea" data-theme="original" >Seoul South Korea</a>
+				<script>
+					!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+				</script>
+			</div>
+			<div class="ui-content-subheader">
+				Latest News
+			</div>
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-expandable ui-li-divider">
+					<h2>
+						World
+					</h2>
+					<ul class="ui-listview">
+						<li>
+							Item 1
+						</li>
+						<li>
+							Item 2
+						</li>
+					</ul>
+				</li>
+				<li class="ui-expandable ui-li-divider">
+					<h2>
+						Technology
+					</h2>
+					<ul class="ui-listview">
+						<li>
+							Item 1
+						</li>
+						<li>
+							Item 2
+						</li>
+					</ul>
+				</li>
+				<li class="ui-expandable ui-li-divider">
+					<h2>
+						Sport
+					</h2>
+					<ul class="ui-listview">
+						<li>
+							Item 1
+						</li>
+						<li>
+							Item 2
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<div class="ui-content-subheader">
+				Now on TV
+			</div>
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-expandable ui-li-divider">
+					<h2>Channel 1</h2>
+					<div class="app-channel-content">
+						<div class="app-movie-content">
+							<img class="app-movie-poster" src="./images/posters/parasite-poster.jpg" alt="Parasite" />
+							Parasite (2019)
+						</div>
+						<div class="app-movie-content">
+							Next:
+							<img class="app-movie-poster-next" src="./images/posters/baby-driver-poster.jpg" alt="Baby Driver" />
+							Baby Driver (2017)
+						</div>
+					</div>
+
+				</li>
+				<li class="ui-expandable ui-li-divider">
+					<h2>Channel 2</h2>
+					<div class="app-channel-content">
+						<div class="app-movie-content">
+							<img class="app-movie-poster" src="./images/posters/backtothefuture-poster.jpg" alt="Back to The Future" />
+							Back To The Future (1985)
+						</div>
+						<div class="app-movie-content">
+							Next:
+							<img class="app-movie-poster-next" src="./images/posters/ET-poster.jpg" alt="E.T." />
+							E.T. (1982)
+						</div>
+					</div>
+				</li>
+				<li class="ui-expandable ui-li-divider">
+					<h2>Channel 3</h2>
+					<div class="app-channel-content">
+						<div class="app-movie-content">
+							<img class="app-movie-poster" src="./images/posters/amelie-poster.jpg" alt="Amelie" />
+							Amelie (2001)
+						</div>
+						<div class="app-movie-content">
+							Next:
+							<img class="app-movie-poster-next" src="./images/posters/lalaland-poster.jpg" alt="La La Land" />
+							La La Land (2016)
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="ui-content-subheader">
+				Apps on TV
+			</div>
+			<div class="ui-content-area">
+				<div class="app-image-grid">
+					<img src="./images/netflix.png" alt="Netflix" class="app-icon-img"/>
+					<img src="./images/hbogo.png" alt="HBO GO" class="app-icon-img"/>
+					<img src="./images/primevideo.png" alt="Amazon Prime Video" class="app-icon-img"/>
+					<img src="./images/disneyplus.png" alt="Disney Plus" class="app-icon-img"/>
+					<img src="./images/youtube.png" alt="Youtube" class="app-icon-img"/>
+					<img src="./images/twitch.png" alt="Twitch" class="app-icon-img"/z>
+				</div>
+			</div>
+			<div class="ui-drawer" data-position="left" id="leftDrawer" data-drag-edge="50">
+				<div class="ui-drawer-header">
+					<div class="ui-drawer-title">Home TV App</div>
+				</div>
+				<ul class="ui-listview ui-content-area">
+					<li class="ui-li-divider ui-li-has-icon">
+						<div class="ui-li-icon">
+							<img src="images/tw_list_icon_wallpaper.svg"/>
+						</div>
+						<a href="#" data-rel="back">
+							<span class="ui-li-text">Media item 1</span>
+						</a>
+					</li>
+					<li class="ui-li-divider ui-li-has-icon">
+						<div class="ui-li-icon">
+							<img src="images/tw_list_icon_wallpaper.svg"/>
+						</div>
+						<a href="#" data-rel="back">
+							<span class="ui-li-text">Media item 2</span>
+						</a>
+					</li>
+					<li class="ui-li-divider ui-li-has-icon">
+						<div class="ui-li-icon">
+							<img src="images/tw_list_icon_wallpaper.svg"/>
+						</div>
+						<a href="#" data-rel="back">
+							<span class="ui-li-text">Media item 3</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

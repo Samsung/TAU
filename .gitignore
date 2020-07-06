@@ -8,7 +8,6 @@ compiled
 *.patch
 *~
 tau/tests/libs/dist
-dist
 .sign/
 .rds_delta
 .sdk_delta.info

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width,user-scalable=no"/>
+	<title>Tizen Web IDE - Template - Tizen Web UI Framework - Spin</title>
+
+	<link rel="stylesheet"
+			href="../../../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet"
+			href="../../../lib/tau/wearable/theme/default/tau.circle.min.css">
+	<link rel="stylesheet" href="../../../css/style.css">
+	<link rel="stylesheet"
+			href="../../../css/style.circle.css">
+</head>
+
+<body>
+	<!-- Start of page: #one -->
+	<div class="ui-page ui-page-active" id="no-loop-spin-page" data-enable-page-scroll="false">
+		<style>
+			.default-spin {
+				height: 120px;
+				font-size: 50px;
+			}
+			.default-spin .ui-spin-item-selected {
+				font-size: 50px;
+			}
+		</style>
+  	    <header class="ui-header ui-header-smaller">
+			<h2 class="ui-title">Spin</h2>
+		</header>
+		<div class="ui-content">
+			<div id="descriptions">default</div>
+			<div class="ui-spin default-spin"
+				data-min="0"
+				data-max="6"
+				data-labels="A,B,C,D,E,F,G"
+				data-roll-height="custom"
+				data-item-height="30"
+				data-loop="disabled"
+				data-momentum-level="2"
+				data-duration="500">
+			</div>
+		</div>
+		<footer class="ui-footer ui-bottom-button ui-fixed">
+			<button class="ui-btn">Change</button>
+		</footer>
+		<script type="text/javascript" src="./no-loop-picker.js"></script>
+	</div><!-- /page one -->
+</body>
+<script type="text/javascript"
+	src="../../../lib/tau/wearable/js/tau.js"></script>
+</html>

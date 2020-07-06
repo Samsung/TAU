@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<title>Scheduling App</title>
+	<link href="lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/style.css" />
+	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js"></script>
+	<link href="css/DayOfWeekPicker.css" rel="stylesheet" />
+	<script src="js/DayOfWeekPicker.js"></script>
+	<script src="js/app.js"></script>
+
+</head>
+
+<body>
+	<div class="ui-page" id="create-event-page">
+		<header>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#main" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat"></a>
+			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">
+					Turn device on and off
+				</span>
+			</div>
+		</header>
+		<div class="ui-content">
+			<div style="font-size: 15px; margin: 0 0 15px 24px">
+				Max running time is 24 hours.
+				<br>Please set time less than 24 hours.
+			</div>
+			<div class="ui-content-subheader">
+				Device on
+			</div>
+			<div class="ui-content-area">
+				<div id="date-on" class="ui-datetime-picker" data-view="wheel" data-format="12"></div>
+				<div id="calendar-on" class="ui-calendar app-hidden" data-past-selection="true" data-close-on-select="true"></div>
+			</div>
+			<div class="ui-content-subheader">
+				Device off
+			</div>
+			<div class="ui-content-area">
+				<div id="date-off" class="ui-datetime-picker" data-view="wheel" data-format="12"></div>
+				<div id="calendar-off" class="ui-calendar app-hidden" data-past-selection="true" data-close-on-select="true"></div>
+			</div>
+			<div class="ui-content-subheader">
+				Repeat weekly
+			</div>
+			<ul class="ui-listview ui-content-area">
+				<li>
+					<div class="ui-li-text">
+						<div class="ui-day-of-week-picker" data-value="2,3,4"></div>
+						<span class="ui-li-text-sub">
+							Turn device on setting
+						</span>
+					</div>
+				</li>
+				<li class="ui-li-divider">
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Mood
+						</span>
+						<span class="ui-li-text-sub ui-li-text-value">
+							Cool
+						</span>
+					</div>
+				</li>
+				<li class="ui-li-divider">
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Temperature
+						</span>
+						<span class="ui-li-text-sub ui-li-text-value">
+							18°C
+						</span>
+					</div>
+				</li>
+				<li>
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Wind strength
+						</span>
+						<span class="ui-li-text-sub ui-li-text-value">
+							High
+						</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	<footer>
+		<div class="ui-bottom-bar">
+			<a class="ui-btn app-event-cancel" data-style="flat" href="#main">
+				Cancel
+			</a>
+			<a class="ui-btn app-event-done" data-style="flat" href="#" data-type="onoff">
+				Done
+			</a>
+		</div>
+	</footer>
+	</div>
+</body>
+
+</html>

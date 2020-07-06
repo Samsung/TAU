@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="toast-demo-page">
+		<div class="ui-header" data-position="fixed">
+			<h1>
+				Toast
+			</h1>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" data-style="flat"></button>
+				<select class="theme-changer" data-native-menu="false" style="display: none">
+					<option value="light">
+						Light Theme
+					</option>
+					<option value="dark" class="ui-dropdown-two-lines">
+						Dark Theme
+					</option>
+				</select>
+			</div>
+		</div>
+		<div data-role="content">
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-anchor">
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#popup_toast">
+						Toast Popup
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-inline="true" data-position-to="window" data-rel="popup" href="#popup_btn_toast">
+						Toast Popup with button
+					</a>
+				</li>
+			</ul>
+			<div class="ui-popup ui-popup-toast" data-role="popup" id="popup_toast">
+				<div class="ui-popup-content">
+					Saving contact...
+				</div>
+			</div>
+			<div class="ui-popup ui-popup-toast" data-role="popup" id="popup_btn_toast">
+				<div class="ui-popup-content ui-popup-toast-has-button">
+					Saving contact
+					<button class="ui-btn">
+						Done
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="../../js/app.js"></script>
+</body>
+
+</html>

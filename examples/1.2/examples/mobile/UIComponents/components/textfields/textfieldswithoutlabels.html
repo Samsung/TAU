@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="textinput-demo">
+		<header>
+			<h1>
+				Text fields without labels
+			</h1>
+		</header>
+		<!-- /header -->
+		<div class="ui-content">
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-has-text-input">
+					<input class="input-hint" placeholder="Hint text Inactive" type="text"/>
+				</li>
+				<li class="ui-li-has-text-input" id="text-input1">
+					<input class="input-hint" placeholder="Hint text Inactive" type="text"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<input type="text"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<input type="text" value="Input text"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<input disabled="disabled" value="Disabled text" type="text"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<input placeholder="Input letters only" pattern="[A-Za-z]+" data-error-message-string="Error message" type="text"/>
+				</li>
+			</ul>
+		</div>
+		<!-- /content -->
+		<script src="textfieldswithoutlabels.js"></script>
+	</div>
+	<!-- /page -->
+</body>
+
+</html>

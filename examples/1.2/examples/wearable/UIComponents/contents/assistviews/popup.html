@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+	<title>
+		Wearable UI
+	</title>
+	<link href="../../lib/tau/wearable/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../lib/tau/wearable/theme/default/tau.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<link href="../../css/style.circle.css" media="all and (-tizen-geometric-shape: circle)" rel="stylesheet" />
+	<script src="../../js/circle-helper.js">
+	</script>
+	<script src="../../lib/tau/wearable/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="popupPage" data-go-to-top-button="true">
+		<header class="ui-header">
+			<h2 class="ui-title">
+				Popup Dialog
+			</h2>
+		</header>
+		<div class="ui-content">
+			<ul class="ui-listview">
+				<li>
+					<a data-rel="popup" href="#generalPopup">
+						General
+					</a>
+				</li>
+				<li>
+					<a data-rel="popup" href="#checkboxPopup">
+						General Checkbox
+					</a>
+				</li>
+				<li>
+					<a data-rel="popup" href="#1btnPopup">
+						Single button
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="ui-popup" id="checkboxPopup">
+			<div class="ui-popup-content">
+				Enable flight
+				mode?
+				<br />
+				Flight mode
+				disables Wi-Fi.
+				<br />
+				<label class="ui-checkbox-small">
+					<input checked="" type="checkbox" />
+					OK
+				</label>
+			</div>
+			<div class="ui-popup-footer ui-side-button ui-grid-col-2">
+				<a class="ui-btn ui-btn-delete" data-rel="back" href="#">
+					Cancel
+				</a>
+				<a class="ui-btn ui-btn-check" data-rel="back" href="#">
+					OK
+				</a>
+			</div>
+		</div>
+		<div class="ui-popup" id="1btnPopup">
+			<div class="ui-popup-content">
+				Once Samsung Gear is
+				installed, tab Next.
+				<br />
+				If you skip, Gear will be
+				in Standalone mode.
+			</div>
+			<div class="ui-popup-footer ui-bottom-button">
+				<a class="ui-btn" data-rel="back" href="#" id="1btnPopup-cancel">
+					OK
+				</a>
+			</div>
+		</div>
+		<div class="ui-popup" id="generalPopup">
+			<div class="ui-popup-header">
+				User consent
+			</div>
+			<div class="ui-popup-content">
+				Agree?
+				<br />
+				GPS location
+				and use of your
+				location data are
+				controlled by the
+				applications.
+			</div>
+			<div class="ui-popup-footer ui-side-button ui-grid-col-2">
+				<a class="ui-btn ui-btn-delete" data-rel="back" href="#">
+					Cancel
+				</a>
+				<a class="ui-btn ui-btn-check" data-rel="back" href="#">
+					OK
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
