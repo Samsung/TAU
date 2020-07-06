@@ -62,6 +62,8 @@
 				 */
 
 				self.options.dragEdge = 0.05;
+				self.options.width = 0.75 * window.screen.width;
+				self.options.height = window.screen.height;
 			};
 
 			ns.widget.mobile.Drawer = Drawer;

@@ -34,3 +34,11 @@
 .app-movie-poster-next {
     width: 50%;
 }
+.app-btn-icon-burger {
+    margin-left: 20px;
+    margin-right: 12px;    
+}
+.app-btn-icon-burger::after {
+    -webkit-mask-image: url(../images/Hamburger_icon.svg);
+    mask-image: url(../images/Hamburger_icon.svg);
+}
