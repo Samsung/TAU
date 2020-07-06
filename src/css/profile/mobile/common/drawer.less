@@ -1,31 +1,31 @@
 .ui-drawer {
 	position: absolute;
-	background-image: url("images/page/core_theme_bg_01.png");
+	background-color: var(--background-color);
 	z-index: 1201;
 	box-sizing: border-box;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	&.ui-drawer-left {
-		border-right: 1px solid @color_drawer_border_right;
-		// drawer left border color same to list border bottom color
+
+	&-header {
+		height: 56 * @px_base;
+		display: flex;
 	}
-	&.ui-drawer-right {
-		border-left: 1px solid @color_drawer_border_left;
-		// drawer right border color same to list border bottom color
+	&-title {
+		font-size: 19 * @px_base;
+		color: var(--appbar-main-text-color);
+		align-self: center;
+		margin-left: 20 * @px_base;
 	}
+
 	.ui-listview {
 		margin: 0;
 		position: absolute;
 		z-index: 2000;
 		width: 100%;
 		height: 100%;
-		.ui-li.ui-li-last > .ui-btn-inner {
-			// This less code should removed after fixing list widget less code
-			border-bottom-color: @color_list_border_bottom;
-		}
 		.ui-drawer-sub-list > .ui-btn-inner .ui-btn-text {
 			.ui-link-inherit {
-				padding-left: 26 * @unit_base;
+				padding-left: 13 * @px_base;
 			}
 		}
 	}
@@ -33,7 +33,7 @@
 
 .ui-drawer-overlay {
 	position: absolute;
-	background-color: @color_drawer_overlay_bg;
+	background-color: var(--overlay);
 	z-index: 1200;
 }
 
@@ -42,18 +42,13 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 55 * @unit_base;
-		height: 72 * @unit_base;
-
-		&:active {
-			background-color: @color_drawer_icon_press;
-		}
+		width: 27 * @px_base;
+		height: 36 * @px_base;
 
 		&::after {
-			width: 55 * @unit_base;
-			height: 72 * @unit_base;
+			width: 27 * @px_base;
+			height: 36 * @px_base;
 			mask-size: 100%;
-			background-color: @color_drawer_icon;
 			margin-top: 0;
 			top: 0;
 			left: 0;
