@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="demo-picker-page">
+		<div class="ui-header" data-position="fixed">
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<h1>
+				Picker
+			</h1>
+		</div>
+		<div data-role="content">
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="date-picker-calendar-dialog">
+						Date picker Dialog (Calendar view)
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="time-picker-dialog-12h">
+						Time picker Dialog (12h)
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="time-picker-dialog-24h">
+						Time picker Dialog (24h)
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a href="./pickers/calendar.html">
+						Date picker (Calendar view)
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="date-picker-wheel">
+						Date picker (Wheel view)
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="date-time-picker-wheel">
+						Date Time picker
+					</a>
+				</li>
+			</ul>
+			<div class="ui-popup" id="date-picker-calendar-dialog">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content ui-date-picker-calendar">
+					<div class="ui-calendar" data-past-selection="true"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
+			<div class="ui-popup" id="time-picker-dialog-12h">
+				<div class="ui-popup-header">
+					Set time
+				</div>
+				<div class="ui-popup-content ui-popup-has-time-picker">
+					<div class="ui-time-picker"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
+			<div class="ui-popup" id="time-picker-dialog-24h">
+				<div class="ui-popup-header">
+					Set time
+				</div>
+				<div class="ui-popup-content ui-popup-has-time-picker">
+					<div class="ui-time-picker" data-format="24"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
+			<div class="ui-popup" id="date-picker-wheel">
+				<div class="ui-popup-content ui-popup-has-date-picker">
+					<div class="ui-date-picker" data-view="wheel"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
+			<div class="ui-popup" id="date-time-picker-wheel">
+				<div class="ui-popup-content ui-popup-has-date-picker">
+					<div class="ui-datetime-picker" data-view="wheel" data-format="12" data-value="2020-03-12 14:46:20"></div>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn" data-style="flat">Cancel</button>
+					<div class="ui-li-divider"></div>
+					<button class="ui-btn" data-style="flat">Done</button>
+				</div>
+			</div>
+		</div>
+		<script src="./picker.js"></script>
+	</div>
+</body>
+
+</html>

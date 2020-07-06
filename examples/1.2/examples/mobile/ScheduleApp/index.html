@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<title>Scheduling App</title>
+	<link href="lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/style.css" />
+	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js"></script>
+	<link href="css/DayOfWeekPicker.css" rel="stylesheet" />
+	<script src="js/DayOfWeekPicker.js"></script>
+	<script src="js/day-indicator.js"></script>
+	<script src="js/app.js"></script>
+</head>
+
+<body>
+	<div class="ui-page ui-page-active" id="main">
+		<header>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">Schedule</span>
+			</div>
+			<div class="ui-appbar-action-buttons-container">
+				<a class="ui-btn ui-btn-icon ui-btn-icon-add" data-style="flat" href="#turn-on-dialog"></a>
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" id="selector-opener" data-style="flat"></button>
+				<select data-native-menu="false" id="theme-selector" style="display: none;">
+					<option value="light">
+						Light Theme
+					</option>
+					<option value="dark">
+						Dark Theme
+					</option>
+				</select>
+			</div>
+		</header>
+		<div class="ui-content">
+			<div class="ui-popup" id="turn-on-dialog">
+				<div class="ui-popup-header">
+					Add Schedule
+				</div>
+				<div class="ui-popup-content">
+					<ul class="ui-listview ui-popup-listview popup-list">
+						<li class="ui-group-index">
+							<div class="ui-li-text">
+								<a href="./create-event-on.html" class="ui-li-text-title">Turn device on</a>
+							</div>
+						</li>
+						<li class="ui-group-index">
+							<div class="ui-li-text">
+								<a href="./create-event-off.html" class="ui-li-text-title">Turn device off</a>
+							</div>
+						</li>
+						<li class="ui-group-index">
+							<div class="ui-li-text">
+								<a href="./create-event.html" class="ui-li-text-title">Turn device on and off</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

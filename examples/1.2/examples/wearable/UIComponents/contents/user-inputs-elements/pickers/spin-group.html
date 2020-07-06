@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width,user-scalable=no"/>
+	<title>Tizen Web IDE - Template - Tizen Web UI Framework - Spin</title>
+
+	<link rel="stylesheet"
+			href="../../../lib/tau/wearable/theme/default/tau.css">
+	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
+			href="../../../lib/tau/wearable/theme/default/tau.circle.min.css">
+	<link rel="stylesheet" href="../../../css/style.css">
+	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
+			href="../../../css/style.circle.css">
+</head>
+
+<body>
+	<!-- Start of page: #one -->
+	<div class="ui-page ui-page-active" id="spin-group-page" data-enable-page-scroll="false">
+		<style>
+			.ui-spin {
+				height: 160px;
+				font-size: 80px;
+				width: 46px;
+			}
+			.ui-spin .ui-spin-item-selected {
+				font-size: 80px;
+			}
+			.ui-spin .ui-spin-item {
+				height: 80px;
+			}
+		</style>
+  	    <header class="ui-header ui-header-smaller">
+			<h2 class="ui-title">Spin</h2>
+		</header>
+		<div class="ui-content">
+			<div id="descriptions">group</div>
+			<div class="ui-spin" id="digit-3"
+				data-min="0"
+				data-max="9"
+				data-value="0"
+				data-loop="enabled"
+				data-roll-height="custom"
+				data-item-height="80"
+				data-move-factor="0.55"
+				data-scale-factor="0.50"
+				data-duration="500">
+			</div>
+			<div class="ui-spin" id="digit-2"
+				data-min="0"
+				data-max="9"
+				data-value="0"
+				data-loop="enabled"
+				data-roll-height="custom"
+				data-item-height="80"
+				data-move-factor="0.55"
+				data-scale-factor="0.50"
+				data-duration="500">
+			</div>
+			<div class="ui-spin" id="digit-1"
+				data-min="0"
+				data-max="9"
+				data-value="0"
+				data-loop="enabled"
+				data-roll-height="custom"
+				data-item-height="80"
+				data-move-factor="0.55"
+				data-scale-factor="0.50"
+				data-duration="500">
+			</div>
+		</div>
+		<script type="text/javascript" src="./spin-group.js"></script>
+	</div><!-- /page one -->
+</body>
+<script type="text/javascript"
+				src="../../../lib/tau/wearable/js/tau.js"></script>
+</html>

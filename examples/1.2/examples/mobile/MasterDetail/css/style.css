@@ -1,0 +1,15 @@
+/*
+Please put the custom styles here.
+*/
+
+.app-introduction {
+	padding-left: 12px;
+	padding-right: 12px;
+	overflow: hidden;
+	background-color: white;
+}
+
+.app-introduction h2 {
+	color: rgba(50, 150, 166, 1);
+}
+
