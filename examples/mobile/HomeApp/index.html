@@ -21,6 +21,7 @@
 				<a href="#" class="ui-btn ui-btn-icon app-btn-icon-burger" data-style="flat"></a>
 			</div>
 			<div class="ui-appbar-action-buttons-container">
+				<a class="ui-btn ui-btn-icon ui-btn-icon-add" data-style="flat" href="#turn-on-dialog"></a>
 				<button class="ui-btn ui-btn-icon ui-btn-icon-more" id="selector-opener" data-style="flat"></button>
 				<select data-native-menu="false" id="theme-selector" style="display: none;">
 					<option value="light">
@@ -43,98 +44,6 @@
 				</script>
 			</div>
 			<div class="ui-content-subheader">
-				Latest News
-			</div>
-			<ul class="ui-listview ui-content-area">
-				<li class="ui-expandable ui-li-divider">
-					<h2>
-						World
-					</h2>
-					<ul class="ui-listview">
-						<li>
-							Item 1
-						</li>
-						<li>
-							Item 2
-						</li>
-					</ul>
-				</li>
-				<li class="ui-expandable ui-li-divider">
-					<h2>
-						Technology
-					</h2>
-					<ul class="ui-listview">
-						<li>
-							Item 1
-						</li>
-						<li>
-							Item 2
-						</li>
-					</ul>
-				</li>
-				<li class="ui-expandable ui-li-divider">
-					<h2>
-						Sport
-					</h2>
-					<ul class="ui-listview">
-						<li>
-							Item 1
-						</li>
-						<li>
-							Item 2
-						</li>
-					</ul>
-				</li>
-			</ul>
-			<div class="ui-content-subheader">
-				Now on TV
-			</div>
-			<ul class="ui-listview ui-content-area">
-				<li class="ui-expandable ui-li-divider">
-					<h2>Channel 1</h2>
-					<div class="app-channel-content">
-						<div class="app-movie-content">
-							<img class="app-movie-poster" src="./images/posters/parasite-poster.jpg" alt="Parasite" />
-							Parasite (2019)
-						</div>
-						<div class="app-movie-content">
-							Next:
-							<img class="app-movie-poster-next" src="./images/posters/baby-driver-poster.jpg" alt="Baby Driver" />
-							Baby Driver (2017)
-						</div>
-					</div>
-
-				</li>
-				<li class="ui-expandable ui-li-divider">
-					<h2>Channel 2</h2>
-					<div class="app-channel-content">
-						<div class="app-movie-content">
-							<img class="app-movie-poster" src="./images/posters/backtothefuture-poster.jpg" alt="Back to The Future" />
-							Back To The Future (1985)
-						</div>
-						<div class="app-movie-content">
-							Next:
-							<img class="app-movie-poster-next" src="./images/posters/ET-poster.jpg" alt="E.T." />
-							E.T. (1982)
-						</div>
-					</div>
-				</li>
-				<li class="ui-expandable ui-li-divider">
-					<h2>Channel 3</h2>
-					<div class="app-channel-content">
-						<div class="app-movie-content">
-							<img class="app-movie-poster" src="./images/posters/amelie-poster.jpg" alt="Amelie" />
-							Amelie (2001)
-						</div>
-						<div class="app-movie-content">
-							Next:
-							<img class="app-movie-poster-next" src="./images/posters/lalaland-poster.jpg" alt="La La Land" />
-							La La Land (2016)
-						</div>
-					</div>
-				</li>
-			</ul>
-			<div class="ui-content-subheader">
 				Apps on TV
 			</div>
 			<div class="ui-content-area">
@@ -146,6 +55,102 @@
 					<img src="./images/youtube.png" alt="Youtube" class="app-icon-img"/>
 					<img src="./images/twitch.png" alt="Twitch" class="app-icon-img"/z>
 				</div>
+			</div>
+			<div class="app-display-none" id="latest-news-container">
+				<div class="ui-content-subheader">
+					Latest News
+				</div>
+				<ul class="ui-listview ui-content-area">
+					<li class="ui-expandable ui-li-divider">
+						<h2>
+							World
+						</h2>
+						<ul class="ui-listview">
+							<li>
+								Item 1
+							</li>
+							<li>
+								Item 2
+							</li>
+						</ul>
+					</li>
+					<li class="ui-expandable ui-li-divider">
+						<h2>
+							Technology
+						</h2>
+						<ul class="ui-listview">
+							<li>
+								Item 1
+							</li>
+							<li>
+								Item 2
+							</li>
+						</ul>
+					</li>
+					<li class="ui-expandable ui-li-divider">
+						<h2>
+							Sport
+						</h2>
+						<ul class="ui-listview">
+							<li>
+								Item 1
+							</li>
+							<li>
+								Item 2
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="app-display-none" id="now-on-tv-container">
+				<div class="ui-content-subheader">
+					Now on TV
+				</div>
+				<ul class="ui-listview ui-content-area">
+					<li class="ui-expandable ui-li-divider">
+						<h2>Channel 1</h2>
+						<div class="app-channel-content">
+							<div class="app-movie-content">
+								<img class="app-movie-poster" src="./images/posters/parasite-poster.jpg" alt="Parasite" />
+								Parasite (2019)
+							</div>
+							<div class="app-movie-content">
+								Next:
+								<img class="app-movie-poster-next" src="./images/posters/baby-driver-poster.jpg" alt="Baby Driver" />
+								Baby Driver (2017)
+							</div>
+						</div>
+	
+					</li>
+					<li class="ui-expandable ui-li-divider">
+						<h2>Channel 2</h2>
+						<div class="app-channel-content">
+							<div class="app-movie-content">
+								<img class="app-movie-poster" src="./images/posters/backtothefuture-poster.jpg" alt="Back to The Future" />
+								Back To The Future (1985)
+							</div>
+							<div class="app-movie-content">
+								Next:
+								<img class="app-movie-poster-next" src="./images/posters/ET-poster.jpg" alt="E.T." />
+								E.T. (1982)
+							</div>
+						</div>
+					</li>
+					<li class="ui-expandable ui-li-divider">
+						<h2>Channel 3</h2>
+						<div class="app-channel-content">
+							<div class="app-movie-content">
+								<img class="app-movie-poster" src="./images/posters/amelie-poster.jpg" alt="Amelie" />
+								Amelie (2001)
+							</div>
+							<div class="app-movie-content">
+								Next:
+								<img class="app-movie-poster-next" src="./images/posters/lalaland-poster.jpg" alt="La La Land" />
+								La La Land (2016)
+							</div>
+						</div>
+					</li>
+				</ul>
 			</div>
 			<div class="ui-drawer" data-position="left" id="leftDrawer" data-drag-edge="50">
 				<div class="ui-drawer-header">
@@ -177,6 +182,26 @@
 						</a>
 					</li>
 				</ul>
+			</div>
+			<div class="ui-popup" id="turn-on-dialog">
+				<div class="ui-popup-header">
+					Set additional widgets
+				</div>
+				<div class="ui-popup-content">
+					<ul class="ui-listview ui-content-area popup-list">
+						<li class="ui-li-has-checkbox ui-group-index">
+								<input type="checkbox" id="latest-news-check"/>
+								<label for="latest-news-ckeck" class="ui-li-text">Latest News</label>
+						</li>
+						<li class="ui-li-has-checkbox ui-group-index">
+								<input type="checkbox" id="now-on-tv-check"/>
+								<label for="now-on-tv-check" class="ui-li-text">Now on TV</label>
+						</li>
+					</ul>
+				</div>
+				<div class="ui-popup-footer">
+					<button class="ui-btn ui-btn-flat ui-btn-text" data-style="flat" id="popup-submit">OK</button>
+				</div>
 			</div>
 		</div>
 	</div>

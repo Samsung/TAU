@@ -47,3 +47,6 @@ body {
     /*disable-pull-to-refresh-effect*/
     overscroll-behavior: contain;
 }
+.app-display-none {
+    display: none;
+}
