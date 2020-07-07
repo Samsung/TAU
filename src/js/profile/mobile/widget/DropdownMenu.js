@@ -605,7 +605,7 @@
 			 * @static
 			 * @param {HTMLElement} element
 			 * @param {HTMLElement} container
-			 * @return number
+			 * @return {number}
 			 * @member ns.widget.mobile.DropdownMenu
 			 */
 			function getTopOffsetOfElement(element, container) {
@@ -1000,7 +1000,7 @@
 					elOptionContainer.addEventListener("focusin", self._focusBound); // bubble
 					elOptionContainer.addEventListener("focusout", self._blurBound); // bubble
 					if (ui.screenFilter) {
-						ui.screenFilter.addEventListener("vclick", self._toggleMenuBound);
+						ui.screenFilter.addEventListener("vmousedown", self._toggleMenuBound);
 					}
 					window.addEventListener("throttledresize", self._onResizeBound, true);
 				} else {
@@ -1040,7 +1040,9 @@
 					hiddenPart = 0, // hidden part of selected list element
 					maxContainerWidth;
 
+				ui.elSelectWrapper.classList.add("ui-dropdownmenu-force-display");
 				self._offsetTop = getTopOffsetOfElement(ui.elSelectWrapper, ui.page);
+				ui.elSelectWrapper.classList.remove("ui-dropdownmenu-force-display");
 				areaInfo = self._chooseDirection();
 
 				width = Math.max(biggestListItemWidth, wrapperMinWidth);
@@ -1105,6 +1107,7 @@
 						topArea: 0,
 						direction: ""
 					};
+
 				areaInfo.belowArea = ui.page.offsetHeight - self._offsetTop - ui.elPlaceHolder.offsetHeight + ui.content.scrollTop;
 				areaInfo.topArea = self._offsetTop - ui.content.scrollTop;
 
@@ -1330,7 +1333,7 @@
 					elOptionContainer.removeEventListener("focusout", self._blurBound);
 					ui.elOptionWrapper.parentNode.removeChild(ui.elOptionWrapper);
 					if (screenFilter) {
-						screenFilter.removeEventListener("vclick", self._toggleMenuBound);
+						screenFilter.removeEventListener("vmousedown", self._toggleMenuBound);
 						screenFilter.parentNode.removeChild(screenFilter);
 					}
 					window.removeEventListener("throttledresize", self._onResizeBound, true);
