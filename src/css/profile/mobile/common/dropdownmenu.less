@@ -95,6 +95,10 @@
 	}
 }
 
+.ui-dropdownmenu-force-display {
+	display: block !important;
+}
+
 .ui-dropdownmenu-native {
 	select {
 		display: block;
@@ -297,4 +301,11 @@
 
 .ui-li-static.ui-li-has-dropdownmenu {
 	height: 60 * @px_base;
+}
+
+.ui-appbar .ui-dropdownmenu-placeholder {
+	line-height: 56 * @px_base;
+}
+.ui-appbar-expanded .ui-dropdownmenu-placeholder {
+	line-height: (56 + 3) * @px_base; // compensate top margin
 }
