@@ -91,12 +91,8 @@ tau-expandable {
 				content: "";
 				display: inline-flex;
 				width: calc(~"100%" - 20 * @px_base);
-				background-color: var(--subheader-divider-color);
-				mask-image: url(images/6_Lists/tw_list_subheader_divider.svg);
-				mask-size: 4.5 * @px_base 1.5 * @px_base;
-				mask-repeat: repeat-x;
-				mask-position: center;
-				height: 1.5 * @px_base;
+				border-bottom: 3 * @px_base dotted var(--subheader-divider-color);
+				height: 0;
 				align-items: center;
 				margin-right: 20 * @px_base;
 			}
