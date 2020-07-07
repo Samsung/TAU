@@ -42,3 +42,8 @@
     -webkit-mask-image: url(../images/Hamburger_icon.svg);
     mask-image: url(../images/Hamburger_icon.svg);
 }
+
+body {
+    /*disable-pull-to-refresh-effect*/
+    overscroll-behavior: contain;
+}
