@@ -290,7 +290,6 @@ a.ui-btn {
 			&-add::after {
 				mask-image: url("images/2_Buttons/tw_ic_ab_add_mtrl.svg");
 			}
-
 			&-delete::after {
 				mask-image: url("images/1_App_bar/tw_ic_bb_delete_mtrl.svg");
 			}
@@ -316,6 +315,27 @@ a.ui-btn {
 			&-move::after {
 				mask-image: url("images/1_App_bar/tw_ic_bb_move_mtrl.svg");
 			}
+			&-plus::after {
+				mask-image: url("images/3_Controllers/tw_list_icon_add_mtrl.svg");
+			}
+			&-minus::after {
+				mask-image: url("images/3_Controllers/tw_list_icon_delete_mtrl.svg");
+			}
+			&-up::after {
+				mask-image: url("images/3_Controllers/tw_expander_close_mtrl.svg");
+			}
+			&-down::after {
+				mask-image: url("images/3_Controllers/tw_expander_open_mtrl.svg");
+			}
+			&-left::after {
+				mask-image: url("images/3_Controllers/tw_expander_open_mtrl.svg");
+				transform: translate(-50%, -50%) rotateZ(90deg);
+			}
+			&-right::after {
+				mask-image: url("images/3_Controllers/tw_expander_open_mtrl.svg");
+				transform: translate(-50%, -50%) rotateZ(-90deg);
+			}
+
 		}
 
 		&.ui-btn-icon {
@@ -405,6 +425,8 @@ a.ui-btn {
 		&.ui-btn-icon {
 			color: var(--text-color);
 			min-height: 56 * @px_base;
+			max-width: 56 * @px_base;
+
 			&::after {
 				width: 56 * @px_base;
 				height: 56 * @px_base;

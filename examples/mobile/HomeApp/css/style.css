@@ -34,10 +34,83 @@
 .app-movie-poster-next {
     width: 50%;
 }
+
+.app-remote-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.app-volume-control {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 0 var(--overlay);
+    margin: 5px;
+    font-size: 16px;
+    background-image: linear-gradient(170deg,
+        rgba(0, 0, 0, 0.2) 0%, var(--background-area-color) 15%,
+        var(--background-area-color) 85%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.app-channel-control {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 0 var(--overlay);
+    margin: 5px;
+    font-size: 16px;
+    background-image: linear-gradient(170deg,
+        rgba(0, 0, 0, 0.2) 0%, var(--background-area-color) 15%,
+        var(--background-area-color) 85%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.app-4way-direction {
+    display: grid;
+    grid-template-columns: repeat(3, 56px);
+    grid-gap: 5px;
+    border-radius: 100%;
+    box-shadow: 1px 1px 3px 0 var(--overlay);
+    margin: 5px;
+    background-image: radial-gradient(var(--background-area-color) 50%, rgba(0, 0, 0, 0.2));
+}
+
+.app-4way-btn-up {
+    grid-column: 2 / 2;
+    grid-row: 1;
+}
+
+.app-4way-btn-left {
+    grid-column: 1 / 1;
+    grid-row: 2;
+}
+
+.app-4way-btn-ok {
+    grid-column: 2 / 2;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    box-shadow: -1px -1px 3px 0 var(--overlay) inset;
+    background-color: var(--button-background);
+}
+
+.app-4way-btn-right {
+    grid-column: 3 / 3;
+    grid-row: 2;
+}
+
+.app-4way-btn-down {
+    grid-column: 2 / 2;
+    grid-row: 3;
+}
+
 .app-btn-icon-burger {
     margin-left: 20px;
-    margin-right: 12px;    
+    margin-right: 12px;
 }
+
 .app-btn-icon-burger::after {
     -webkit-mask-image: url(../images/Hamburger_icon.svg);
     mask-image: url(../images/Hamburger_icon.svg);
