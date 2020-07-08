@@ -24,7 +24,12 @@ module.exports = function (config) {
 				{ type: "clover", subdir: "clover" },
 				{ type: "lcov", subdir: "lcov" },
 				{ type: "text"}
-			]
+			],
+			check: {
+				global: {
+					lines: 53.96
+				}
+			}
 		},
 
 		// the default configuration
