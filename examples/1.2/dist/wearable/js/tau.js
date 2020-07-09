@@ -20,7 +20,7 @@ var ns = window.tau = window.tau || {},
 nsConfig = window.tauConfig = window.tauConfig || {};
 nsConfig.rootNamespace = 'tau';
 nsConfig.fileName = 'tau';
-ns.version = '1.2.6';
+ns.version = '1.2.7';
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -37873,6 +37873,9 @@ function pathToRegexp (path, keys, options) {
 
 
 				if (scroller) {
+					// initialize the position of the scroller
+					scroller.scrollTop = 0;
+
 					// disable tau rotaryScroller the widget has own support for rotary event
 					ns.util.rotaryScrolling && ns.util.rotaryScrolling.lock();
 
