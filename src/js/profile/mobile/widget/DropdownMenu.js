@@ -1076,7 +1076,7 @@
 					if (areaInfo.topArea < ui.elPlaceHolder.offsetHeight) {
 						hiddenPart = scrollTop % ui.elPlaceHolder.offsetHeight;
 					}
-					offsetTop = self._offsetTop - scrollTop;
+					offsetTop = (self._offsetTop - scrollTop) < 0 ? 0 : self._offsetTop - scrollTop;
 					ui.elOptionWrapper.classList.add(classes.bottom);
 				}
 				// take into account part of clicked list item which is partially hidden
