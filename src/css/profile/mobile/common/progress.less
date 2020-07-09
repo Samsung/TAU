@@ -192,19 +192,71 @@ tau-progress {
 	top: 0;
 	height: 100%;
 	padding: 0;
-	background-color: var(--progress-bar-color);
-	mask-image: url('./images/8_Progress/progress_bar_ind.png');
-	mask-repeat: no-repeat;
+	background-color: transparent;
 	border-radius: 1.5 * @px_base;
-	animation: indeterminatebar 1200ms infinite linear;
+
+	&::before {
+		content: "";
+		position: absolute;
+		width: 46%;
+		left: 0;
+		top: 0;
+		height: 100%;
+		background-color: var(--progress-bar-color);
+		animation: indeterminate-bar1 1200ms infinite linear;
+	}
+	&::after {
+		content: "";
+		position: absolute;
+		width: 46%;
+		left: 93%;
+		top: 0;
+		height: 100%;
+		background-color: var(--progress-bar-color);;
+		animation: indeterminate-bar2 1200ms infinite linear;
+	}
+
 }
 
-@keyframes indeterminatebar {
-	from {
-		mask-position:-180% 0;
+@keyframes indeterminate-bar1 {
+	0% {
+		left: -30%;
 	}
-	to {
-		mask-position: 220% 0;
+	74.9% {
+		left: 100%;
+		opacity: 1;
+	}
+	75% {
+		left: -70%;
+		opacity: 0;
+	}
+	75.1% {
+		left: -70%;
+		opacity: 1;
+	}
+	100% {
+		left: -30%;
+	}
+}
+
+@keyframes indeterminate-bar2 {
+	0% {
+		left: 93%;
+	}
+	59.9% {
+		left: 232%;
+		opacity: 1;
+	}
+	60% {
+		left: -46%;
+		opacity: 0;
+	}
+	60.1% {
+		left: -46%;
+		opacity: 1;
+	}
+	100% {
+		left: 93%;
 	}
 }
 
