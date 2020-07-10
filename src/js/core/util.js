@@ -54,6 +54,9 @@
 			 * @protected
 			 */
 			util._requestAnimationFrameOnSetTimeout = function (callback) {
+				if (typeof callback !== "function") {
+					ns.throws("Parameter is not a function!");
+				}
 				currentFrame = window.setTimeout(callback.bind(callback, +new Date()), 1000 / 60);
 			};
 

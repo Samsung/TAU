@@ -56,6 +56,16 @@
 			helpers.restoreStub(window, "setTimeout");
 		});
 
+		test("_requestAnimationFrameOnSetTimeout [n]", 1, function (assert) {
+			assert.throws(function () {
+				// Method requires a callback as parameter in other ways throws exception
+				util._requestAnimationFrameOnSetTimeout();
+			}, function (e) {
+				return e instanceof ns._TAUException &&
+					e.toString() === "Parameter is not a function!";
+			}, "Parameter is undefined");
+		});
+
 		test("_cancelAnimationFrameOnSetTimeout", 2, function () {
 			equal(typeof util._cancelAnimationFrameOnSetTimeout, "function", "_cancelAnimationFrameOnSetTimeout exists and is a method");
 
