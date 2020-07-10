@@ -64,6 +64,25 @@ function runTests(tau, helpers) {
 		equal(tau.error("test1", "test2", "test3"), undefined, "Result of tau.error");
 		helpers.restoreStub(window.console, "error");
 	});
+
+	test("Method throws", 1, function (assert) {
+		assert.throws(function () {
+			tau.throws("Message");
+		}, function (e) {
+			return e instanceof tau._TAUException &&
+				e.toString() === "Message";
+		}, "Method throws exception with proper message");
+	});
+
+	test("Method throws [n]", 1, function (assert) {
+		assert.throws(function () {
+			// Method requires a string as parameter in other ways throws exception
+			tau.throws();
+		}, function (e) {
+			return e instanceof tau._TAUException &&
+				e.toString() === "Wrong parameter type. Message must be a string!";
+		}, "Parameter is not string");
+	});
 }
 
 if (typeof define === "function") {

@@ -41,7 +41,10 @@
 				args.unshift("[" + rootNamespace + "][" + dateNow.toLocaleString() + "]");
 			},
 			ns = window.ns || window.tau || {},
-			nsConfig = window.nsConfig || window.tauConfig || {};
+			nsConfig = window.nsConfig || window.tauConfig || {},
+			TAUException = function (message) {
+				this.message = message;
+			};
 
 		ns.info = ns.info || {
 			profile: "custom"
@@ -56,6 +59,10 @@
 
 		rootNamespace = nsConfig.rootNamespace;
 		fileName = nsConfig.fileName;
+
+		TAUException.prototype.toString = function () {
+			return this.message;
+		};
 
 		/**
 		 * Return unique id
@@ -177,6 +184,21 @@
 				}
 			}
 			return null;
+		};
+
+		ns._TAUException = TAUException;
+
+		/**
+		 * Method throws TAU exception with given message
+		 * @param {string} message
+		 * @method throws
+		 * @member ns
+		 */
+		ns.throws = function (message) {
+			if (typeof message !== "string") {
+				ns.throws("Wrong parameter type. Message must be a string!");
+			}
+			throw new ns._TAUException(message);
 		};
 
 		//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
