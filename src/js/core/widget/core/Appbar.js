@@ -41,6 +41,10 @@
 				Page = ns.widget.core.Page,
 				min = Math.min,
 				max = Math.max,
+				nominalHeights = {
+					COLLAPSED: 56,
+					EXPANDED: 56
+				},
 				states = {
 					EXPANDED: "EXPANDED",
 					COLLAPSED: "COLLAPSED",
@@ -85,10 +89,6 @@
 					selectAll: "ui-label-select-all",
 					bottomBar: "ui-bottom-bar",
 					hidden: "ui-hidden"
-				},
-				nominalHeights = {
-					COLLAPSED: 56,
-					EXPANDED: 56
 				},
 				containersProperties = {
 					leftIconsContainer: {
