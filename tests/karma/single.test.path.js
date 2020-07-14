@@ -1,6 +1,6 @@
 /*global testPaths:true */
 testPaths = [
-	"profile/wearable/widget/wearable/AssistPanel"
+	"core/widget/core/Appbar"
 ];
 
 // For test:

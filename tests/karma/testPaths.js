@@ -5,6 +5,7 @@ testPaths = [
 	"profile/mobile/config",
 	"profile/wearable/config",
 	"core/widget/core/Page",
+	"core/widget/core/Appbar",
 	"core/widget/core/Checkbox",
 	"core/widget/core/Radio",
 	"core/widget/core/Slider",

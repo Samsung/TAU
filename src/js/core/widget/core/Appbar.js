@@ -29,6 +29,8 @@
 			"../core",
 			"../BaseWidget",
 			"../../../core/event/gesture",
+			"../../../core/event/gesture/Drag",
+			"../../../core/event/gesture/Instance",
 			"../../../core/engine",
 			"../../../core/util/selectors",
 			"./Page"
