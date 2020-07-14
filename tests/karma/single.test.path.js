@@ -1,6 +1,6 @@
 /*global testPaths:true */
 testPaths = [
-	"core/widget/core/Appbar"
+	"core/widget/core/Spin"
 ];
 
 // For test:
