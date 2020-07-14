@@ -36,6 +36,8 @@
 		"../../../core/engine",
 		"../../../core/util/animation/animation",
 		"../../../core/event/gesture",
+		"../../../core/event/gesture/Drag",
+		"../../../core/event/gesture/Instance",
 		"../../../core/util/selectors",
 		"./Page",
 		"./Appbar"
@@ -277,21 +279,6 @@
 			ns.event.trigger(self.element, "spinstep", parseInt(state.value, 10));
 		}
 
-		prototype._valueToIndex = function (value) {
-			var options = this.options,
-				delta = options.max - options.min + options.step;
-
-			value = value - options.min;
-			while (value < options.min) {
-				value += delta;
-			}
-			while (value > options.max) {
-				value -= delta;
-			}
-
-			return parseInt(value, 10) % this.length;
-		};
-
 		prototype._removeSelectedLayout = function () {
 			var self = this,
 				item = self._itemByCount(self._previousCount);
@@ -530,9 +517,11 @@
 
 			if (isNaN(value)) {
 				ns.warn("Spin: value is not a number");
-			} else if (value !== self.options.value) {
-				if (value >= self.options.min && value <= self.options.max || self.options.loop === "enabled") {
-
+			} else {
+				if ((value < self.options.min || value > self.options.max) && self.options.loop === "disabled") {
+					value = Math.min(Math.max(value, self.options.min), self.options.max);
+				}
+				if (value !== self.options.value) {
 					self._previousCount = self._count;
 					self._count = self._valueToCount(value);
 

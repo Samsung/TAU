@@ -155,28 +155,30 @@
 	});
 
 
-	test("Values Spin test", 4, function () {
+	test("Values Spin test", 5, function () {
 		var spin = document.getElementById("spin"),
 			options = {
 				min: 3,
 				max: 10,
 				loop: "disabled"
 			},
-			testValues = [0, 10, 100, 11],
-			spinWidget = tau.engine.instanceWidget(spin, "Spin", options);
+			spinWidget = tau.engine.instanceWidget(spin, "core.Spin", options);
 
-		spinWidget.value(testValues[0]);
-		equal(spinWidget.value(), testValues[0], "Spin value check (0)");
-		spinWidget.value(testValues[1]);
-		equal(spinWidget.value(), testValues[1], "Spin value check (10)");
-		spinWidget.value(testValues[2]);
-		equal(spinWidget.value(), spinWidget.option("max"), "Spin value check (100) limited to max");
+		spinWidget.value(3);
+		equal(spinWidget.value(), 3, "Spin value check (3)");
+		spinWidget.value(10);
+		equal(spinWidget.value(), 10, "Spin value check (10)");
+
+		spinWidget.value(0);
+		equal(spinWidget.value(), 3, "Spin value check (3) limited to min");
+		spinWidget.value(100);
+		equal(spinWidget.value(), 10, "Spin value check (100) limited to max");
+
 		spinWidget.option("loop", "enabled");
-		spinWidget.value(testValues[3]);
-		equal(spinWidget.value(), spinWidget.option("min"), "Spin value check (max + 1) equal min for loop enabled");
+		spinWidget.value(11);
+		equal(spinWidget.value(), 3, "Spin value check for (max + 1) equal min for loop enabled");
 
 		spinWidget.destroy();
-
 	});
 
 }());

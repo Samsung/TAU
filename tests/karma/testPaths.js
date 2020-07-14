@@ -9,6 +9,7 @@ testPaths = [
 	"core/widget/core/Checkbox",
 	"core/widget/core/Radio",
 	"core/widget/core/Slider",
+	"core/widget/core/Spin",
 	"core/widget/core/PageContainer",
 	"core/widget/core/Popup",
 	"core/widget/core/PanelChanger",
