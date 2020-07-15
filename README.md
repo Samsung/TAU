@@ -37,21 +37,38 @@ Build TAU by running the following command in the tau directory:
 
 `npm run build`
 
-## Running the tests
+## Running tests using PhantomJS
 
-TAU has automated tests. To run tests execute command:
+### all
+
+run:
 
 `npm run test`
 
-Part of tests are run in Karma. To run tests in Karma execute command:
+### single
+
+run:
+
+`npx grunt test --single_test=path/to/test.html`
+
+## Running tests using Karma
+
+### all
+run:
 
 `npm run test:karma`
 
-If you need to run one particular test in Karma you have to modify file `tests/karma/single.conf.path.js` and execute command:
+### single
+
+modify:
+
+`tests/karma/single.conf.path.js`
+
+run:
 
 `npm run test:karma-single-test`
 
-## Debuggging
+## Debugging
 
 In order to set additional logging in TAU you need to build TAU with --tau-debug option
 
