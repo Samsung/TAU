@@ -1,6 +1,6 @@
 /*global testPaths:true */
 testPaths = [
-	"core/util/path"
+	"core/widget/core/Drawer"
 ];
 
 // For test:
