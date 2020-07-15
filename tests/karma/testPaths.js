@@ -40,6 +40,7 @@ testPaths = [
 	"core/util/DOM/attributes",
 	"core/util/DOM/manipulation",
 	"core/util/easing",
+	"core/util/path",
 	"core/util/polar",
 	"core/util/data",
 	"core/util/date",

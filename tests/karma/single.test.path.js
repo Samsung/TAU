@@ -1,6 +1,6 @@
 /*global testPaths:true */
 testPaths = [
-	"core/widget/core/Spin"
+	"core/util/path"
 ];
 
 // For test:
