@@ -1,4 +1,4 @@
-/*global window, ns, define, ns */
+/*global ns, define, ns */
 /*jslint nomen: true */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
@@ -549,6 +549,7 @@
 			 * Drawer translate function
 			 * @method _translate
 			 * @param {number} x
+			 * @param {number} y
 			 * @param {number} duration
 			 * @member ns.widget.core.Drawer
 			 * @protected

@@ -16,6 +16,7 @@ testPaths = [
 	"core/widget/core/SectionChanger",
 	"core/widget/core/Marquee",
 	"core/widget/core/VirtualListviewSimple",
+	"core/widget/core/Drawer",
 	"core/event/vmouse",
 	"core/event/throttledresize",
 	"profile/mobile/widget/Popup",
