@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*global window, define, ns*/
+/*global define, ns*/
 /**
  * #DatePicker Widget
  *
@@ -515,8 +515,8 @@
 
 				if (parentClassName) {
 					activeName = parentClassName.replace(classes.CONTAINER_PREFIX, "")
-					.replace(classes.CONTAINER, "")
-					.trim();
+						.replace(classes.CONTAINER, "")
+						.trim();
 				}
 
 				if (parent && activeName && CONTAINERS.indexOf(activeName) > -1) {
@@ -565,7 +565,8 @@
 				value.setFullYear(year);
 				daysInMonth = self._daysInMonth(year, newValue);
 				if (day > daysInMonth && (self._daysInMonth(year, month) > daysInMonth)) {
-					value = new Date(year, newValue, daysInMonth);
+					value = new Date(year, newValue, daysInMonth,
+						value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
 				}
 				self._changeValue(value);
 			};
@@ -580,21 +581,18 @@
 			prototype._changeDay = function (changeValue) {
 				var self = this,
 					value = self.value(),
-					month = value.getMonth(),
-					newValue,
 					day = value.getDate(),
-					year = value.getFullYear(),
-					daysInMonth = self._daysInMonth(year, month);
+					newValue = day + changeValue,
+					daysInMonth = self._daysInMonth(value.getFullYear(), value.getMonth());
 
-				newValue = day + changeValue;
-
-				if (changeValue < 0 && day === 1) {
-					value.setDate(daysInMonth);
-				} else {
-					value.setDate(newValue);
+				if (newValue < 1) {
+					newValue += daysInMonth;
+				} else if (newValue > daysInMonth) {
+					newValue -= daysInMonth;
 				}
-				value.setMonth(month);
-				value.setFullYear(year);
+
+				value.setDate(newValue);
+
 				self._changeValue(value);
 			};
 
