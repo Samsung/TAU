@@ -1,6 +1,6 @@
 /*global testPaths:true */
 testPaths = [
-	"core/util/path"
+	"core/event/orientationchange"
 ];
 
 // For test:
