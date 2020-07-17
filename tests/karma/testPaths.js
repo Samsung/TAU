@@ -55,6 +55,7 @@ testPaths = [
 	"core/event/gesture/LongPress",
 	"core/event/gesture/Pinch",
 	"core/event/gesture/Swipe",
+	"core/event/orientationchange",
 	"profile/wearable/router/route/grid",
 	"core/router/Router",
 	"core/widget/core/tab/SubTab",

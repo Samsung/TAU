@@ -1,6 +1,6 @@
 /*global testPaths:true */
 testPaths = [
-	"core/widget/core/Drawer"
+	"core/event/orientationchange"
 ];
 
 // For test:

@@ -1,9 +1,7 @@
-/*global window, start */
-(function (window, document, tau, QUnit, define) {
+/* global QUnit, define, start, tau */
+(function () {
 	"use strict";
-
 	QUnit.config.reorder = false;
-
 	function runTests(orientation, helpers) {
 		var mockWindow = {
 				matchMedia: null,
@@ -27,10 +25,21 @@
 			},
 			originalSupport = false;
 
+		orientation = orientation || window.ns.event.orientationchange;
+		helpers = helpers || window.helpers;
+
+		function initHTML() {
+			var HTML = helpers.loadHTMLFromFile("/base/tests/js/core/event/orientationchange/test-data/sample.html"),
+				parent = document.getElementById("qunit-fixture") || helpers.initFixture();
+
+			parent.innerHTML = HTML;
+		}
+
 		QUnit.module("core/event/orientationchange", {
 			setup: function () {
 				orientation._window = mockWindow;
 				originalSupport = orientation.supported;
+				initHTML();
 			},
 			teardown: function () {
 				orientation._window = window;
@@ -174,18 +183,12 @@
 		});
 	}
 
-	if (define) {
-		define(
-			[
-				"../../../../../src/js/core/event/orientationchange",
-				"../../../../karma/tests/helpers"
-			],
-			function (engine, event, orientation, helpers) {
-				return runTests.bind(null, orientation, helpers);
-			}
-		);
+	if (typeof define === "function") {
+		define(function () {
+			return runTests;
+		});
 	} else {
-		runTests(tau.event.orientationchange, window.helpers);
+		runTests(tau.event.orientationchange, window.helpers)
 	}
 
-}(window, window.document, window.tau, window.QUnit, window.define));
+}());
