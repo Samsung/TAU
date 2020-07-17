@@ -264,7 +264,7 @@
 				options.min = parseInt(element.getAttribute("min"), 10);
 				options.max = parseInt(element.getAttribute("max"), 10);
 				options.step = parseInt(element.getAttribute("step"), 10);
-				options.disabled = element.getAttribute("disabled", 10);
+				options.disabled = !!element.getAttribute("disabled");
 			};
 
 			/**
