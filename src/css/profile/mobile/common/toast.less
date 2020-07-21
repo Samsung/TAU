@@ -28,7 +28,7 @@
 				width: 84%;
 			}
 		}
-		
+
 		@media all and (min-width: 480px) and (max-width: 959px) {
 			max-width: 68%;
 			&.ui-popup-toast-has-button {
@@ -62,9 +62,10 @@
 					background-color: transparent;
 					border: none;
 					border-radius: 0;
+					padding-right: 20 * @px_base; // space for press effect
+					margin-right: -20 * @px_base; // space for press effect
 
 					&::before {
-						border-radius: 0;
 						background-color: @color_toast_button_bg_press;
 					}
 
@@ -72,7 +73,21 @@
 						background-color: transparent;
 					}
 				}
-
+			}
+		}
+	}
+	&.ui-popup-toast-multiline {
+		.ui-popup-content {
+			display: block;
+			padding: 12 * @px_base 20 * @px_base;
+			&.ui-popup-toast-has-button {
+				.ui-btn {
+					margin-left: auto;
+					padding-top: 5 * @px_base;
+					padding-bottom: 0;
+				}
+				padding-top: 9 * @px_base;
+				padding-bottom: 4 * @px_base;
 			}
 		}
 	}

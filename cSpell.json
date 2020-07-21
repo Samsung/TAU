@@ -280,7 +280,7 @@
         "listitem",
         "indexscroller",
 
-        //TAU module names 
+        //TAU module names
         "Collapsibleset",
         "Fieldcontain",
         "Fastscroll",
@@ -938,6 +938,7 @@
         "lorem",
         "ipsum",
         "amet",
+        "adipisicing",
         "invenire",
         "moderatius",
         "mucius",
