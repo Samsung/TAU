@@ -4,7 +4,6 @@
 :root {
     // FAB
 	--button-fab-radius: 50%;
-    --button-fab-color: var(--primary-color);
     --button-fab-icon-color: var(--color-white);
 
 
@@ -550,7 +549,7 @@ a.ui-btn {
 		bottom: var(--button-fab-bottom);
 		width: var(--button-fab-width);
 		height: var(--button-fab-height);
-		background-color: var(--button-fab-color);
+		background-color: var(--primary-color);
 		z-index: 1000;
 		border-radius: var(--button-fab-radius);
 		&::after {
@@ -558,7 +557,10 @@ a.ui-btn {
 			width: var(--button-fab-icon-width);
 			height: var(--button-fab-icon-height);
 		}
-	}
+		&.ui-btn-active.ui-btn-icon::after {
+			background-color: var(--button-fab-icon-color);
+		}
+}
 	.ui-btn-content {
 		width: 90 * @px_base;
 		display: flex;
