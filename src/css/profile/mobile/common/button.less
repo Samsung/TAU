@@ -228,6 +228,10 @@ a.ui-btn {
 	}
 
 	&.ui-btn-icon {
+		&.ui-state-disabled::after {
+			opacity: 0.4;
+		}
+
 		&.ui-btn-circle {
 			width: 98 * @unit_base;
 			height: 98 * @unit_base;
@@ -252,6 +256,14 @@ a.ui-btn {
 				width: 50 * @unit_base;
 				height: 50 * @unit_base;
 			}
+		}
+
+		&.ui-color-add::after {
+			background-color: var(--btn-add-color);
+		}
+		
+		&.ui-color-delete::after {
+			background-color: var(--btn-delete-color);
 		}
 	}
 
@@ -423,21 +435,21 @@ a.ui-btn {
 
 		&.ui-btn-icon {
 			color: var(--text-color);
-			min-height: 56 * @px_base;
-			max-width: 56 * @px_base;
+			min-height: 32 * @px_base;
+			max-width: 32 * @px_base;
 
 			&::after {
-				width: 56 * @px_base;
-				height: 56 * @px_base;
+				width: 32 * @px_base;
+				height: 32 * @px_base;
 				border-radius: 28 * @px_base;
-				mask-size: 43 * @px_base;
+				mask-size: 32 * @px_base;
 			}
 			&::before {
 				top: 50%;
 				left: 50%;
 				transform: translate(-50%, -50%);
-				height: 56 * @px_base;
-				width: 56 * @px_base;
+				height: 32 * @px_base;
+				width: 32 * @px_base;
 				border-radius: 28 * @px_base;
 				background-color: var(--button-background-flat);
 			}
