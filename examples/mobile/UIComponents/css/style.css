@@ -286,20 +286,9 @@
 .ui-btn-icon.ui-icon-plus:not(.ui-btn-circle) {
 	background-color: transparent;
 }
-.ui-btn-icon.ui-icon-plus:not(.ui-btn-circle):after {
-	background-color: rgba(61, 185, 204, 1);
-}
-.ui-btn-icon.ui-icon-plus:not(.ui-btn-circle):active:after {
-	background-color: rgba(34, 104, 115, 1);
-}
+
 .ui-btn-icon.ui-icon-minus:not(.ui-btn-circle) {
 	background-color: transparent;
-}
-.ui-btn-icon.ui-icon-minus:not(.ui-btn-circle):after {
-	background-color: rgba(224, 34, 34, 1);
-}
-.ui-btn-icon.ui-icon-minus:not(.ui-btn-circle):active:after {
-	background-color: rgba(186, 28, 28, 1);
 }
 .ui-btn-icon.ui-icon-cancel:after {
 	-webkit-mask-image: url("images/core_button_cancel.png");
