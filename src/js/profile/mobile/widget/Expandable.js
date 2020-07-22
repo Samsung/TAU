@@ -156,13 +156,15 @@
 					 */
 					this.options = {
 						collapsed: true,
-						heading: expandableSelectors.HEADING
+						heading: expandableSelectors.HEADING,
+						expander: "heading"
 					};
 
 					this._eventHandlers = {};
 					this._ui = {
-						expandableHeadingElement: null,
-						expandableHeadingContent: null
+						heading: null,
+						expandableHeadingContent: null,
+						expandButton: null
 					};
 
 				},
@@ -219,9 +221,15 @@
 					/**
 					 * Set active to expandable widget heading
 					 * @style ui-expandable-heading-active
+					 * @member ns.widget.mobile.Expandable,
+					 */
+					uiExpandableHeadingActive: "ui-expandable-heading-active",
+					/**
+					 * Set active to expandable widget heading
+					 * @style ui-expandable-heading-active
 					 * @member ns.widget.mobile.Expandable
 					 */
-					uiExpandableHeadingActive: "ui-expandable-heading-active"
+					expandButton: "ui-expand-button"
 				};
 
 
@@ -240,9 +248,9 @@
 			function toggleExpandableHandler(self, element, event) {
 				var	ui = self._ui,
 					elementClassList = element.classList,
-					heading = ui.expandableHeadingElement,
+					heading = ui.heading,
 					headingClassList = heading.classList,
-					content = ui.expandableContentElement,
+					content = ui.expandableContent,
 					contentClassList = content.classList,
 					isCollapse = event.type === "collapse";
 
@@ -268,7 +276,7 @@
 			}
 
 			function setHeadingActiveClassHandler(self, setClass) {
-				var headingClassList = self._ui.expandableHeadingElement.classList;
+				var headingClassList = self._ui.heading.classList;
 
 				if (setClass) {
 					headingClassList.add(classes.uiExpandableHeadingActive);
@@ -279,7 +287,7 @@
 
 			function toggleEventTypeHandler(self, event) {
 				var element = self.element,
-					heading = self._ui.expandableHeadingElement,
+					heading = self._ui.heading,
 					eventType = heading.classList.contains(classes.uiExpandableHeadingCollapsed) ? "expand" : "collapse";
 
 				eventUtil.trigger(element, eventType);
@@ -329,18 +337,19 @@
 				}
 				expandableHeading.classList.add(classes.uiExpandableHeading);
 
-				// Wrap all widget content
-				domUtils.wrapInHTML(element.childNodes, "<div class='" + classes.uiExpandableContent + "'></div>");
+				expandableContent = element.querySelector("." + classes.uiExpandableContent);
+				if (!expandableContent) {
+					// Wrap all widget content
+					domUtils.wrapInHTML(element.childNodes, "<div class='" + classes.uiExpandableContent + "'></div>");
 
-				// Move header out
-				element.insertBefore(expandableHeading, element.firstChild);
+					// Move header out
+					element.insertBefore(expandableHeading, element.firstChild);
+					domUtils.wrapInHTML(expandableHeading.childNodes, "<a class='" + classes.uiExpandableHeadingToggle + "' tabindex='0'></a>");
+					expandableContent = expandableHeading.nextElementSibling;
+				}
 
-				domUtils.wrapInHTML(expandableHeading.childNodes, "<a class='" + classes.uiExpandableHeadingToggle + "' tabindex='0'></a>");
-
-				expandableContent = expandableHeading.nextElementSibling;
-
-				ui.expandableHeadingElement = expandableHeading;
-				ui.expandableContentElement = expandableContent;
+				ui.heading = expandableHeading;
+				ui.expandableContent = expandableContent;
 
 				return element;
 			};
@@ -357,13 +366,14 @@
 				var self = this,
 					ui = self._ui;
 
-				ui.expandableHeadingElement = ui.expandableHeadingElement || selectors.getChildrenByClass(element, classes.uiExpandableHeading)[0];
-				ui.expandableContentElement = ui.expandableContentElement || selectors.getChildrenByClass(element, classes.uiExpandableContent)[0];
+				ui.heading = ui.heading || selectors.getChildrenByClass(element, classes.uiExpandableHeading)[0];
+				ui.expandableContent = ui.expandableContent || element.querySelector("." + classes.uiExpandableContent);
+				ui.expandButton = ui.expandButton || element.querySelector("." + classes.expandButton);
 
 				if (self.options.collapsed) {
 					element.classList.add(classes.uiExpandableCollapsed);
-					ui.expandableHeadingElement.classList.add(classes.uiExpandableHeadingCollapsed);
-					ui.expandableContentElement.classList.add(classes.uiExpandableContentCollapsed);
+					ui.heading.classList.add(classes.uiExpandableHeadingCollapsed);
+					ui.expandableContent.classList.add(classes.uiExpandableContentCollapsed);
 				}
 
 				return element;
@@ -379,7 +389,7 @@
 			Expandable.prototype._bindEvents = function (element) {
 				var self = this,
 					eventHandlers = self._eventHandlers,
-					heading = self._ui.expandableHeadingElement;
+					heading = self._ui.heading;
 
 				// Declare handlers with and assign them to local variables
 				eventHandlers.toggleExpandable = toggleExpandableHandler.bind(null, self, element);
@@ -450,7 +460,7 @@
 			Expandable.prototype._destroy = function () {
 				var self = this,
 					element = self.element,
-					heading = self._ui.expandableHeadingElement,
+					heading = self._ui.heading,
 					eventHandlers = self._eventHandlers,
 					parentNode = element.parentNode;
 

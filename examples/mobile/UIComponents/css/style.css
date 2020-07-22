@@ -1,6 +1,6 @@
 /* Header */
 .btn-icon-back::after {
-	 -webkit-mask-image: url(./images/core_icon_back.png);
+	-webkit-mask-image: url(./images/core_icon_back.png);
 	mask-image: url(./images/core_icon_back.png);
 }
 
@@ -460,7 +460,7 @@
 }
 
 /**************************************
-			Virtual List
+		Virtual List
 ***************************************/
 .virtual-icon {
 	width: 35px;
@@ -468,7 +468,7 @@
 }
 
 /**************************************
-            Slider
+		Slider
 ***************************************/
 #slider-demo .ui-slider-vertical {
 	left: 50%;
@@ -477,7 +477,7 @@
 }
 
 /**************************************
-			Button Text
+		Button Text
 ***************************************/
 #button-page {
 	color: white;
@@ -624,14 +624,14 @@
 }
 
 /**************************************
-            text input with buttons
+		text input with buttons
 ***************************************/
 #textinputwithbuttons-demo .ui-content {
 	top: 80px;
 	background: white;
 }
 /******************************************************
-            List Styles - sliders
+		List Styles - sliders
 ******************************************************/
 
 #slider-description{
@@ -671,7 +671,7 @@
 }
 
 /******************************************************
-        Indexscrollbar with search floating button
+		Indexscrollbar with search floating button
 ******************************************************/
 
 #indexscrollbarPage .ui-header.search-active h1 {
@@ -704,4 +704,26 @@
 }
 .sample-unit-lines p {
 	margin-bottom: 2px;
+}
+
+/* Expand button example */
+.app-content-example {
+	height: 150px;
+	width: 100%;
+	background-color: #ddd;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 15px;
+}
+.app-content-example-expanded {
+	height: 150px;
+	width: 100%;
+	background-color: #ddd;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 15px;
 }

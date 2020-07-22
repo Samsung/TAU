@@ -159,12 +159,15 @@
 		border-radius: 26 * @px_base;
 		box-sizing: border-box;
 		box-shadow: 0 0 0 0.25 * @px_base var(--content-area-line-color) inset;
-		margin: auto;
+		margin: auto auto 16 * @px_base auto;
 
 		&-disabled-top-rounding {
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
 			mask-border-width: 0 26 * @px_base 26 * @px_base;
+		}
+		~ .ui-content-subheader {
+			margin-top: -16 * @px_base; // margin compensation from content area
 		}
 	}
 
