@@ -112,6 +112,17 @@ tau-expandable {
 			margin: 0 24 * @px_base;
 		}
 
+		.ui-li-checkbox-icon {
+			align-self: center;
+		}
+		// Checkbox icon
+		.ui-li-checkbox-icon img {
+			width: 40 * @px_base;
+			height: 40 * @px_base;
+			margin-right: 18 * @px_base;
+			display: flex;
+		}
+
 		// Icon
 		.ui-li-icon {
 			width: 40 * @px_base;
@@ -147,6 +158,7 @@ tau-expandable {
 				font-size: 18 * @sp_base;
 				color: var(--text-color);
 				line-height: 21 * @px_base;
+				vertical-align: middle;
 
 				&:only-child {
 					padding-bottom: @px_base;
@@ -208,6 +220,9 @@ tau-expandable {
 			&.ui-li-has-checkbox::after, &.ui-li-has-radio::after {
 				width: calc(~"100%" - 92 * @px_base);
 				left: 68 * @px_base;
+			}
+			&.ui-li-has-checkbox-icon::after {
+				left: 126 * @px_base;
 			}
 		}
 
