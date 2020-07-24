@@ -138,6 +138,13 @@
     background-image: url(../images/English_breakfast_2.jpg);
     background-size: 100%;
 }
+.app-breakfast-2 {
+    background-image: url(../images/Vegetarian_breakfast_at_Cafe_Cuilles.jpg);
+}
+.app-breakfast-3 {
+    background-image: url(../images/800px-Korean.cuisine-Bibimbap-01.jpg);
+}
+
 .app-hotel-order {
     display: flex;
     align-self: center;
