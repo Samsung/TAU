@@ -130,6 +130,19 @@
     mask-image: url(../images/Hamburger_icon.svg);
 }
 
+.app-hotel-breakfast {
+    height: 370px;
+}
+.app-hotel-breakfast-image {
+    height: 200px;
+    background-image: url(../images/English_breakfast_2.jpg);
+    background-size: 100%;
+}
+.app-hotel-order {
+    display: flex;
+    align-self: center;
+}
+
 body {
     /*disable-pull-to-refresh-effect*/
     overscroll-behavior: contain;
