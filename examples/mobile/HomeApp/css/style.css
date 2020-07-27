@@ -149,6 +149,9 @@
     display: flex;
     align-self: center;
 }
+.app-price {
+    margin-left: auto;
+}
 
 body {
     /*disable-pull-to-refresh-effect*/
