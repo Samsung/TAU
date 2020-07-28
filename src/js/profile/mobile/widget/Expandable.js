@@ -47,6 +47,21 @@
  *			</li>
  *		</ul>
  *
+ * ####Create part of list as expandable
+ *
+ *		@example
+ *		<ul data-role="listview">
+ *			<li>list item1</li>
+ *			<li>list item2</li>
+ *			<li>list item3</li>
+ *			<li>list item4</li>
+			<li class="ui-expandable-from"></li>
+ *			<li>list item5</li>
+ *			<li>list item6</li>
+ *			<li>list item7</li>
+ *			<li>list item8</li>
+ *		</ul>
+ *
  * ####Create using class selector
  *
  *		@example
@@ -92,6 +107,7 @@
  * @author Marcin Jakuszko <m.jakuszko@samsung.com>
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
  * @author Heeju Joo <heeju.joo@samsung.com>
+ * @author Tomasz Lukawski <t.lukawski@samsung.com>
  */
 (function (document, ns) {
 	"use strict";
@@ -153,6 +169,7 @@
 					 * @property {boolean} [options.collapsed=true] Determines if content should be collapsed on load
 					 * @property {string} [options.heading="h1,h2,h3,h4,h5,h6,legend,li"] Within the Expandable container, the first immediate child element
 					 * that matches this selector will be used as the header for the Expandable.
+					 * @property {string} [options.expander="heading"] Determines which part of widget expands content: "heading", "button"
 					 */
 					this.options = {
 						collapsed: true,
@@ -164,7 +181,9 @@
 					this._ui = {
 						heading: null,
 						expandableHeadingContent: null,
-						expandButton: null
+						expandButton: null,
+						expandFrom: null,
+						expandTo: null
 					};
 
 				},
@@ -201,6 +220,12 @@
 					 */
 					uiExpandableCollapsed: "ui-expandable-collapsed",
 					/**
+					 * Set expandable widget as expanded
+					 * @style ui-expandable-collapsed
+					 * @member ns.widget.mobile.Expandable
+					 */
+					uiExpandableExpanded: "ui-expandable-expanded",
+					/**
 					 * Set heading to expandable widget
 					 * @style ui-expandable-heading
 					 * @member ns.widget.mobile.Expandable
@@ -229,7 +254,20 @@
 					 * @style ui-expandable-heading-active
 					 * @member ns.widget.mobile.Expandable
 					 */
-					expandButton: "ui-expand-button"
+					expandButton: "ui-expand-button",
+					/**
+					 * All sibling elements after this element will be toggled
+					 * @style ui-expandable-from
+					 * @member ns.widget.mobile.Expandable
+					 */
+					expandFrom: "ui-expandable-from",
+					/**
+					 * All sibling elements before this element will be toggled.
+					 * On this class will be build widget too
+					 * @style ui-expandable-to
+					 * @member ns.widget.mobile.Expandable
+					 */
+					expandTo: "ui-expandable-to"
 				};
 
 
@@ -249,9 +287,9 @@
 				var	ui = self._ui,
 					elementClassList = element.classList,
 					heading = ui.heading,
-					headingClassList = heading.classList,
+					headingClassList,
 					content = ui.expandableContent,
-					contentClassList = content.classList,
+					contentClassList,
 					isCollapse = event.type === "collapse";
 
 				if (event.defaultPrevented) {
@@ -260,35 +298,56 @@
 
 				event.preventDefault();
 
-				//Toggle functions switched to if/else statement due to toggle bug on Tizen
-				if (isCollapse) {
-					elementClassList.add(classes.uiExpandableCollapsed);
-					headingClassList.add(classes.uiExpandableHeadingCollapsed);
-					contentClassList.add(classes.uiExpandableContentCollapsed);
+				if (ui.expandFrom) {
+					if (isCollapse) {
+						ui.expandFrom.classList.remove(classes.uiExpandableExpanded);
+					} else {
+						ui.expandFrom.classList.add(classes.uiExpandableExpanded);
+					}
 				} else {
-					elementClassList.remove(classes.uiExpandableCollapsed);
-					headingClassList.remove(classes.uiExpandableHeadingCollapsed);
-					contentClassList.remove(classes.uiExpandableContentCollapsed);
+					headingClassList = heading.classList;
+					contentClassList = content.classList;
+					//Toggle functions switched to if/else statement due to toggle bug on Tizen
+					if (isCollapse) {
+						elementClassList.add(classes.uiExpandableCollapsed);
+						headingClassList.add(classes.uiExpandableHeadingCollapsed);
+						contentClassList.add(classes.uiExpandableContentCollapsed);
+					} else {
+						elementClassList.remove(classes.uiExpandableCollapsed);
+						headingClassList.remove(classes.uiExpandableHeadingCollapsed);
+						contentClassList.remove(classes.uiExpandableContentCollapsed);
+					}
+					content.setAttribute("aria-hidden", isCollapse);
 				}
-
-				content.setAttribute("aria-hidden", isCollapse);
 				eventUtil.trigger(element, isCollapse ? "collapsed" : "expanded");
 			}
 
 			function setHeadingActiveClassHandler(self, setClass) {
-				var headingClassList = self._ui.heading.classList;
+				var heading = self._ui.heading,
+					headingClassList;
 
-				if (setClass) {
-					headingClassList.add(classes.uiExpandableHeadingActive);
-				} else {
-					headingClassList.remove(classes.uiExpandableHeadingActive);
+				if (heading) {
+					headingClassList = self._ui.heading.classList;
+					if (setClass) {
+						headingClassList.add(classes.uiExpandableHeadingActive);
+					} else {
+						headingClassList.remove(classes.uiExpandableHeadingActive);
+					}
 				}
 			}
 
 			function toggleEventTypeHandler(self, event) {
 				var element = self.element,
-					heading = self._ui.heading,
+					ui = self._ui,
+					heading = ui.heading,
+					expandFrom = ui.expandFrom,
+					eventType;
+
+				if (heading) {
 					eventType = heading.classList.contains(classes.uiExpandableHeadingCollapsed) ? "expand" : "collapse";
+				} else if (expandFrom) {
+					eventType = expandFrom.classList.contains(classes.uiExpandableExpanded) ? "collapse" : "expand";
+				}
 
 				eventUtil.trigger(element, eventType);
 
@@ -297,29 +356,19 @@
 			}
 
 			/**
-			 * Build widget structure
-			 * @method _build
+			 * Method tries to find expandable heading or create new if not exists
+			 * @method _getExpandableHeading
 			 * @protected
 			 * @param {HTMLElement} element
 			 * @return {HTMLElement}
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._build = function (element) {
-				var self = this,
-					options = self.options,
-					ui = self._ui,
-					elementClassList = element.classList,
-					expandableHeading,
-					expandableContent,
+			Expandable.prototype._getExpandableHeading = function (element) {
+				var options = this.options,
+					// First child matching selector is Expandable header
+					expandableHeading = selectors.getChildrenBySelector(element, options.heading)[0],
 					alternativeHeading;
 
-				if ((element.parentNode && element.parentNode.tagName.toLowerCase() === "ul") && (element.tagName.toLowerCase() === "div")) {
-					ns.warn("Don't make the Expandable list using <div>. It violates standard of HTML rule. Instead of, please use <li>.");
-				}
-				elementClassList.add(classes.uiExpandable);
-
-				// First child matching selector is Expandable header
-				expandableHeading = selectors.getChildrenBySelector(element, options.heading)[0];
 				if (!expandableHeading) {
 					//>>excludeStart("tauDebug", pragmas.tauDebug);
 					ns.log("[Expandable widget] no elements matching heading selector found");
@@ -335,9 +384,22 @@
 					element.replaceChild(alternativeHeading, expandableHeading);
 					expandableHeading = alternativeHeading;
 				}
-				expandableHeading.classList.add(classes.uiExpandableHeading);
 
-				expandableContent = element.querySelector("." + classes.uiExpandableContent);
+				return expandableHeading;
+			};
+
+			/**
+			 * Method tries to find expandable content or create new if not exists
+			 * @method _getExpandableContent
+			 * @protected
+			 * @param {HTMLElement} element
+ 			 * @param {HTMLElement} expandableHeading
+			 * @return {HTMLElement}
+			 * @member ns.widget.mobile.Expandable
+			 */
+			Expandable.prototype._getExpandableContent = function (element, expandableHeading) {
+				var expandableContent = element.querySelector("." + classes.uiExpandableContent);
+
 				if (!expandableContent) {
 					// Wrap all widget content
 					domUtils.wrapInHTML(element.childNodes, "<div class='" + classes.uiExpandableContent + "'></div>");
@@ -347,10 +409,88 @@
 					domUtils.wrapInHTML(expandableHeading.childNodes, "<a class='" + classes.uiExpandableHeadingToggle + "' tabindex='0'></a>");
 					expandableContent = expandableHeading.nextElementSibling;
 				}
+				return expandableContent;
+			};
 
-				ui.heading = expandableHeading;
-				ui.expandableContent = expandableContent;
+			/**
+			 * Build list item for expand button on the end of listview
+			 * @method _createExpandButton
+			 * @protected
+			 * @param {HTMLElement} element
+			 * @return {HTMLElement}
+			 * @member ns.widget.mobile.Expandable
+			 */
+			Expandable.prototype._createExpandTo = function (element) {
+				var expandTo = element.parentElement.querySelector("." + classes.expandTo);
 
+				if (!expandTo) {
+					expandTo = document.createElement("li");
+					expandTo.classList.add(classes.expandTo);
+					expandTo.setAttribute("data-expander", "button");
+					// append to listview
+					element.parentElement.appendChild(expandTo);
+				}
+
+				return expandTo;
+			}
+
+			/**
+			 * Build expand button on listview item
+			 * @method _createExpandButton
+			 * @protected
+			 * @param {HTMLElement} expandTo
+			 * @return {HTMLElement}
+			 * @member ns.widget.mobile.Expandable
+			 */
+			Expandable.prototype._createExpandButton = function (expandTo) {
+				var button = expandTo.querySelector(".ui-btn");
+
+				if (!button) {
+					button = document.createElement("a");
+					button.classList.add("ui-btn");
+					expandTo.appendChild(button);
+					button.setAttribute("href", "#");
+				}
+				button.setAttribute("data-icon", "down");
+				button.setAttribute("data-style", "flat");
+				button.classList.add(classes.expandButton);
+
+				return button;
+			}
+
+			/**
+			 * Build widget structure
+			 * @method _build
+			 * @protected
+			 * @param {HTMLElement} element
+			 * @return {HTMLElement}
+			 * @member ns.widget.mobile.Expandable
+			 */
+			Expandable.prototype._build = function (element) {
+				var self = this,
+					ui = self._ui,
+					elementClassList = element.classList,
+					expandableHeading,
+					expandableContent;
+
+				if (element.classList.contains(classes.expandFrom)) {
+					ui.expandFrom = element;
+					ui.expandTo = self._createExpandTo(element);
+					ui.expandButton = self._createExpandButton(ui.expandTo);
+				} else {
+					if ((element.parentNode && element.parentNode.tagName.toLowerCase() === "ul") && (element.tagName.toLowerCase() === "div")) {
+						ns.warn("Don't make the Expandable list using <div>. It violates standard of HTML rule. Instead of, please use <li>.");
+					}
+					elementClassList.add(classes.uiExpandable);
+
+					expandableHeading = self._getExpandableHeading(element);
+					expandableHeading.classList.add(classes.uiExpandableHeading);
+
+					expandableContent = self._getExpandableContent(element, expandableHeading);
+
+					ui.heading = expandableHeading;
+					ui.expandableContent = expandableContent;
+				}
 				return element;
 			};
 
@@ -368,12 +508,24 @@
 
 				ui.heading = ui.heading || selectors.getChildrenByClass(element, classes.uiExpandableHeading)[0];
 				ui.expandableContent = ui.expandableContent || element.querySelector("." + classes.uiExpandableContent);
-				ui.expandButton = ui.expandButton || element.querySelector("." + classes.expandButton);
 
-				if (self.options.collapsed) {
-					element.classList.add(classes.uiExpandableCollapsed);
-					ui.heading.classList.add(classes.uiExpandableHeadingCollapsed);
-					ui.expandableContent.classList.add(classes.uiExpandableContentCollapsed);
+				if (ui.expandTo) {
+					ui.expandButton = ui.expandButton || ui.expandTo.querySelector("." + classes.expandButton);
+					ns.widget.Button(ui.expandButton);
+					if (self.options.collapsed) {
+						element.classList.remove(classes.uiExpandableExpanded);
+					}
+				} else {
+					ui.expandButton = ui.expandButton || element.querySelector("." + classes.expandButton);
+					if (self.options.collapsed) {
+						element.classList.add(classes.uiExpandableCollapsed);
+						if (ui.heading) {
+							ui.heading.classList.add(classes.uiExpandableHeadingCollapsed);
+						}
+						if (ui.expandableContent) {
+							ui.expandableContent.classList.add(classes.uiExpandableContentCollapsed);
+						}
+					}
 				}
 
 				return element;
@@ -389,7 +541,8 @@
 			Expandable.prototype._bindEvents = function (element) {
 				var self = this,
 					eventHandlers = self._eventHandlers,
-					heading = self._ui.heading;
+					ui = self._ui,
+					heading = ui.heading;
 
 				// Declare handlers with and assign them to local variables
 				eventHandlers.toggleExpandable = toggleExpandableHandler.bind(null, self, element);
@@ -399,9 +552,13 @@
 
 				eventUtil.on(element, "expand collapse", eventHandlers.toggleExpandable, false);
 
-				eventUtil.on(heading, "vmousedown", eventHandlers.addActiveClass, false);
-				eventUtil.on(heading, "vmousemove vmousecancel vmouseup", eventHandlers.removeActiveClass, false);
-				eventUtil.on(heading, "vclick", eventHandlers.toggleEventType, false);
+				if (heading) {
+					eventUtil.on(heading, "vmousedown", eventHandlers.addActiveClass, false);
+					eventUtil.on(heading, "vmousemove vmousecancel vmouseup", eventHandlers.removeActiveClass, false);
+					eventUtil.on(heading, "vclick", eventHandlers.toggleEventType, false);
+				} else if (ui.expandTo) {
+					eventUtil.on(ui.expandButton, "vclick", eventHandlers.toggleEventType, false);
+				}
 			};
 
 			/**
@@ -460,15 +617,20 @@
 			Expandable.prototype._destroy = function () {
 				var self = this,
 					element = self.element,
-					heading = self._ui.heading,
+					ui = self._ui,
+					heading = ui.heading,
 					eventHandlers = self._eventHandlers,
 					parentNode = element.parentNode;
 
 				eventUtil.off(element, "expand collapse", eventHandlers.toggleExpandable, false);
 
-				eventUtil.off(heading, "vmousedown", eventHandlers.addActiveClass, false);
-				eventUtil.off(heading, "vmousemove vmousecancel vmouseup", eventHandlers.removeActiveClass, false);
-				eventUtil.off(heading, "vclick", eventHandlers.toggleEventType, false);
+				if (heading) {
+					eventUtil.off(heading, "vmousedown", eventHandlers.addActiveClass, false);
+					eventUtil.off(heading, "vmousemove vmousecancel vmouseup", eventHandlers.removeActiveClass, false);
+					eventUtil.off(heading, "vclick", eventHandlers.toggleEventType, false);
+				} else if (ui.expandTo) {
+					eventUtil.off(ui.expandButton, "vclick", eventHandlers.toggleEventType, false);
+				}
 
 				self._ui = null;
 				self._eventHandlers = null;
@@ -483,7 +645,7 @@
 			ns.widget.mobile.Expandable = Expandable;
 			engine.defineWidget(
 				"Expandable",
-				"[data-role='expandable'], .ui-expandable",
+				"[data-role='expandable'], .ui-expandable, .ui-expandable-from",
 				[],
 				Expandable,
 				"mobile"
