@@ -1,4 +1,4 @@
-/*global window, define, ns */
+/*global define, ns */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -55,7 +55,7 @@
  *			<li>list item2</li>
  *			<li>list item3</li>
  *			<li>list item4</li>
-			<li class="ui-expandable-from"></li>
+ *			<li class="ui-expandable-from"></li>
  *			<li>list item5</li>
  *			<li>list item6</li>
  *			<li>list item7</li>
@@ -102,7 +102,7 @@
  *
  * @since 2.4
  * @class ns.widget.mobile.Expandable
- * @component-selector .ui-expandable [data-role]="expandable"
+ * @component-selector .ui-expandable [data-role]="expandable .ui-expandable-from"
  * @author Piotr Karny <p.karny@samsung.com>
  * @author Marcin Jakuszko <m.jakuszko@samsung.com>
  * @author Hyeoncheol Choi <hc7.choi@samsung.com>
@@ -136,11 +136,11 @@
 				 */
 				engine = ns.engine,
 				/**
-				 * @property {Object} selectors alias variable
+				 * @property {Object} selectorsUtil alias variable
 				 * @private
 				 * @static
 				 */
-				selectors = ns.util.selectors,
+				selectorsUtil = ns.util.selectors,
 				/**
 				 * @property {Object} eventUtil alias variable
 				 * @private
@@ -154,39 +154,6 @@
 				 */
 				domUtils = ns.util.DOM,
 
-				/**
-				 * @property {Object} expandableSelectors selectors used in this widget
-				 * @private
-				 * @static
-				 */
-				expandableSelectors = {
-					HEADING: "h1,h2,h3,h4,h5,h6,legend,li"
-				},
-
-				Expandable = function () {
-					/**
-					 * Expandable widget options.
-					 * @property {boolean} [options.collapsed=true] Determines if content should be collapsed on load
-					 * @property {string} [options.heading="h1,h2,h3,h4,h5,h6,legend,li"] Within the Expandable container, the first immediate child element
-					 * that matches this selector will be used as the header for the Expandable.
-					 * @property {string} [options.expander="heading"] Determines which part of widget expands content: "heading", "button"
-					 */
-					this.options = {
-						collapsed: true,
-						heading: expandableSelectors.HEADING,
-						expander: "heading"
-					};
-
-					this._eventHandlers = {};
-					this._ui = {
-						heading: null,
-						expandableHeadingContent: null,
-						expandButton: null,
-						expandFrom: null,
-						expandTo: null
-					};
-
-				},
 				/**
 				 * Dictionary object containing commonly used widget classes
 				 * @property {Object} classes
@@ -268,12 +235,49 @@
 					 * @member ns.widget.mobile.Expandable
 					 */
 					expandTo: "ui-expandable-to"
-				};
+				},
 
+				/**
+				 * @property {Object} selectors selectors used in this widget
+				 * @private
+				 * @static
+				 */
+				selectors = {
+					HEADING: "h1,h2,h3,h4,h5,h6,legend,li",
+					BUTTON: "." + classes.expandButton
+				},
 
-			Expandable.prototype = new BaseWidget();
+				Expandable = function () {
+					var self = this;
+
+					/**
+					 * Expandable widget options.
+					 * @property {boolean} [options.collapsed=true] Determines if content should be collapsed on load
+					 * @property {string} [options.heading="h1,h2,h3,h4,h5,h6,legend,li"] Within the Expandable container, the first immediate child element
+					 * that matches this selector will be used as the header for the Expandable.
+					 * @property {string} [options.expander="heading"] Determines which part of widget expands content: "heading", "button"
+					 */
+					self.options = {
+						collapsed: true,
+						heading: selectors.HEADING,
+						expander: "heading"
+					};
+
+					self._eventHandlers = {};
+					self._ui = {
+						heading: null,
+						expandableHeadingContent: null,
+						expandButton: null,
+						expandFrom: null,
+						expandTo: null
+					};
+
+				},
+				prototype = new BaseWidget();
+
+			Expandable.prototype = prototype;
 			Expandable.classes = classes;
-			Expandable.selectors = expandableSelectors;
+			Expandable.selectors = selectors;
 
 			/**
 			 * Handler function for expanding/collapsing widget
@@ -363,10 +367,10 @@
 			 * @return {HTMLElement}
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._getExpandableHeading = function (element) {
+			prototype._getExpandableHeading = function (element) {
 				var options = this.options,
 					// First child matching selector is Expandable header
-					expandableHeading = selectors.getChildrenBySelector(element, options.heading)[0],
+					expandableHeading = selectorsUtil.getChildrenBySelector(element, options.heading)[0],
 					alternativeHeading;
 
 				if (!expandableHeading) {
@@ -397,7 +401,7 @@
 			 * @return {HTMLElement}
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._getExpandableContent = function (element, expandableHeading) {
+			prototype._getExpandableContent = function (element, expandableHeading) {
 				var expandableContent = element.querySelector("." + classes.uiExpandableContent);
 
 				if (!expandableContent) {
@@ -420,7 +424,7 @@
 			 * @return {HTMLElement}
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._createExpandTo = function (element) {
+			prototype._createExpandTo = function (element) {
 				var expandTo = element.parentElement.querySelector("." + classes.expandTo);
 
 				if (!expandTo) {
@@ -442,8 +446,8 @@
 			 * @return {HTMLElement}
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._createExpandButton = function (expandTo) {
-				var button = expandTo.querySelector(".ui-btn");
+			prototype._createExpandButton = function (expandTo) {
+				var button = expandTo.querySelector(selectors.BUTTON);
 
 				if (!button) {
 					button = document.createElement("a");
@@ -466,7 +470,7 @@
 			 * @return {HTMLElement}
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._build = function (element) {
+			prototype._build = function (element) {
 				var self = this,
 					ui = self._ui,
 					elementClassList = element.classList,
@@ -476,7 +480,11 @@
 				if (element.classList.contains(classes.expandFrom)) {
 					ui.expandFrom = element;
 					ui.expandTo = self._createExpandTo(element);
-					ui.expandButton = self._createExpandButton(ui.expandTo);
+					ui.expandButton = element.querySelector(selectors.BUTTON) ||
+						ui.expandTo.querySelector(selectors.BUTTON);
+					if (!ui.expandButton) {
+						ui.expandButton = self._createExpandButton(ui.expandTo);
+					}
 				} else {
 					if ((element.parentNode && element.parentNode.tagName.toLowerCase() === "ul") && (element.tagName.toLowerCase() === "div")) {
 						ns.warn("Don't make the Expandable list using <div>. It violates standard of HTML rule. Instead of, please use <li>.");
@@ -502,21 +510,21 @@
 			 * @return {HTMLElement}
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._init = function (element) {
+			prototype._init = function (element) {
 				var self = this,
 					ui = self._ui;
 
-				ui.heading = ui.heading || selectors.getChildrenByClass(element, classes.uiExpandableHeading)[0];
+				ui.heading = ui.heading || selectorsUtil.getChildrenByClass(element, classes.uiExpandableHeading)[0];
 				ui.expandableContent = ui.expandableContent || element.querySelector("." + classes.uiExpandableContent);
 
 				if (ui.expandTo) {
-					ui.expandButton = ui.expandButton || ui.expandTo.querySelector("." + classes.expandButton);
+					ui.expandButton = ui.expandButton || ui.expandTo.querySelector(selectors.BUTTON);
 					ns.widget.Button(ui.expandButton);
 					if (self.options.collapsed) {
 						element.classList.remove(classes.uiExpandableExpanded);
 					}
 				} else {
-					ui.expandButton = ui.expandButton || element.querySelector("." + classes.expandButton);
+					ui.expandButton = ui.expandButton || element.querySelector(selectors.BUTTON);
 					if (self.options.collapsed) {
 						element.classList.add(classes.uiExpandableCollapsed);
 						if (ui.heading) {
@@ -538,7 +546,7 @@
 			 * @param {HTMLElement} element
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._bindEvents = function (element) {
+			prototype._bindEvents = function (element) {
 				var self = this,
 					eventHandlers = self._eventHandlers,
 					ui = self._ui,
@@ -586,7 +594,7 @@
 			* @protected
 			* @member ns.widget.mobile.Expandable
 			*/
-			Expandable.prototype._refresh = function () {
+			prototype._refresh = function () {
 				return;
 			};
 
@@ -614,7 +622,7 @@
 			 * @protected
 			 * @member ns.widget.mobile.Expandable
 			 */
-			Expandable.prototype._destroy = function () {
+			prototype._destroy = function () {
 				var self = this,
 					element = self.element,
 					ui = self._ui,
