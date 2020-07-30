@@ -123,6 +123,7 @@
 			"./profile/mobile/widget/DatePicker",
 			"./profile/mobile/widget/DateTimePickerWheel",
 			"./profile/mobile/widget/DateTimePicker",
+			"./profile/mobile/widget/Chip",
 			"./core/widget/core/ScrollHandler",
 			"./core/widget/core/Tabs",
 			"./profile/mobile/widget/GridView",

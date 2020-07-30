@@ -1,0 +1,75 @@
+.ui-chip {
+	display: inline-flex;
+	.font(regular);
+	font-size: 14 * @sp_base;
+	height: 30 * @px_base;
+	border-radius: 15 * @px_base;
+	padding: 0 0 0 16 * @px_base;
+	background-color: var(--chip-background-color);
+	border: 0.25 * @px_base solid var(--chip-border-color);
+	box-sizing: border-box;
+	align-items: center;
+
+	.ui-chip-text {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+		order: 1;
+	}
+	.ui-chip-button {
+		order: 2;
+	}
+
+	.ui-btn.ui-btn-flat {
+		order: 2;
+		width: 20 * @px_base;
+		height: 20 * @px_base;
+		max-width: 20 * @px_base;
+		max-height: 20 * @px_base;
+		min-width: 20 * @px_base;
+		min-height: 20 * @px_base;
+		max-width: 100%;
+		margin: auto 5 * @px_base auto 10 * @px_base;
+		padding: 0;
+		border-radius: 100%;
+		background-color: var(--chip-btn-background-color);
+		border: 0.5 * @px_base solid var(--chip-btn-border-color);
+		box-sizing: border-box;
+		&::after {
+			width: 20 * @px_base;
+			height: 20 * @px_base;
+			mask-size: 20 * @px_base;
+		}
+		&::before {
+			width: 30 * @px_base;
+			height: 30 * @px_base;
+		}
+		&.ui-btn-icon {
+			background-color: var(--chip-btn-background-color);
+		}
+		&.ui-icon-add {
+			mask-image: url(../images/tw_chips_icon_add_mtrl.svg);
+		}
+		&.ui-icon-delete {
+			mask-image: url(../images/tw_chips_icon_delete_mtrl.svg);
+		}
+	}
+}
+
+.ui-chips {
+	display: flex;
+	margin: 0 20 * @px_base 0 13 * @px_base;
+	flex-wrap: wrap;
+	max-height: 114 * @px_base;
+	overflow-y: auto;
+
+	.ui-chip {
+		margin: 4 * @px_base 0 4 * @px_base 7 * @px_base;
+		max-width: calc(~"100% - "7 * @px_base);
+	}
+	&.ui-chips-inline {
+		flex-wrap: nowrap;
+		overflow-x: scroll;
+		height: 44 * @px_base; // need space for scroll indicator
+	}
+}
