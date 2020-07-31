@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*global window, define, ns */
+/*global define, ns */
 /**
  * # List View
  * List view component is used to display, for example, navigation data,
@@ -282,17 +282,17 @@
 					 * @member ns.widget.mobile.Listview
 					 */
 					"HOLDER": "ui-listview-holder",
-					"SNAPSHOT": "snapshot",
+					"SNAPSHOT": "ui-snapshot",
 					/**
 					 * Create handler for listview widget
 					 * @style ui-listview-handler
 					 * @member ns.widget.mobile.Listview
 					 */
 					"HANDLER": "ui-listview-handler",
-					"DRAG_MODE": "dragMode",
-					"ACTIVATE_HANDLERS": "activateHandlers",
-					"CANCEL_ANIMATION": "cancelAnimation",
-					"DEACTIVATE_HANDLERS": "deactivateHandlers",
+					"DRAG_MODE": "ui-drag-mode",
+					"ACTIVATE_HANDLERS": "ui-activate-handlers",
+					"CANCEL_ANIMATION": "ui-cancel-animation",
+					"DEACTIVATE_HANDLERS": "ui-deactivate-handlers",
 					"FOCUS": "ui-listview-focus",
 					"ITEMFOCUS": "ui-listview-item-focus"
 				},
@@ -305,7 +305,8 @@
 				 * @readonly
 				 */
 				events = {
-					"BACKGROUND_RENDER": "event-listview-background-render"
+					"BACKGROUND_RENDER": "event-listview-background-render",
+					"REORDER": "listviewreorder"
 				},
 				engine = ns.engine,
 				prototype = new CoreListview();
@@ -821,27 +822,7 @@
 			 * @protected
 			 */
 			prototype._handleReorderScroll = function () {
-				var self = this,
-					reorderElements = self._reorderElements,
-					liElement,
-					liElements;
-
-				self._setColoredBackground(self.element, true);
-
-				liElements = slice.call(self.element.querySelectorAll("li"));
-
-				while (reorderElements.length > 0) {
-					liElement = reorderElements.pop();
-					if (liElements[liElement]) {
-						liElements[liElement].style.backgroundColor = "";
-					}
-				}
-
-				window.clearTimeout(self.isScrolling);
-
-				self.isScrolling = setTimeout(function () {
-					self._setReorderBackground();
-				}, 70);
+				eventUtils.trigger(this.element, events.REORDER);
 			};
 
 			/**
@@ -1454,6 +1435,9 @@
 					self._recalculateTop();
 					//save before dragging, the position for original list
 					self.originalListPosition = parentElement.getBoundingClientRect().top - 55;
+					// set element height
+					self._styleHeightBackup = element.style.height;
+					element.style.height = element.getBoundingClientRect().height + "px";
 					element.classList.add(classes.SNAPSHOT);
 					//change scrollTop as we use absolute and top positions now
 					parentElement.scrollTop = -self.originalListPosition;
@@ -1574,58 +1558,14 @@
 
 				self._removeTopOffsets();
 				element.classList.remove(classes.SNAPSHOT);
+				// recovery widget height
+				element.style.height = self._styleHeightBackup;
 
 				//change scrollTop as we use absolute and top positions now
 				element.parentElement.parentElement.scrollTop = -self.originalListPosition;
 				//refresh cache
 				self._liElements = slice.call(element.querySelectorAll("li"));
 				self.trigger("scroll");
-			};
-
-			/**
-			 * Method for setting item background on reorder
-			 * Ir disables canvas and manually sets background of visible items
-			 * It disables canvas on
-			 * @method _setReorderBackground
-			 * @protected
-			 * @member ns.widget.mobile.GridView
-			 */
-			prototype._setReorderBackground = function () {
-				var self = this,
-					reorderElements = self._reorderElements,
-					element = self.element,
-					liElementRect,
-					headerElement,
-					headerHeight,
-					liElements = slice.call(element.querySelectorAll("li")),
-					opacity = 100,
-					i,
-					nextColor;
-
-				headerElement = document.querySelector(".ui-page-active .ui-header");
-				headerHeight = (headerElement) ? headerElement.offsetHeight : 0;
-
-				self._setColoredBackground(element, false);
-				reorderElements.length = 0;
-
-				for (i = 0; i < liElements.length; i++) {
-					liElementRect = liElements[i].getBoundingClientRect();
-					if ((liElementRect.bottom >= headerHeight) &&
-						(liElementRect.top <= (window.innerHeight || document.documentElement.clientHeight))) {
-						reorderElements.push(i);
-						nextColor = "rgba(250, 250, 250, " + (opacity / 100) + ")";
-						liElements[i].style.backgroundColor = nextColor;
-						opacity -= 4;
-					}
-				}
-				if (reorderElements[reorderElements.length - 1] < liElements.length - 1) {
-					reorderElements.push(reorderElements[reorderElements.length - 1] + 1);
-					liElements[reorderElements[reorderElements.length - 1]].style.backgroundColor = nextColor;
-				}
-				if (reorderElements[0] > 0) {
-					reorderElements.unshift(reorderElements[0] - 1);
-					liElements[reorderElements[0]].style.backgroundColor = "white";
-				}
 			};
 
 			/**
@@ -1639,13 +1579,16 @@
 			 * @member ns.widget.mobile.Listview
 			 */
 			prototype._click = function () {
-				var self = this;
+				var self = this,
+					element = self.element;
 
 				self._removeTopOffsets();
-				self.element.classList.remove(classes.SNAPSHOT);
+				element.classList.remove(classes.SNAPSHOT);
+				// recovery widget height
+				element.style.height = self._styleHeightBackup;
 
 				//change scrollTop as we use absolute and top positions now
-				self.element.parentElement.parentElement.scrollTop = -self.originalListPosition;
+				element.parentElement.parentElement.scrollTop = -self.originalListPosition;
 			};
 
 			/**
@@ -1736,6 +1679,8 @@
 					liElement = liElements[i];
 					handler = document.createElement("div");
 					handler.classList.add(classes.HANDLER);
+					handler.classList.add("ui-icon-reorder");
+					handler.classList.add("ui-icon");
 					liElement.appendChild(handler);
 				}
 			};

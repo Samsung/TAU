@@ -198,7 +198,7 @@ tau-expandable {
 		& > .ui-li-text:first-child {
 			margin-left: 24 * @px_base;
 		}
-		
+
 		// Divider
 		&.ui-li-divider {
 			&::after {
@@ -259,7 +259,7 @@ tau-expandable {
 		.ui-li-right {
 			margin-left: auto !important;
 		}
-		
+
 		.ui-li-text-ellipse {
 			min-width: 0;
 			white-space: nowrap;
@@ -566,7 +566,7 @@ tau-expandable {
 		input.ui-li-area-d {
 			&[type="checkbox"], &[type="radio"], .ui-li-image, .ui-li-circle-image {
 				margin-right: 32 * @unit_base;
-			}			
+			}
 		}
 
 		.ui-li-icon::after {
@@ -725,26 +725,32 @@ tau-expandable {
 	}
 
 	/*when set the list in drag mode before dragging*/
-	&.dragMode li {
+	&.ui-drag-mode li {
 		/*align-items: center;*/
 		.ui-listview-handler {
-			-webkit-mask-image: url("images/core_grid_button_reorder.png");
-			-webkit-mask-size: 100%;
-			background-color: @color_button_add;
 			display: block;
-			width: 50 * @unit_base;
-			height: 50 * @unit_base;
+			position: relative;
+			width: 32 * @px_base;
+			height: 32 * @px_base;
 
 			flex: 0 1 auto;
 			order: 10;
-			margin: 33 * @unit_base;
-			margin-right: -80 * @unit_base;
-			max-width: 50 * @unit_base;
+			margin: auto 16 * @px_base auto auto;
+
+			&::after {
+				content: "";
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				mask-size: 100%;
+				background-color: var(--reorder-color);
+			}
 		}
 	}
 
 	/*When dragging element*/
-	&.snapshot {
+	&.ui-snapshot {
+		height: 100%;
 		li {
 			position: absolute;
 			width: 100%;
@@ -753,6 +759,12 @@ tau-expandable {
 
 			&.ui-listview-helper {
 				transition: none;
+				background-color: var(--holder-reoder-background);
+				box-sizing: border-box;
+				border: 0.25 * @px_base solid var(--holder-reoder-border);
+				&::after {
+					display: none;
+				}
 			}
 
 			&.ui-listview-item.ui-listview-holder {
@@ -770,7 +782,7 @@ tau-expandable {
 		}
 	}
 
-	&.activateHandlers {
+	&.ui-activate-handlers {
 		li {
 			.ui-listview-handler {
 				.animation(button-handler-activate 200ms linear alternate);
@@ -778,7 +790,7 @@ tau-expandable {
 		}
 	}
 
-	&.deactivateHandlers {
+	&.ui-deactivate-handlers {
 		li {
 			.ui-listview-handler {
 				.animation(button-handler-deactivate 200ms linear alternate);
@@ -786,12 +798,11 @@ tau-expandable {
 		}
 	}
 
-	&.cancelAnimation {
+	&.ui-cancel-animation {
 		li {
 			.ui-listview-handler {
 				.animation(none);
 				animation: none;
-				margin-right: 0;
 			}
 		}
 	}
