@@ -296,9 +296,6 @@
 .ui-btn-icon.ui-icon-delete:after {
 	-webkit-mask-image: url("images/core_button_delete.png");
 }
-.ui-btn-icon.ui-icon-reorder:after {
-	-webkit-mask-image: url("images/core_button_reorder.png");
-}
 .ui-btn-icon.ui-icon-call:after {
 	-webkit-mask-image: url("images/00_button_call.png");
 }

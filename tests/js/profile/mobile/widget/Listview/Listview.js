@@ -1,4 +1,4 @@
-/* global document, tau, define, module, test, strictEqual, asyncTest, window, ok, Promise, start */
+/* global tau, define, test, strictEqual, ok */
 (function () {
 	"use strict";
 	function runTests(engine, selectors, Listview, helpers, ns) {
@@ -59,15 +59,6 @@
 		Context2DMock.prototype.fillRect = function () {
 			this._fillRectCalledNum++;
 		};
-
-		function mockListview(listviewInstance) {
-			listviewInstance._context = new Context2DMock(listviewInstance._context.canvas);
-			listviewInstance._async = function (callback) {
-				setTimeout(callback, 1000 / 60);
-			};
-
-			return listviewInstance._context;
-		}
 
 		/*
 		asyncTest("scroll", function (assert) {
@@ -648,22 +639,6 @@
 			assert.equal(liElements[1].style.backgroundColor, "", "Background on element listview element is empty.");
 		});
 
-		test("_setReorderBackground", function (assert) {
-			var element = document.getElementById("mobile-listview-1"),
-				listview,
-				liElements;
-
-			listview = new Listview();
-			listview.element = element;
-
-			listview._setReorderBackground();
-			assert.ok(true, "_setReorderBackground method was called.");
-
-			liElements = [].slice.call(element.querySelectorAll("li"));
-
-			assert.equal(liElements[0].style.backgroundColor, "rgb(250, 250, 250)", "First element has proper background color.");
-		});
-
 		test("_appendHandlers", function (assert) {
 			var element = document.getElementById("mobile-listview-1"),
 				listview,
@@ -822,12 +797,12 @@
 			listview._scrollableContainer = scrollableContainer;
 
 			listview.toggleDragMode();
-			assert.ok(listview.element.classList.contains("dragMode"), "Listview contains class dragMode.");
+			assert.ok(listview.element.classList.contains("ui-drag-mode"), "Listview contains class ui-drag-mode.");
 			assert.equal(listview._liElements.length, length, "liElements were properly created.");
 
 			listview.toggleDragMode();
-			assert.ok(listview.element.classList.contains("deactivateHandlers"), "Listview contains class deactivateHandlers.");
-			assert.ok(!listview.element.classList.contains("cancelAnimation"), "Listview doesn't contain cancelAnimation class.");
+			assert.ok(listview.element.classList.contains("ui-deactivate-handlers"), "Listview contains class ui-deactivate-handlers.");
+			assert.ok(!listview.element.classList.contains("ui-cancel-animation"), "Listview doesn't contain ui-cancel-animation class.");
 		});
 
 		test("_handleEvent", function (assert) {
