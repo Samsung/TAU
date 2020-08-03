@@ -394,6 +394,7 @@
 					diffY = null,
 					scroller = self._ui.scroller,
 					state = self._state,
+					elementHeight = 0,
 					parentElement,
 					parentClassList;
 
@@ -401,9 +402,7 @@
 					parentElement = self.element;
 					parentClassList = parentElement.classList;
 
-					// set parent size
 					parentRect = parentElement.getBoundingClientRect();
-					prepareParentStyle(parentElement, parentRect);
 
 					parentClassList.add(classes.FORCE_RELATIVE);
 
@@ -426,6 +425,7 @@
 							item.y = round(rect.top + rect.height / 2 + scroller.scrollTop);
 							item.height = rect.height;
 							item.rect = rect;
+							elementHeight += item.height;
 							if (diffY === null) {
 								diffY = rect.top - parentRect.top;
 							}
@@ -433,6 +433,11 @@
 					});
 
 					parentClassList.remove(classes.FORCE_RELATIVE);
+
+					// set parent size
+					prepareParentStyle(parentElement, {
+						height: elementHeight
+					});
 
 					arrayUtil.forEach(items, function (item) {
 						if (item.parentElement === parentElement) {

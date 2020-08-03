@@ -340,7 +340,7 @@
 					assert.ok("Called function from flow");
 				};
 
-			expect(6);
+			expect(7);
 
 			helpers.stub(ArcListview, "calcFactors", function (a, b) {
 				assert.equal(a, listWidget.options.ellipsisA, "a was correct assign");
@@ -351,6 +351,7 @@
 			listWidget._setAnimatedItems = testStub;
 			listWidget._refresh = testStub;
 			listWidget._scroll = testStub;
+			listWidget._initBouncingEffect = testStub;
 			listWidget._ui.page = pageElement;
 
 			listWidget._init();
@@ -854,6 +855,24 @@
 			assert.equal(arclistWidget._state.toIndex, 0, "_state.toIndex is correct");
 			arclistWidget._rollUp();
 			assert.equal(arclistWidget._state.toIndex, 0, "_state.toIndex is correct");
+		});
+
+		QUnit.test("addItem", function (assert) {
+			var listWidget = new ArcListview(),
+				element = document.getElementById("arc-list"),
+				page = element.parentElement.parentElement.parentElement,
+				arcListviewCarousel = element.parentElement;
+
+			listWidget.element = element;
+			listWidget._ui.page = page;
+			listWidget._ui.arcListviewCarousel = arcListviewCarousel;
+			listWidget._init();
+
+			expect(2);
+
+			assert.equal(listWidget._state.items.length, 9, "_state.items.length is correct");
+			listWidget.addItem("added Item", 0);
+			assert.equal(listWidget._state.items.length, 10, "_state.items.length is correct");
 		});
 	}
 
