@@ -12,15 +12,15 @@
 	});
 	test("GridView", function () {
 		var elGridView = document.getElementById("gridview"),
-			gridList = tau.widget.GridView(elGridView),
+			gridList = tau.widget.GridView(elGridView, {cols: 5}),
 			addedItem,
 			listLength;
 
 		ok(window.parseInt(elGridView.children[0].style.width, 10) > 0, "grid item has width");
 		$(elGridView).trigger("pinchout");
-		equal(gridList.options.cols, (window.innerWidth > window.innerHeight) ? 6 : 3, "pinchout event has fired and adjust cols");
+		equal(gridList.options.cols, 4, "pinchout event has fired and adjust cols");
 		$(elGridView).trigger("pinchin");
-		equal(gridList.options.cols, (window.innerWidth > window.innerHeight) ? 7 : 4, "pinchin event has fired and adjust cols");
+		equal(gridList.options.cols, 5, "pinchin event has fired and adjust cols");
 
 		listLength = elGridView.children.length;
 		equal(listLength, 4, "There are 4 list items");
