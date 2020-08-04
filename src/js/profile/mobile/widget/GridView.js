@@ -1,4 +1,4 @@
-/*global window, define, ns */
+/*global define, ns */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
  *
@@ -86,6 +86,7 @@
 				STYLE_PATTERN = ".ui-gridview li:nth-child({index})",
 				MATRIX_REGEXP = /matrix\((.*), (.*), (.*), (.*), (.*), (.*)\)/,
 				DATA_ROLE = "data-role",
+				RESIZE_TIMEOUT = 300,
 				direction = {
 					PREV: 0,
 					NEXT: 1
@@ -127,6 +128,12 @@
 					 */
 					HOLDER: "ui-gridview-holder",
 					/**
+					 * Set element as image of gridview items list
+					 * @style ui-gridview-image
+					 * @member ns.widget.mobile.GridView
+					 */
+					IMAGE: "ui-gridview-image",
+					/**
 					 * Set label-type as label in gridview
 					 * @style ui-gridview-label
 					 * @member ns.widget.mobile.GridView
@@ -155,7 +162,16 @@
 					 * @style ui-gridview-image-checked
 					 * @member ns.widget.mobile.GridView
 					 */
-					CHECKED: "ui-gridview-image-checked"
+					CHECKED: "ui-gridview-image-checked",
+					/**
+					 * Class indicates that gridview item has label
+					 * @style ui-gridview-item-has-label
+					 * @member ns.widget.mobile.GridView
+					 */
+					ITEM_HAS_LABEL: "ui-gridview-item-has-label"
+				},
+				selectors = {
+					ANY_NOT_IMAGE: "*:not(." + classes.IMAGE + ")"
 				},
 				GridView = function () {
 					var self = this;
@@ -196,7 +212,8 @@
 			}
 
 			function refreshSizes(gridViewInstance) {
-				gridViewInstance._setItemWidth();
+				gridViewInstance._setItemSize();
+				gridViewInstance._checkItemLabel();
 				gridViewInstance._setGridStyle();
 				gridViewInstance._refreshItemsInfo();
 				gridViewInstance._calculateListHeight();
@@ -222,18 +239,13 @@
 				 * @member ns.widget.mobile.GridView
 				 */
 				this.options = {
-					cols: 4,
+					cols: 0, // auto - fit to screen resolution
 					reorder: false,
 					label: labels.NONE,
 					minWidth: "auto",
-					minCols: 1,
+					minCols: 2,
 					maxCols: 5
 				};
-				// for landscape 7 (mobile profile)
-				if (window.innerWidth > window.innerHeight) {
-					this.options.cols = 7;
-					this.options.maxCols = 7;
-				}
 				this._direction = direction.NEXT;
 			};
 
@@ -246,6 +258,7 @@
 			 * @member ns.widget.mobile.GridView
 			 */
 			prototype._build = function (element) {
+				element.classList.add("ui-gridview-cols");
 				return element;
 			};
 
@@ -262,8 +275,9 @@
 					popup;
 
 				ui.listElements = [].slice.call(self.element.getElementsByTagName("li"));
-				self._setItemWidth();
+				self._setItemSize();
 				self._setLabel(element);
+				self._checkItemLabel();
 				self._setReorder(element, self.options.reorder);
 				self._calculateListHeight();
 				self._initCheckboxState(element);
@@ -289,6 +303,22 @@
 				self._setGridStyle();
 			}
 
+			prototype._onResize = function () {
+				var self = this;
+
+				self.options.cols = 0;
+				self.refresh();
+			};
+
+			prototype._onResizeTimeOut = function () {
+				var self = this;
+
+				clearTimeout(self._resizeTimeout);
+				self._resizeTimeout = window.setTimeout(function () {
+					self._onResize();
+				}, RESIZE_TIMEOUT);
+			};
+
 			/**
 			 * Bind events for GridView
 			 * @method _bindEvents
@@ -308,6 +338,8 @@
 				self.on("animationend webkitAnimationEnd", animationEndCallback);
 
 				self.on("change", self);
+				utilsEvents.on(window, "resize", self, true);
+
 				utilsEvents.on(page, pageEvents.SHOW, self._onSetGridStyle);
 			};
 
@@ -348,9 +380,10 @@
 
 				self._removeGridStyle();
 				ui.listElements = [].slice.call(element.getElementsByTagName("li"));
-				self._setItemWidth();
+				self._setItemSize();
 				self._setGridStyle();
 				self._setLabel(element);
+				self._checkItemLabel();
 				self._setReorder(element, self.options.reorder);
 				self._calculateListHeight();
 				self._ui.content = utilsSelectors.getClosestByClass(element, "ui-content") || window;
@@ -407,6 +440,9 @@
 						break;
 					case "pinchout":
 						self._out(event);
+						break;
+					case "resize":
+						self._onResizeTimeOut();
 						break;
 				}
 			};
@@ -552,7 +588,7 @@
 					minCols = options.minCols;
 
 				if (cols > minCols) {
-					options.minWidth = null;
+					self._minWidth = null;
 					options.cols = cols - 1;
 					self._refresh();
 				}
@@ -572,7 +608,7 @@
 
 				if (maxCols === null || cols < maxCols) {
 					options.cols = cols + 1;
-					options.minWidth = null;
+					self._minWidth = null;
 					self._refresh();
 				}
 			};
@@ -724,38 +760,50 @@
 
 			/**
 			 * Set the width of each item
-			 * @method _setItemWidth
+			 * @method _setItemSize
 			 * @protected
 			 * @member ns.widget.mobile.GridView
 			 */
-			prototype._setItemWidth = function () {
+			prototype._setItemSize = function () {
 				var self = this,
 					options = self.options,
 					parentComputedStyle = window.getComputedStyle(self.element, null),
 					parentWidth = parseFloat(parentComputedStyle.getPropertyValue("width")) || 0,
-					parentHeight = self.element.firstElementChild.offsetHeight || 0,
-					minWidth = options.minWidth,
+					minWidth = self._minWidth,
 					listElements = self._ui.listElements,
 					length = listElements.length,
-					firstLiComputed = listElements.length && window.getComputedStyle(listElements[0], null),
 					cols,
 					i,
 					width,
-					borderSize = 1,
-					elementStyle = null;
+					borderSize = 16,
+					elementStyle = null,
+					content;
 
-				if (minWidth === "auto") {
-					minWidth = parseFloat(firstLiComputed.getPropertyValue("width")) || 0;
-					options.minWidth = minWidth;
+				if (options.minWidth === "auto") {
+					minWidth = 0;
 				} else {
 					minWidth = (minWidth) ? parseInt(minWidth, 10) : null;
 				}
+				self._minWidth = minWidth;
 
-				cols = minWidth ? Math.floor(parentWidth / minWidth) : options.cols;
+				cols = options.cols;
+				if (cols === 0) { // fit number of columns to screen resolution
+					content = window.getComputedStyle(self.element, ":after").content;
+					content = content.replace(/[^0-9]+/, "");
+					if (content) {
+						cols = parseInt(content.replace(/\"/g, ""), 10);
+					}
+				}
+				if (cols === 0 && minWidth > 0) { // if cols are still undefined
+					cols = minWidth ? Math.floor(parentWidth / minWidth) : cols;
+				}
+				if (cols === 0) {
+					cols = options.minCols;
+				}
 
 				self._itemSize = (parentWidth - (cols - 1) * borderSize) / cols;
-				self._itemHeight = parentHeight;
-				self._borderSize = 1;
+				self._itemHeight = self._itemSize;
+				self._borderSize = borderSize;
 
 				width = self._itemSize + "px";
 
@@ -763,14 +811,44 @@
 					elementStyle = listElements[i].style;
 					// all without last in raw should have right border
 					if (i % cols < cols - 1) {
-						elementStyle.borderRightWidth = borderSize + "px";
+						elementStyle.marginRight = borderSize + "px";
 					}
-					// all should have top border
-					elementStyle.borderTopWidth = borderSize + "px";
+					// first row doesn't have top margin
+					if (i > cols - 1) {
+						elementStyle.marginTop = borderSize + "px";
+					} else {
+						elementStyle.marginTop = "0px";
+					}
 					elementStyle.width = width;
+					// item height is the same like width
+					elementStyle.height = width;
+					// check label
+					if (listElements[i].querySelector("*:not(img)")) {
+						listElements[i].classList.add(classes.ITEM_HAS_LABEL);
+					}
 				}
 
 				options.cols = cols;
+			};
+
+			/**
+			 * Check item label and add class to indicate it
+			 * @method _checkItemLabel
+			 * @protected
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._checkItemLabel = function () {
+				var self = this,
+					listElements = self._ui.listElements,
+					length = listElements.length,
+					i;
+
+				for (i = 0; i < length; i++) {
+					// check label
+					if (listElements[i].querySelector(selectors.ANY_NOT_IMAGE)) {
+						listElements[i].classList.add(classes.ITEM_HAS_LABEL);
+					}
+				}
 			};
 
 			/**
@@ -875,6 +953,42 @@
 			};
 
 			/**
+			 * Set number of cols
+			 * @method _setCols
+			 * @protected
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._setCols = function (element, value) {
+				var self = this,
+					options = self.options;
+
+				if (value === "auto") {
+					options.cols = 0;
+				} else {
+					options.cols = parseInt(value, 10);
+				}
+
+				return true;
+			};
+
+			/**
+			 * Set number of cols
+			 * @method _getCols
+			 * @protected
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._getCols = function () {
+				var self = this,
+					options = self.options;
+
+				if (options.cols === 0) {
+					return "auto";
+				}
+
+				return options.cols;
+			};
+
+			/**
 			 * Define transform style for positioning of grid items
 			 * @method _getTransformStyle
 			 * @protected
@@ -886,7 +1000,7 @@
 			prototype._getTransformStyle = function (col, row, index) {
 				var size = this._itemSize + this._borderSize,
 					x = col * size + "px",
-					y = row * (this._itemHeight + this._borderSize) + "px",
+					y = row * (this._itemHeight) + Math.max(row - 1, 0) * this._borderSize + "px",
 					transform,
 					style;
 

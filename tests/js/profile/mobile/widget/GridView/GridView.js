@@ -56,14 +56,12 @@
 			strictEqual(gridView.options.minCols, undefined, "Option minCols is set correct");
 			strictEqual(gridView.options.maxCols, undefined, "Option maxCols is set correct");
 			gridView._configure();
-			strictEqual(gridView.options.cols, (window.innerWidth > window.innerHeight) ? 7 : 4,
-				"Option cols is set correct");
+			strictEqual(gridView.options.cols, 0, "Option cols is set correct");
 			strictEqual(gridView.options.reorder, false, "Option reorder is set correct");
 			strictEqual(gridView.options.label, "none", "Option label is set correct");
 			strictEqual(gridView.options.minWidth, "auto", "Option minWidth is set correct");
-			strictEqual(gridView.options.minCols, 1, "Option minCols is set correct");
-			strictEqual(gridView.options.maxCols, (window.innerWidth > window.innerHeight) ? 7 : 5,
-				"Option maxCols is set correct");
+			strictEqual(gridView.options.minCols, 2, "Option minCols is set correct");
+			strictEqual(gridView.options.maxCols, 5, "Option maxCols is set correct");
 		});
 
 		test("onSetGridStyle", 4, function () {
@@ -85,7 +83,7 @@
 					numberOfStylesAdded = gridViewStyles.innerText.split(".ui-gridview").length - 1,
 					length = element.children.length;
 
-				strictEqual(Boolean(gridViewStyles), true, "GridView style tag with translate3D for each element is defined");
+				strictEqual(!!gridViewStyles, true, "GridView style tag with translate3D for each element is defined");
 				strictEqual(numberOfStylesAdded, length, "every element has relevant styles added");
 				strictEqual(element.children[0].style.animation.indexOf("grid_show_item"), 0, "firstElement has an animation added");
 				strictEqual(element.children[length - 1].style.animation.indexOf("grid_show_item"), 0, "lastElement has an animation added");
@@ -93,6 +91,7 @@
 
 			page.onShow();
 		});
+
 	}
 
 	if (typeof define === "function") {
