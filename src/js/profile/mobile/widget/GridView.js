@@ -149,7 +149,13 @@
 					 * @style ui-gridview-handler
 					 * @member ns.widget.mobile.GridView
 					 */
-					HANDLER: "ui-gridview-handler"
+					HANDLER: "ui-gridview-handler",
+					/**
+					 * Set image as checked
+					 * @style ui-gridview-image-checked
+					 * @member ns.widget.mobile.GridView
+					 */
+					CHECKED: "ui-gridview-image-checked"
 				},
 				GridView = function () {
 					var self = this;
@@ -260,6 +266,8 @@
 				self._setLabel(element);
 				self._setReorder(element, self.options.reorder);
 				self._calculateListHeight();
+				self._initCheckboxState(element);
+
 				self._ui.content = utilsSelectors.getClosestByClass(element, "ui-content") || window;
 				self._ui.scrollableParent = getScrollableParent(element) || self._ui.content;
 				popup = utilsSelectors.getClosestBySelector(element, popupSelector);
@@ -299,6 +307,7 @@
 
 				self.on("animationend webkitAnimationEnd", animationEndCallback);
 
+				self.on("change", self);
 				utilsEvents.on(page, pageEvents.SHOW, self._onSetGridStyle);
 			};
 
@@ -322,6 +331,7 @@
 					utilsEvents.off(popup.element, popupEvents.before_show, this._refreshSizesCallback);
 				}
 				self.off("animationend webkitAnimationEnd", animationEndCallback);
+				self.off("change", self);
 				utilsEvents.off(page, pageEvents.SHOW, self._onSetGridStyle);
 			};
 
@@ -370,6 +380,9 @@
 				var self = this;
 
 				switch (event.type) {
+					case "change":
+						self._shadeCheckbox(event.target);
+						break;
 					case "dragprepare":
 						if (event.detail.srcEvent.srcElement.classList.contains(classes.HANDLER)) {
 							break;
@@ -621,6 +634,35 @@
 					self.element.style.height = (itemHeight + 1) * rows + 1 + "px";
 				}
 			};
+
+			/**
+			 * Set checkbox initial state
+			 * @method _initCheckboxState
+			 * @protected
+			 * @param {HTMLElement} element
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._initCheckboxState = function (element) {
+				var checkboxNodeList = element.querySelectorAll("input[type=checkbox]"),
+					i = 0,
+					self = this,
+					length = checkboxNodeList.length;
+
+				for (i = 0; i < length; i++) {
+					self._shadeCheckbox(checkboxNodeList[i]);
+				}
+			}
+
+			/**
+			 * Set darker background for checked element in the grid
+			 * @method _shadeCheckbox
+			 * @protected
+			 * @param {HTMLElement} target
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._shadeCheckbox = function (target) {
+				target.parentElement.classList.toggle(classes.CHECKED, target.checked);
+			}
 
 			/**
 			 * Update information of each list item
