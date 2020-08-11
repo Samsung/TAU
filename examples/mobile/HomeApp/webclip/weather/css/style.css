@@ -1,0 +1,201 @@
+.app-weather-container {
+    height: 209px;
+    position: relative;
+}
+
+.app-progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.app-image-grid {
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 100px [col-start]);
+    grid-template-rows: auto;
+    gap: 10px;
+    justify-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.app-icon-img {
+    width: 100px;
+    height: 100px;
+}
+
+.app-channel-content {
+    display: flex;
+}
+
+.app-movie-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.app-movie-poster {
+    width: 80%;
+    height: auto;
+}
+
+.app-movie-poster-next {
+    width: 50%;
+}
+
+.app-remote-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.app-volume-control {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 0 var(--overlay);
+    margin: 5px;
+    font-size: 16px;
+    background-image: linear-gradient(170deg,
+        rgba(0, 0, 0, 0.2) 0%, var(--background-area-color) 15%,
+        var(--background-area-color) 85%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.app-channel-control {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px 0 var(--overlay);
+    margin: 5px;
+    font-size: 16px;
+    background-image: linear-gradient(170deg,
+        rgba(0, 0, 0, 0.2) 0%, var(--background-area-color) 15%,
+        var(--background-area-color) 85%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.app-4way-direction {
+    display: grid;
+    grid-template-columns: repeat(3, 56px);
+    grid-gap: 5px;
+    border-radius: 100%;
+    box-shadow: 1px 1px 3px 0 var(--overlay);
+    margin: 5px;
+    background-image: radial-gradient(var(--background-area-color) 50%, rgba(0, 0, 0, 0.2));
+}
+
+.app-4way-btn-up {
+    grid-column: 2 / 2;
+    grid-row: 1;
+}
+
+.app-4way-btn-left {
+    grid-column: 1 / 1;
+    grid-row: 2;
+}
+
+.app-4way-btn-ok {
+    grid-column: 2 / 2;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    box-shadow: -1px -1px 3px 0 var(--overlay) inset;
+    background-color: var(--button-background);
+}
+
+.app-4way-btn-right {
+    grid-column: 3 / 3;
+    grid-row: 2;
+}
+
+.app-4way-btn-down {
+    grid-column: 2 / 2;
+    grid-row: 3;
+}
+
+.app-btn-icon-burger {
+    margin-left: 20px;
+    margin-right: 12px;
+}
+
+.app-btn-icon-burger::after {
+    -webkit-mask-image: url(../images/Hamburger_icon.svg);
+    mask-image: url(../images/Hamburger_icon.svg);
+}
+
+.app-hotel-breakfast {
+    height: 370px;
+}
+.app-hotel-breakfast-image {
+    height: 200px;
+    background-image: url(../images/English_breakfast_2.jpg);
+    background-size: 100%;
+}
+.app-breakfast-2 {
+    background-image: url(../images/Vegetarian_breakfast_at_Cafe_Cuilles.jpg);
+}
+.app-breakfast-3 {
+    background-image: url(../images/800px-Korean.cuisine-Bibimbap-01.jpg);
+}
+
+.app-hotel-order {
+    display: flex;
+    align-self: center;
+}
+
+.app-dummy-payment input {
+    display: block;
+    font-size: 18px;
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    width: 100%;
+}
+.app-dummy-payment input.ui-inline {
+    width: auto;
+    display: inline;
+}
+.app-cards {
+    margin-left: 30px;
+}
+.app-cards .app-visa {
+    width: 36px;
+    -webkit-mask-image: url(../images/270px-Font_Awesome_5_brands_cc-visa.svg.png);
+    background-color: blue;
+    height: 30px;
+    -webkit-mask-size: 100%;
+    display: inline-block;
+}
+.app-cards .app-mc {
+    background-image: url(../images/MasterCard_Logo.svg.png);
+    width: 36px;
+    height: 30px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-position: center;
+    margin: 0 5px;
+}
+
+body {
+    /*disable-pull-to-refresh-effect*/
+    overscroll-behavior: contain;
+}
+.app-display-none {
+    display: none;
+}
+
+.ui-content-area iframe {
+    width: 100%;
+    height: 370px;
+    border: none;
+}

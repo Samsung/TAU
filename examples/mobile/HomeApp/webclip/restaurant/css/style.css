@@ -1,0 +1,63 @@
+.app-hotel-breakfast {
+    height: 370px;
+}
+.app-hotel-breakfast-image {
+    height: 200px;
+    background-image: url(../images/English_breakfast_2.jpg);
+    background-size: 100%;
+}
+.app-breakfast-2 {
+    background-image: url(../images/Vegetarian_breakfast_at_Cafe_Cuilles.jpg);
+}
+.app-breakfast-3 {
+    background-image: url(../images/800px-Korean.cuisine-Bibimbap-01.jpg);
+}
+
+.app-hotel-order {
+    display: flex;
+    align-self: center;
+}
+
+.app-dummy-payment input {
+    display: block;
+    font-size: 18px;
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    width: 100%;
+}
+.app-dummy-payment input.ui-inline {
+    width: auto;
+    display: inline;
+}
+.app-cards {
+    margin-left: 30px;
+}
+.app-cards .app-visa {
+    width: 36px;
+    -webkit-mask-image: url(../images/270px-Font_Awesome_5_brands_cc-visa.svg.png);
+    background-color: blue;
+    height: 30px;
+    -webkit-mask-size: 100%;
+    display: inline-block;
+}
+.app-cards .app-mc {
+    background-image: url(../images/MasterCard_Logo.svg.png);
+    width: 36px;
+    height: 30px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-position: center;
+    margin: 0 5px;
+}
+
+body {
+    /*disable-pull-to-refresh-effect*/
+    overscroll-behavior: contain;
+}
+.app-display-none {
+    display: none;
+}
