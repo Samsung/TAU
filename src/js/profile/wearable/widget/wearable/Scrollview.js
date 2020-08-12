@@ -140,7 +140,8 @@
 					children = [].slice.call(element.children),
 					scroller,
 					content,
-					fragment;
+					fragment,
+					enableCircularScrollbar;
 
 				element.classList.add(pageScrollSelector);
 				scroller = document.createElement("div");
@@ -162,11 +163,13 @@
 				scroller.appendChild(fragment);
 
 				if (ns.support.shape.circle) {
-					if (scroller) {
+					enableCircularScrollbar = ns.getConfig("enableCircularScrollbar");
+
+					if (scroller && enableCircularScrollbar) {
 						scroller.setAttribute(scrollBarType.CIRCLE, "");
 					}
 					content = element.querySelector("." + classes.uiContent);
-					if (content) {
+					if (content && enableCircularScrollbar) {
 						content.setAttribute(scrollBarType.CIRCLE, "");
 					}
 				}
