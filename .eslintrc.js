@@ -337,5 +337,8 @@ module.exports = {
 	],
 	"globals": {
 		"tizen": true
+	},
+	"parserOptions": {
+		"sourceType": "module",
 	}
 };
