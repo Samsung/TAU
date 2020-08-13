@@ -1,9 +1,13 @@
+import Storage from "./clipping-storage.js";
+
 (function () {
+
 	"use strict";
 	var tau = window.tau,
 
+		storage = new Storage(),
 		webClipList = [],
-		activeWebClipList = [
+		activeWebClipList = storage.readAllFromStorage(Storage.elements.ACTIVEWEBCLIPS) || [
 			"webclip/tv-remote-control",
 			"webclip/restaurant",
 			"webclip/weather"
@@ -37,7 +41,7 @@
 						"webclip/apps-on-tv",
 						"webclip/latest-news",
 						"webclip/now-on-tv"
-					]
+					];
 			})
 			.finally(() => {
 				updateWebClipsUI();
@@ -48,14 +52,16 @@
 	function onPopupSubmit() {
 
 		activeWebClipList = [];
+		storage.refreshStorage(Storage.elements.ACTIVEWEBCLIPS);
 		webClipList.forEach(function (webclip) {
 			const webClipName = getWebClipName(webclip),
 				checkbox = document.querySelector("#" + webClipName);
 
 			if (checkbox.checked) {
-				activeWebClipList.push(webclip)
+				activeWebClipList.push(webclip);
+				storage.writeToStorage(Storage.elements.ACTIVEWEBCLIPS, webclip);
 			}
-		})
+		});
 		updateWebClipsUI();
 		tau.history.back();
 	}
