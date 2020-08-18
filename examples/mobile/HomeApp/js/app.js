@@ -6,7 +6,10 @@
 				news: false,
 				nowontv: false
 			}
-		};
+		},
+		// TODO: remove below directive after webClipList use
+		// eslint-disable-next-line no-unused-vars
+		webClipList = [];
 
 	function getWidgetsState() {
 		var latestNews = document.querySelector("#latest-news-check"),
@@ -49,6 +52,16 @@
 		loadWeatherJS();
 	}
 
+	function loadWebClipList() {
+		const requestURL = "api/webcliplist";
+
+		fetch(requestURL)
+			.then((response) => response.json())
+			.then((data) => {
+				webClipList = data;
+			});
+	}
+
 	function onPopupSubmit() {
 		getWidgetsState();
 		toggleWidgetsState();
@@ -83,6 +96,7 @@
 		burgerButton.addEventListener("click", onButtonClick);
 		popupButton.addEventListener("click", onPopupSubmit);
 		loadWeatherJS();
+		loadWebClipList();
 	}
 
 	document.addEventListener("pagebeforeshow", init);
