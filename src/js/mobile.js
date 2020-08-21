@@ -92,6 +92,7 @@
 			"./core/widget/core/Slider",
 			"./core/widget/core/progress/Progress",
 			"./core/widget/core/Page",
+			"./core/widget/core/Card",
 			"./core/widget/core/Appbar",
 			"./core/widget/core/Interactive3D",
 			"./core/widget/core/CoverFlow",
@@ -136,6 +137,7 @@
 			"./core/router/route/popup",
 			"./core/router/route/drawer",
 			"./core/router/route/panel",
+			"./core/router/route/card",
 			"./core/history/manager",
 			// Modules to be loaded after
 			//>>excludeEnd("tauUI");

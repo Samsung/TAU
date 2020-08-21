@@ -1,0 +1,40 @@
+.app-image-grid {
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 100px [col-start]);
+    grid-template-rows: auto;
+    gap: 10px;
+    justify-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.app-icon-img {
+    width: 100px;
+    height: 100px;
+}
+
+.app-channel-content {
+    display: flex;
+}
+
+.app-movie-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.app-movie-poster {
+    width: 80%;
+    height: auto;
+}
+
+.app-movie-poster-next {
+    width: 50%;
+}
+
+.app-display-none {
+    display: none;
+}
