@@ -9,7 +9,19 @@
 		},
 		// TODO: remove below directive after webClipList use
 		// eslint-disable-next-line no-unused-vars
-		webClipList = [];
+		webClipList = [
+			"webclip/tv-remote-control/",
+			"webclip/restaurant/",
+			"webclip/weather/index.html",
+			"webclip/apps-on-tv/index.html",
+			"webclip/latest-news/",
+			"webclip/now-on-tv"
+		],
+		activeWebClipList = [
+			"webclip/tv-remote-control/",
+			"webclip/restaurant/",
+			"webclip/weather/index.html"
+		];
 
 	function getWidgetsState() {
 		var latestNews = document.querySelector("#latest-news-check"),
@@ -78,6 +90,28 @@
 		drawerWidget.open();
 	}
 
+	function updateWebClipsUI() {
+		var current = document.querySelectorAll(".ui-card[data-src]"),
+			webclipsContainer = document.getElementById("web-clips");
+
+		// remove previous
+		current.forEach(function (card) {
+			card.parentElement.removeChild(card);
+		});
+
+		// add new
+		activeWebClipList.forEach(function (webclip) {
+			var card = document.createElement("div");
+
+			card.classList.add("ui-card");
+			card.setAttribute("data-src", webclip);
+
+			webclipsContainer.appendChild(card);
+		});
+
+		tau.engine.createWidgets(webclipsContainer);
+	}
+
 	function init() {
 		var themeChanger = document.querySelector("#theme-selector"),
 			page = document.querySelector(".ui-page"),
@@ -95,9 +129,17 @@
 
 		burgerButton.addEventListener("click", onButtonClick);
 		popupButton.addEventListener("click", onPopupSubmit);
+
 		loadWeatherJS();
 		loadWebClipList();
+		updateWebClipsUI();
 	}
 
-	document.addEventListener("pagebeforeshow", init);
+	function onPageBeforeShow(event) {
+		if (event.target.id === "main") {
+			init();
+		}
+	}
+
+	document.addEventListener("pagebeforeshow", onPageBeforeShow);
 }());
