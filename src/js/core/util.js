@@ -1,4 +1,4 @@
-/*global window, ns, define, XMLHttpRequest, console, Blob */
+/*global ns, define */
 /*jslint nomen: true, browser: true, plusplus: true */
 /*
  * Copyright (c) 2015 Samsung Electronics Co., Ltd
@@ -43,7 +43,14 @@
 				waitingFrames = [],
 				slice = [].slice,
 				// inform that loop was added to request animation frame callback
-				loopWork = false;
+				loopWork = false,
+				// regexp for filename in URL string
+				URL_FILE_REGEXP = /([^/])+$/,
+				// selectors used by this module
+				selectors = {
+					LINKS: "link[href]",
+					IMAGES: "img[src]"
+				};
 
 			/**
 			 * Function which is use as workaround when any type of request animation frame not exists
@@ -352,17 +359,35 @@
 			 * @member ns.util
 			 * @static
 			 */
-			util.importEvaluateAndAppendElement = function (element, container) {
+			util.importEvaluateAndAppendElement = function (element, container, options) {
 				var externalScriptsQueue =
 						util._createScriptsSync(util._removeExternalScripts(element), element),
 					inlineScripts = util._removeInlineScripts(element),
-					newNode = document.importNode(element, true);
+					newNode = document.importNode(element, true),
+					links,
+					images,
+					relativePath,
+					urlObject;
 
 				container.appendChild(newNode); // append and eval inline
 				inlineScripts.forEach(function (script) {
 					container.appendChild(script);
 				});
 				util.batchCall(externalScriptsQueue);
+
+				// make urls relative to base dir
+				if (options && options.url) {
+					urlObject = ns.util.path.parseLocation(options.url);
+					relativePath = options.url.replace(URL_FILE_REGEXP, "").replace(urlObject.href, "");
+					links = newNode.querySelectorAll(selectors.LINKS);
+					links.forEach(function (link) {
+						link.href = urlObject.href + relativePath + link.href.replace(urlObject.href, "");
+					});
+					images = newNode.querySelectorAll(selectors.IMAGES);
+					images.forEach(function (source) {
+						source.src = urlObject.href + relativePath + source.src.replace(urlObject.href, "");
+					});
+				}
 
 				return newNode;
 			};

@@ -1,0 +1,14 @@
+.app-weather-container {
+    height: 245px;
+    position: relative;
+}
+
+.app-progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
