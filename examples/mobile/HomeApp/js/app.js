@@ -1,43 +1,20 @@
 (function () {
 	"use strict";
 	var tau = window.tau,
-		state = {
-			widgets: {
-				news: false,
-				nowontv: false
-			}
-		},
-		// TODO: remove below directive after webClipList use
-		// eslint-disable-next-line no-unused-vars
+
 		webClipList = [
 			"webclip/tv-remote-control/",
 			"webclip/restaurant/",
-			"webclip/weather/index.html",
-			"webclip/apps-on-tv/index.html",
+			"webclip/weather/",
+			"webclip/apps-on-tv/",
 			"webclip/latest-news/",
 			"webclip/now-on-tv"
 		],
 		activeWebClipList = [
 			"webclip/tv-remote-control/",
 			"webclip/restaurant/",
-			"webclip/weather/index.html"
+			"webclip/weather/"
 		];
-
-	function getWidgetsState() {
-		var latestNews = document.querySelector("#latest-news-check"),
-			nowOnTV = document.querySelector("#now-on-tv-check");
-
-		state.widgets.news = latestNews.checked;
-		state.widgets.nowontv = nowOnTV.checked;
-	}
-
-	function toggleWidgetsState() {
-		var latestNews = document.querySelector("#latest-news-container"),
-			nowOnTv = document.querySelector("#now-on-tv-container");
-
-		latestNews.classList.toggle("app-display-none", !state.widgets.news);
-		nowOnTv.classList.toggle("app-display-none", !state.widgets.nowontv);
-	}
 
 	function loadWeatherJS() {
 		var head = document.getElementsByTagName("head")[0],
@@ -75,8 +52,17 @@
 	}
 
 	function onPopupSubmit() {
-		getWidgetsState();
-		toggleWidgetsState();
+
+		activeWebClipList = [];
+		webClipList.forEach(function (webclip) {
+			const webClipName = getWebClipName(webclip),
+				checkbox = document.querySelector("#" + webClipName);
+
+			if (checkbox.checked) {
+				activeWebClipList.push(webclip)
+			}
+		})
+		updateWebClipsUI();
 		tau.history.back();
 	}
 
@@ -91,7 +77,7 @@
 	}
 
 	function updateWebClipsUI() {
-		var current = document.querySelectorAll(".ui-card[data-src]"),
+		var current = document.querySelectorAll(".ui-card"),
 			webclipsContainer = document.getElementById("web-clips");
 
 		// remove previous
@@ -110,6 +96,57 @@
 		});
 
 		tau.engine.createWidgets(webclipsContainer);
+	}
+
+	//TODO: provide mechanism for getting web clip name from webClip meta data
+	//		and separate from getting ID
+	function getWebClipName(webClip) {
+		webClip = webClip.replace("webclip/", "").replace("/", "");
+		return webClip;
+	}
+
+	function updateWebClipListPopup() {
+
+		var popupList = document.getElementById("popup-list");
+
+		// remove previous
+		popupList.childNodes.forEach(function (li) {
+			popupList.removeChild(li);
+		});
+
+		webClipList.forEach(function (webclip) {
+			var li = document.createElement("li"),
+				input = document.createElement("input"),
+				label = document.createElement("label"),
+				webClipName = getWebClipName(webclip);
+
+			li.classList.add("ui-li-has-checkbox");
+			li.classList.add("ui-group-index");
+
+			input.setAttribute("type", "checkbox");
+			input.setAttribute("id", webClipName);
+
+			label.setAttribute("for", "latest-news-ckeck");
+			label.classList.add("ui-li-text");
+			label.innerHTML = webClipName;
+
+
+			li.appendChild(input);
+			li.appendChild(label);
+			popupList.appendChild(li);
+		});
+		tau.engine.createWidgets(popupList);
+		webClipList.forEach(function (webclip) {
+
+			if (activeWebClipList.includes(webclip)) {
+				const webClipName = getWebClipName(webclip),
+					checkbox = document.querySelector("#" + webClipName);
+
+				if (checkbox) {
+					checkbox.checked = true;
+				}
+			}
+		});
 	}
 
 	function init() {
@@ -133,6 +170,7 @@
 		loadWeatherJS();
 		loadWebClipList();
 		updateWebClipsUI();
+		updateWebClipListPopup();
 	}
 
 	function onPageBeforeShow(event) {
