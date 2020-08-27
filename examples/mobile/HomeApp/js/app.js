@@ -2,18 +2,11 @@
 	"use strict";
 	var tau = window.tau,
 
-		webClipList = [
-			"webclip/tv-remote-control/",
-			"webclip/restaurant/",
-			"webclip/weather/",
-			"webclip/apps-on-tv/",
-			"webclip/latest-news/",
-			"webclip/now-on-tv"
-		],
+		webClipList = [],
 		activeWebClipList = [
-			"webclip/tv-remote-control/",
-			"webclip/restaurant/",
-			"webclip/weather/"
+			"webclip/tv-remote-control",
+			"webclip/restaurant",
+			"webclip/weather"
 		];
 
 	function loadWeatherJS() {
@@ -48,6 +41,28 @@
 			.then((response) => response.json())
 			.then((data) => {
 				webClipList = data;
+				// make sure that default active webclip list contains only available elements
+				activeWebClipList.forEach(function (webclip) {
+					if (!webClipList.includes(webclip)) {
+						activeWebClipList.splice(activeWebClipList.indexOf(webclip), 1);
+					}
+				})
+			})
+			.catch(() => {
+				// use default webclip list is sth wrong
+				webClipList =
+					[
+						"webclip/tv-remote-control",
+						"webclip/restaurant",
+						"webclip/weather",
+						"webclip/apps-on-tv",
+						"webclip/latest-news",
+						"webclip/now-on-tv"
+					]
+			})
+			.finally(() => {
+				updateWebClipsUI();
+				updateWebClipListPopup();
 			});
 	}
 
@@ -169,8 +184,6 @@
 
 		loadWeatherJS();
 		loadWebClipList();
-		updateWebClipsUI();
-		updateWebClipListPopup();
 	}
 
 	function onPageBeforeShow(event) {
