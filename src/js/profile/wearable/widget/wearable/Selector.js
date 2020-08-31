@@ -811,43 +811,46 @@
 			prototype.handleEvent = function (event) {
 				var self = this;
 
-				switch (event.type) {
-					case "dragstart":
-						self._onDragstart(event);
-						break;
-					case "drag":
-						self._onDrag(event);
-						break;
-					case "dragend":
-						self._onDragend(event);
-						break;
-					case "click":
-						self._onClick(event);
-						break;
-					case "rotarydetent":
-						self._onRotary(event);
-						break;
-					case "transitionend":
-						self._onTransitionEnd(event);
-						break;
-					case "animationend":
-					case "webkitAnimationEnd":
-						self._onAnimationEnd(event);
-						break;
-					case "longpress":
-						self._onLongPress(event);
-						break;
-					case "mouseup":
-					case "touchend":
-						self._onTouchEnd(event);
-						break;
-					case "tizenhwkey":
-						event.stopPropagation();
-						self._onHWKey(event);
-						break;
-					case "swipe":
-						self._onSwipe(event);
-						break;
+				// Events on the hidden selector should be ignored
+				if (self.element.offsetWidth !== 0) {
+					switch (event.type) {
+						case "dragstart":
+							self._onDragstart(event);
+							break;
+						case "drag":
+							self._onDrag(event);
+							break;
+						case "dragend":
+							self._onDragend(event);
+							break;
+						case "click":
+							self._onClick(event);
+							break;
+						case "rotarydetent":
+							self._onRotary(event);
+							break;
+						case "transitionend":
+							self._onTransitionEnd(event);
+							break;
+						case "animationend":
+						case "webkitAnimationEnd":
+							self._onAnimationEnd(event);
+							break;
+						case "longpress":
+							self._onLongPress(event);
+							break;
+						case "mouseup":
+						case "touchend":
+							self._onTouchEnd(event);
+							break;
+						case "tizenhwkey":
+							event.stopPropagation();
+							self._onHWKey(event);
+							break;
+						case "swipe":
+							self._onSwipe(event);
+							break;
+					}
 				}
 			};
 
