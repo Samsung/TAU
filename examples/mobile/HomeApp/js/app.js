@@ -104,6 +104,11 @@
 		activeWebClipList.forEach(function (webclip) {
 			var card = document.createElement("div");
 
+			// add slash for name of webClip
+			if (!webclip.match(/\/$/)) {
+				webclip += "/";
+			}
+
 			card.classList.add("ui-card");
 			card.setAttribute("data-src", webclip);
 
