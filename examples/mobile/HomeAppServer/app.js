@@ -20,7 +20,13 @@ app.get("/api/webcliplist", (req, res) => {
 
 		if (!err) {
 			files.forEach((file) => {
-				result.push(webClipDir + "/" + file)
+				try {
+					if (fs.lstatSync(homeAppPath + "/" + webClipDir + "/" + file).isDirectory()) {
+						result.push(webClipDir + "/" + file)
+					}
+				} catch (e) {
+					// unable to figure out if element is directory or not
+				}
 			});
 		}
 		res.header("Content-Type", "application/json");
