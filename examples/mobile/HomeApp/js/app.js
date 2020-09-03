@@ -108,6 +108,7 @@
 			if (!webclip.match(/\/$/)) {
 				webclip += "/";
 			}
+			webclip += "webclip.html";
 
 			card.classList.add("ui-card");
 			card.setAttribute("data-src", webclip);
