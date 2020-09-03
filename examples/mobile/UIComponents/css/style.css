@@ -713,3 +713,17 @@
 	justify-content: center;
 	margin-bottom: 15px;
 }
+
+.app-icon {
+	background-color: #6170ff;
+	position: relative;
+}
+
+.app-icon::after {
+	content: "IC";
+	position: absolute;
+	top: 7px;
+	left: 7px;
+	font-size: 12px;
+	color: white;
+}

@@ -4,6 +4,13 @@
 	z-index: 100;
 	overflow-x: hidden;
 	overflow-y: visible;
+
+	&[data-scroll="x"] {
+		scroll-snap-type: x mandatory;
+		.ui-scrollview-view {
+			overflow: initial;
+		}
+	}
 }
 
 .ui-scrollview-view {
@@ -12,6 +19,7 @@
 	min-width: 100%;
 	box-sizing: border-box;
 }
+
 
 .ui-scrolllistview .ui-li-divider {
 	z-index: 10;

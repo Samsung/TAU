@@ -30,6 +30,7 @@
 			"../../engine",
 			"../../event",
 			"../../util/selectors",
+			"../../util/path",
 			"../BaseWidget",
 			"../core"
 		],
@@ -58,6 +59,13 @@
 					this.options = {
 						src: ""
 					}
+				},
+				// regexp for filename in URL string
+				URL_FILE_REGEXP = /([^/])+$/,
+				// selectors used by this module
+				selectors = {
+					LINKS: "link[href]",
+					IMAGES: "img[src]"
 				},
 				prototype = new BaseWidget();
 
@@ -108,10 +116,34 @@
 			* @protected
 			*/
 			prototype._include = function (content, options) {
-				var element = this.element;
+				var element = this.element,
+					links,
+					images,
+					relativePath,
+					relativeFile,
+					urlObject;
 
 				if (!content.parentNode || content.ownerDocument !== document) {
 					content = ns.util.importEvaluateAndAppendElement(content, element, options);
+					// make urls relative to base dir
+					if (options && options.url) {
+						urlObject = ns.util.path.parseLocation(options.url);
+						relativePath = options.url.replace(URL_FILE_REGEXP, "");
+						links = content.querySelectorAll(selectors.LINKS);
+						links.forEach(function (link) {
+							if (link.href.indexOf(ns.util.path.parseLocation(options.url).domain) === 0) {
+								relativeFile = link.href.replace(urlObject.domain, "").replace(urlObject.directory, "");
+								link.href = relativePath + relativeFile;
+							}
+						});
+						images = content.querySelectorAll(selectors.IMAGES);
+						images.forEach(function (source) {
+							if (source.src.indexOf(ns.util.path.parseLocation(options.url).domain) === 0) {
+								relativeFile = source.src.replace(urlObject.domain, "").replace(urlObject.directory, "");
+								source.src = relativePath + relativeFile;
+							}
+						});
+					}
 				}
 				return content;
 			};
