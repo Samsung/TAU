@@ -14,9 +14,21 @@
 		head.appendChild(jsScript);
 	}
 
+	function changeTheme(event) {
+		var weatherWidget = document.querySelector(".weatherwidget-io");
+
+		if (event.detail.theme === "light") {
+			weatherWidget.setAttribute("data-theme", "pure");
+		} else {
+			weatherWidget.setAttribute("data-theme", "dark");
+		}
+		loadWeatherJS();
+	}
+
 	function init() {
 		loadWeatherJS();
 	}
 
-	document.addEventListener("pagebeforeshow", init);
+	document.addEventListener("cardcontentchange", init);
+	document.addEventListener("themechange", changeTheme);
 }());
