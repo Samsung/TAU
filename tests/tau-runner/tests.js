@@ -14,7 +14,7 @@ var TESTS = [
 	"tests/js/core/event/event.html",
 	"tests/js/core/event/api/event.html",
 	"tests/js/core/event/mobile/events.html",
-	"tests/js/core/util/selectors/selectors.html",
+	"tests/js/core/util/selectors/Selectors.html",
 	"tests/js/core/util/selectors/api/selectors.html",
 	"tests/js/core/util/selectors/mobile/ej.utils.selectors.html",
 	"tests/js/core/util/object/object.html",

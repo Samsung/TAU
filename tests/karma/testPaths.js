@@ -63,6 +63,7 @@ testPaths = [
 	"profile/wearable/widget/wearable/CircleIndicator",
 	"profile/wearable/widget/wearable/NumberPicker",
 	"profile/wearable/widget/wearable/DatePicker",
+	"profile/wearable/widget/wearable/Selector",
 	"profile/mobile/widget/DropdownMenu",
 	"core/core"
 ];
