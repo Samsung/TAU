@@ -92,5 +92,5 @@ if (typeof define === "function") {
 		return runTests;
 	});
 } else {
-	runTests(tau.util._Set, window.helpers);
+	runTests(tau.util.Set, window.helpers);
 }

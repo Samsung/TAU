@@ -92,8 +92,6 @@
 				}
 			};
 
-			// for tests
-			ns.util._Set = set;
 			ns.util.Set = window.Set || set;
 
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
