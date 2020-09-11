@@ -99,8 +99,8 @@
 	//TODO: provide mechanism for getting web clip name from webClip meta data
 	//		and separate from getting ID
 	function getWebClipName(webClip) {
-		webClip = webClip.replace("webclip/", "").replace("/", "");
-		return webClip;
+		// remove all text to the last \
+		return webClip.replace(/.*\//, "");
 	}
 
 	function updateWebClipListPopup() {
