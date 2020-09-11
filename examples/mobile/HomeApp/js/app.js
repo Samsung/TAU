@@ -20,12 +20,6 @@
 			.then((response) => response.json())
 			.then((data) => {
 				webClipList = data;
-				// make sure that default active webclip list contains only available elements
-				activeWebClipList.forEach(function (webclip) {
-					if (!webClipList.includes(webclip)) {
-						activeWebClipList.splice(activeWebClipList.indexOf(webclip), 1);
-					}
-				})
 			})
 			.catch(() => {
 				// use default webclip list is sth wrong
@@ -40,6 +34,10 @@
 					]
 			})
 			.finally(() => {
+				// make sure that default active webclip list contains only available elements
+				activeWebClipList = activeWebClipList.filter(function (webClip) {
+					return webClipList.includes(webClip);
+				})
 				updateWebClipsUI();
 				updateWebClipListPopup();
 			});
