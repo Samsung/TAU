@@ -204,9 +204,12 @@
 			 */
 			prototype._initHeight = function () {
 				var self = this,
-					page = ns.widget.Page(self._ui.page);
+					page;
 
-				self.element.style.height = page.getContentHeight() + "px";
+				if (!self.element.style.height) {
+					page = ns.widget.Page(self._ui.page);
+					self.element.style.height = page.getContentHeight() + "px";
+				}
 			};
 
 			/**

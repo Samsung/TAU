@@ -62,6 +62,14 @@
     .ui-content, .ui-content.ui-scrollview-clip {
         padding: 10 * @px_base 20 * @px_base;
 
+        &.ui-tabs {
+            padding: 0;
+        }
+
+        .ui-section-changer .ui-content {
+            padding: 0;
+        }
+
         .ui-title {
             font-size: 18 * @sp_base;
         }
@@ -134,5 +142,10 @@
             font-size: 14 * @sp_base;
             background-color: #6170ff;
         }
+    }
+
+
+    .ui-sub-tab {
+        background-color: transparent;
     }
 }
