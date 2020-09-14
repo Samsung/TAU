@@ -25,8 +25,78 @@
 		});
 
 
-// unit test, one case
-		QUnit.test("handleEvent", function test(assert) {
+		QUnit.test("_configure", function (assert) {
+			var sectionChanger = new SectionChanger();
+
+			sectionChanger._configure();
+
+			expect(11);
+
+			assert.equal(sectionChanger.options.items, "section", "items is 'section'");
+			assert.equal(sectionChanger.options.activeClass, "ui-section-active", "activeClass is 'ui-section-active'");
+			assert.equal(sectionChanger.options.circular, false, "circular is false");
+			assert.equal(sectionChanger.options.animate, true, "animate is true");
+			assert.equal(sectionChanger.options.animateDuration, 100, "itanimateDurationms is 100");
+			assert.equal(sectionChanger.options.orientation, "horizontal", "orientation is 'horizontal'");
+			assert.equal(sectionChanger.options.changeThreshold, -1, "changeThreshold is -1");
+			assert.equal(sectionChanger.options.useTab, false, "useTab is 'false'");
+			assert.equal(sectionChanger.options.fillContent, true, "fillContent is 'true'");
+			assert.equal(sectionChanger.options.model, null, "model is null");
+			assert.equal(sectionChanger.options.directives, null, "directives is null");
+		});
+
+		QUnit.test("_build", function (assert) {
+			var element = document.getElementById("emptysectionchanger"),
+				sectionChanger = new SectionChanger();
+
+			sectionChanger.options.orientation = "horizontal";
+			sectionChanger._build(element);
+
+			expect(3);
+
+			assert.equal(sectionChanger.activeIndex, 0, "activeIndex is '0'");
+			assert.equal(sectionChanger.beforeIndex, 0, "beforeIndex is 0");
+			assert.equal(sectionChanger.orientation, "horizontal", "orientation is horizontal");
+		});
+
+		QUnit.test("setActiveSection & getActiveSectionIndex", function (assert) {
+			var element = document.getElementById("emptysectionchanger"),
+				sectionChanger = new SectionChanger();
+
+			sectionChanger.element = element;
+			sectionChanger._build(element);
+			sectionChanger._init(element);
+
+			expect(3);
+
+			assert.equal(sectionChanger.activeIndex, 0, "activeIndex is 0");
+
+			sectionChanger.setActiveSection(1, 0, false, true);
+
+			assert.equal(sectionChanger.getActiveSectionIndex(), 1, "activeIndex is 1");
+			assert.equal(sectionChanger.activeIndex, 1, "activeIndex is 1");
+		});
+
+		QUnit.test("_calculateIndex", function (assert) {
+			var element = document.getElementById("sectionchanger"),
+				scroller = element.querySelector(".scroller"),
+				sectionChanger = new SectionChanger();
+
+			sectionChanger.scroller = scroller;
+			sectionChanger.element = element;
+			sectionChanger._build(element);
+			sectionChanger._init(element);
+
+			expect(2);
+
+			sectionChanger.options.circular = true;
+			assert.equal(sectionChanger._calculateIndex(3), 0, "calculated index is 0");
+
+			sectionChanger.options.circular = false;
+			assert.equal(sectionChanger._calculateIndex(3), 2, "calculated index is 2");
+		});
+
+		QUnit.test("handleEvent", function (assert) {
 			var element = document.getElementById("emptysectionchanger"),
 				sectionChanger = new SectionChanger(),
 				event = {
