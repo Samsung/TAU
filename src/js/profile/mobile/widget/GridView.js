@@ -60,6 +60,7 @@
 		[
 			"../../../core/widget/BaseWidget",
 			"../../../core/widget/core/Page",
+			"../../../core/widget/core/Appbar",
 			"./Popup",
 			"../../../core/engine",
 			"../../../core/event",
@@ -87,6 +88,7 @@
 				MATRIX_REGEXP = /matrix\((.*), (.*), (.*), (.*), (.*), (.*)\)/,
 				DATA_ROLE = "data-role",
 				RESIZE_TIMEOUT = 300,
+				BORDER_SIZE = 16,
 				direction = {
 					PREV: 0,
 					NEXT: 1
@@ -190,6 +192,7 @@
 						scrollableParent: null,
 						content: null
 					};
+					self._borderSize = BORDER_SIZE;
 					self._refreshSizesCallback = refreshSizes.bind(null, this);
 				},
 				prototype = new BaseWidget();
@@ -550,6 +553,7 @@
 					if (self._compareOverlapItem(listItems[i])) {
 						self._direction ? element.insertBefore(ui.holder, listItems[i].element.nextSibling) : element.insertBefore(ui.holder, listItems[i].element);
 						self._refreshItemsInfo();
+						self._setItemMargin();
 					}
 				}
 			};
@@ -572,6 +576,7 @@
 				helper.style.left = 0;
 				element.insertBefore(helperElement, holder);
 				element.removeChild(holder);
+				self._setItemMargin();
 				self._ui.helper = {};
 			};
 
@@ -759,6 +764,41 @@
 			};
 
 			/**
+			 * Set the margins of each item
+			 * @method _setItemMargin
+			 * @protected
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._setItemMargin = function () {
+				var self = this,
+					options = self.options,
+					// list elements represents current order of list item in DOM tree
+					listElements = [].slice.call(self.element.getElementsByTagName("li")),
+					i,
+					length = listElements.length,
+					cols = options.cols,
+					elementStyle = null,
+					borderSize = self._borderSize;
+
+				// set margin
+				for (i = 0; i < length; i++) {
+					elementStyle = listElements[i].style;
+					// all without last in raw should have right border
+					if (i % cols < cols - 1) {
+						elementStyle.marginRight = borderSize + "px";
+					} else {
+						elementStyle.marginRight = "0";
+					}
+					// first row doesn't have top margin
+					if (i > cols - 1) {
+						elementStyle.marginTop = borderSize + "px";
+					} else {
+						elementStyle.marginTop = "0";
+					}
+				}
+			};
+
+			/**
 			 * Set the width of each item
 			 * @method _setItemSize
 			 * @protected
@@ -775,7 +815,7 @@
 					cols,
 					i,
 					width,
-					borderSize = 16,
+					borderSize = self._borderSize,
 					elementStyle = null,
 					content;
 
@@ -800,35 +840,29 @@
 				if (cols === 0) {
 					cols = options.minCols;
 				}
+				options.cols = cols;
 
 				self._itemSize = (parentWidth - (cols - 1) * borderSize) / cols;
 				self._itemHeight = self._itemSize;
-				self._borderSize = borderSize;
 
 				width = self._itemSize + "px";
 
+				self._setItemMargin();
+
+				// set size
 				for (i = 0; i < length; i++) {
 					elementStyle = listElements[i].style;
-					// all without last in raw should have right border
-					if (i % cols < cols - 1) {
-						elementStyle.marginRight = borderSize + "px";
-					}
-					// first row doesn't have top margin
-					if (i > cols - 1) {
-						elementStyle.marginTop = borderSize + "px";
-					} else {
-						elementStyle.marginTop = "0px";
-					}
 					elementStyle.width = width;
 					// item height is the same like width
 					elementStyle.height = width;
+				}
+				// check label
+				for (i = 0; i < length; i++) {
 					// check label
 					if (listElements[i].querySelector("*:not(img)")) {
 						listElements[i].classList.add(classes.ITEM_HAS_LABEL);
 					}
 				}
-
-				options.cols = cols;
 			};
 
 			/**
@@ -879,7 +913,10 @@
 			 */
 			prototype._setReorder = function (element, reorder) {
 				var self = this,
-					options = self.options;
+					options = self.options,
+					page = self._getParentPage(element),
+					appbarElement,
+					appbar;
 
 				utilsEvents.disableGesture(element);
 
@@ -903,6 +940,15 @@
 							liItem.appendChild(handler);
 						}
 					});
+
+					// lock AppBar if exists
+					if (page) {
+						appbarElement = page.querySelector(ns.widget.core.Appbar.selector);
+						if (appbarElement) {
+							appbar = ns.widget.Appbar(appbarElement);
+							appbar.lockExpanding(true);
+						}
+					}
 				} else {
 					utilsEvents.enableGesture(
 						element,
@@ -911,6 +957,15 @@
 					utilsEvents.off(element, "drag dragstart dragend dragcancel dragprepare", self, true);
 					utilsEvents.on(element, "pinchin pinchout", self);
 					element.classList.remove("ui-gridview-reorder");
+
+					// unlock AppBar if exists
+					if (page) {
+						appbarElement = page.querySelector(ns.widget.core.Appbar.selector);
+						if (appbarElement) {
+							appbar = ns.widget.Appbar(appbarElement);
+							appbar.lockExpanding(false);
+						}
+					}
 				}
 
 				options.reorder = reorder;
