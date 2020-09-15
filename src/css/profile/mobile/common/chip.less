@@ -47,25 +47,27 @@
 		&.ui-btn-icon {
 			background-color: var(--chip-btn-background-color);
 		}
-		&.ui-icon-add {
-			mask-image: url(../images/tw_chips_icon_add_mtrl.svg);
+		&.ui-icon-add::after {
+			mask-image: url(images/3_Controllers/tw_chips_icon_add_mtrl.svg);
 		}
-		&.ui-icon-delete {
-			mask-image: url(../images/tw_chips_icon_delete_mtrl.svg);
+		&.ui-icon-delete::after {
+			mask-image: url(images/3_Controllers/tw_chips_icon_delete_mtrl.svg);
 		}
 	}
 }
 
 .ui-chips {
 	display: flex;
-	margin: 0 20 * @px_base 0 13 * @px_base;
+	margin: 0 20 * @px_base;
+	row-gap: 4 * @px_base;
+	column-gap: 7 * @px_base;
 	flex-wrap: wrap;
 	max-height: 114 * @px_base;
 	overflow-y: auto;
 
 	.ui-chip {
-		margin: 4 * @px_base 0 4 * @px_base 7 * @px_base;
-		max-width: calc(~"100% - "7 * @px_base);
+		margin-top: 4 * @px_base;
+		max-width: 100%;
 	}
 	&.ui-chips-inline {
 		flex-wrap: nowrap;
