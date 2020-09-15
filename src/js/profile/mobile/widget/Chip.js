@@ -94,6 +94,8 @@
 				 * @static
 				 */
 				eventUtil = ns.event,
+				COLOR_CLASS_PREFIX = "ui-color-",
+				COLOR_CLASS_REGEX = /ui-color-[^\s]+/g,
 
 				Chip = function () {
 					var self = this;
@@ -237,16 +239,21 @@
 				return element;
 			};
 
-			prototype._getButtonIcon = function () {
+			prototype._updateButtonColor = function () {
 				var self = this,
-					options = self.options;
+					button = self._ui.button,
+					actualClass = COLOR_CLASS_PREFIX + self.options.icon,
+					colorClasses;
 
-				if (options.icon === "delete") {
-					return "minus";
-				} else if (options.icon === "add") {
-					return "plus"
+				colorClasses = button.className.match(COLOR_CLASS_REGEX) || [];
+				colorClasses.forEach(function (colorClass) {
+					if (colorClass !== actualClass) {
+						button.classList.remove(colorClass);
+					}
+				});
+				if (colorClasses.indexOf(actualClass) === -1) {
+					button.classList.add(actualClass);
 				}
-				return "unknown";
 			};
 
 			/**
@@ -265,8 +272,9 @@
 				ui.button = ui.button || element.querySelector(selectors.button);
 
 				ns.widget.Button(ui.button, {
-					icon: self._getButtonIcon()
+					icon: self.options.icon
 				});
+				self._updateButtonColor();
 
 				return element;
 			};
