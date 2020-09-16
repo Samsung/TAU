@@ -65,13 +65,29 @@
 				 */
 				IMAGE_PATH_REGEXP = /url\((\.\/)?images/gm,
 				/**
+				 * Regular expression for extracting url from css content
+				 * @property {RegExp} CSS_URL_REGEXP
+				 * @static
+				 * @private
+				 * @member ns.util.load
+				 */
+				CSS_URL_REGEXP = /url\((.+)\)/gm,
+				/**
 				 * Regular expression for extracting path to the css
 				 * @property {RegExp} CSS_FILE_REGEXP
 				 * @static
 				 * @private
 				 * @member ns.util.load
 				 */
-				CSS_FILE_REGEXP = /[^/]+\.css$/;
+				CSS_FILE_REGEXP = /[^/]+\.css$/,
+				/**
+				 * Regular expression for extracting base path of css file
+				 * @property {RegExp} BASE_PATH_REGEXP
+				 * @static
+				 * @private
+				 * @member ns.util.load
+				 */
+				BASE_PATH_REGEXP = /[^\/]+$/;
 
 			/**
 			 * Load file
@@ -188,12 +204,36 @@
 			 * @method cssSyncSuccess
 			 * @param {string} cssPath
 			 * @param {?Function} successCB
-			 * @param {?Function} xhrObj
+			 * @param {Object} xhrObj
 			 * @member ns.util.load
 			 * @static
 			 * @private
 			 */
 			function cssSyncSuccess(cssPath, successCB, xhrObj) {
+				var css = document.createElement("style"),
+					pathRelatedToBaseApp = cssPath.replace(BASE_PATH_REGEXP, "");
+
+				css.type = "text/css";
+				css.textContent = xhrObj.responseText.replace(
+					CSS_URL_REGEXP,
+					"url(" + pathRelatedToBaseApp + "$1)"
+				);
+				if (typeof successCB === "function") {
+					successCB(css);
+				}
+			}
+
+			/**
+			 * Callback function on tau theme css load success
+			 * @method cssThemeSyncSuccess
+			 * @param {string} cssPath
+			 * @param {?Function} successCB
+			 * @param {Object} xhrObj
+			 * @member ns.util.load
+			 * @static
+			 * @private
+			 */
+			function cssThemeSyncSuccess(cssPath, successCB, xhrObj) {
 				var css = document.createElement("style");
 
 				css.type = "text/css";
@@ -214,11 +254,24 @@
 			 * @param {?Function} successCB
 			 * @param {?Function} errorCB
 			 * @static
-			 * @private
 			 * @member ns.util.load
 			 */
 			function cssSync(cssPath, successCB, errorCB) {
 				loadFileSync(cssPath, cssSyncSuccess.bind(null, cssPath, successCB), errorCB);
+			}
+
+			/**
+			 * Add tau theme css to document
+			 * (synchronous loading)
+			 * @method cssThemeSync
+			 * @param {string} cssPath
+			 * @param {?Function} successCB
+			 * @param {?Function} errorCB
+			 * @static
+			 * @member ns.util.load
+			 */
+			function cssThemeSync(cssPath, successCB, errorCB) {
+				loadFileSync(cssPath, cssThemeSyncSuccess.bind(null, cssPath, successCB), errorCB);
 			}
 
 			/**
@@ -313,7 +366,7 @@
 
 				if (embed) {
 					// Load and replace old styles or append new styles
-					cssSync(path, function (styleElement) {
+					cssThemeSync(path, function (styleElement) {
 						addNodeAsTheme(styleElement, themeName, previousElement);
 					}, function (xhrObj, xhrStatus) {
 						ns.warn("There was a problem when loading '" + themeName + "', status: " + xhrStatus);
@@ -336,6 +389,7 @@
 			load.addElementToHead = addElementToHead;
 			load.makeLink = makeLink;
 			load.themeCSS = themeCSS;
+			load.cssSync = cssSync;
 			load.JSON = loadJSON;
 
 			ns.util.load = load;

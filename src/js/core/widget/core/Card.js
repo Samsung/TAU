@@ -124,18 +124,29 @@
 					urlObject;
 
 				if (!content.parentNode || content.ownerDocument !== document) {
-					content = ns.util.importEvaluateAndAppendElement(content, element, options);
-					// make urls relative to base dir
+					// load styles.css
+					links = content.querySelectorAll(selectors.LINKS);
+					links.forEach(function (link) {
+						if (link.href.indexOf(ns.util.path.parseLocation(options.url).domain) === 0) {
+							urlObject = ns.util.path.parseLocation(options.url);
+							relativeFile = link.href.replace(urlObject.domain, "").replace(urlObject.directory, "");
+							ns.util.load.cssSync(link.href, function (styleElement) {
+								ns.util.load.addElementToHead(styleElement, true);
+							}, function (xhrObj, xhrStatus) {
+								ns.warn("There was a problem when loading, status: " + xhrStatus);
+							});
+						}
+						link.parentElement.removeChild(link);
+					});
+
+					// evaluate scripts
+					content = ns.util.importEvaluateAndAppendElement(content, element);
+
+					// make images urls relative to base dir
 					if (options && options.url) {
 						urlObject = ns.util.path.parseLocation(options.url);
 						relativePath = options.url.replace(URL_FILE_REGEXP, "");
-						links = content.querySelectorAll(selectors.LINKS);
-						links.forEach(function (link) {
-							if (link.href.indexOf(ns.util.path.parseLocation(options.url).domain) === 0) {
-								relativeFile = link.href.replace(urlObject.domain, "").replace(urlObject.directory, "");
-								link.href = relativePath + relativeFile;
-							}
-						});
+
 						images = content.querySelectorAll(selectors.IMAGES);
 						images.forEach(function (source) {
 							if (source.src.indexOf(ns.util.path.parseLocation(options.url).domain) === 0) {
