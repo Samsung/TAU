@@ -311,12 +311,6 @@
 .ui-btn-icon.ui-icon-arrow-d:after {
 	-webkit-mask-image: url("images/00_button_expand_closed.png");
 }
-.ui-btn-icon.ui-icon-plus:after {
-	-webkit-mask-image: url("images/00_button_add.png");
-}
-.ui-btn-icon.ui-icon-minus:after {
-	-webkit-mask-image: url("images/00_button_delete.png");
-}
 .ui-btn-icon.ui-icon-forward:after {
 	-webkit-mask-image: url("images/00_button_expand_send.png");
 }
