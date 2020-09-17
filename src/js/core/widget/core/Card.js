@@ -151,10 +151,15 @@
 			prototype.changeContent = function (content, options) {
 				var self = this;
 
-				content = self._include(content, options);
-				self.element.parentElement.replaceChild(content, self.element);
-				ns.engine.createWidgets(content);
-				eventUtils.trigger(content, "cardcontentchange");
+				if (self.element.parentElement) {
+					content = self._include(content, options);
+					self.element.parentElement.replaceChild(content, self.element);
+					ns.engine.createWidgets(content);
+					eventUtils.trigger(content, "cardcontentchange");
+				} else {
+					eventUtils.trigger(content, "cardcontentabort");
+				}
+
 			};
 
 			/**
