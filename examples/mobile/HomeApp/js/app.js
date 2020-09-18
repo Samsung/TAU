@@ -6,60 +6,96 @@ import Storage from "./clipping-storage.js";
 	var tau = window.tau,
 
 		storage = new Storage(),
-		webClipList = [],
-		activeWebClipList = storage.readAllFromStorage(Storage.elements.ACTIVEWEBCLIPS) || [
-			"webclip/tv-remote-control",
-			"webclip/restaurant",
-			"webclip/weather"
-		];
+		appsList = [];
+
+	const defaultList = [
+		{
+			"appID": "vUf39tzQ3s.UIComponents",
+			"isInstalled": true,
+			"isActive": true,
+			"webClipsList": [
+				{
+					url: "webclip/apps-on-tv",
+					isSelected: false
+				},
+				{
+					url: "webclip/latest-news",
+					isSelected: false
+				}
+			]
+		},
+		{
+			"appID": "vUf39tzQ3t.UIComponents",
+			"isInstalled": true,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/now-on-tv",
+					isSelected: false
+				},
+				{
+					url: "webclip/restaurant",
+					isSelected: true
+				}
+			]
+		},
+		{
+			"appID": "vUf39tzQ3r.UIComponents",
+			"isInstalled": false,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/tv-remote-control",
+					isSelected: true
+				},
+				{
+					url: "webclip/weather",
+					isSelected: true
+				}
+			]
+		}
+	];
 
 	function changeTheme(event) {
 		tau.theme.setTheme(event.target.value);
 	}
 
 	function loadWebClipList() {
-		const requestURL = "api/webcliplist";
+		const requestURL = "api/appslist";
 
 		fetch(requestURL)
 			.then((response) => response.json())
 			.then((data) => {
-				webClipList = data;
+				appsList = data;
+				appsList.forEach((app) => {
+					app.webClipsList.forEach((webclip) => {
+						webclip.isSelected = false;
+					});
+				});
 			})
 			.catch(() => {
-				// use default webclip list is sth wrong
-				webClipList =
-					[
-						"webclip/tv-remote-control",
-						"webclip/restaurant",
-						"webclip/weather",
-						"webclip/apps-on-tv",
-						"webclip/latest-news",
-						"webclip/now-on-tv"
-					];
+				// use default apps list if sth wrong
+				appsList = defaultList;
 			})
 			.finally(() => {
-				// make sure that default active webclip list contains only available elements
-				activeWebClipList = activeWebClipList.filter(function (webClip) {
-					return webClipList.includes(webClip);
-				})
+
+				storage.refreshStorage(Storage.elements.APPSLIST, appsList);
+
 				updateWebClipsUI();
 				updateWebClipListPopup();
 			});
 	}
 
 	function onPopupSubmit() {
+		appsList.forEach(function (app) {
+			app.webClipsList.forEach(function (webclip) {
+				const webClipName = getWebClipName(webclip.url),
+					checkbox = document.querySelector("#" + webClipName);
 
-		activeWebClipList = [];
-		storage.refreshStorage(Storage.elements.ACTIVEWEBCLIPS);
-		webClipList.forEach(function (webclip) {
-			const webClipName = getWebClipName(webclip),
-				checkbox = document.querySelector("#" + webClipName);
-
-			if (checkbox.checked) {
-				activeWebClipList.push(webclip);
-				storage.writeToStorage(Storage.elements.ACTIVEWEBCLIPS, webclip);
-			}
+				webclip.isSelected = checkbox.checked;
+			})
 		});
+		storage.refreshStorage(Storage.elements.APPSLIST, appsList);
 		updateWebClipsUI();
 		tau.history.back();
 	}
@@ -83,20 +119,27 @@ import Storage from "./clipping-storage.js";
 			card.parentElement.removeChild(card);
 		});
 
-		// add new
-		activeWebClipList.forEach(function (webclip) {
-			var card = document.createElement("div");
+		appsList.forEach(function (app) {
+			app.webClipsList.forEach((webclip) => {
+				let card,
+					webClipUrl;
 
-			// add slash for name of webClip
-			if (!webclip.match(/\/$/)) {
-				webclip += "/";
-			}
-			webclip += "webclip.html";
+				if (webclip.isSelected) {
+					card = document.createElement("div"),
+					webClipUrl = webclip.url;
 
-			card.classList.add("ui-card");
-			card.setAttribute("data-src", webclip);
+					// add slash for name of webClip
+					if (!webClipUrl.match(/\/$/)) {
+						webClipUrl += "/";
+					}
+					webClipUrl += "webclip.html";
 
-			webclipsContainer.appendChild(card);
+					card.classList.add("ui-card");
+					card.setAttribute("data-src", webClipUrl);
+
+					webclipsContainer.appendChild(card);
+				}
+			});
 		});
 
 		tau.engine.createWidgets(webclipsContainer);
@@ -118,38 +161,42 @@ import Storage from "./clipping-storage.js";
 			popupList.removeChild(li);
 		});
 
-		webClipList.forEach(function (webclip) {
-			var li = document.createElement("li"),
-				input = document.createElement("input"),
-				label = document.createElement("label"),
-				webClipName = getWebClipName(webclip);
+		appsList.forEach(function (app) {
+			app.webClipsList.forEach(function (webclip) {
+				var li = document.createElement("li"),
+					input = document.createElement("input"),
+					label = document.createElement("label"),
+					webClipName = getWebClipName(webclip.url);
 
-			li.classList.add("ui-li-has-checkbox");
-			li.classList.add("ui-group-index");
+				li.classList.add("ui-li-has-checkbox");
+				li.classList.add("ui-group-index");
 
-			input.setAttribute("type", "checkbox");
-			input.setAttribute("id", webClipName);
+				input.setAttribute("type", "checkbox");
+				input.setAttribute("id", webClipName);
 
-			label.setAttribute("for", "latest-news-ckeck");
-			label.classList.add("ui-li-text");
-			label.innerHTML = webClipName;
+				label.setAttribute("for", "latest-news-ckeck");
+				label.classList.add("ui-li-text");
+				//TODO: we should read webclip description for label
+				label.innerHTML = webClipName;
 
-
-			li.appendChild(input);
-			li.appendChild(label);
-			popupList.appendChild(li);
+				li.appendChild(input);
+				li.appendChild(label);
+				popupList.appendChild(li);
+			});
 		});
+
 		tau.engine.createWidgets(popupList);
-		webClipList.forEach(function (webclip) {
+		appsList.forEach(function (app) {
+			app.webClipsList.forEach(function (webclip) {
+				if (webclip.isSelected) {
+					const webClipName = getWebClipName(webclip.url),
+						checkbox = document.querySelector("#" + webClipName);
 
-			if (activeWebClipList.includes(webclip)) {
-				const webClipName = getWebClipName(webclip),
-					checkbox = document.querySelector("#" + webClipName);
-
-				if (checkbox) {
-					checkbox.checked = true;
+					if (checkbox) {
+						checkbox.checked = true;
+					}
 				}
-			}
+			});
 		});
 	}
 
@@ -171,7 +218,16 @@ import Storage from "./clipping-storage.js";
 		burgerButton.addEventListener("click", onButtonClick);
 		popupButton.addEventListener("click", onPopupSubmit);
 
-		loadWebClipList();
+		appsList = storage.readAllFromStorage(Storage.elements.APPSLIST) || [];
+
+		//TODO: all webclips url should checked if they are valid
+
+		if (!appsList.length) {
+			loadWebClipList();
+		} else {
+			updateWebClipsUI();
+			updateWebClipListPopup();
+		}
 	}
 
 	function onPageBeforeShow(event) {

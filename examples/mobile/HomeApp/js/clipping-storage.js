@@ -1,6 +1,6 @@
 class Storage {
 	constructor() {
-		this.activeWebClips = JSON.parse(localStorage.getItem("activeWebClips")) || [];
+		this.appsList = JSON.parse(localStorage.getItem("appsList")) || [];
 	}
 
 	refreshStorage(element, data = []) {
@@ -19,6 +19,6 @@ class Storage {
 
 }
 
-Storage.elements = {ACTIVEWEBCLIPS: "activeWebClips"};
+Storage.elements = {APPSLIST: "appsList"};
 
 export default Storage;
