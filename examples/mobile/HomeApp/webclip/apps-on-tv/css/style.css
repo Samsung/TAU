@@ -1,40 +1,29 @@
-.app-image-grid {
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(3, 100px [col-start]);
-    grid-template-rows: auto;
-    gap: 10px;
-    justify-items: center;
-    justify-content: center;
-    padding: 20px;
+.ui-active-item {
+    transform: scale(1.2);
+}
+.ui-container {
+    max-height: 200px;
+}
+.ui-container > * {
+    transition: transform 200ms ease-in-out;
+    margin: 4px;
 }
 
-.app-icon-img {
-    width: 100px;
-    height: 100px;
-}
-
-.app-channel-content {
-    display: flex;
-}
-
-.app-movie-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-}
-
-.app-movie-poster {
-    width: 80%;
-    height: auto;
-}
-
-.app-movie-poster-next {
-    width: 50%;
-}
-
-.app-display-none {
+.ui-container-hidden {
     display: none;
+}
+
+.app-disney.ui-container .ui-container-item {
+    width: auto;
+}
+.app-disney.ui-container .ui-container-item img {
+    width: auto;
+    height: 200px;
+}
+.app-primevideo.ui-container .ui-container-item {
+    width: auto;
+}
+.app-primevideo.ui-container .ui-container-item img {
+    width: auto;
+    height: 200px;
 }
