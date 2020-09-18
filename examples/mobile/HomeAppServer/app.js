@@ -1,6 +1,4 @@
-const fs = require("fs"),
-	homeAppPath = "../HomeApp",
-	webClipDir = "webclip";
+const homeAppPath = "../HomeApp";
 
 var express = require("express");
 var path = require("path");
@@ -14,24 +12,52 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, homeAppPath)));
 
-app.get("/api/webcliplist", (req, res) => {
-	fs.readdir(homeAppPath + "/" + webClipDir, (err, files) => {
-		var result = [];
-
-		if (!err) {
-			files.forEach((file) => {
-				try {
-					if (fs.lstatSync(homeAppPath + "/" + webClipDir + "/" + file).isDirectory()) {
-						result.push(webClipDir + "/" + file)
-					}
-				} catch (e) {
-					// unable to figure out if element is directory or not
+app.get("/api/appslist", (req, res) => {
+	var result = [
+		{
+			"appID": "vUf39tzQ3s.UIComponents",
+			"isInstalled": true,
+			"isActive": true,
+			"webClipsList": [
+				{
+					url: "webclip/apps-on-tv"
+				},
+				{
+					url: "webclip/latest-news"
 				}
-			});
+			]
+		},
+		{
+			"appID": "vUf39tzQ3t.UIComponents",
+			"isInstalled": true,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/now-on-tv"
+				},
+				{
+					url: "webclip/restaurant"
+				}
+			]
+		},
+		{
+			"appID": "vUf39tzQ3r.UIComponents",
+			"isInstalled": false,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/tv-remote-control"
+				},
+				{
+					url: "webclip/weather"
+				}
+			]
 		}
-		res.header("Content-Type", "application/json");
-		res.send(JSON.stringify(result));
-	});
+	];
+
+	res.header("Content-Type", "application/json");
+	res.send(JSON.stringify(result));
+
 })
 
 
