@@ -1,16 +1,118 @@
-<div class="ui-card">
+<div class="ui-card ui-card-service" id="apps-on-tv">
 	<link rel="stylesheet" href="css/style.css" />
 	<div class="ui-content-subheader">
 		Apps on TV
 	</div>
-	<div class="ui-content-area">
-		<div class="app-image-grid">
-			<img src="./images/netflix.png" alt="Netflix" class="app-icon-img"/>
-			<img src="./images/hbogo.png" alt="HBO GO" class="app-icon-img"/>
-			<img src="./images/primevideo.png" alt="Amazon Prime Video" class="app-icon-img"/>
-			<img src="./images/disneyplus.png" alt="Disney Plus" class="app-icon-img"/>
-			<img src="./images/youtube.png" alt="Youtube" class="app-icon-img"/>
-			<img src="./images/twitch.png" alt="Twitch" class="app-icon-img"/>
+	<div class="ui-content" data-scroll="x">
+		<div class="ui-container app-youtube ui-container-active">
+			<div class="ui-container-item">
+				<img src="images/youtube/yt1.png" alt="image 1">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/youtube/yt2.png" alt="image 2">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/youtube/yt3.png" alt="image 3">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/youtube/yt4.png" alt="image 4">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/youtube/yt5.png" alt="image 5">
+			</div>
+		</div>
+
+		<div class="ui-container app-disney ui-container-hidden">
+			<div class="ui-container-item">
+				<img src="images/disney/cinderella.jpg" alt="image 1">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/disney/frozen.jpeg" alt="image 2">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/disney/mermaid.jpg" alt="image 3">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/disney/mulan.jpg" alt="image 4">
+			</div>
+		</div>
+
+		<div class="ui-container app-primevideo ui-container-hidden">
+			<div class="ui-container-item">
+				<img src="images/movies/a-star-is-born.jpg" alt="image 1">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/movies/aladdin.jpg" alt="image 2">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/movies/ant_man.jpg" alt="image 3">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/movies/John_Wick.jpg" alt="image 4">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/movies/John_Wick3.jpg" alt="image 5">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/movies/joker.jpeg" alt="image 6">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/movies/matrix.jpg" alt="image 7">
+			</div>
+		</div>
+
+		<div class="ui-container app-smartthings ui-container-hidden">
+			<div class="ui-container-item">
+				<img src="images/smartthings/st1.png" alt="image 1">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/smartthings/st2.png" alt="image 2">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/smartthings/st3.png" alt="image 3">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/smartthings/st4.png" alt="image 4">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/smartthings/st5.png" alt="image 5">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/smartthings/st6.png" alt="image 6">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/smartthings/st7.png" alt="image 7">
+			</div>
+		</div>
+
+		<div class="ui-container app-internet ui-container-hidden">
+			<div class="ui-container-item">
+				<img src="images/webpage/page1.png" alt="image 1">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/webpage/page2.png" alt="image 2">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/webpage/page3.png" alt="image 3">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/webpage/page4.png" alt="image 4">
+			</div>
+			<div class="ui-container-item">
+				<img src="images/webpage/page1.png" alt="image 5">
+			</div>
 		</div>
 	</div>
+
+	<div class="ui-content" data-scroll="x">
+		<div class="ui-container webclip-apps">
+			<img src="./images/youtube.png" alt="Youtube" class="app-icon-img ui-favorite ui-active-item" data-container="youtube"/>
+			<img src="./images/disneyplus.png" alt="Disney Plus" class="app-icon-img ui-favorite" data-container="disney"/>
+			<img src="./images/primevideo.png" alt="Amazon Prime Video" class="app-icon-img ui-favorite" data-container="primevideo"/>
+			<img src="./images/smartthings.png" alt="Smartthings" class="app-icon-img ui-favorite" data-container="smartthings"/>
+			<img src="./images/internet.png" alt="internet" class="app-icon-img ui-favorite" data-container="internet"/>
+		</div>
+	</div>
+
+	<script src="js/app.js"></script>
 </div>
