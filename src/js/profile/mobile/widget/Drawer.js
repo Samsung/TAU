@@ -62,7 +62,8 @@
 				 */
 
 				self.options.dragEdge = 0.05;
-				self.options.width = 0.75 * window.screen.width;
+				self.options.width = (window.screen.width >= 960) ? 360 : // for TV HD+
+					0.75 * window.screen.width; // mobile
 				self.options.height = window.screen.height;
 			};
 
