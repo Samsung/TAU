@@ -555,9 +555,9 @@
 				var self = this;
 
 				if (window.screen.height <= SCREEN_HEIGHT_LIMIT_FOR_EXPANDING) {
-					self.option("expandingEnabled", false);
+					self._lockExpanding = true;
 				} else {
-					self.option("expandingEnabled", true);
+					self._lockExpanding = false;
 				}
 			}
 
