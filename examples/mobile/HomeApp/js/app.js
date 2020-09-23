@@ -168,14 +168,22 @@ import Storage from "./clipping-storage.js";
 				input.setAttribute("type", "checkbox");
 				input.setAttribute("id", webClipName);
 
-				label.setAttribute("for", "latest-news-ckeck");
+				label.setAttribute("for", webClipName);
 				label.classList.add("ui-li-text");
-				//TODO: we should read webclip description for label
-				label.innerHTML = webClipName;
+
+				fetch(`${webclip.url}/manifest.json`)
+					.then((out) => out.json())
+					.then((manifest) => {
+						label.innerHTML = manifest.description;
+					})
+					.catch((err) => {
+						console.error(err);
+					});
 
 				li.appendChild(input);
 				li.appendChild(label);
 				popupList.appendChild(li);
+
 			});
 		});
 
