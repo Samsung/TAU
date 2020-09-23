@@ -150,10 +150,10 @@ import Storage from "./clipping-storage.js";
 
 		var popupList = document.getElementById("popup-list");
 
-		// remove previous
-		popupList.childNodes.forEach(function (li) {
-			popupList.removeChild(li);
-		});
+		// remove previous li items
+		while (popupList.firstChild) {
+			popupList.firstChild.remove()
+		}
 
 		appsList.forEach(function (app) {
 			app.webClipsList.forEach(function (webclip) {
