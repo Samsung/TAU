@@ -9,82 +9,76 @@ import Storage from "./clipping-storage.js";
 		appsList = [];
 
 	const defaultList = [
-		{
-			"appID": "vUf39tzQ3s.UIComponents",
-			"isInstalled": true,
-			"isActive": true,
-			"webClipsList": [
-				{
-					url: "webclip/apps-on-tv",
-					isSelected: false
-				},
-				{
-					url: "webclip/latest-news",
-					isSelected: false
-				}
-			]
-		},
-		{
-			"appID": "vUf39tzQ3t.UIComponents",
-			"isInstalled": true,
-			"isActive": false,
-			"webClipsList": [
-				{
-					url: "webclip/now-on-tv",
-					isSelected: false
-				},
-				{
-					url: "webclip/restaurant",
-					isSelected: true
-				}
-			]
-		},
-		{
-			"appID": "vUf39tzQ3r.UIComponents",
-			"isInstalled": false,
-			"isActive": false,
-			"webClipsList": [
-				{
-					url: "webclip/tv-remote-control",
-					isSelected: true
-				},
-				{
-					url: "webclip/weather",
-					isSelected: true
-				}
-			]
-		}
-	];
+			{
+				"appID": "vUf39tzQ3s.UIComponents",
+				"isInstalled": true,
+				"isActive": true,
+				"webClipsList": [
+					{
+						url: "webclip/apps-on-tv",
+						isSelected: false
+					},
+					{
+						url: "webclip/latest-news",
+						isSelected: false
+					}
+				]
+			},
+			{
+				"appID": "vUf39tzQ3t.UIComponents",
+				"isInstalled": true,
+				"isActive": false,
+				"webClipsList": [
+					{
+						url: "webclip/now-on-tv",
+						isSelected: false
+					},
+					{
+						url: "webclip/restaurant",
+						isSelected: true
+					}
+				]
+			},
+			{
+				"appID": "vUf39tzQ3r.UIComponents",
+				"isInstalled": false,
+				"isActive": false,
+				"webClipsList": [
+					{
+						url: "webclip/tv-remote-control",
+						isSelected: true
+					},
+					{
+						url: "webclip/weather",
+						isSelected: true
+					}
+				]
+			}
+		],
+		getAppsList = new Promise((resolve) => {
+			const requestURL = "api/appslist";
+
+			fetch(requestURL)
+				.then((response) => response.json())
+				.then((data) => {
+					data.forEach((app) => {
+						app.webClipsList.forEach((webclip) => {
+							webclip.isSelected = false;
+						});
+					});
+					resolve(data);
+				})
+				.catch(() => {
+					// use default apps list if sth wrong
+					resolve(defaultList);
+				})
+		});
+
 
 	function changeTheme(event) {
 		tau.theme.setTheme(event.target.value);
 	}
 
-	function loadWebClipList() {
-		const requestURL = "api/appslist";
-
-		fetch(requestURL)
-			.then((response) => response.json())
-			.then((data) => {
-				appsList = data;
-				appsList.forEach((app) => {
-					app.webClipsList.forEach((webclip) => {
-						webclip.isSelected = false;
-					});
-				});
-			})
-			.catch(() => {
-				// use default apps list if sth wrong
-				appsList = defaultList;
-			})
-			.finally(() => {
-
-				storage.refreshStorage(Storage.elements.APPSLIST, appsList);
-
-				updateWebClipsUI();
-				updateWebClipListPopup();
-			});
-	}
 
 	function onPopupSubmit() {
 		appsList.forEach(function (app) {
@@ -223,7 +217,12 @@ import Storage from "./clipping-storage.js";
 		//TODO: all webclips url should checked if they are valid
 
 		if (!appsList.length) {
-			loadWebClipList();
+			getAppsList((apps) => {
+				appsList = apps;
+				updateWebClipsUI();
+				updateWebClipListPopup();
+				storage.refreshStorage(Storage.elements.APPSLIST, apps);
+			});
 		} else {
 			updateWebClipsUI();
 			updateWebClipListPopup();
