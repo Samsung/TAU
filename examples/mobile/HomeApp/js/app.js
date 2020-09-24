@@ -159,6 +159,28 @@ import Storage from "./clipping-storage.js";
 		socket = new WebSocket(wsURL);
 		socket.addEventListener("message", onWSMessage);
 	}
+	async function validateAppsList() {
+		const promisesList = [],
+			indexesList = [];
+		let	i,
+			j,
+			responses = [];
+
+		for (i = 0; i < appsList.length; i++) {
+			for (j = 0; j < appsList[i].webClipsList.length; j++) {
+				promisesList.push(fetch(appsList[i].webClipsList[j].url + "\\webclip.html"));
+				indexesList.push({appIndex: i, webClipIndex: j})
+			}
+		}
+
+		responses = await Promise.allSettled(promisesList);
+
+		for (i = 0; i < responses.length; i++) {
+			if (responses[i].status === "rejected" || !responses[i].value.ok) {
+				appsList[indexesList[i].appIndex].webClipsList.splice(indexesList[i].webClipIndex, 1);
+			}
+		}
+	}
 
 	function changeTheme(event) {
 		tau.theme.setTheme(event.target.value);
@@ -316,10 +338,13 @@ import Storage from "./clipping-storage.js";
 		getAppsList.then((apps) => {
 			updateAppsList(apps);
 		}).finally(() => {
-			storage.refreshStorage(Storage.elements.APPSLIST, appsList);
-			updateWebClipsUI();
-			updateWebClipListPopup();
+			validateAppsList().then(() => {
+				storage.refreshStorage(Storage.elements.APPSLIST, appsList);
+				updateWebClipsUI();
+				updateWebClipListPopup();
+			});
 		});
+
 	}
 
 	function onPageBeforeShow(event) {
