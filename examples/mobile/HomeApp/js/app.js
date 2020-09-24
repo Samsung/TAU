@@ -217,7 +217,7 @@ import Storage from "./clipping-storage.js";
 		//TODO: all webclips url should checked if they are valid
 
 		if (!appsList.length) {
-			getAppsList((apps) => {
+			getAppsList.then((apps) => {
 				appsList = apps;
 				updateWebClipsUI();
 				updateWebClipListPopup();
