@@ -122,6 +122,15 @@ import Storage from "./clipping-storage.js";
 				(app2.isActive) ? 0 : -1 : 1
 		});
 
+		updateManifests();
+
+		appsList = appsList.forEach((app) => {
+
+			app.webClipsList.sort((a, b) => {
+				return a.manifest.cardType - b.manifest.cardType;
+			});
+		})
+
 		// order has been changed
 		if (currentOrder !== appsList.reduce(function (prev, app) {
 			return prev + app.appID;
@@ -148,6 +157,18 @@ import Storage from "./clipping-storage.js";
 			tau.log("nothing change");
 		}
 
+	}
+
+	function updateManifests() {
+		for (const app of appsList) {
+			for (const webclip of app.webClipsList) {
+				fetch(`${webclip.url}/manifest.json`)
+					.then((data) => data.json())
+					.then((manifest) => {
+						webclip.manifest = manifest;
+					});
+			}
+		}
 	}
 
 	function addWSListener(wsPort) {
@@ -274,15 +295,7 @@ import Storage from "./clipping-storage.js";
 
 				label.setAttribute("for", webClipName);
 				label.classList.add("ui-li-text");
-
-				fetch(`${webclip.url}/manifest.json`)
-					.then((out) => out.json())
-					.then((manifest) => {
-						label.innerHTML = manifest.description;
-					})
-					.catch((err) => {
-						console.error(err);
-					});
+				label.innerHTML = webclip.manifest.description;
 
 				li.appendChild(input);
 				li.appendChild(label);
