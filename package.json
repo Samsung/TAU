@@ -4,19 +4,19 @@
   "description": "Tizen Advanced UI",
   "version": "1.2.7",
   "scripts": {
-    "build": "grunt build",
+    "build": "node --harmony ./node_modules/.bin/grunt build",
     "postinstall": "npm run build",
     "grunt": "grunt",
     "http-server": "http-server -p 8888 -a localhost",
     "preinstall": "./check-node.py && ./install-hooks",
-    "test": "grunt test",
+    "test": "node --harmony ./node_modules/.bin/grunt test",
     "test:karma": "karma start tests/karma/all.conf.js",
     "test:karma-single-test": "karma start tests/karma/single.conf.js",
     "lint-check": "lint-diff $TRAVIS_COMMIT_RANGE",
     "spellcheck": "cspell 'src/**/*.js' 'src/**/*.html' 'examples/mobile/UIComponents/**/*.js' 'examples/wearable/UIComponents/**/*.js' 'examples/mobile/UIComponents/**/*.html' 'examples/wearable/UIComponents/**/*.html'"
   },
-  "engines" : {
-	"node": "6.16"
+  "engines": {
+    "node": "6.16"
   },
   "devDependencies": {
     "async": "^0.9.2",
