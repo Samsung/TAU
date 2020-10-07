@@ -16,7 +16,7 @@ import Storage from "./clipping-storage.js";
 			"webClipsList": [
 				{
 					url: "webclip/apps-on-tv",
-					isSelected: false
+					isSelected: true
 				},
 				{
 					url: "webclip/latest-news",
@@ -31,11 +31,11 @@ import Storage from "./clipping-storage.js";
 			"webClipsList": [
 				{
 					url: "webclip/now-on-tv",
-					isSelected: false
+					isSelected: true
 				},
 				{
 					url: "webclip/restaurant",
-					isSelected: true
+					isSelected: false
 				}
 			]
 		},
@@ -46,11 +46,11 @@ import Storage from "./clipping-storage.js";
 			"webClipsList": [
 				{
 					url: "webclip/tv-remote-control",
-					isSelected: true
+					isSelected: false
 				},
 				{
 					url: "webclip/weather",
-					isSelected: true
+					isSelected: false
 				}
 			]
 		}],
@@ -63,8 +63,8 @@ import Storage from "./clipping-storage.js";
 					addWSListener(data.wsPort);
 					resolve(data.apps);
 				})
-				.catch(() => {
-					reject();
+				.catch((e) => {
+					reject(e);
 				})
 		});
 
@@ -97,9 +97,6 @@ import Storage from "./clipping-storage.js";
 
 		// add apps to local apps list
 		added.forEach(function (remoteApp) {
-			remoteApp.webClipsList.forEach((webclip) => {
-				webclip.isSelected = !!remoteApp.isSelected;
-			});
 			appsList.push(remoteApp);
 		});
 
@@ -330,20 +327,24 @@ import Storage from "./clipping-storage.js";
 
 		// use apps list from storage or default apps list if sth wrong
 		appsList = storage.readAllFromStorage(Storage.elements.APPSLIST);
-		if (appsList.length === 0) {
-			updateAppsList(defaultList);
-		}
 
 		// check webclips on remote server
 		getAppsList.then((apps) => {
 			updateAppsList(apps);
-		}).finally(() => {
-			validateAppsList().then(() => {
-				storage.refreshStorage(Storage.elements.APPSLIST, appsList);
-				updateWebClipsUI();
-				updateWebClipListPopup();
+		})
+			.catch((e) => {
+				console.warn("Error getting app lits: " + e.message);
+				if (appsList.length === 0) {
+					updateAppsList(defaultList);
+				}
+			})
+			.finally(() => {
+				validateAppsList().then(() => {
+					storage.refreshStorage(Storage.elements.APPSLIST, appsList);
+					updateWebClipsUI();
+					updateWebClipListPopup();
+				});
 			});
-		});
 
 	}
 
