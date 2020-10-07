@@ -69,6 +69,17 @@ import Storage from "./clipping-storage.js";
 					isSelected: false
 				}
 			]
+		},
+		{
+			"appID": "vUf39tzQvi.Video",
+			"isInstalled": false,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/video-service",
+					isSelected: true
+				}
+			]
 		}],
 		getAppsList = new Promise((resolve, reject) => {
 			const requestURL = "api/register";

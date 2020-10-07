@@ -211,6 +211,7 @@
 					element.classList.add(classes.uiSectionChanger);
 
 					self.scroller.style.position = "absolute";
+					self.scroller.classList.add("ui-section-changer-container");
 					self.orientation = options.orientation === "horizontal" ? Orientation.HORIZONTAL : Orientation.VERTICAL;
 
 					return element;

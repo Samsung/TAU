@@ -1,4 +1,5 @@
 .app-full-height {
     display: flex;
-    height: -webkit-fill-available;
+    height: 100vh;
+    max-height: -webkit-fill-available;
 }
