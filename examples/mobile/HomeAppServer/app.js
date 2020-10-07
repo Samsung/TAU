@@ -47,6 +47,17 @@ var logger = require("morgan"),
 				url: "webclip/weather"
 			}
 		]
+	},
+	{
+		"appID": "vUf39tzQvi.Video",
+		"isInstalled": false,
+		"isActive": false,
+		"webClipsList": [
+			{
+				url: "webclip/video-service",
+				isSelected: true
+			}
+		]
 	}];
 
 app.use(logger("dev"));

@@ -1,0 +1,27 @@
+
+.app-video-control .ui-btn.ui-btn-flat.ui-btn-icon {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+}
+.app-control-bar .ui-btn.ui-btn-contained {
+    font-size: 13px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+.app-control-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+.app-control-status {
+    padding: 20px;
+}
+.app-control-status .app-control-video-title {
+    font-size: 20px;
+    color: var(--text-color);
+}
+.app-control-status .app-control-video-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary-color);
+}
