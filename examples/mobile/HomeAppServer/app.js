@@ -95,6 +95,18 @@ var express = require("express"),
 			}
 		],
 		"action": "add"
+	},
+	{
+		"appID": "vUf39tzQvi.Video",
+		"isInstalled": false,
+		"isActive": false,
+		"webClipsList": [
+			{
+				url: "webclip/video-service",
+				isSelected: true
+			}
+		],
+		"action": "add"
 	}];
 
 app.use(logger("dev"));
