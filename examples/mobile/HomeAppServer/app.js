@@ -17,7 +17,8 @@ var logger = require("morgan"),
 		"isActive": true,
 		"webClipsList": [
 			{
-				url: "webclip/apps-on-tv"
+				url: "webclip/apps-on-tv",
+				isSelected: "true"
 			},
 			{
 				url: "webclip/latest-news"
@@ -30,7 +31,8 @@ var logger = require("morgan"),
 		"isActive": false,
 		"webClipsList": [
 			{
-				url: "webclip/now-on-tv"
+				url: "webclip/now-on-tv",
+				isSelected: "true"
 			},
 			{
 				url: "webclip/restaurant"
