@@ -1,12 +1,14 @@
 const homeAppPath = "../HomeApp";
 const WebSocket = require("ws");
 
-var express = require("express");
+var express = require("express"),
+	socketPort = process.env.PORT_SOCKET || 0;
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan"),
 	app = express(),
 	ws,
+	wsPort,
 	pingCount = 0,
 	result = {},
 	apps = [{
@@ -55,8 +57,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, homeAppPath)));
 
+wsPort = startWS();
+
 app.get("/api/register", (req, res) => {
-	const wsPort = startWS();
 
 	result.apps = apps;
 	result.wsPort = wsPort;
@@ -74,7 +77,7 @@ function runPing(ws) {
 				apps: apps
 			}));
 		} catch (e) {
-			console.warn("ws error");
+			console.warn("setInterval: " + e.message);
 		}
 
 		// @test
@@ -109,7 +112,7 @@ function onWSConnection(ws) {
 }
 
 function startWS() {
-	var server = app.listen(0);
+	var server = app.listen(socketPort);
 
 	ws = new WebSocket.Server({server});
 	ws.on("connection", onWSConnection);
