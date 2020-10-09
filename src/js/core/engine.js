@@ -755,10 +755,6 @@
 					element = document.getElementById(element);
 				}
 
-				//>>excludeStart("tauDebug", pragmas.tauDebug);
-				ns.log("Removing all widgets for element:", element);
-				//>>excludeEnd("tauDebug");
-
 				// If type is not defined all widgets should be removed
 				// this is for backward compatibility
 				widgetInstance = getBinding(element, type);
@@ -815,10 +811,6 @@
 				if (typeof element === TYPE_STRING) {
 					element = document.getElementById(element);
 				}
-
-				//>>excludeStart("tauDebug", pragmas.tauDebug);
-				ns.log("Removing all widgets for element:", element);
-				//>>excludeEnd("tauDebug");
 
 				if (!childOnly) {
 					// If type is not defined all widgets should be removed
