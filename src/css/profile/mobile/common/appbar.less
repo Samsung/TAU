@@ -259,11 +259,47 @@
 		line-height: 14 * @px_base;
 		margin-left: 18 * @px_base;
 		margin-right: 18 * @px_base;
-		
+
 		input[type="checkbox"].ui-checkbox {
 			margin: 0 0 -3px 0;
 		}
 	}
+
+	.ui-appbar-container {
+		height: 60 * @px_base;
+		display: flex;
+		align-items: center;
+		order: 10;
+		background-color: var(--background-area-color);
+		border-radius: 26 * @px_base;
+		overflow: hidden;
+		box-sizing: border-box;
+		box-shadow: 0 0 0 0.25 * @px_base var(--content-area-line-color) inset;
+
+		> :first-child {
+			margin-left: 24 * @px_base;
+		}
+		.ui-title {
+			flex: 1;
+		}
+
+		.ui-icon {
+			width: 32 * @px_base;
+			height: 32 * @px_base;
+			overflow: hidden;
+			margin-right: 4 * @px_base;
+
+			img {
+				width: 100%;
+			}
+		}
+
+		.ui-btn.ui-btn-icon.ui-btn-icon-only {
+			height: 48 * @px_base;
+			max-width: 48 * @px_base;
+		}
+	}
+
 }
 
 @media all and (min-height: 580px) and (orientation: landscape) {
