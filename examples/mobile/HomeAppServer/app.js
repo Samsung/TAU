@@ -26,6 +26,17 @@ var logger = require("morgan"),
 		]
 	},
 	{
+		"appID": "vUf39tzQ4s.UIComponents",
+		"isInstalled": false,
+		"isActive": false,
+		"webClipsList": [
+			{
+				url: "webclip/netflix",
+				isSelected: true
+			}
+		]
+	},
+	{
 		"appID": "vUf39tzQ3t.UIComponents",
 		"isInstalled": true,
 		"isActive": false,
