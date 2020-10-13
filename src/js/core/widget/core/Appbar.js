@@ -63,12 +63,14 @@
 						actionButtonsContainer: null,
 						page: null,
 						selectAll: null,
-						bottomBar: null
+						bottomBar: null,
+						instantContainers: []
 					};
 					self._expandedHeight = nominalHeights.EXPANDED;
 					self._appbarState = states.COLLAPSED;
 					self._dragStartingHeight = 0;
 					self._currentHeight = 0;
+					self._instantContainersHeight = 0;
 					self._scrolledToTop = true;
 					self._lockExpanding = false;
 					self._calculateExtendedHight();
@@ -80,6 +82,7 @@
 					title: classPrefix + "-title",
 					leftIconsContainer: classPrefix + "-left-icons-container",
 					actionButtonsContainer: classPrefix + "-action-buttons-container",
+					instantContainer: classPrefix + "-container",
 					titleContainer: classPrefix + "-title-container",
 					hasMultilineTitle: classPrefix + "-has-multiline",
 					hasSubtitle: classPrefix + "-has-subtitle",
@@ -148,9 +151,44 @@
 				var self = this;
 
 				self._createContainers(element);
+				self._findInstantContainers(element);
 				self._readTitleType(element);
 				self._setTitleType(element, self.options.titleType);
 				return element;
+			};
+
+			/**
+			 * Method set new height of appbar if instant container exists
+			 * @param {HTMLElement} element
+			 * @method _findInstantContainers
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._findInstantContainers = function (element) {
+				var self = this,
+					instantContainersHeight = 0,
+					controlsContainer = self._ui.controlsContainer;
+
+				self._ui.instantContainers = [].slice.call(element.querySelectorAll("." + classes.instantContainer));
+
+				// calculate instant containers height
+				element.style.height = "auto";
+				self._ui.instantContainers.forEach(function (container) {
+					instantContainersHeight += container.offsetHeight;
+				});
+
+				// increase height of appbar and change bottom possition of control container
+				if (instantContainersHeight > 0) {
+					self._expandedHeight += instantContainersHeight;
+					self._currentHeight += instantContainersHeight;
+					if (controlsContainer) {
+						controlsContainer.style.bottom = instantContainersHeight + "px";
+					}
+					self._instantContainersHeight = instantContainersHeight
+				}
+
+				// set initial height of collapsed appbar
+				element.style.height = nominalHeights.COLLAPSED + self._instantContainersHeight + "px";
 			};
 
 			/**
@@ -181,7 +219,7 @@
 
 				if (screenHeight >= 580 && screenHeight < 960 && screenWidth > screenHeight) { // lanscape
 					self._expandedHeight = screenHeight * 0.3 - bottomMarginHeight;
-				} else if (screenHeight >= 580 && screenHeight < 960 && screenWidth < screenHeight) { // portrait
+				} else if (screenHeight >= 580 && screenHeight < 960 && screenWidth <= screenHeight) { // portrait
 					self._expandedHeight = screenHeight * 0.3967 - bottomMarginHeight;
 				} else if (screenHeight >= 960) {
 					self._expandedHeight = screenHeight * 0.25 - bottomMarginHeight;
@@ -429,7 +467,7 @@
 				var self = this,
 					element = self.element;
 
-				element.style.height = "";
+				element.style.height = self._expandedHeight + "px";
 				element.classList.add(classes.expanded);
 				self._appbarState = states.EXPANDED;
 				self._setTitlesOpacity(1);
@@ -462,8 +500,9 @@
 				var self = this,
 					element = self.element;
 
-				element.style.height = "";
-				self._currentHeight = 0;
+				self._currentHeight = self._instantContainersHeight;
+				element.style.height = nominalHeights.COLLAPSED + self._instantContainersHeight + "px";
+
 				element.classList.remove(classes.expanded);
 				self._appbarState = states.COLLAPSED;
 				self._setTitlesOpacity(0);

@@ -205,7 +205,7 @@
 
 			widget.collapse();
 
-			assert.equal(widget.element.style.height, "", "collapse: element height has been changed");
+			assert.equal(widget.element.style.height, "56px", "collapse: element height has been changed");
 			assert.equal(widget._currentHeight, 0, "_currentHeight equals 0");
 			assert.ok(!widget.element.classList.contains("ui-appbar-expanded"), "element doesn't contain expanded class");
 			assert.equal(widget._appbarState, "COLLAPSED", "_appbar state is collapsed");
@@ -225,7 +225,7 @@
 
 			widget.expand();
 
-			assert.equal(widget.element.style.height, "", "expand: element height has been changed");
+			assert.notEqual(widget.element.style.height, "56px", "expand: element height has been changed");
 			assert.ok(widget.element.classList.contains("ui-appbar-expanded"), "element contains expanded class");
 			assert.equal(widget._appbarState, "EXPANDED", "_appbar state is expanded");
 		});

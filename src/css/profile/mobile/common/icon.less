@@ -43,6 +43,18 @@
 	}
 	&-right::after {
 		mask-image: url("images/3_Controllers/tw_expander_open_mtrl.svg");
-		transform: translate(-50%, -50%) rotateZ(-90deg);
+	}
+	&-next::after {
+		mask-image: url(images/3_Controllers/tw_expander_close_mtrl.svg);
+	}
+}
+.ui-btn {
+	&.ui-icon {
+		&-next::after, &-right::after {
+			transform: translate(-50%, -50%) rotateZ(90deg);
+		}
+		&-left::after {
+			transform: translate(-50%, -50%) rotateZ(-90deg);
+		}
 	}
 }
