@@ -198,7 +198,7 @@ import Storage from "./clipping-storage.js";
 		appsList.forEach(function (app) {
 			app.webClipsList.forEach(function (webclip) {
 				const webClipName = getWebClipName(webclip.url),
-					checkbox = document.querySelector("#" + webClipName);
+					checkbox = document.getElementById("popup-checkbox-" + webClipName);
 
 				webclip.isSelected = checkbox.checked;
 			})
@@ -281,9 +281,9 @@ import Storage from "./clipping-storage.js";
 				li.classList.add("ui-group-index");
 
 				input.setAttribute("type", "checkbox");
-				input.setAttribute("id", webClipName);
+				input.setAttribute("id", "popup-checkbox-" + webClipName);
 
-				label.setAttribute("for", webClipName);
+				label.setAttribute("for", "popup-checkbox-" + webClipName);
 				label.classList.add("ui-li-text");
 
 				fetch(`${webclip.url}/manifest.json`)
@@ -308,7 +308,7 @@ import Storage from "./clipping-storage.js";
 			app.webClipsList.forEach(function (webclip) {
 				if (webclip.isSelected) {
 					const webClipName = getWebClipName(webclip.url),
-						checkbox = document.querySelector("#" + webClipName);
+						checkbox = document.getElementById("popup-checkbox-" + webClipName);
 
 					if (checkbox) {
 						checkbox.checked = true;
