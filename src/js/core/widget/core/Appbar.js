@@ -157,19 +157,9 @@
 				return element;
 			};
 
-			/**
-			 * Method set new height of appbar if instant container exists
-			 * @param {HTMLElement} element
-			 * @method _findInstantContainers
-			 * @member ns.widget.core.Appbar
-			 * @protected
-			 */
-			prototype._findInstantContainers = function (element) {
+			prototype._calculateInstantContainers = function (element) {
 				var self = this,
-					instantContainersHeight = 0,
-					controlsContainer = self._ui.controlsContainer;
-
-				self._ui.instantContainers = [].slice.call(element.querySelectorAll("." + classes.instantContainer));
+					instantContainersHeight = 0;
 
 				// calculate instant containers height
 				element.style.height = "auto";
@@ -177,8 +167,17 @@
 					instantContainersHeight += container.offsetHeight;
 				});
 
+				return instantContainersHeight;
+			};
+
+			prototype._updateAppbarDimensions = function (element) {
+				var self = this,
+					instantContainersHeight = self._instantContainersHeight,
+					controlsContainer = self._ui.controlsContainer;
+
 				// increase height of appbar and change bottom possition of control container
 				if (instantContainersHeight > 0) {
+					self._calculateExtendedHight();
 					self._expandedHeight += instantContainersHeight;
 					self._currentHeight += instantContainersHeight;
 					if (controlsContainer) {
@@ -192,15 +191,75 @@
 			};
 
 			/**
+			 * Method set new height of appbar if instant container exists
+			 * @param {HTMLElement} element
+			 * @method _findInstantContainers
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype._findInstantContainers = function (element) {
+				var self = this;
+
+				self._ui.instantContainers = [].slice.call(element.querySelectorAll("." + classes.instantContainer));
+
+				self._instantContainersHeight = self._calculateInstantContainers(element);
+				self._updateAppbarDimensions(element);
+			};
+
+			/**
+			 * Add Html element as instant container
+			 * @param {HTMLElement} container
+			 * @method addInstantContainer
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype.addInstantContainer = function (container) {
+				var self = this;
+
+				if (container && container instanceof HTMLElement) {
+					container.classList.add(classes.instantContainer);
+					self.element.appendChild(container);
+					self.refresh();
+				} else {
+					ns.warn("AppBar: method addInstantContainer needs argument");
+				}
+			}
+
+			/**
+			 * Remove instant container
+			 * @param {HTMLElement} container
+			 * @method removeInstantContainer
+			 * @member ns.widget.core.Appbar
+			 * @protected
+			 */
+			prototype.removeInstantContainer = function (container) {
+				var self = this;
+
+				if (container && container instanceof HTMLElement) {
+					if (container.parentElement) {
+						container.parentElement.removeChild(container);
+						self.refresh();
+					}
+				} else {
+					ns.warn("AppBar: method removeInstantContainer needs argument");
+				}
+			}
+
+			/**
 			 * Refresh the widget
 			 * @method _refresh
 			 * @member ns.widget.core.Appbar
+			 * @param {HTMLElement} element
 			 * @protected
 			 */
 			prototype._refresh = function (element) {
 				var self = this;
 
-				self._setLineType(element);
+				element = element || self.element;
+				self._findInstantContainers(element);
+				self._ui.instantContainers.forEach(function (container) {
+					ns.engine.createWidgets(container);
+				});
 			};
 
 			/**
