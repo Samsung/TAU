@@ -1,11 +1,11 @@
-const homeAppPath = "../HomeApp";
-const WebSocket = require("ws");
+const homeAppPath = "../HomeApp",
+	WebSocket = require("ws");
 
 var express = require("express"),
-	socketPort = process.env.PORT_SOCKET || 0;
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan"),
+	socketPort = process.env.PORT_SOCKET || 0,
+	path = require("path"),
+	cookieParser = require("cookie-parser"),
+	logger = require("morgan"),
 	app = express(),
 	ws,
 	wsPort,
@@ -21,9 +21,11 @@ var logger = require("morgan"),
 				isSelected: "true"
 			},
 			{
-				url: "webclip/latest-news"
+				url: "webclip/latest-news",
+				isSelected: "true"
 			}
-		]
+		],
+		"action": "add"
 	},
 	{
 		"appID": "vUf39tzQ4s.UIComponents",
@@ -34,7 +36,8 @@ var logger = require("morgan"),
 				url: "webclip/netflix",
 				isSelected: true
 			}
-		]
+		],
+		"action": "add"
 	},
 	{
 		"appID": "vUf39tzQ3t.UIComponents",
@@ -48,7 +51,8 @@ var logger = require("morgan"),
 			{
 				url: "webclip/restaurant"
 			}
-		]
+		],
+		"action": "add"
 	},
 	{
 		"appID": "vUf39tzQ3r.UIComponents",
@@ -61,7 +65,36 @@ var logger = require("morgan"),
 			{
 				url: "webclip/weather"
 			}
-		]
+		],
+		"action": "add"
+	}],
+	sampleDiff = [{
+		"appID": "vUf39tzQ3s.UIComponents",
+		"isInstalled": true,
+		"isActive": true,
+		"webClipsList": [
+			{
+				url: "webclip/apps-on-tv",
+				isSelected: "true"
+			},
+			{
+				url: "webclip/latest-news",
+				isSelected: "true"
+			}
+		],
+		"action": "add"
+	},
+	{
+		"appID": "vUf39tzQ4s.UIComponents",
+		"isInstalled": false,
+		"isActive": false,
+		"webClipsList": [
+			{
+				url: "webclip/netflix",
+				isSelected: true
+			}
+		],
+		"action": "add"
 	}];
 
 app.use(logger("dev"));
@@ -78,7 +111,10 @@ app.get("/api/register", (req, res) => {
 	result.wsPort = wsPort;
 
 	res.header("Content-Type", "application/json");
-	res.send(JSON.stringify(result));
+	res.send(JSON.stringify({
+		type: "full",
+		data: result
+	}));
 });
 
 function runPing(ws) {
@@ -87,7 +123,8 @@ function runPing(ws) {
 		pingCount++;
 		try {
 			ws.send(JSON.stringify({
-				apps: apps
+				type: "diff",
+				data: sampleDiff
 			}));
 		} catch (e) {
 			console.warn("setInterval: " + e.message);
@@ -96,11 +133,11 @@ function runPing(ws) {
 		// @test
 		// active app rotation
 		if (pingCount % 3) {
-			apps[0].isActive = false;
-			apps[1].isActive = true;
+			sampleDiff[0].isActive = false;
+			sampleDiff[1].isActive = true;
 		} else {
-			apps[0].isActive = true;
-			apps[1].isActive = false;
+			sampleDiff[0].isActive = true;
+			sampleDiff[1].isActive = false;
 		}
 		// end test
 	}, 10000);
@@ -117,7 +154,8 @@ function onWSConnection(ws) {
 
 	// send message
 	ws.send(JSON.stringify({
-		apps: apps
+		type: "diff",
+		data: apps
 	}));
 
 	// ping
