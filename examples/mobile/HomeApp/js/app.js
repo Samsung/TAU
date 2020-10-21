@@ -75,9 +75,9 @@ import Storage from "./clipping-storage.js";
 
 			fetch(requestURL)
 				.then((response) => response.json())
-				.then((data) => {
-					addWSListener(data.wsPort);
-					resolve(data.apps);
+				.then((response) => {
+					addWSListener(response.data.wsPort);
+					resolve(response.data.apps);
 				})
 				.catch((e) => {
 					reject(e);
@@ -131,10 +131,76 @@ import Storage from "./clipping-storage.js";
 		appBar.removeInstantContainer(card);
 	}
 
-	function updateAppsList(apps) {
+	function updateAppsList(message) {
+		if (message.type === "full") {
+			return updateAppsListFull(message.data);
+		} else if (message.type === "diff") {
+			updateAppsListDiff(message.data);
+			return true;
+		} else {
+			console.warn("app.js: unsupported type of applist.");
+		}
+		return false;
+	}
+
+	function updateAppsListDiff(apps) {
+		apps.forEach(function (remoteApp) {
+			if (remoteApp.action === "add") { // add (or update if app already added)
+				const localApp = homeApp.appsList.filter(function (localApp) {
+					return remoteApp.appID === localApp.appID;
+				})[0];
+
+				delete remoteApp.action;
+
+				if (!localApp) { // add new
+					homeApp.appsList.push(remoteApp);
+				} else { // update local app
+					/**
+					 * @todo
+					 * Which properties we need update
+					 */
+					localApp.isActive = remoteApp.isActive;
+				}
+			} else if (remoteApp.action === "remove") { // remove local app
+				homeApp.appsList = homeApp.appsList.filter(function (localApp) {
+					return remoteApp.appID !== localApp.appID;
+				});
+			} else {
+				console.warn("Unsupported action:", remoteApp.action);
+			}
+
+		});
+
+		updateOrderOfApplist();
+	}
+
+	function updateOrderOfApplist() {
 		var change = false,
-			appsCount = homeApp.appsList.length,
 			currentOrder = "";
+
+		currentOrder = homeApp.appsList.reduce(function (prev, app) {
+			return prev + app.appID;
+		}, "");
+
+		// check apps order
+		homeApp.appsList = homeApp.appsList.sort(function (app1, app2) {
+			return (app1.isActive) ?
+				(app2.isActive) ? 0 : -1 : 1
+		});
+
+		// order has been changed
+		if (currentOrder !== homeApp.appsList.reduce(function (prev, app) {
+			return prev + app.appID;
+		}, "")) {
+			change = true;
+		}
+
+		return change;
+	}
+
+	function updateAppsListFull(apps) {
+		var change = false,
+			appsCount = homeApp.appsList.length;
 
 		// remove app from local apps list if not exists on remote host
 		homeApp.appsList = homeApp.appsList.filter(function (localApp) {
@@ -175,20 +241,7 @@ import Storage from "./clipping-storage.js";
 			})
 		});
 
-		currentOrder = homeApp.appsList.reduce(function (prev, app) {
-			return prev + app.appID;
-		}, "");
-
-		// check apps order
-		homeApp.appsList = homeApp.appsList.sort(function (app1, app2) {
-			return (app1.isActive) ?
-				(app2.isActive) ? 0 : -1 : 1
-		});
-
-		// order has been changed
-		if (currentOrder !== homeApp.appsList.reduce(function (prev, app) {
-			return prev + app.appID;
-		}, "")) {
+		if (updateOrderOfApplist()) {
 			change = true;
 		}
 
@@ -196,11 +249,11 @@ import Storage from "./clipping-storage.js";
 	}
 
 	function onWSMessage(message) {
-		const messageObj = JSON.parse(message.data);
+		const data = (typeof message.data === "string") ? JSON.parse(message.data) : message;
 
 		socket.send(JSON.stringify({cmd: "echo"}));
 
-		if (updateAppsList(messageObj.apps)) {
+		if (updateAppsList(data)) {
 			tau.log("change");
 
 			storage.refreshStorage(Storage.elements.APPSLIST, homeApp.appsList);
@@ -321,11 +374,13 @@ import Storage from "./clipping-storage.js";
 			app.webClipsList.forEach((webClip) => {
 				if (webClip.manifest && webClip.manifest.cardType === "control") {
 					if (webClip.isSelected) {
-						homeApp.addControlCard({
-							title: webClip.manifest.description,
-							href: "#nowa-karta",
-							icon: "images/Icon.png"}
-						);
+						if (!document.querySelector("[data-title='" + webClip.manifest.description + "']")) {
+							homeApp.addControlCard({
+								title: webClip.manifest.description,
+								href: "#open-control-card",
+								icon: "images/Icon.png"}
+							);
+						}
 					} else {
 						// remove mini controll card
 						homeApp.removeControlCard(document.querySelector("[data-title='" + webClip.manifest.description + "']"));
@@ -367,7 +422,7 @@ import Storage from "./clipping-storage.js";
 
 				label.setAttribute("for", "popup-checkbox-" + webClipName);
 				label.classList.add("ui-li-text");
-				label.innerHTML = webClip.manifest.description;
+				label.innerHTML = webClip.manifest && webClip.manifest.description || webClipName;
 
 				li.appendChild(input);
 				li.appendChild(label);
@@ -414,11 +469,11 @@ import Storage from "./clipping-storage.js";
 
 		// upate webclips from remote server
 		getAppsList.then((apps) => {
-			updateAppsList(apps);
+			updateAppsListFull(apps);
 		}).catch((e) => {
 			console.warn("Error getting app lits: " + e.message);
 			if (homeApp.appsList.length === 0) {
-				updateAppsList(defaultList);
+				updateAppsListFull(defaultList);
 			}
 		}).finally(() => {
 			// check webclips access
