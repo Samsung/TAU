@@ -310,7 +310,7 @@ import Storage from "./clipping-storage.js";
 	function onPopupSubmit() {
 		homeApp.appsList.forEach(function (app) {
 			app.webClipsList.forEach(function (webClip) {
-				const webClipName = getWebClipName(webClip.url),
+				const webClipName = getWebClipNameFromUrl(webClip.url),
 					checkbox = document.getElementById("popup-checkbox-" + webClipName);
 
 				webClip.isSelected = checkbox.checked;
@@ -349,17 +349,39 @@ import Storage from "./clipping-storage.js";
 	}
 
 	function updateWebClipsUI() {
-		var current = document.querySelectorAll(".ui-card"),
-			webclipsContainer = document.getElementById("web-clips");
+		var webclipsContainer = document.getElementById("web-clips"),
+			// get Cards elements and convert NodeList to array
+			currentWebClipsCards = [].slice.call(webclipsContainer.querySelectorAll(".ui-card[data-url],.ui-card[data-src]")),
+			// list of webClips url in order
+			webClipsUrlList = homeApp.appsList.reduce(function (prev, app) {
+				return prev.concat(
+					app.webClipsList.filter((webClip) => webClip.isSelected)
+						.map((webClip) => webClip.url));
+			}, []);
 
-		// remove previous
-		current.forEach(function (card) {
-			card.parentElement.removeChild(card);
+		// remove card
+		currentWebClipsCards.forEach(function (card) {
+			const found = webClipsUrlList.filter(function (webClipUrl) {
+				return card.dataset.url && card.dataset.url.indexOf(webClipUrl) > -1 ||
+					card.dataset.src && card.dataset.src.indexOf(webClipUrl) > -1;
+			});
+
+			// remove card from UI if not exists on list
+			if (found.length === 0) {
+				card.parentElement.removeChild(card);
+			}
 		});
 
+		// add card
 		homeApp.appsList.forEach(function (app) {
 			app.webClipsList.forEach((webClip) => {
-				if (webClip.manifest && webClip.manifest.cardType !== "control") {
+				const found = currentWebClipsCards.filter(function (card) {
+					return card.dataset.url && card.dataset.url.indexOf(webClip.url) > -1 ||
+						card.dataset.src && card.dataset.src.indexOf(webClip.url) > -1;
+				});
+
+				if (found.length === 0 &&
+					webClip.manifest && webClip.manifest.cardType !== "control") {
 					if (webClip.isSelected) {
 						webclipsContainer.appendChild(
 							createWebClipCard(webClip)
@@ -369,7 +391,24 @@ import Storage from "./clipping-storage.js";
 			});
 		});
 
-		// activate / deactivate mini control cards
+		// set proper order of cards
+		// @todo change inline styles to css class after merge HomeApp branches
+		webclipsContainer.style.display = "flex";
+		webclipsContainer.style.flexDirection = "column";
+		currentWebClipsCards = [].slice.call(webclipsContainer.querySelectorAll(".ui-card[data-url],.ui-card[data-src]"));
+
+		webClipsUrlList.forEach(function (url, order) {
+			const card = currentWebClipsCards.filter(function (card) {
+				return card.dataset.url && card.dataset.url.indexOf(url) > -1 ||
+					card.dataset.src && card.dataset.src.indexOf(url) > -1;
+			})[0];
+
+			if (card) {
+				card.style.order = order;
+			}
+		});
+
+		// add/remove mini control cards
 		homeApp.appsList.forEach(function (app) {
 			app.webClipsList.forEach((webClip) => {
 				if (webClip.manifest && webClip.manifest.cardType === "control") {
@@ -381,7 +420,7 @@ import Storage from "./clipping-storage.js";
 								icon: "images/Icon.png"}
 							);
 						}
-					} else {
+					} else if (document.querySelector("[data-title='" + webClip.manifest.description + "']")) {
 						// remove mini controll card
 						homeApp.removeControlCard(document.querySelector("[data-title='" + webClip.manifest.description + "']"));
 					}
@@ -394,7 +433,7 @@ import Storage from "./clipping-storage.js";
 
 	//TODO: provide mechanism for getting web clip name from webClip meta data
 	//		and separate from getting ID
-	function getWebClipName(webClip) {
+	function getWebClipNameFromUrl(webClip) {
 		// remove all text to the last \
 		return webClip.replace(/.*\//, "");
 	}
@@ -412,7 +451,7 @@ import Storage from "./clipping-storage.js";
 				var li = document.createElement("li"),
 					input = document.createElement("input"),
 					label = document.createElement("label"),
-					webClipName = getWebClipName(webClip.url);
+					webClipName = getWebClipNameFromUrl(webClip.url);
 
 				li.classList.add("ui-li-has-checkbox");
 				li.classList.add("ui-group-index");
@@ -435,7 +474,7 @@ import Storage from "./clipping-storage.js";
 		homeApp.appsList.forEach(function (app) {
 			app.webClipsList.forEach(function (webClip) {
 				if (webClip.isSelected) {
-					const webClipName = getWebClipName(webClip.url),
+					const webClipName = getWebClipNameFromUrl(webClip.url),
 						checkbox = document.getElementById("popup-checkbox-" + webClipName);
 
 					if (checkbox) {
