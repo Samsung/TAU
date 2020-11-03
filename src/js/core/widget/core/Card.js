@@ -164,7 +164,6 @@
 
 				if (self.element.parentElement) {
 					content = self._include(content, options);
-					self.element.parentElement.replaceChild(content, self.element);
 					ns.engine.createWidgets(content);
 					eventUtils.trigger(content, "cardcontentchange");
 				} else {
