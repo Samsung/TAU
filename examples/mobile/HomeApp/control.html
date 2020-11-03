@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<title>Home Tv App</title>
+	<link href="lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="manifest" href="./manifest.webmanifest">
+	<link rel="shortcut icon" href="images/Icon.png">
+	<script data-build-remove="false" src="lib/tau/mobile/js/tau.js"></script>
+	<script src="js/clipping-storage.js" type="module"></script>
+	<script src="js/app.js" type="module"></script>
+</head>
+<body>
+	<div class="ui-page" id="open-control-app-1">
+		<header>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">Instant Control</span>
+			</div>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" id="selector-opener" data-style="flat"></button>
+				<select data-native-menu="false" id="theme-selector" style="display: none;">
+					<option value="light">
+						Light Theme
+					</option>
+					<option value="dark">
+						Dark Theme
+					</option>
+				</select>
+			</div>
+		</header>
+
+		<div class="ui-content ui-tabs">
+			<div class="ui-sub-tab ui-sub-tab-static">
+				<ul>
+					<li class="ui-li-anchor">
+						<a class="ui-tab-active" href="#">
+							Basic
+						</a>
+					</li>
+					<li class="ui-li-anchor">
+						<a href="#">
+							Channel
+						</a>
+					</li>
+					<li class="ui-li-anchor">
+						<a href="#">
+							Typing
+						</a>
+					</li>
+					<li class="ui-li-anchor">
+						<a href="#">
+							Media
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="ui-section-changer">
+				<div>
+					<section class="ui-content ui-section-active">
+						<div class="ui-card ui-card-service app-border">
+							<div class="ui-header">
+								<div class="ui-title">Remote Control</div>
+								<div class="ui-icon app-remote-control-icon"></div>
+							</div>
+							<div class="ui-content">
+								<link rel="stylesheet" href="./css/app-remote-control-basic.css" />
+								<div class="app-home-buttons">
+									<a href="#" class="ui-btn ui-btn-icon" data-icon="enter" data-style="flat"></a>
+									<a href="#" class="ui-btn ui-btn-icon" data-icon="home" data-style="flat"></a>
+									<a href="#" class="ui-btn ui-btn-icon" data-icon="backward" data-style="flat"></a>
+								</div>
+								<div class="app-remote-control">
+									<div class="app-volume-channel">
+										<div class="app-volume-control">
+											<a href="#" class="ui-btn ui-btn-icon app-btn-icon-volume-up" data-icon="plus" data-style="flat"></a>
+											VOL
+											<a href="#" class="ui-btn ui-btn-icon app-btn-icon-volume-down"  data-icon="minus" data-style="flat"></a>
+										</div>
+										<div class="app-channel-control">
+											<a href="#" class="ui-btn ui-btn-icon app-btn-icon-channel-up" data-icon="up" data-style="flat"></a>
+											CH
+											<a href="#" class="ui-btn ui-btn-icon app-btn-icon-channel-down" data-icon="down" data-style="flat"></a>
+										</div>
+									</div>
+									<div class="app-4way-direction">
+										<a href="#" class="ui-btn ui-btn-icon app-4way-btn-up" data-icon="up" data-style="flat"></a>
+										<a href="#" class="ui-btn ui-btn-icon app-4way-btn-right" data-icon="right" data-style="flat"></a>
+										<div class="app-4way-touchpad"></div>
+										<a href="#" class="ui-btn ui-btn-icon app-4way-btn-left" data-icon="left" data-style="flat"></a>
+										<a href="#" class="ui-btn ui-btn-icon app-4way-btn-down" data-icon="down" data-style="flat"></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<section class="ui-content">
+						<p>Channel</p>
+					</section>
+					<section class="ui-content">
+						<p>Typing</p>
+					</section>
+					<section class="ui-content">
+						<p>Media</p>
+					</section>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

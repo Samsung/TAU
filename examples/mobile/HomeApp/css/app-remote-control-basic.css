@@ -9,67 +9,104 @@
 
 .app-home-buttons {
     display: flex;
-    width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
     height: 48px;
+    padding: 0 20px;
 }
 
 .ui-icon-home::after {
-    mask-image: url(../images/home.svg);
-    -webkit-mask-image: url(../images/home.svg);
+    mask-image: url(../images/ic_home.png);
+    -webkit-mask-image: url(../images/ic_home.png);
+    mask-size: 24px !important;
+    -webkit-mask-size: 24px !important;
 }
 .ui-icon-enter::after {
-    mask-image: url(../images/enter-button.png);
-    -webkit-mask-image: url(../images/enter-button.png);
+    mask-size: 26px 18px;
+    mask-image: url(../images/ic_source.png);
+    -webkit-mask-size: 26px 18px !important;
+    -webkit-mask-image: url(../images/ic_source.png);
 }
 .ui-icon-backward::after {
-    mask-image: url(../images/back-button.png);
-    -webkit-mask-image: url(../images/back-button.png);
+    mask-size: 25px 23px !important;
+    -webkit-mask-size: 25px 23px !important;
+    mask-image: url(../images/ic_back.png);
+    -webkit-mask-image: url(../images/ic_back.png);
 }
 
 .app-volume-channel {
     flex-direction: row;
-    width: 70%;
+    width: calc(100% - 148px);
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .app-volume-control {
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
-    box-shadow: 1px 1px 3px 0 var(--overlay);
-    margin: 5px;
     font-size: 16px;
-    background-image: linear-gradient(170deg,
-        rgba(0, 0, 0, 0.2) 0%, var(--background-area-color) 15%,
-        var(--background-area-color) 85%, rgba(0, 0, 0, 0.2) 100%);
-    width: 70px;
+    background-image: linear-gradient(180deg,
+        transparent, transparent 25px, #ebebeb 25px,
+        #ebebeb 125px, transparent 100%);
+    width: 53px;
     align-items: center;
+    height: 173px;
+    justify-content: space-between;
+}
+
+.app-btn-icon-volume-up {
+    background-image: url(../images/btn_plus.png);
+    background-size: 100%;
+    background-position-y: 2px;
+}
+.app-btn-icon-volume-up::after {
+    display: none;
+}
+.app-btn-icon-volume-down {
+    background-image: url(../images/btn_minus.png);
+    background-size: 100%;
+    background-position-y: 2px;
+}
+.app-btn-icon-volume-down::after {
+    display: none;
 }
 
 .app-channel-control {
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
-    box-shadow: 1px 1px 3px 0 var(--overlay);
-    margin: 5px;
     font-size: 16px;
-    background-image: linear-gradient(170deg,
-        rgba(0, 0, 0, 0.2) 0%, var(--background-area-color) 15%,
-        var(--background-area-color) 85%, rgba(0, 0, 0, 0.2) 100%);
-    width: 70px;
+    background-image: linear-gradient(180deg,
+        transparent, transparent 25px, #ebebeb 25px,
+        #ebebeb 125px, transparent 100%);
+    width: 53px;
     align-items: center;
+    height: 173px;
+    justify-content: space-between;
+}
+
+.app-btn-icon-channel-up {
+    background-image: url(../images/btn_up.png);
+    background-size: 100%;
+    background-position-y: 2px;
+}
+.app-btn-icon-channel-up::after {
+    display: none;
+}
+.app-btn-icon-channel-down {
+    background-image: url(../images/btn_down.png);
+    background-size: 100%;
+    background-position-y: 2px;
+}
+.app-btn-icon-channel-down::after {
+    display: none;
 }
 
 .app-4way-direction {
     display: grid;
+    grid-template-columns: 25px 1fr 25px;
+    grid-template-rows: 25px 1fr 25px;
     grid-gap: 5px;
-    border-radius: 25px;
-    box-shadow: 1px 1px 3px 0 var(--overlay) inset;
-    margin: 5px;
-    background-color: var(--border-surface);
-    width: 75%;
+    width: 100%;
+    height: 210px;
     justify-items: center;
 }
 
@@ -94,27 +131,39 @@
 .app-4way-btn-up {
     grid-column: 2 / 2;
     grid-row: 1;
+    align-self: center;
 }
 
 .app-4way-btn-left {
     grid-column: 1 / 1;
     grid-row: 2;
+    align-self: center;
 }
 
 .app-4way-btn-right {
     grid-column: 3 / 3;
     grid-row: 2;
+    align-self: center;
 }
 
 .app-4way-btn-down {
     grid-column: 2 / 2;
     grid-row: 3;
+    align-self: center;
+}
+
+.app-4way-touchpad {
+    grid-column: 2 / 2;
+    grid-row: 2 / 2;
+    width: 100%;
+    border-radius: 28px;
+    background-color: #ebebeb;
 }
 
 .app-remote-control .ui-btn.ui-btn-flat.ui-btn-icon {
-    width: 56px;
-    height: 56px;
-    min-width: 56px;
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
 }
 .ui-btn.ui-icon-right::after {
     -webkit-transform: translate(-50%, -50%) rotateZ(-90deg);
