@@ -160,6 +160,51 @@
     background-color: #ebebeb;
 }
 
+.app-remote-num-pad {
+    display: grid;
+    grid-gap: 5px;
+    width: 100%;
+    justify-items: center;
+    border-radius: 28px;
+    margin-top: 10px;
+    overflow: hidden;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.app-remote-num-pad .ui-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    width: 100% !important;
+    height: 100%;
+    background-color: #ebebeb;
+    border-radius: 0;
+}
+.app-num-pad-1 {
+    grid-column: 1 / 1;
+    grid-row: 1;
+}
+.app-num-pad-2 {
+    grid-column: 2 / 2;
+    grid-row: 1;
+}
+.app-num-pad-3 {
+    grid-column: 3 / 3;
+    grid-row: 1;
+}
+.app-num-pad-4 {
+    grid-column: 1 / 1;
+    grid-row: 2;
+}
+.app-num-pad-5 {
+    grid-column: 2 / 2;
+    grid-row: 2;
+}
+.app-num-pad-6 {
+    grid-column: 3 / 3;
+    grid-row: 2;
+}
+
 .app-remote-control .ui-btn.ui-btn-flat.ui-btn-icon {
     width: 58px;
     height: 58px;
