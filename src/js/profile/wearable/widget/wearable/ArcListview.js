@@ -722,6 +722,10 @@
 					carouselItemUpperSeparatorElement,
 					top;
 
+				if (carousel.items.length === 0) {
+					return;
+				}
+
 				if (self.options.focusedTitle) {
 					self._updateFocusedTitle();
 				}
