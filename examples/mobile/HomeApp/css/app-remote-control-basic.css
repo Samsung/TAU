@@ -228,3 +228,26 @@
 .app-border {
     box-shadow: 0 0 0 0.25px var(--content-area-line-color) inset;
 }
+
+
+/* Typing control */
+.app-typing-control-icon {
+    background-image: url(../images/control/squarcle_bg.png);
+    background-size: 100%;
+}
+.app-voice-button {
+    background-image: url(../images/control/cta/oval/default.png);
+    background-size: 100%;
+    width: 43px !important;
+    height: 43px !important;
+    display: inline-block;
+    max-width: 43px;
+    max-height: 43px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.app-input-with-button {
+    display: flex;
+}
+
+
