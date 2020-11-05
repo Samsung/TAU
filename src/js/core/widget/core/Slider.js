@@ -96,7 +96,8 @@
 					toggle: "",
 					min: 0,
 					max: 10,
-					step: 1
+					step: 1,
+					labels: false
 				},
 				unsupportedOptions = ["orientation", "expand", "warning", "warningLevel", "toggle"],
 				Slider = function () {
@@ -120,7 +121,11 @@
 					SLIDER_ACTIVE: "ui-slider-active",
 					TRACK: "ui-slider-handler-track",
 					SPACE_BEFORE: "ui-slider-before-space",
-					SPACE_AFTER: "ui-slider-after-space"
+					SPACE_AFTER: "ui-slider-after-space",
+					SLIDER_HAS_LABELS: "ui-slider-has-labels",
+					LABEL: "ui-slider-label",
+					LABEL_MIN: "ui-slider-label-min",
+					LABEL_MAX: "ui-slider-label-max"
 				},
 				prototype = new BaseWidget();
 
@@ -230,6 +235,29 @@
 			}
 
 			/**
+			 * Method is called when "labels" option has change
+			 * @method _setLabels
+			 * @member ns.widget.core.Slider
+			 * @param {HTMLElement} element element parameter is required by BaseWidget
+			 * @param {string} value
+			 * @protected
+			 */
+			prototype._setLabels = function (element, value) {
+				var self = this;
+
+				if (value) {
+					if (!self._ui.labelMin.innerText) {
+						self._ui.labelMin.innerText = self.options.min;
+					}
+					if (!self._ui.labelMax.innerText) {
+						self._ui.labelMax.innerText = self.options.max;
+					}
+				}
+				self._ui.containerElement.classList.toggle(classes.SLIDER_HAS_LABELS, value);
+				self.options.labels = value;
+			}
+
+			/**
 			 * Build structure of Slider component
 			 * @method _build
 			 * @param {HTMLElement} element
@@ -246,7 +274,9 @@
 					handlerElement = document.createElement("div"),
 					handlerTrack = document.createElement("div"),
 					beforeSpace = document.createElement("div"),
-					afterSpace = document.createElement("div");
+					afterSpace = document.createElement("div"),
+					labelMin = document.createElement("div"),
+					labelMax = document.createElement("div");
 
 				containerElement.classList.add(classes.SLIDER);
 
@@ -259,12 +289,19 @@
 				beforeSpace.classList.add(classes.SPACE_BEFORE);
 				afterSpace.classList.add(classes.SPACE_AFTER);
 
+				labelMin.classList.add(classes.LABEL);
+				labelMax.classList.add(classes.LABEL);
+				labelMin.classList.add(classes.LABEL_MIN);
+				labelMax.classList.add(classes.LABEL_MAX);
+
 				handlerTrack.appendChild(beforeSpace);
 				handlerTrack.appendChild(handlerElement);
 				handlerTrack.appendChild(afterSpace);
 
 				containerElement.appendChild(handlerTrack);
 				containerElement.appendChild(barElement);
+				containerElement.appendChild(labelMin);
+				containerElement.appendChild(labelMax);
 
 				element.parentNode.appendChild(containerElement);
 				ui.barElement = barElement;
@@ -273,6 +310,8 @@
 				ui.containerElement = containerElement;
 				ui.beforeSpace = beforeSpace;
 				ui.afterSpace = afterSpace;
+				ui.labelMin = labelMin;
+				ui.labelMax = labelMax;
 
 				element.parentNode.replaceChild(containerElement, element);
 				containerElement.appendChild(element);
@@ -349,6 +388,7 @@
 					ui = self._ui;
 
 				self._setType(self.element, self.options.type);
+				self._setLabels(self.element, self.options.labels);
 
 				self._containerElementWidth = ui.containerElement.offsetWidth;
 
