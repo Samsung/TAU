@@ -1767,12 +1767,15 @@
 			 */
 			prototype.handleEvent = function (event) {
 				var self = this,
+					state = self._state,
 					page = self._ui.page;
 
 				if (event.type === "pageinit") {
 					self._onPageInit(event);
 				} else if (event.type === "pageshow") {
-					self._selectItem(self._state.currentIndex);
+					if (state.items.length > 0) {
+						self._selectItem(self._state.currentIndex);
+					}
 				} else if (event.type === "pagehide") {
 					self._removeHighlight();
 				} else if (page && page.classList.contains("ui-page-active")) {
