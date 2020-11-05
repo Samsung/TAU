@@ -119,6 +119,24 @@
 			left: -5 * @px_base; // to reduce margin effect from parent
 		}
 	}
+
+	&-label {
+		font-size: 12 * @px_base;
+		color: var(--text-secondary-color);
+	}
+	&-label-min {
+		position: absolute;
+		left: 0;
+		bottom: -2 * @px_base
+	}
+	&-label-max {
+		position: absolute;
+		right: 0;
+		bottom: -2 * @px_base
+	}
+	&.ui-slider-has-labels {
+		height: 50 * @px_base;
+	}
 }
 
 input[data-tau-built="Slider"] {

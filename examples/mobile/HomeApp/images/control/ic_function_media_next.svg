@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>SVG/ic/ic_function_media_next</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M14.8063777,5.3 L14.8063777,11.1849791 L8.6458754,6.21236149 C8.47759173,6.07707461 8.28950997,6.00530657 8.10390298,6.00530657 C7.73433883,6.00530657 7.35982517,6.29732824 7.35982517,6.85414922 L7.35982517,17.1450259 C7.35982517,17.7043216 7.73433883,17.9938685 8.10390298,17.9938685 C8.29033489,17.9938685 8.47759173,17.9229254 8.64670032,17.7876385 L14.8063777,12.8158459 L14.8063777,18.7 L16.6401748,18.7 L16.6401748,5.3 L14.8063777,5.3 Z" id="path-1"></path>
+    </defs>
+    <g id="ic/ic_function_media_next" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="mask" fill="#252525" xlink:href="#path-1"></use>
+    </g>
+</svg>
