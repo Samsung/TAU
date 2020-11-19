@@ -26,8 +26,6 @@ module.exports = function (grunt) {
 		});
 
 		function convert(srcDir, destDir, fileMask) {
-			grunt.log.writeln("convert: " + srcDir);
-
 			return new Promise(function (resolve) {
 				var spriter; // instance of spriter
 
@@ -77,7 +75,6 @@ module.exports = function (grunt) {
 					spriter = new SVGSpriter(config);
 
 					Promise.all(queue).then(function (data) {
-						//console.log("all files read", data);
 						data.forEach(function (fileData) {
 							spriter.add(path.resolve(fileData.file), fileData.file, fileData.data);
 						});
