@@ -294,3 +294,122 @@
     background-image: url(../images/control/squarcle_bg.png);
     background-size: 100%;
 }
+
+/** game pad **/
+.app-game-4way-direction {
+    background-image: url("../images/control/control1_bg .png");
+    width: 157px;
+    height: 157px;
+    background-position: center;
+    background-size: 100%;
+    display: inline-grid;
+    grid-template-columns: 48px 1fr 48px;
+    grid-template-rows: 48px 1fr 48px;
+}
+.app-game-4way-direction .ui-icon-up {
+    grid-column: 2;
+    grid-row: 1;
+}
+.app-game-4way-direction .ui-icon-left {
+    grid-column: 1 / 1;
+    grid-row: 2;
+}
+.app-game-4way-direction .ui-icon-right {
+    grid-column: 3 / 3;
+    grid-row: 2;
+}
+.app-game-4way-direction .ui-icon-down {
+    grid-column: 2;
+    grid-row: 3;
+}
+.app-game-4way-direction .ui-btn {
+    justify-self: center;
+}
+.app-game-4way-direction .ui-btn::after {
+    justify-self: center;
+    mask-size: 12px !important;
+    -webkit-mask-size: 12px !important;
+    transform: translate(-50%, -50%);
+}
+
+.app-game-4way-direction .ui-icon-up::after {
+    mask-image: url(../images/control/ic_control1_top.png);
+    -webkit-mask-image: url(../images/control/ic_control1_top.png);
+}
+.app-game-4way-direction .ui-icon-down::after {
+    mask-image: url(../images/control/ic_control1_bottom.png);
+    -webkit-mask-image: url(../images/control/ic_control1_bottom.png);
+}
+.app-game-4way-direction .ui-icon-left::after {
+    mask-image: url(../images/control/ic_control1_left.png);
+    -webkit-mask-image: url(../images/control/ic_control1_left.png);
+}
+.app-game-4way-direction .ui-icon-right::after {
+    mask-image: url(../images/control/ic_control1_right.png);
+    -webkit-mask-image: url(../images/control/ic_control1_right.png);
+}
+.app-game-4buttons {
+    width: 157px;
+    height: 157px;
+    background-position: center;
+    background-size: 100%;
+    display: inline-grid;
+    grid-template-columns: 58px 35px 58px;
+    grid-template-rows: 58px 35px 58px;
+}
+.app-game-4buttons .ui-btn.ui-btn-icon {
+    background-image: url(../images/control/control2_bg\ .png);
+    background-size: 100%;
+    background-position-y: 2px;
+    min-width: 58px;
+    min-height: 58px;
+}
+.app-game-4buttons-Y {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+}
+.app-game-4buttons-X {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: center;
+}
+.app-game-4buttons-B {
+    grid-column: 3;
+    grid-row: 2;
+    align-self: center;
+}
+.app-game-4buttons-A {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: center;
+}
+
+.app-game-4buttons .ui-btn.ui-btn-icon::after {
+    mask-image: none;
+    -webkit-mask-image: none;
+    background-color: transparent;
+    font-size: 16px;
+    text-align: center;
+    height: auto;
+}
+.app-game-4buttons-Y::after {
+    content: "Y";
+    color: #ffb100;
+}
+.app-game-4buttons-X::after {
+    content: "X";
+    color: #18a3ff;
+}
+.app-game-4buttons-B::after {
+    content: "B";
+    color: #ed3c36;
+}
+.app-game-4buttons-A::after {
+    content: "A";
+    color: #67ce2b;
+}
+.app-game-control-icon {
+    background-image: url(../images/control/squarcle_bg.png);
+    background-size: 100%;
+}
