@@ -41,6 +41,17 @@ import Storage from "./clipping-storage.js";
 			]
 		},
 		{
+			"appID": "vUf39tzQ5s.TVPlusChannels",
+			"isInstalled": true,
+			"isActive": true,
+			"webClipsList": [
+				{
+					url: "webclip/tv-plus-channels",
+					isSelected: true
+				}
+			]
+		},
+		{
 			"appID": "vUf39tzQ3t.UIComponents",
 			"isInstalled": true,
 			"isActive": false,
