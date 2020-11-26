@@ -12,4 +12,27 @@
         margin-right: 3 * @px_base;
         width: 188 * @px_base;
     }
+
+    &.ui-container-middle {
+        .ui-favorite {
+            &.ui-btn {
+                width: 103 * @px_base;
+                .ui-btn-content {
+                    width: 103 * @px_base;
+                    img {
+                        width: 100 * @px_base;
+                        height: 100 * @px_base;
+                    }
+                    .ui-title, .ui-subtitle {
+                        .font(medium);
+                        width: 100%;
+                        text-align: left;
+                        text-overflow: ellipsis;
+                        color: #7b7b7b;
+                    }
+
+                }
+            }
+        }
+    }
 }
