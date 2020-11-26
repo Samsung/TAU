@@ -4,7 +4,7 @@
 	box-sizing: border-box;
 	margin-bottom: 10 * @px_base;
 
-	&-service {
+	&.ui-card-service {
 		background-color: var(--background-area-color);
 		border-radius: 26 * @px_base;
 		overflow: hidden;
@@ -13,6 +13,33 @@
 
 		*::-webkit-scrollbar {
 			display: none;
+		}
+		.ui-subheader-text {
+			color: #7b7b7b;
+		}
+		.ui-content-subheader {
+			display: flex;
+			align-items: center;
+
+			&::after {
+				content: "";
+				display: inline-flex;
+				width: calc(~"100%" - 20 * @px_base);
+				border-bottom: 1 * @px_base solid var(--subheader-divider-color);
+				height: 0;
+				align-items: center;
+				margin-right: 20 * @px_base;
+				margin-left: 10 * @px_base;
+			}
+		}
+		.ui-content-thumbnail {
+			width: 100%;
+		}
+		.ui-content {
+			.ui-title.ui-title-medium {
+				font-size: 18 * @px_base;
+				.font(medium);
+			}
 		}
 	}
 

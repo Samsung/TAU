@@ -1,5 +1,5 @@
 {
-    "name": "Netflix",
+    "name": "netflix-service",
     "description": "Netflix",
-    "cardType": "ads"
+    "cardType": "service"
 }

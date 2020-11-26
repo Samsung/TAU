@@ -30,12 +30,23 @@ import Storage from "./clipping-storage.js";
 			]
 		},
 		{
-			"appID": "vUf39tzQ4s.UIComponents",
+			"appID": "vUf39tzQ4s.Netflix",
 			"isInstalled": false,
 			"isActive": false,
 			"webClipsList": [
 				{
 					url: "webclip/netflix",
+					isSelected: true
+				}
+			]
+		},
+		{
+			"appID": "vUf39tzQ6s.NetflixAds",
+			"isInstalled": false,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/netflix-ads",
 					isSelected: true
 				}
 			]
