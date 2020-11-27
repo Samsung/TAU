@@ -30,7 +30,7 @@ import Storage from "./clipping-storage.js";
 			]
 		},
 		{
-			"appID": "vUf39tzQ4s.Netflix",
+			"appID": "vUf40tzQ4s.Netflix",
 			"isInstalled": false,
 			"isActive": false,
 			"webClipsList": [
@@ -85,6 +85,17 @@ import Storage from "./clipping-storage.js";
 				{
 					url: "webclip/restaurant",
 					isSelected: false
+				}
+			]
+		},
+		{
+			"appID": "vUf18tzQ4s.YouTube",
+			"isInstalled": false,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/youtube",
+					isSelected: true
 				}
 			]
 		},
