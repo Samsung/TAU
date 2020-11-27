@@ -63,6 +63,17 @@ import Storage from "./clipping-storage.js";
 			]
 		},
 		{
+			"appID": "vUf19tzQ4s.Sketch",
+			"isInstalled": false,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/sketch-app",
+					isSelected: true
+				}
+			]
+		},
+		{
 			"appID": "vUf39tzQ3t.UIComponents",
 			"isInstalled": true,
 			"isActive": false,
