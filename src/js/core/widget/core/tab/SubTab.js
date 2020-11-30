@@ -389,8 +389,11 @@
 			prototype._onClick = function (event) {
 				var self = this,
 					ui = self._ui,
+					element = self.element,
 					options = self.options,
 					selectTab = event.currentTarget.querySelector("A"),
+					selectedRect,
+					elementRect,
 					index,
 					i,
 					tabLength;
@@ -401,6 +404,14 @@
 						break;
 					}
 					index = 0;
+				}
+
+				if (!self._type.static) {
+					// scroll selected tab to center of widget
+					selectedRect = selectTab.getBoundingClientRect();
+					elementRect = element.getBoundingClientRect();
+					self.element.scrollLeft = self.element.scrollLeft + selectedRect.left + selectedRect.width / 2 -
+						elementRect.width / 2;
 				}
 
 				if (options.autoChange) {

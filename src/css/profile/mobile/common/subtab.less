@@ -92,9 +92,25 @@
 	}
 
 	&:not(.ui-sub-tab-static) {
+		overflow-x: scroll;
+		margin-left: 0;
+		margin-right: 0;
+		width: 100%;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+
 		ul {
 			li {
-				min-width: 105 * @px_base;
+				min-width: 93 * @px_base;
+
+				&:first-child {
+					margin-left: 24 * @px_base;
+				}
+				&:last-child {
+					margin-right: 24 * @px_base;
+				}
 			}
 		}
 		&.ui-sub-tab-landscape {
