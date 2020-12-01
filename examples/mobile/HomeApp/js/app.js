@@ -74,6 +74,17 @@ import Storage from "./clipping-storage.js";
 			]
 		},
 		{
+			"appID": "vUf20tzQ4s.Karaoke",
+			"isInstalled": false,
+			"isActive": false,
+			"webClipsList": [
+				{
+					url: "webclip/karaoke-app",
+					isSelected: true
+				}
+			]
+		},
+		{
 			"appID": "vUf39tzQ3t.UIComponents",
 			"isInstalled": true,
 			"isActive": false,
