@@ -125,7 +125,7 @@
 			Appbar.prototype = prototype;
 			Appbar.defaults = defaults;
 			Appbar.classes = classes;
-			Appbar.selector = ".ui-appbar,.ui-header,header,[data-role='header']";
+			Appbar.selector = ".ui-appbar,.ui-page > .ui-header,.ui-page > header,[data-role='header']";
 
 			prototype._init = function (element) {
 				var self = this;
