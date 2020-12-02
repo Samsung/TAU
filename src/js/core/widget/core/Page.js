@@ -1004,7 +1004,9 @@
 						var scroller = self.getScroller(),
 							scrollview = ns.engine.getBinding(scroller);
 
-						scrollview.enableScrolling();
+						if (scrollview) {
+							scrollview.enableScrolling();
+						}
 					}, false);
 
 					header.addEventListener("appbarexpanded", function () {
