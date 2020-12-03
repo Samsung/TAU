@@ -196,14 +196,20 @@
 			var self = this,
 				direction = delta > 0 ? 1 : -1,
 				borderItem,
-				newItemToPlace;
+				newItemToPlace,
+				halfOfFreeCarouselItems = Math.round((self._numberOfCarouselItems - self._ui.items.length) / 2);
+
+			if (halfOfFreeCarouselItems < 0) {
+				halfOfFreeCarouselItems = 0;
+			}
 
 			delta = Math.abs(delta);
 			if (delta === 1) { // move one item
 				borderItem = self._carouselItems[
-					self._carouselItemByCount(count + direction * self._carouselCenterIndex)
+					self._carouselItemByCount(count + direction * (self._carouselCenterIndex - halfOfFreeCarouselItems))
 				];
-				newItemToPlace = self._itemByCount(count + direction * self._carouselCenterIndex);
+
+				newItemToPlace = self._itemByCount(count + direction * (self._carouselCenterIndex - halfOfFreeCarouselItems));
 
 				if (borderItem.element.firstElementChild) {
 					borderItem.element.removeChild(borderItem.element.firstElementChild);
@@ -229,7 +235,9 @@
 			// change carousel items content on change current index
 			if (self._lastCurrentIndex !== Math.round(value)) {
 				if (self._lastCurrentIndex !== null) {
-					self._rollItems(Math.round(value) - self._lastCurrentIndex, Math.round(value));
+					if (self._ui.items.length !== self._numberOfCarouselItems) {
+						self._rollItems(Math.round(value) - self._lastCurrentIndex, Math.round(value));
+					}
 				}
 				self._lastCurrentIndex = Math.round(value);
 			}
