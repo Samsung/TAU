@@ -109,7 +109,8 @@
 					max: 12,
 					step: 1,
 					disabled: false,
-					accelerated: 0
+					accelerated: 0,
+					dragTarget: "self"
 				};
 
 				// other widgets instances using by number picker
@@ -244,7 +245,8 @@
 						rollHeight: "custom",
 						itemHeight: 38,
 						duration: 300,
-						value: element.value
+						value: element.value,
+						dragTarget: self.options.dragTarget
 					});
 				}
 			};

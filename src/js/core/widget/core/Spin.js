@@ -452,7 +452,7 @@
 			self.length = options.max - options.min + options.step;
 			self._count = self._valueToCount(options.value);
 
-			self.dragTarget = (options.dragTarget === "document") ? document : self.element;
+			self.dragTarget = (options.dragTarget === "self") ? self.element : document;
 
 			self._refresh();
 		};
