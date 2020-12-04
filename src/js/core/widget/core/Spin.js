@@ -61,6 +61,7 @@
 			DRAG_STEP_TO_VALUE = 60,
 			NUMBER_OF_CAROUSEL_ITEMS = 13,
 			EVENT_DRAG_END_TIMEOUT = 500,
+			VIBRATION_DURATION = 10,
 
 			/**
 			 * Alias for class Spin
@@ -96,6 +97,7 @@
 				 * // eg. "Monday,Tuesday,Wednesday"
 				 * @property {string} [options.digits=0] value filling with zeros, eg. 002 for digits=3;
 				 * @property {string} [options.dragTarget="document"] set target element for drag gesture
+				 * @property {string} [options.vibration=0] set vibration duration, set 0 to disable vibration
 				 * @member ns.widget.core.Spin
 				 */
 				self.options = {
@@ -117,6 +119,7 @@
 					digits: 0, // 0 - doesn't complete by zeros
 					value: 0,
 					dragTarget: "document", // "document" | "self",
+					vibration: VIBRATION_DURATION,
 					enabled: false
 				};
 				self._ui = {
@@ -662,18 +665,28 @@
 		};
 
 		prototype._drag = function (e) {
-			var self = this;
+			var self = this,
+				options = self.options,
+				previousCount;
 
 			// if element is detached from DOM then event listener should be removed
 			if (document.getElementById(self.element.id) === null) {
 				utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
 			} else {
-				if (self.options.enabled) {
+				if (options.enabled) {
+					previousCount = Math.round(self._count);
 					self._objectValue.value = self._startDragCount - e.detail.deltaY / DRAG_STEP_TO_VALUE;
-					if (self.options.loop !== "enabled") {
+					if (options.loop !== "enabled") {
 						self._objectValue.value = Math.min(Math.max(self._objectValue.value, 0), self.length - 1);
 					}
 					showAnimationTick(self);
+
+					// trigger device vibration
+					if (options.vibration > 0 &&
+						previousCount !== Math.round(self._count) &&
+						typeof window.navigator.vibrate === "function") {
+						window.navigator.vibrate(options.vibration);
+					}
 				}
 			}
 			// set timeout in case of drag outside screen

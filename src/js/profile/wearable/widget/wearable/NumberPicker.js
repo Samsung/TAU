@@ -110,7 +110,8 @@
 					step: 1,
 					disabled: false,
 					accelerated: 0,
-					dragTarget: "self"
+					dragTarget: "self",
+					vibration: 0
 				};
 
 				// other widgets instances using by number picker
@@ -246,7 +247,8 @@
 						itemHeight: 38,
 						duration: 300,
 						value: element.value,
-						dragTarget: self.options.dragTarget
+						dragTarget: self.options.dragTarget,
+						vibration: options.vibration
 					});
 				}
 			};
