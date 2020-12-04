@@ -473,6 +473,7 @@
 				self._unbindEvents();
 
 				// destroy widgets
+				self._spin.destroy();
 				self._circleIndicator.destroy();
 
 				// remove classes
