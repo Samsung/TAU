@@ -101,11 +101,26 @@
 				self._ui.links = [].slice.call(element.querySelectorAll("li > a"));
 				self._ui.links.forEach(function (link) {
 					var wrap = document.createElement("span"),
+						linkElements = [],
+						linkChild,
 						content = link.textContent.trim();
 
+					// detach and cache previous elements from link
+					while (link.children.length > 0) {
+						linkChild = link.children[0];
+						linkElements.push(linkChild);
+						link.removeChild(linkChild);
+					}
+
+					// wrap text content for marquee widget
 					wrap.textContent = content;
 					link.textContent = "";
 					link.appendChild(wrap);
+
+					// recovering previous cached elements of link
+					linkElements.forEach(function (linkChild) {
+						link.appendChild(linkChild);
+					});
 
 					ns.widget.Marquee(wrap, {
 						iteration: 1,
