@@ -46,3 +46,26 @@
         }
     }
 }
+.ui-main-tab {
+    .ui-badge {
+        display: block;
+        width: auto;
+        position: relative;
+        padding: 0;
+        overflow: initial;
+        height: 17 * @px_base;
+        min-width: 17 * @px_base;
+        margin-left: 3 * @px_base;
+        align-self: center;
+
+        &::after {
+            top: -6 * @px_base;
+            display: block;
+            position: relative;
+            right: auto;
+        }
+        &::before {
+            content: none;
+        }
+    }
+}
