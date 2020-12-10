@@ -20,9 +20,11 @@
         &::after {
             padding: 0;
             min-width: 6 * @px_base;
+            max-width: 6 * @px_base;
             min-height: 6 * @px_base;
             margin: 2 * @px_base;
-            top: 0;
+            top: -5 * @px_base;
+            right: 0;
         }
     }
 }
@@ -43,6 +45,11 @@
                 right: 24 * @px_base;
                 margin-top: 1 * @px_base;
             }
+            &[title=""], &:not([title])  {
+                &::after {
+                    top: calc(~"50% - "5 * @px_base);
+                }
+            }
         }
     }
 }
@@ -57,6 +64,24 @@
         min-width: 17 * @px_base;
         margin-left: 3 * @px_base;
         align-self: center;
+
+        &::after {
+            top: -6 * @px_base;
+            display: block;
+            position: relative;
+            right: auto;
+        }
+        &::before {
+            content: none;
+        }
+    }
+}
+.ui-sub-tab {
+    .ui-badge {
+        display: block;
+        order: 3;
+        overflow: inherit;
+        width: 6 * @px_base;
 
         &::after {
             top: -6 * @px_base;
