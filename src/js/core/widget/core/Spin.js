@@ -520,7 +520,8 @@
 		};
 
 		prototype._setValue = function (value) {
-			var self = this;
+			var self = this,
+				countDiff;
 
 			value = window.parseFloat(value, 10);
 			// @todo: for spin with labels the textContent should contains label by value;
@@ -535,6 +536,17 @@
 				if (value !== self.options.value) {
 					self._previousCount = self._count;
 					self._count = self._valueToCount(value);
+
+					if (self.options.loop === "enabled" && self.options.shortPath === "enabled") {
+						countDiff = self._count - self._previousCount;
+						if (Math.abs(countDiff) > (self.length / 2)) {
+							if (countDiff < 0) {
+								self._count += self.length;
+							} else if (countDiff > 0) {
+								self._count -= self.length;
+							}
+						}
+					}
 
 					self.options.value = value;
 					// set data-value on element
