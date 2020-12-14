@@ -172,16 +172,6 @@
 
 			};
 
-			/**
-			 * Destroy Card component
-			 * @method _destroy
-			 * @member ns.widget.core.Card
-			 * @protected
-			 */
-			prototype._destroy = function () {
-				this._unbindEvents();
-			};
-
 			// definition
 			ns.widget.core.Card = Card;
 
