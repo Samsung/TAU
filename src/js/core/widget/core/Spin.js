@@ -52,6 +52,9 @@
 			utilsEvents = ns.event,
 			gesture = utilsEvents.gesture,
 			utilSelectors = ns.util.selectors,
+			max = Math.max,
+			min = Math.min,
+			round = Math.round,
 
 			Animation = ns.util.Animate,
 
@@ -129,7 +132,7 @@
 				};
 				self._carouselItems = [];
 				self._numberOfCarouselItems = NUMBER_OF_CAROUSEL_ITEMS;
-				self.length = self.options.max - self.options.min + self.options.step;
+				self.length = (self.options.max - self.options.min) / self.options.step + 1; // number of steps
 				self._prevValue = null; // self property has to be "null" on start
 				self._overflowYBeforeDrag = null;
 				self._lastCurrentIndex = null;
@@ -166,7 +169,7 @@
 				restDiff,
 				i;
 
-			count = Math.round(count);
+			count = round(count);
 			// remove all items
 			for (i = 0; i < self._numberOfCarouselItems; i++) {
 				if (self._carouselItems[i].element.firstElementChild) {
@@ -197,7 +200,7 @@
 				direction = delta > 0 ? 1 : -1,
 				borderItem,
 				newItemToPlace,
-				halfOfFreeCarouselItems = Math.round((self._numberOfCarouselItems - self._ui.items.length) / 2);
+				halfOfFreeCarouselItems = round((self._numberOfCarouselItems - self._ui.items.length) / 2);
 
 			if (halfOfFreeCarouselItems < 0) {
 				halfOfFreeCarouselItems = 0;
@@ -233,13 +236,13 @@
 				currentIndex = self._carouselItemByCount(count);
 
 			// change carousel items content on change current index
-			if (self._lastCurrentIndex !== Math.round(value)) {
+			if (self._lastCurrentIndex !== round(value)) {
 				if (self._lastCurrentIndex !== null) {
 					if (self._ui.items.length !== self._numberOfCarouselItems) {
-						self._rollItems(Math.round(value) - self._lastCurrentIndex, Math.round(value));
+						self._rollItems(round(value) - self._lastCurrentIndex, round(value));
 					}
 				}
-				self._lastCurrentIndex = Math.round(value);
+				self._lastCurrentIndex = round(value);
 			}
 
 			diff = index - currentIndex;
@@ -342,8 +345,8 @@
 				self.options.value = self._getValueByCount(self._count);
 
 				ns.event.trigger(self.element, "spinchange", {
-					value: parseInt(self.options.value, 10),
-					dValue: parseInt(self.options.value, 10) - parseInt(self._prevValue, 10)
+					value: parseFloat(self.options.value),
+					dValue: parseFloat(self.options.value) - parseFloat(self._prevValue)
 				});
 			});
 
@@ -453,14 +456,14 @@
 				options = self.options;
 
 			// convert options
-			options.min = (options.min !== undefined) ? parseInt(options.min, 10) : 0;
-			options.max = (options.max !== undefined) ? parseInt(options.max, 10) : 0;
-			options.value = (options.value !== undefined) ? parseInt(options.value, 10) : 0;
-			options.step = (options.step !== undefined) ? parseInt(options.step, 10) : 1;
+			options.min = (options.min !== undefined) ? parseFloat(options.min) : 0;
+			options.max = (options.max !== undefined) ? parseFloat(options.max) : 0;
+			options.value = (options.value !== undefined) ? parseFloat(options.value) : 0;
+			options.step = (options.step !== undefined) ? parseFloat(options.step, 10) : 1;
 			options.duration = (options.duration !== undefined) ? parseInt(options.duration, 10) : 0;
 			options.labels = (Array.isArray(options.labels)) ? options.labels : options.labels.split(",");
 
-			self.length = options.max - options.min + options.step;
+			self.length = (options.max - options.min) / options.step + 1;
 			self._count = self._valueToCount(options.value);
 
 			self.dragTarget = (options.dragTarget === "self") ? self.element : document;
@@ -521,7 +524,8 @@
 
 		prototype._setValue = function (value) {
 			var self = this,
-				countDiff;
+				countDiff,
+				options = self.options;
 
 			value = window.parseFloat(value, 10);
 			// @todo: for spin with labels the textContent should contains label by value;
@@ -530,14 +534,14 @@
 			if (isNaN(value)) {
 				ns.warn("Spin: value is not a number");
 			} else {
-				if ((value < self.options.min || value > self.options.max) && self.options.loop === "disabled") {
-					value = Math.min(Math.max(value, self.options.min), self.options.max);
+				if ((value < options.min || value > options.max) && options.loop === "disabled") {
+					value = min(max(value, options.min), options.max);
 				}
-				if (value !== self.options.value) {
+				if (value !== options.value) {
 					self._previousCount = self._count;
 					self._count = self._valueToCount(value);
 
-					if (self.options.loop === "enabled" && self.options.shortPath === "enabled") {
+					if (options.loop === "enabled" && options.shortPath === "enabled") {
 						countDiff = self._count - self._previousCount;
 						if (Math.abs(countDiff) > (self.length / 2)) {
 							if (countDiff < 0) {
@@ -548,7 +552,7 @@
 						}
 					}
 
-					self.options.value = value;
+					options.value = value;
 					// set data-value on element
 					self.element.dataset.value = value;
 
@@ -609,7 +613,7 @@
 				value = self._getValueByCount(self._count);
 
 			if (self.options.loop !== "enabled") {
-				self._objectValue.value = Math.min(Math.max(value, options.min), options.max);
+				self._objectValue.value = min(max(value, options.min), options.max);
 			}
 			return value;
 		};
@@ -617,15 +621,22 @@
 		prototype._setMax = function (element, max) {
 			var options = this.options;
 
-			options.max = (max !== undefined) ? parseInt(max, 10) : 0;
-			this.length = options.max - options.min + options.step;
+			options.max = (max !== undefined) ? parseFloat(max) : 0;
+			this.length = (options.max - options.min) / options.step + 1;
 		};
 
 		prototype._setMin = function (element, min) {
 			var options = this.options;
 
-			options.min = (min !== undefined) ? parseInt(min, 10) : 0;
-			this.length = options.max - options.min + options.step;
+			options.min = (min !== undefined) ? parseFloat(min) : 0;
+			this.length = (options.max - options.min) / options.step + 1;
+		};
+
+		prototype._setStep = function (element, step) {
+			var options = this.options;
+
+			options.step = (step !== undefined) ? parseFloat(step) : 0;
+			this.length = (options.max - options.min) / options.step + 1;
 		};
 
 		prototype._setLabels = function (element, value) {
@@ -694,16 +705,16 @@
 				utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
 			} else {
 				if (options.enabled) {
-					previousCount = Math.round(self._count);
+					previousCount = round(self._count);
 					self._objectValue.value = self._startDragCount - e.detail.deltaY / DRAG_STEP_TO_VALUE;
 					if (options.loop !== "enabled") {
-						self._objectValue.value = Math.min(Math.max(self._objectValue.value, 0), self.length - 1);
+						self._objectValue.value = min(max(self._objectValue.value, 0), self.length - 1);
 					}
 					showAnimationTick(self);
 
 					// trigger device vibration
 					if (options.vibration > 0 &&
-						previousCount !== Math.round(self._count) &&
+						previousCount !== round(self._count) &&
 						typeof window.navigator.vibrate === "function") {
 						window.navigator.vibrate(options.vibration);
 					}
@@ -745,20 +756,20 @@
 				e.detail.velocityY > 0.7 &&
 				e.detail.distance) {
 
-				momentum = self.options.momentumLevel * Math.round(e.detail.distance / 20);
+				momentum = self.options.momentumLevel * round(e.detail.distance / 20);
 				if (e.detail.direction === "up") {
 					momentum = -momentum;
 				}
-				self._count = Math.round(self._objectValue.value) - momentum || 0;
+				self._count = round(self._objectValue.value) - momentum || 0;
 				if (self.options.loop !== "enabled") {
-					self._count = Math.min(Math.max(self._count, 0), self.length - 1);
+					self._count = min(max(self._count, 0), self.length - 1);
 				}
 				duration = self.options.momentumDuration;
 				chain[0].timing = Spin.timing.easeOut;
 			} else {
-				self._count = Math.round(self._objectValue.value) || 0;
+				self._count = round(self._objectValue.value) || 0;
 				if (self.options.loop !== "enabled") {
-					self._count = Math.min(Math.max(self._count, 0), self.length - 1);
+					self._count = min(max(self._count, 0), self.length - 1);
 				}
 				duration = Math.abs(self._count - self._objectValue.value) * duration;
 			}
@@ -817,7 +828,7 @@
 		prototype._itemIndexByValue = function (value) {
 			var options = this.options;
 
-			return Math.round((value - options.min) / options.step);
+			return round((value - options.min) / options.step);
 		};
 
 		prototype._itemByCount = function (count) {

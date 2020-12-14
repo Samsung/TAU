@@ -1,0 +1,33 @@
+.ui-value-picker {
+	display: flex;
+	padding-left: 36%;
+	padding-top: 19 * @px_base;
+	padding-bottom: 24 * @px_base;
+
+	/*disable-pull-to-refresh-effect*/
+	overscroll-behavior: contain;
+
+	.ui-spin-item {
+		line-height: 56 * @px_base;
+	}
+
+	.ui-value-picker-value {
+		width: 28%;
+		font-size: 32 * @px_base;
+	}
+
+	.ui-spin ~ .ui-spin {
+		margin-left: 4%;
+	}
+
+	.ui-value-picker-unit {
+		width: 25%;
+		font-size: 24 * @px_base;
+		align-items: flex-start;
+	}
+
+	@media (orientation: landscape) {
+		padding-top: 8 * @px_base;
+		padding-bottom: 11 * @px_base;
+	}
+}
