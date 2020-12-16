@@ -167,6 +167,8 @@
 				itemToAppend,
 				diff,
 				restDiff,
+				firstItem,
+				lastItem,
 				i;
 
 			count = round(count);
@@ -179,14 +181,23 @@
 
 			// for case of count of items is less then carousel items
 			diff = self._numberOfCarouselItems - self.length;
-			if (diff < 0) {
+			if (diff <= 0) {
 				diff = 0;
+				firstItem = 0;
+				lastItem = self._numberOfCarouselItems - 1;
+			} else {
+				// indicate first and last carousel item to fill
+				firstItem = Math.floor(diff / 2);
+				restDiff = diff - firstItem;
+				lastItem = self._numberOfCarouselItems - restDiff - 1;
+				// difference between last and first item has to be odd value
+				if ((lastItem - firstItem + 1) % 2 === 0) {
+					lastItem++;
+				}
 			}
 
 			// append new items
-			i = Math.floor(diff / 2);
-			restDiff = diff - i;
-			for (; i < self._numberOfCarouselItems - restDiff; i++) {
+			for (i = firstItem; i <= lastItem; i++) {
 				itemToAppend = self._itemByCount(count + i - self._carouselCenterIndex);
 				if (itemToAppend) {
 					self._carouselItems[self._carouselItemByCount(count + i - self._carouselCenterIndex)]
@@ -833,9 +844,10 @@
 
 		prototype._itemByCount = function (count) {
 			var self = this,
-				value = self._getValueByCount(count);
+				value = self._getValueByCount(count),
+				itemIndex = self._itemIndexByValue(value);
 
-			return self._ui.items[self._itemIndexByValue(value)];
+			return (itemIndex >= 0) ? self._ui.items[itemIndex] : null;
 		};
 
 		prototype._click = function (e) {

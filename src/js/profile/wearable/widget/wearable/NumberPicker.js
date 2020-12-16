@@ -109,6 +109,7 @@
 					max: 12,
 					step: 1,
 					disabled: false,
+					loop: "enabled",
 					accelerated: 0,
 					dragTarget: "self",
 					vibration: 0
@@ -242,7 +243,7 @@
 					self._spin = ns.widget.Spin(ui.number, {
 						min: self.options.min,
 						max: self.options.max,
-						loop: "enabled",
+						loop: self.options.loop,
 						rollHeight: "custom",
 						itemHeight: 38,
 						duration: 300,
