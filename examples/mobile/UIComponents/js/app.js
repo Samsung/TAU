@@ -31,10 +31,14 @@
 		tau.theme.setTheme(event.target.value);
 	}
 
-	function onMenuClick() {
-		var dropDownMenuWidget = tau.widget.DropdownMenu(themeChanger);
 
-		dropDownMenuWidget.open();
+	function onMenuClick() {
+		var dropDownMenuWidget;
+
+		if (themeChanger) {
+			dropDownMenuWidget = tau.widget.DropdownMenu(themeChanger);
+			dropDownMenuWidget.open();
+		}
 	}
 
 	function onPageShow() {
