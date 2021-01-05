@@ -1026,10 +1026,13 @@
 					optionHeight = ui.elOptionContainer.offsetHeight,
 					listItemWidthOffsets = [].slice.call(ui.elOptionContainer.children).map(mapItemWidth),
 					optionContainerStyle = window.getComputedStyle(ui.elOptionContainer),
+					wrapperStyle = window.getComputedStyle(ui.elOptionWrapper),
 					biggestListItemWidth = Math.max.apply(Math, listItemWidthOffsets) +
 						parseInt(optionContainerStyle.borderLeftWidth, 10) +
 						parseInt(optionContainerStyle.borderRightWidth, 10),
-					wrapperMinWidth = parseInt(window.getComputedStyle(ui.elOptionWrapper).minWidth, 10),
+					wrapperPaddingLeftRight = parseInt(wrapperStyle.paddingLeft, 10) +
+						parseInt(wrapperStyle.paddingRight, 10),
+					wrapperMinWidth = parseInt(wrapperStyle.minWidth, 10),
 					options = self.options,
 					scrollTop = ui.elOptionWrapper.parentNode.querySelector(".ui-scrollview-clip").scrollTop,
 					height,
@@ -1048,13 +1051,20 @@
 				width = Math.max(biggestListItemWidth, wrapperMinWidth);
 				height = optionHeight;
 
+				if (width + wrapperPaddingLeftRight > window.screen.width) {
+					width = window.screen.width - wrapperPaddingLeftRight;
+				}
+
 				// This part decides the location and direction of option list.
-				offsetLeft = self._horizontalPosition === "right" ? widgetParentRect.right - width : widgetParentRect.left;
+				offsetLeft = self._horizontalPosition === "right" ? widgetParentRect.right - width - wrapperPaddingLeftRight :
+					widgetParentRect.left;
 				// if drop down menu goes out screen eg. more menu
 				// left position has to be corrected
-				if (offsetLeft + width > window.screen.width) {
-					offsetLeft -= offsetLeft + width - window.screen.width;
+
+				if (offsetLeft + width + wrapperPaddingLeftRight > window.screen.width) {
+					offsetLeft -= offsetLeft + width + wrapperPaddingLeftRight - window.screen.width;
 				}
+
 				optionStyle = "left: " + offsetLeft + "px; ";
 
 				if (options.inline === true) {

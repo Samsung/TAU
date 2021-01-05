@@ -1,5 +1,3 @@
-@dropdown-options-margin: 3 * @px_base;
-
 .ui-dropdownmenu-overlay {
 	opacity: 0;
 	position: absolute;
@@ -55,7 +53,7 @@
 		vertical-align: middle;
 		position: relative;
 		height: 100%;
-		line-height: 120 * @unit_base;
+		line-height: 60 * @px_base;
 		white-space: nowrap;
 		padding: 0 26 * @px_base 0 16 * @px_base;
 		overflow: hidden;
@@ -66,7 +64,7 @@
 		&::after {
 			content: "";
 			position: absolute;
-			.calc-width(~"100% - " (64 * @unit_base));
+			.calc-width(~"100% - " (32 * @px_base));
 			height: 1 * @px_base;
 			bottom: 9 * @px_base;
 			right: 16 * @px_base;
@@ -161,19 +159,19 @@
 	}
 }
 
-@-webkit-keyframes open-to-bottom {
+@keyframes open-to-bottom {
 	.open-to-bottom();
 }
 
-@-webkit-keyframes open-to-top {
+@keyframes open-to-top {
 	.open-to-top();
 }
 
-@-webkit-keyframes close-to-bottom {
+@keyframes close-to-bottom {
 	.close-to-bottom();
 }
 
-@-webkit-keyframes close-to-top {
+@keyframes close-to-top {
 	.close-to-top();
 }
 
@@ -186,11 +184,12 @@
 	z-index: 1201;
 	min-width: 168px;
 	max-width: 100vw;
-	padding: 3 * @px_base;
+	padding: 5 * @px_base;
+	margin-top: -5.5 * @px_base;
 
 	&.ui-dropdownmenu-options-vertical-margins {
-		margin-top: @dropdown-options-margin;
-		margin-bottom: @dropdown-options-margin;
+		margin-top: 0.5 * @px_base;
+		margin-bottom: 4.5 * @px_base;
 	}
 	&.ui-dropdownmenu-active {
 		visibility: visible;
@@ -214,11 +213,11 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
-		max-height: calc(~"100vh - "2 * @dropdown-options-margin);
+		max-height: calc(~"100vh - "2 * 5 * @px_base);
 		overflow-y: auto;
 		background-color: var(--dropdown-menu-options-background);
 		border-radius: 26 * @px_base;
-		box-shadow: 0 0 3 * @px_base 0 @dropdown-list-box-shadow-color;
+		box-shadow: 0 2.5 * @px_base 8 * @px_base 0 var(--dropdown-shadow-color-1), 0 0 2.5 * @px_base 0 var(--dropdown-shadow-color-2);
 		border: var(--dropdown-menu-options-border);
 		&:focus {
 			outline: none;
@@ -238,7 +237,7 @@
 				margin-right: 24 * @px_base;
 				content: '';
 				position: absolute;
-				mask-image: url('images/1_App_bar/tw_ic_ab_back_mtrl.svg');
+				mask-image: url('images/13_View_controls/tw_dropdown_ic_check.svg');
 				mask-size: 100%, 0;
 				mask-position: center;
 				mask-repeat: no-repeat;
