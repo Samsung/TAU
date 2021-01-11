@@ -1,7 +1,7 @@
 (function (tau) {
 	"use strict";
-	var page = document.getElementById("progressbar-demo"),
-		progressbar = document.getElementById("progressbar"),
+	var page = document.getElementById("progress-bar-appbar-page"),
+		progressbar = document.getElementById("progress-bar-appbar"),
 		timer,
 
 		pageBeforeShowHandler = function () {
