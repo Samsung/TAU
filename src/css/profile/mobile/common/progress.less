@@ -277,7 +277,7 @@ tau-progress {
 	box-sizing: border-box;
 	margin: auto;
 	animation: rotating 2s linear infinite;
-	
+
 	&::before {
 		content:"";
 		border-top-style: solid;
@@ -397,4 +397,44 @@ tau-progress {
 .ui-scrollview-view > .ui-progress-container {
 	padding-left: 56 * @px_base;
 	padding-right: 56 * @px_base;
+}
+
+/** Progress Bar / Circle in AppBar */
+.ui-appbar {
+	.ui-progress-bar {
+		height: 3 * @px_base;
+	}
+	.ui-indeterminate-circle {
+		width: 24 * @px_base;
+		height: 24 * @px_base;
+		margin-right: 24 * @px_base;
+		margin-bottom: 16 * @px_base;
+		transition: margin-right 200ms ease-in;
+	}
+	.ui-indeterminate-circle-medium {
+		&::before, &::after {
+			width: (24/2 - 3) * @px_base;
+			height: (24/2 - 3) * @px_base;
+		}
+
+		&::before {
+			border-top-width: 3 * @px_base;
+			border-left-width: 3 * @px_base;
+		}
+
+		&::after {
+			border-right-width: 3 * @px_base;
+			border-bottom-width: 3 * @px_base;
+		}
+	}
+	&.ui-appbar-expanded {
+		.ui-indeterminate-circle {
+			margin-right: calc(~"50% - "24/2 * @px_base);
+		}
+		&.ui-appbar-dragging {
+			.ui-indeterminate-circle {
+				margin-right: 24 * @px_base;
+			}
+		}
+	}
 }

@@ -11,7 +11,7 @@
 	 * pageBeforeShowHandler - pagebeforeshow event handler
 	 * pageHideHandler - pagehide event handler
 	 */
-	var page = document.getElementById("progresscircle-demo"),
+	var page = document.getElementById("progress-circle-page"),
 		progressBar = document.getElementById("circle"),
 		minusBtn = document.getElementById("minus"),
 		plusBtn = document.getElementById("plus"),
