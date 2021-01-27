@@ -416,16 +416,6 @@ tau-progress {
 			width: (24/2 - 3) * @px_base;
 			height: (24/2 - 3) * @px_base;
 		}
-
-		&::before {
-			border-top-width: 3 * @px_base;
-			border-left-width: 3 * @px_base;
-		}
-
-		&::after {
-			border-right-width: 3 * @px_base;
-			border-bottom-width: 3 * @px_base;
-		}
 	}
 	&.ui-appbar-expanded {
 		.ui-indeterminate-circle {
@@ -435,6 +425,53 @@ tau-progress {
 			.ui-indeterminate-circle {
 				margin-right: 24 * @px_base;
 			}
+		}
+	}
+}
+.ui-footer {
+	.ui-progress-bar {
+		height: 3 * @px_base;
+	}
+	.ui-progress-container {
+		width: 100%;
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		min-height: 40 * @px_base;
+
+		.ui-progress-bar {
+			position: absolute;
+			width: 100%;
+		}
+		.ui-progress-text {
+			font-size: 14 * @sp_base;
+			padding: 0;
+			margin: auto;
+		}
+		.ui-indeterminate-circle-medium {
+			width: 24 * @px_base;
+			height: 24 * @px_base;
+			margin-right: 8 * @px_base;
+			&::before, &::after {
+				width: (24/2 - 3) * @px_base;
+				height: (24/2 - 3) * @px_base;
+			}
+		}
+		.ui-progress-bar ~ .ui-progress-text {
+			padding-top: 3 * @px_base;
+		}
+		.ui-indeterminate-circle ~ .ui-progress-text {
+			margin-left: 0;
+		}
+	}
+}
+.ui-btn-content {
+	.ui-indeterminate-circle-medium {
+		width: 24 * @px_base;
+		height: 24 * @px_base;
+		&::before, &::after {
+			width: (24/2 - 3) * @px_base;
+			height: (24/2 - 3) * @px_base;
 		}
 	}
 }

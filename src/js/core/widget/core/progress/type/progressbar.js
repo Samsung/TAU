@@ -170,7 +170,7 @@
 				},
 
 				changeValue: function (progress, oldValue, newValue) {
-					var duration = 1850,
+					var duration = progress.options.duration,
 						valueElement = progress._ui.progressBarValueElement,
 						oldPercentValue = (oldValue * 100) / (progress.options.max - progress.options.min),
 						newPercentValue = (newValue * 100) / (progress.options.max - progress.options.min),

@@ -119,6 +119,7 @@
 				defaults = {
 					type: progressType.PROGRESS_BAR,
 					size: circleSize.MEDIUM,
+					duration: 1850,
 					value: 100,
 					min: 0,
 					max: 100
@@ -271,10 +272,12 @@
 					element = self.element,
 					page = selectors.getClosestByClass(element, Page.classes.uiPage);
 
-				self._ui.page = page;
+				if (page) {
+					self._ui.page = page;
 
-				self._callbacks.onPageBeforeShow = pageBeforeShow.bind(null, self);
-				page.addEventListener(Page.events.BEFORE_SHOW, self._callbacks.onPageBeforeShow, false);
+					self._callbacks.onPageBeforeShow = pageBeforeShow.bind(null, self);
+					page && page.addEventListener(Page.events.BEFORE_SHOW, self._callbacks.onPageBeforeShow, false);
+				}
 			};
 
 			prototype._unbindEvents = function () {
