@@ -62,9 +62,12 @@
 					 * @member ns.widget.core.MasterOnOffSwitch
 					 */
 					self.options = {
-						target: null
+						target: null,
+						progress: false
 					},
-					self._ui = {};
+					self._ui = {
+						progress: null
+					};
 					self._onChangeMasterOnOff = null;
 				},
 				BaseWidget = ns.widget.BaseWidget,
@@ -124,6 +127,7 @@
 				onOff.type = "checkbox";
 				label.classList.add("ui-on-off-label");
 
+
 				labelText.innerHTML = "Off";
 				label.appendChild(labelText);
 				label.appendChild(onOff);
@@ -142,6 +146,36 @@
 			};
 
 			/**
+			 * Enable / disable progress in Master On-Off Switch
+			 * @param {HTMLElement} element widget base element
+			 * @param {boolean} value
+			 * @protected
+			 * @member ns.widget.core.MasterOnOffSwitch
+			 * @instance
+			 */
+			prototype._setProgress = function (element, value) {
+				var self = this,
+					ui = self._ui,
+					progress = ui.progress;
+
+				if (value && !progress) {
+					progress = document.createElement("div");
+					progress.classList.add("ui-progress");
+					progress.setAttribute("data-size", "small");
+					progress.setAttribute("data-type", "indeterminatecircle");
+					ui.progress = progress;
+
+					ui.labelOnOff.appendChild(progress);
+					ns.widget.Progress(progress);
+				} else if (!value && progress) {
+					ns.widget.Progress(progress).destroy();
+					progress.parentElement.removeChild(progress);
+					ui.progress = null;
+				}
+				self.options.progress = value;
+			};
+
+			/**
 			 * Initiate widget
 			 * @method _init
 			 * @param {HTMLElement} element
@@ -155,6 +189,7 @@
 				self._ui.input = element.querySelector("input.ui-on-off-switch");
 				// set initial look
 				onChangeMasterOnOff(self);
+				self._setProgress(element, self.options.progress);
 			};
 
 			function onChangeMasterOnOff(self) {

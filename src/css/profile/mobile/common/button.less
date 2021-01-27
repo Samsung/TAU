@@ -261,7 +261,7 @@ a.ui-btn {
 		&.ui-color-add::after {
 			background-color: var(--btn-add-color);
 		}
-		
+
 		&.ui-color-delete::after {
 			background-color: var(--btn-delete-color);
 		}
@@ -479,8 +479,9 @@ a.ui-btn {
 		width: auto;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		padding-top: 12 * @px_base;
-		padding-bottom: 12 * @px_base;
+		padding-top: 0;
+		padding-bottom: 0;
+		min-height: 44 * @px_base;
 
 		&::before {
 			border-radius: 22 * @px_base;
@@ -522,9 +523,8 @@ a.ui-btn {
 		&.ui-btn-active.ui-btn-icon::after {
 			background-color: var(--button-fab-icon-color);
 		}
-}
+	}
 	.ui-btn-content {
-		width: 90 * @px_base;
 		display: flex;
 		flex-direction: column;
 		margin: 0 auto;
@@ -558,8 +558,9 @@ a.ui-btn {
 		.ui-btn.ui-btn-contained {
 			border-radius: 18 * @px_base;
 			font-size: var(--button-contained-list-text-font-size);
-			padding-top: 8 * @px_base;
-			padding-bottom: 8 * @px_base;
+			min-height: 36 * @px_base;
+			padding-top: 0;
+			padding-bottom: 0;
 		}
 	}
 	.ui-btn-flat, .ui-btn-contained {
