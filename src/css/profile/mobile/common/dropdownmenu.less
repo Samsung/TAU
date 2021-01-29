@@ -308,3 +308,19 @@
 .ui-appbar-expanded .ui-dropdownmenu-placeholder {
 	line-height: (56 + 3) * @px_base; // compensate top margin
 }
+
+.ui-spinner {
+	.ui-dropdownmenu-placeholder::after {
+		content: "";
+		width: 20 * @px_base;
+		height: 20 * @px_base;
+		position: absolute;
+		right: 0;
+		background-color:black;
+		top: 35%;
+		mask-image: url(images/13_View_controls/tw_spinner_mtrl.svg);
+	}
+	.ui-dropdownmenu-active .ui-dropdownmenu-placeholder::after {
+		display: none;
+	}
+}
