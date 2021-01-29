@@ -188,13 +188,15 @@
 					 * @property {boolean} [options.inline=false] Sets the DropdownMenu widget as inline/normal type.
 					 * @property {boolean} [options.hidePlaceholderMenuItems=true] Hide/Reveal the placeholder option in dropdown list of the DropdownMenu.
 					 * @property {string}  [options.items=''] List of <option>: 'key1:value1, key2:value2, key3:value3 .....'
+					 * @property {string}  [options.style='dropdown'] style of dropdown widget: 'dropdown', 'spinner'
 					 * @member ns.widget.mobile.DropdownMenu
 					 */
 					self.options = {
 						nativeMenu: true,
 						inline: false,
 						hidePlaceholderMenuItems: true,
-						items: ""
+						items: "",
+						style: "dropdown"
 					};
 					/**
 					 * @property {Function|null} _toggleMenuBound callback for select action
@@ -370,7 +372,13 @@
 					 * @style "ui-dropdownmenu-options-vertical-margins"
 					 * @member ns.widget.mobile.DropdownMenu
 					 */
-					verticalMargins: "ui-dropdownmenu-options-vertical-margins"
+					verticalMargins: "ui-dropdownmenu-options-vertical-margins",
+					/**
+					 * Set top and bottom margins for dropdownmenu
+					 * @style "ui-dropdownmenu-options-vertical-margins"
+					 * @member ns.widget.mobile.DropdownMenu
+					 */
+					spinner: "ui-spinner"
 				},
 				prototype = new BaseWidget();
 
@@ -522,6 +530,7 @@
 					classList.remove(BaseWidget.classes.disable);
 				}
 			}
+
 			/**
 			 * Return data array used to fill select tag options elements
 			 * @method dataItemsToArray
@@ -887,6 +896,29 @@
 			};
 
 			/**
+			 * Set widget style
+			 * @method setStyle
+			 * @protected
+			 * @static
+			 * @param {HTMLElement} element
+			 * @param {string} style
+			 * @member ns.widget.mobile.DropdownMenu
+			 */
+			prototype._setStyle = function (element, style) {
+				var self = this,
+					ui = self._ui;
+
+				if (style === "spinner") {
+					ui.elSelectWrapper.classList.add(classes.spinner);
+					self._setInline(element, true);
+				} else if (style === "dropdown") {
+					ui.elSelectWrapper.classList.remove(classes.spinner);
+				} else {
+					ns.warn("DropDownMenu: not supported style '" + style + "'");
+				}
+			};
+
+			/**
 			 * Init of DropdownMenu widget
 			 * @method _init
 			 * @param {HTMLElement} element
@@ -909,6 +941,8 @@
 						ui.elOptions = ui.elOptionContainer.querySelectorAll("li[data-value]");
 					}
 				}
+				// set widget style: dropdown | spinner
+				self._setStyle(element, self.options.style);
 			};
 
 			/**
