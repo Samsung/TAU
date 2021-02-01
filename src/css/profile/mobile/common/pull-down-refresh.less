@@ -1,0 +1,25 @@
+.ui-pull-down-refresh {
+    position: absolute;
+    display: block;
+    top: (62 + 56) * @px_base; /* 56px below header */
+    width: 40 * @px_base;
+    height: 40 * @px_base;
+    left: calc(~"50% - "28 * @px_base);
+    border-radius: 100%;
+    margin: 5 * @px_base 8 * @px_base 10 * @px_base;
+    background-color: var(--pull-down-refresh-bg-color);
+    box-shadow: 0 2.5 * @px_base 8 * @px_base 0 var(--pull-down-refresh-shadow-1-color), 0 0 2 * @px_base 0 var(--pull-down-refresh-shadow-2-color);
+
+    &:after {
+        content: "";
+        width: 24 * @px_base;
+        height: 24 * @px_base;
+        position: absolute;
+        mask-image: url(images/9_Progress/tw_ic_progress_refresh_mtrl.svg);
+        mask-size: 24 * @px_base;
+        background-color: var(--primary-color);
+        mask-repeat: no-repeat;
+        mask-position: center;
+        padding: 8 * @px_base;
+    }
+}
