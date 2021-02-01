@@ -430,6 +430,7 @@
 				 * @property {Object} options
 				 * @property {boolean|string|null} [options.header=false] Sets content of header.
 				 * @property {boolean|string|null} [options.footer=false] Sets content of footer.
+				 * @property {boolean} [options.pullDownRefresh=false] enable / disable pull down refresh
 				 * @property {boolean} [options.autoBuildWidgets=false] Automatically build widgets inside page.
 				 * @property {boolean} [options.goToTopButton=false] Shows go to top button at the bottom of the page.
 				 * @property {string} [options.content=null] Sets content of popup.
@@ -441,6 +442,7 @@
 				options.header = null;
 				options.footer = null;
 				options.content = null;
+				options.pullDownRefresh = false;
 				options.goToTopButton = ns.getConfig("goToTopButton");
 				options.enablePageScroll = ns.getConfig("enablePageScroll");
 				options.autoBuildWidgets = ns.getConfig("autoBuildOnPageChange");
@@ -757,6 +759,35 @@
 					null;
 			};
 
+			function createPullDownRefresh() {
+				var pullDown = document.createElement("div");
+
+				pullDown.classList.add("ui-pull-down-refresh");
+				return pullDown;
+			}
+
+			/**
+			 * Method set Pull Down Refresh indicator on page
+			 * @method _setPullDownRefresh
+			 * @param {HTMLElement} element
+			 * @param {boolean} enabled
+			 * @protected
+			 * @member ns.widget.core.Page
+			 */
+			prototype._setPullDownRefresh = function (element, enabled) {
+				var self = this,
+					pullDownRefresh = self._ui.pullDownRefresh;
+
+				if (enabled && !pullDownRefresh) {
+					pullDownRefresh = createPullDownRefresh();
+					element.appendChild(pullDownRefresh);
+					self._ui.pullDownRefresh = pullDownRefresh;
+				} else if (!enabled && pullDownRefresh) {
+					element.removeChild(pullDownRefresh);
+					self._ui.pullDownRefresh = null;
+				}
+			};
+
 			prototype._buildGoToTopButton = function (element) {
 				var self = this,
 					ui = self._ui;
@@ -915,6 +946,7 @@
 				self._buildContent(element);
 				self._buildGoToTopButton(element);
 				self._setTitle(element);
+				self._setPullDownRefresh(element, self.options.pullDownRefresh);
 				self._setAria();
 
 				//it means that we are in wearable profile and we want to make a scrollview on page element (not content)
