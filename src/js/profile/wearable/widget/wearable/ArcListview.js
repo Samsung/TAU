@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-/*global window, define, ns, Math*/
+/*global define, ns*/
 /**
  * #ArcListview Widget
  *
@@ -258,6 +258,7 @@
 					PAGE: "." + Page.classes.uiPage,
 					POPUP: ".ui-popup",
 					SCROLLER: ".ui-scroller",
+					POPUP_WRAPPER: ".ui-popup-wrapper",
 					ITEMS: "." + WIDGET_CLASS + " > li",
 					TEXT_INPUT: "input[type='text']" +
 								", input[type='number']" +
@@ -1119,7 +1120,7 @@
 
 				state.toIndex = index;
 
-				if (this.options.listItemUpdater) {  // virtual list
+				if (this.options.listItemUpdater) { // virtual list
 					if (state.toIndex > self.options.dataLength - 1) {
 						state.toIndex = self.options.dataLength - 1;
 					}
@@ -1553,6 +1554,25 @@
 
 			/**
 			 * Handler for popupbeforeshow event
+			 * @method _onPopupBeforeShow
+			 * @param {Event} event
+			 * @memberof ns.widget.wearable.ArcListview
+			 * @protected
+			 */
+			prototype._onPopupBeforeShow = function (event) {
+				var self = this,
+					popup = event.target;
+
+				if (!popup.classList.contains(Popup.classes.toastSmall)) {
+					if (popup.querySelector(".ui-listview") !== self.element) {
+						self.disableList();
+						self._disabledByPopup = true;
+					}
+				}
+			};
+
+			/**
+			 * Handler for popupshow event
 			 * @method _onPopupShow
 			 * @param {Event} event
 			 * @memberof ns.widget.wearable.ArcListview
@@ -1563,11 +1583,12 @@
 					popup = event.target;
 
 				if (!popup.classList.contains(Popup.classes.toastSmall)) {
-					self.disableList();
-					self._disabledByPopup = true;
+					if (popup.querySelector(".ui-listview") === self.element) {
+						// initialization of the listview embedded in the popup
+						self._init();
+					}
 				}
 			};
-
 
 			/**
 			 * Handler for popupbeforehide event
@@ -1649,8 +1670,10 @@
 			prototype._getItemsFromElement = function () {
 				var self = this;
 
-				// find list elements with including group indexes
-				self._items = slice.call(self._ui.page.querySelectorAll(selectors.ITEMS)) || [];
+				// find list elements with including group indexes and append to list
+				self._items = self._items.concat(
+					slice.call(self._ui.page.querySelectorAll(selectors.ITEMS))
+				);
 			}
 
 			prototype._addItemsFromElement = function () {
@@ -1692,16 +1715,18 @@
 				var self = this,
 					element = self.element,
 					options = self.options,
-					page,
-					header,
-					scroller,
 					ui = self._ui,
+					page = ui.page,
+					header = ui.header,
+					scroller = ui.scroller,
 					carousel = self._carousel,
 					visibleItemsCount = parseInt(self.options.visibleItems, 10);
 
 				// find outer parent elements
-				page = selectorsUtil.getClosestBySelector(element, selectors.PAGE);
-				ui.page = page;
+				if (!page) {
+					page = selectorsUtil.getClosestBySelector(element, selectors.PAGE);
+					ui.page = page;
+				}
 
 				header = page.querySelector("header");
 				if (header) {
@@ -1709,8 +1734,9 @@
 					ui.title = header.querySelector(".ui-title:not(.ui-subtitle)");
 					ui.subTitle = header.querySelector(".ui-title.ui-subtitle");
 				}
-				scroller = selectorsUtil.getClosestBySelector(element, selectors.SCROLLER);
 
+				scroller = selectorsUtil.getClosestBySelector(element, selectors.SCROLLER) ||
+					selectorsUtil.getClosestBySelector(element, selectors.POPUP_WRAPPER);
 
 				if (scroller) {
 					// initialize the position of the scroller
@@ -1724,16 +1750,21 @@
 					self._getItemsFromElement();
 					self._createTextInputs();
 
-					ui.arcListviewSelection = self._buildArcListviewElement(
-						scroller, classes.SELECTION, {
-							insertBefore: true
-						});
-					ui.arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
-					ui.dummyElement = self._buildArcListviewElement(page, classes.DUMMY_ELEMENT);
-
-					// append carousel outside scroller element
-					scroller.parentElement.appendChild(ui.arcListviewCarousel);
-					ui.arcListviewCarousel.addEventListener("vclick", self, true);
+					if (!ui.arcListviewSelection) {
+						ui.arcListviewSelection = self._buildArcListviewElement(
+							scroller, classes.SELECTION, {
+								insertBefore: true
+							});
+					}
+					if (!ui.arcListviewCarousel) {
+						ui.arcListviewCarousel = buildArcListviewCarousel(carousel, visibleItemsCount);
+						// append carousel outside scroller element
+						scroller.parentElement.appendChild(ui.arcListviewCarousel);
+						ui.arcListviewCarousel.addEventListener("vclick", self, true);
+					}
+					if (!ui.dummyElement) {
+						ui.dummyElement = self._buildArcListviewElement(page, classes.DUMMY_ELEMENT);
+					}
 
 					// cache HTML elements
 					ui.scroller = scroller;
@@ -1807,6 +1838,9 @@
 							self._onPopupHide();
 							break;
 						case "popupbeforeshow":
+							self._onPopupBeforeShow(event);
+							break;
+						case "popupshow":
 							self._onPopupShow(event);
 							break;
 						case "currentindexchange" :
@@ -1839,6 +1873,7 @@
 				page.addEventListener("pagehide", self, true);
 				page.addEventListener("popupbeforeshow", self, true);
 				page.addEventListener("popupbeforehide", self, true);
+				page.addEventListener("popupshow", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.addEventListener("vclick", self, true);
 				}
@@ -1904,6 +1939,7 @@
 				page.removeEventListener("pagehide", self, true);
 				page.removeEventListener("popupbeforeshow", self, true);
 				page.removeEventListener("popupbeforehide", self, true);
+				page.removeEventListener("popupshow", self, true);
 				if (self._ui.arcListviewCarousel) {
 					self._ui.arcListviewCarousel.removeEventListener("vclick", self, true);
 				}
@@ -2007,12 +2043,14 @@
 			prototype._initBouncingEffect = function () {
 				var self = this;
 
-				self._setMaxScrollY();
-				self._bouncingEffect = new ns.widget.core.scroller.effect.Bouncing(self._ui.page, {
-					maxScrollX: self.element.getBoundingClientRect().right,
-					maxScrollY: self._maxScrollY,
-					orientation: "vertical-horizontal"
-				});
+				if (!self._bouncingEffect) {
+					self._setMaxScrollY();
+					self._bouncingEffect = new ns.widget.core.scroller.effect.Bouncing(self._ui.page, {
+						maxScrollX: self.element.getBoundingClientRect().right,
+						maxScrollY: self._maxScrollY,
+						orientation: "vertical-horizontal"
+					});
+				}
 			};
 
 			prototype._setGoToTopButtonVisibility = function (visibility) {

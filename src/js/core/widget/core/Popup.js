@@ -604,7 +604,8 @@
 					activeClass = classes.active,
 					elementClassList = self.element.classList,
 					route = Router && Router.getInstance().getRoute("popup"),
-					options;
+					options,
+					ui = self._ui;
 
 				// NOTE: popup's options object is stored in window.history at the router module,
 				// and this window.history can't store DOM element object.
@@ -631,8 +632,8 @@
 					self.state = states.CLOSED;
 				}
 
-				if (self._ui.content.scrollHeight > self._ui.content.clientHeight) {
-					self._ui.footer.classList.add("bottomDivider");
+				if (ui.content.scrollHeight > ui.content.clientHeight) {
+					ui.footer && ui.footer.classList.add("bottomDivider");
 				}
 			};
 
@@ -644,17 +645,20 @@
 			 */
 			prototype._onScroll = function () {
 				var self = this,
-					content = self._ui.content;
+					ui = self._ui,
+					content = ui.content,
+					header = ui.header,
+					footer = ui.footer;
 
 				if (content.scrollTop === 0) {
-					self._ui.header.classList.remove("topDivider");
-					self._ui.footer.classList.add("bottomDivider");
+					header && header.classList.remove("topDivider");
+					footer && footer.classList.add("bottomDivider");
 				} else if (content.scrollHeight - content.clientHeight === content.scrollTop) {
-					self._ui.header.classList.add("topDivider");
-					self._ui.footer.classList.remove("bottomDivider");
+					header && header.classList.add("topDivider");
+					footer && footer.classList.remove("bottomDivider");
 				} else {
-					self._ui.header.classList.add("topDivider");
-					self._ui.footer.classList.add("bottomDivider");
+					header && header.classList.add("topDivider");
+					footer && footer.classList.add("bottomDivider");
 				}
 			}
 
