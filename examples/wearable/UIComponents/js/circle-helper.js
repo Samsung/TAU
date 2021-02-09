@@ -51,11 +51,20 @@ document.addEventListener("tauinit", function () {
 			}
 		});
 		document.addEventListener("popupshow", function (event) {
-			var popup = event.target;
+			var popup = event.target,
+				list = popup.querySelector(".ui-listview");
 
+			if (list) {
+				tau.widget.Listview(list);
+			}
 			tau.util.rotaryScrolling.enable(popup.querySelector(".ui-popup-wrapper"));
 		});
 		document.addEventListener("popuphide", function () {
+			var list = event.target.querySelector(".ui-listview");
+
+			if (list) {
+				tau.engine.getBinding(list).destroy();
+			}
 			tau.util.rotaryScrolling.disable();
 		});
 	}
