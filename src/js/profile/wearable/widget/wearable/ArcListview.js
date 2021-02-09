@@ -1512,10 +1512,12 @@
 				var self = this,
 					selectionElement = self._ui.arcListviewSelection,
 					items = self._state.items,
-					index = self._state.currentIndex,
-					activeElement = items[index].element;
+					index = self._state.currentIndex;
 
-				showHighlight(selectionElement, activeElement);
+				if (items[index]) {
+					// highlight active element
+					showHighlight(selectionElement, items[index].element);
+				}
 			}
 
 			/**
@@ -1848,7 +1850,7 @@
 							break;
 						case "transitionend":
 						case "webkitTransitionEnd":
-							self._onSelectedElementTransitionEnd();
+							self._onSelectedElementTransitionEnd(event);
 							break;
 					}
 				}
@@ -2004,8 +2006,6 @@
 
 				self._unbindEvents();
 
-				self._items = [];
-
 				// Destroy marquee.
 				self._state.items.forEach(function (item) {
 					marqueeDiv = item.element.querySelector(".ui-arc-listview-text-content");
@@ -2016,6 +2016,15 @@
 						}
 					}
 				});
+
+				// append ist items to widget base element
+				self._items.forEach(function (item) {
+					self.element.appendChild(item);
+					item.style.transform = null;
+					item.style.opacity = null;
+				});
+				self._items = [];
+
 				self._state.items = [];
 
 				// remove added elements
