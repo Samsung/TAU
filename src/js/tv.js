@@ -92,6 +92,8 @@
 			"./core/widget/core/Slider",
 			"./core/widget/core/progress/Progress",
 			"./core/widget/core/Page",
+			"./core/widget/core/Card",
+			"./core/widget/core/Appbar",
 			"./core/widget/core/Interactive3D",
 			"./core/widget/core/CoverFlow",
 			"./core/widget/core/Graph",
@@ -99,7 +101,11 @@
 			"./profile/mobile/widget/Scrollview",
 			"./profile/mobile/widget/Expandable",
 			"./profile/mobile/widget/Listview",
+			"./core/widget/core/Marquee",
 			"./core/widget/core/tab/SubTab",
+			"./core/widget/core/MainTab",
+			"./core/widget/core/OnOffSwitch",
+			"./core/widget/core/MasterOnOffSwitch",
 			"./profile/mobile/widget/TextInput",
 			"./profile/mobile/widget/DropdownMenu",
 			"./profile/mobile/widget/TextEnveloper",
@@ -113,17 +119,25 @@
 			"./profile/mobile/widget/IndexScrollbar",
 			"./profile/mobile/widget/Button",
 			"./profile/mobile/widget/FloatingActions",
+			"./profile/mobile/widget/Spin",
+			"./profile/mobile/widget/TimePicker",
+			"./profile/mobile/widget/DatePicker",
+			"./profile/mobile/widget/DateTimePickerWheel",
+			"./profile/mobile/widget/DateTimePicker",
+			"./profile/mobile/widget/Chip",
 			"./core/widget/core/ScrollHandler",
 			"./core/widget/core/Tabs",
 			"./profile/mobile/widget/GridView",
 			"./profile/mobile/expose",
+			"./profile/mobile/widget/Calendar",
 			// router modules
 			"./core/router/Router",
 			"./core/router/route/page",
-			"./core/router/route/popup",
+			"./core/router/route/mainTab",
 			"./core/router/route/popup",
 			"./core/router/route/drawer",
 			"./core/router/route/panel",
+			"./core/router/route/card",
 			"./core/history/manager",
 			"./profile/wearable/expose",
 			// Modules to be loaded after
@@ -136,7 +150,9 @@
 			"./core/info",
 			"./core/init",
 			// globalize
-			"./core/util/globalize"
+			"./core/util/globalize",
+			// theme manager
+			"./core/theme/themeManager"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");

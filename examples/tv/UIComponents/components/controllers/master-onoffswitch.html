@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/tv/theme/changeable/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/tv/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="master-switch-demo">
+		<header class="ui-appbar">
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">Master On/Off switch</span>
+			</div>
+		</header>
+
+		<div class="ui-content">
+			<div class="ui-master-on-off-switch" data-target="list-1"></div>
+			<ul class="ui-listview ui-content-area" id="list-1">
+				<li class="ui-li-divider">
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Switch <span id="switch-result-1">on</span>
+						</span>
+					</div>
+					<div class="ui-li-action">
+						<select class="ui-on-off-switch" id="switch-1">
+							<option value="off"></option>
+							<option value="on" selected></option>
+						</select>
+					</div>
+				</li>
+				<li class="ui-li-divider">
+					<div class="ui-li-text">
+						<span class="ui-li-text-title">
+							Switch <span id="switch-result-2">off</span>
+						</span>
+					</div>
+					<div class="ui-li-action">
+						<select class="ui-on-off-switch" id="switch-2">
+							<option value="off" selected></option>
+							<option value="on"></option>
+						</select>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<link href="onoffswitch.css" rel="stylesheet" />
+		<script src="onoffswitch.js"></script>
+	</div>
+</body>
+
+</html>
