@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link rel="stylesheet" href="../../../lib/tau/tv/theme/changeable/tau.css">
+	<link rel="stylesheet" href="../../../css/style.css">
+	<script data-build-remove="false" src="../../../lib/tau/tv/js/tau.min.js"></script>
+</head>
+<body>
+	<div class="ui-page" id="bar-graph-page">
+		<header>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<h1>Bar graph</h1>
+		</header><!-- /header -->
+		<div class="ui-content">
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-anchor">
+					<div class="ui-graph"
+					id="graph"
+					data-mode="continuous"
+					data-graph="bar"
+					data-color="#FF0000,#00FF00"
+					data-xlabel="Number"
+					data-ylabel="Value"
+					data-xinit="0"
+					data-yinit="0"
+					data-axis-x-type="order"
+					data-axis-x-unit="s"></div>
+				</li>
+			</ul>
+		</div><!-- /content -->
+		<script src="../../../lib/tau/libs/tau.graph.js" type="text/javascript"></script>
+		<script src="bar-graph.js"></script>
+	</div><!-- /page -->
+</body>
+
+</html>

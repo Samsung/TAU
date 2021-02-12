@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/tv/theme/changeable/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/tv/js/tau.js"></script>
+</head>
+
+<body>
+	<div class="ui-page">
+		<header>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<div class="ui-appbar-title-container">
+				<span class="ui-appbar-title">More option list (Max width)</span>
+			</div>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon ui-btn-icon-more" data-style="flat" onClick="openDropdownMenu()"></button>
+				<select data-native-menu="false" id="dropdownmenu" style="display: none">
+					<option value="1">
+						Option1
+					</option>
+					<option value="2" class="ui-dropdown-two-lines">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consectetur venenatis blandit. Praesent vehicula, libero non pretium vulputate, lacus arcu facilisis lectus, sed feugiat tellus nulla eu dolor. Nulla porta bibendum lectus quis euismod. Aliquam volutpat ultricies porttitor. Cras risus nisi, accumsan vel cursus ut, sollicitudin vitae dolor. Fusce scelerisque eleifend lectus in bibendum. Suspendisse lacinia egestas felis a volutpat.
+					</option>
+					<option value="3">
+						Option3
+					</option>
+					<option value="4">
+						Option4
+					</option>
+				</select>
+			</div>
+		</header>
+
+		<div class="ui-content">
+		</div>
+
+		<script>
+			var dropDownMenu = document.getElementById("dropdownmenu");
+			dropdownmenu.selectedIndex = -1;
+
+			function openDropdownMenu() {
+				var dropdownmenuWidget = tau.widget.DropdownMenu(dropDownMenu);
+
+				dropdownmenuWidget.open();
+			}
+		</script>
+
+	</div> <!-- /page -->
+
+</body>
+
+</html>

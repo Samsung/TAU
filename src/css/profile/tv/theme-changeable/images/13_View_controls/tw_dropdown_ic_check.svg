@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>PNG/Light/Winset/List/tw_dropdown_ic_check</title>
+    <defs>
+        <path d="M57.839625,13.282876 C56.960625,12.403876 55.532625,12.406876 54.656625,13.285876 L25.379625,42.655876 C25.184625,42.844876 24.962625,42.874876 24.845625,42.874876 C24.731625,42.874876 24.506625,42.844876 24.314625,42.655876 L5.34562499,23.626876 C4.46662499,22.744876 3.04162499,22.744876 2.16262499,23.620876 C1.28062499,24.499876 1.27762499,25.924876 2.15662499,26.803876 L21.128625,45.832876 C22.121625,46.828876 23.441625,47.374876 24.845625,47.374876 C26.252625,47.374876 27.572625,46.828876 28.562625,45.832876 L57.845625,16.465876 C58.721625,15.583876 58.718625,14.158876 57.839625,13.282876" id="path-1"></path>
+    </defs>
+    <g id="PNG/Light/Winset/List/tw_dropdown_ic_check" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Done-/-Selected" fill="#000000" fill-rule="nonzero" xlink:href="#path-1"></use>
+    </g>
+</svg>
