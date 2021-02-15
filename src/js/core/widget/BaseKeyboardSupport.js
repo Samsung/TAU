@@ -547,14 +547,14 @@
 			function sortByDistance(a, b) {
 				return (a.distanceByDirection.distance === b.distanceByDirection.distance) ?
 					sortByDistanceByCenter(a, b) :
-						(a.distanceByDirection.distance < b.distanceByDirection.distance) ? -1 : 1;
+					(a.distanceByDirection.distance < b.distanceByDirection.distance) ? -1 : 1;
 			}
 
 			function sortByInSideDistanceLimit(a, b) {
 				// sort by inSideDistanceLimit
 				return (a.inSideDistanceLimit && b.inSideDistanceLimit) ? sortByDistance(a, b) :
-						(!a.inSideDistanceLimit && !b.inSideDistanceLimit) ? sortByDistanceByCenter(a, b) :
-							(a.inSideDistanceLimit && !b.inSideDistanceLimit) ? -1 : 1;
+					(!a.inSideDistanceLimit && !b.inSideDistanceLimit) ? sortByDistanceByCenter(a, b) :
+						(a.inSideDistanceLimit && !b.inSideDistanceLimit) ? -1 : 1;
 			}
 
 			/**
@@ -651,8 +651,7 @@
 							distanceByDirection: distanceByDirection,
 							distanceByCenter: getDistanceByCenter(focusableElementRect, elementRect),
 							inLine: isInLine(focusableElementRect, elementRect, direction),
-							inSideDistanceLimit: distanceByDirection.distance >= 0 &&
-								distanceByDirection.distance < SIDE_DISTANCE_LIMIT
+							inSideDistanceLimit: Math.abs(distanceByDirection.distance) < SIDE_DISTANCE_LIMIT
 						});
 					}
 
