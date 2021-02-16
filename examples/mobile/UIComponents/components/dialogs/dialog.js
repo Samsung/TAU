@@ -1,28 +1,16 @@
 (function (document, tau) {
 	var page = document.getElementById("demo-dialog-page"),
-		buttons = document.querySelectorAll(".ui-btn:not(.ui-btn-icon-back)"),
 		progressPage = page.querySelector("#progressbar-dialog"),
 		progressbar = page.querySelector("#progressbar"),
 		progressPercent = page.querySelector("#percent"),
 		setTimer,
-		getTimer,
-		idx;
-
-	function onClick() {
-		tau.history.back();
-	}
+		getTimer;
 
 	function onPageShow() {
-		for (idx = 0; idx < buttons.length; idx++) {
-			buttons[idx].addEventListener("vclick", onClick);
-		}
 		progressPage.addEventListener("popupshow", onProgressPageShow);
 	}
 
 	function onPageHide() {
-		for (idx = 0; idx < buttons.length; idx++) {
-			buttons[idx].removeEventListener("vclick", onClick);
-		}
 		progressPage.addEventListener("popuphide", onProgressPageHide);
 	}
 

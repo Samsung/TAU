@@ -142,6 +142,16 @@
 				margin-left: 18 * @px_base;
 				margin-right: 18 * @px_base;
 			}
+
+			label {
+				display: inherit;
+			}
+		}
+
+		ul .ui-li-has-radio {
+			label {
+				display: inherit;
+			}
 		}
 
 		.ui-popup-container-text {
@@ -172,6 +182,20 @@
 		&.ui-popup-has-time-picker, &.ui-popup-has-date-picker {
 			padding-left: unset;
 			padding-right: unset;
+		}
+
+		.ui-content-image {
+			margin: 19 * @px_base auto 8 * @px_base auto;
+			img {
+				height: 168 * @px_base;
+				border-radius: 22 * @px_base;
+				padding: 0;
+			}
+		}
+		@media (orientation: landscape) {
+			.ui-content-image {
+				margin-top: 8 * @px_base;
+			}
 		}
 	}
 
