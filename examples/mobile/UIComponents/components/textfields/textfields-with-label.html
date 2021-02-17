@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="textinput-demo">
+		<header>
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<h1>
+				Text fields with labels
+			</h1>
+		</header>
+		<!-- /header -->
+		<div class="ui-content">
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-has-text-input">
+					<label class="ui-text-input-label" for="text-label-1">Label</label>
+					<input class="input-hint" placeholder="Hint text Inactive" type="text" id="text-label-1"/>
+				</li>
+				<li class="ui-li-has-text-input" id="text-input1">
+					<label for="text-label-2">Label</label>
+					<input class="input-hint" placeholder="Hint text Inactive" type="text" id="text-label-2"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<label for="text-label-3">Label</label>
+					<input type="text" id="text-label-3"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<label for="text-label-4">Label</label>
+					<input type="text" value="Input text" id="text-label-4"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<label for="text-label-5">Label</label>
+					<input disabled="disabled" value="Disabled text" type="text" id="text-label-5"/>
+				</li>
+				<li class="ui-li-has-text-input">
+					<label for="text-label-6">Label</label>
+					<input placeholder="Input letters only" pattern="[A-Za-z ]+" value="8 wrong value"
+						data-error-message-string="Error message" type="text" id="text-label-6"/>
+				</li>
+			</ul>
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+</body>
+
+</html>

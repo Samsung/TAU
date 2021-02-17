@@ -31,7 +31,7 @@
 
 			assert.equal(element.className, "ui-text-enveloper ui-text-enveloper-container", "Element has proper class");
 			assert.equal(element.firstElementChild.className, "ui-text-enveloper-start", "First child element has proper class");
-			assert.equal(input.className, "ui-text-enveloper-input ui-text-input", "Input element has proper class");
+			assert.equal(input.className, "ui-text-enveloper-input ui-text-input ui-text-input-empty", "Input element has proper class");
 			assert.equal(input.dataset.tauName, "TextInput", "Input element is instance of TextInput");
 			assert.equal(widget._ui.inputElement, input, "Insput is stored in _ui");
 			assert.deepEqual(widget._ui.buttons, [], "Insput is stored in _ui");
@@ -44,7 +44,7 @@
 			input = elementSimple.children[0].children[0];
 
 			assert.equal(element.className, "ui-text-enveloper ui-text-enveloper-container", "Element has proper class");
-			assert.equal(input.className, "ui-text-enveloper-input ui-text-input", "Input element has proper class");
+			assert.equal(input.className, "ui-text-enveloper-input ui-text-input ui-text-input-empty", "Input element has proper class");
 			assert.equal(input.dataset.tauName, "TextInput", "Input element is instance of TextInput");
 			assert.equal(widget._ui.inputElement, input, "Insput is stored in _ui");
 			assert.deepEqual(widget._ui.buttons, [], "Insput is stored in _ui");
