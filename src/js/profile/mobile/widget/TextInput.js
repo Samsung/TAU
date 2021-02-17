@@ -140,7 +140,8 @@
 					self._ui = {
 						textLineElement: null,
 						textClearButtonElement: null,
-						errorMessageElement: null
+						errorMessageElement: null,
+						label: null
 					};
 					self._callbacks = {};
 
@@ -211,6 +212,48 @@
 					 * @member ns.widget.mobile.TextInput
 					 */
 					uiTextInputFocused: CLASSES_PREFIX + "-focused",
+					/**
+					 * Set class for text input label
+					 * @style ui-text-input-label
+					 * @member ns.widget.mobile.TextInput
+					 */
+					label: CLASSES_PREFIX + "-label",
+					/**
+					 * Set class for text input label when input is inactive
+					 * @style ui-text-input-label-inactive
+					 * @member ns.widget.mobile.TextInput
+					 */
+					labelInactive: CLASSES_PREFIX + "-label-inactive",
+					/**
+					 * Set class for text input when input is empty
+					 * @style ui-text-input-empty
+					 * @member ns.widget.mobile.TextInput
+					 */
+					empty: CLASSES_PREFIX + "-empty",
+					/**
+					 * Set class for text input when TextInput has label
+					 * @style ui-text-input-has-label
+					 * @member ns.widget.mobile.TextInput
+					 */
+					hasLabel: CLASSES_PREFIX + "-has-label",
+					/**
+					 * Set class for text input label when TextInput is focused
+					 * @style ui-activated
+					 * @member ns.widget.mobile.TextInput
+					 */
+					ACTIVATED: "ui-activated",
+					/**
+					 * Set class for text input label when TextInput is disabled
+					 * @style ui-disabled
+					 * @member ns.widget.mobile.TextInput
+					 */
+					DISABLED: "ui-disabled",
+					/**
+					 * Set class for text input label when TextInput value does not match pattern
+					 * @style ui-error
+					 * @member ns.widget.mobile.TextInput
+					 */
+					ERROR: "ui-error",
 					HEADER_WITH_SEARCH: "ui-header-searchbar",
 					/**
 					 * Set search-input widget in text input widget
@@ -238,7 +281,8 @@
 				selector = {
 					uiTextInput: "." + classes.uiTextInput,
 					uiTextInputClearButton: "." + classes.uiTextInputClear,
-					uiTextInputTextLine: "." + classes.uiTextInputTextLine
+					uiTextInputTextLine: "." + classes.uiTextInputTextLine,
+					label: "." + classes.label
 				},
 				/**
 				 * Object with default options
@@ -362,9 +406,15 @@
 			 */
 			prototype._onFocus = function (self) {
 				var element = self.element,
-					currentValueLength = element.value.length;
+					currentValueLength = element.value.length,
+					label = self._ui.label;
 
 				element.classList.add(classes.uiTextInputFocused);
+				element.classList.toggle(classes.empty, element.value === "");
+				if (label) {
+					label.classList.add(classes.ACTIVATED);
+					label.classList.remove(classes.labelInactive);
+				}
 				if (element.value !== "" && self._ui.textClearButtonElement) {
 					self._ui.textClearButtonElement.classList.remove(classes.uiTextInputClearHidden);
 				}
@@ -373,6 +423,17 @@
 				element.selectionStart = currentValueLength;
 				element.selectionEnd = currentValueLength;
 			};
+
+			prototype._validate = function (element) {
+				var self = this,
+					label = self._ui.label;
+
+				if (self._patternRegexp && label) {
+					label.classList.toggle(
+						classes.ERROR,
+						element.value.replace(self._patternRegexp, "") !== "");
+				}
+			}
 
 			/**
 			 * Method adds event for showing clear button and optional resizing textarea.
@@ -384,18 +445,24 @@
 			 */
 			prototype._onInput = function (self) {
 				var element = self.element,
-					btn = self._ui.textClearButtonElement;
+					ui = self._ui,
+					btn = ui.textClearButtonElement;
 
 				if (element.value === "" && btn) {
 					btn.classList.add(classes.uiTextInputClearHidden);
 					element.classList.remove(classes.uiTextInputClearActive);
 				} else {
-					self._toggleClearButton(self._ui.textClearButtonElement, element);
+					self._toggleClearButton(ui.textClearButtonElement, element);
 				}
+
+				element.classList.toggle(classes.empty, element.value === "");
+				ui.label && ui.label.classList.remove(classes.labelInactive);
 
 				if (element.nodeName.toLowerCase() === "textarea") {
 					self._resizeTextArea(element);
 				}
+
+				self._validate(element);
 			};
 			/**
 			 * Method removes class ui-text-input-focused from target element of event.
@@ -406,10 +473,16 @@
 			 * @member ns.widget.mobile.TextInput
 			 */
 			prototype._onBlur = function (self) {
-				var element = self.element;
+				var element = self.element,
+					label = self._ui.label;
 
 				element.classList.remove(classes.uiTextInputFocused);
+				if (label) {
+					label.classList.remove(classes.ACTIVATED);
+					label.classList.toggle(classes.labelInactive, element.value === "");
+				}
 				self._toggleClearButton(self._ui.textClearButtonElement, element);
+				element.classList.toggle(classes.empty, element.value === "");
 			};
 
 			function setAria(element) {
@@ -541,6 +614,23 @@
 
 			/**
 			* Init TextInput Widget
+			* @method _findLabel
+			* @param {HTMLElement} element
+			* @member ns.widget.mobile.TextInput
+			* @return {HTMLElement}
+			* @protected
+			*/
+			prototype._findLabel = function (element) {
+				var previousElement = element.previousElementSibling;
+
+				if (previousElement && previousElement.nodeName === "LABEL") {
+					return previousElement;
+				}
+				return null;
+			};
+
+			/**
+			* Init TextInput Widget
 			* @method _init
 			* @param {HTMLElement} element
 			* @member ns.widget.mobile.TextInput
@@ -550,6 +640,7 @@
 			prototype._init = function (element) {
 				var self = this,
 					ui = self._ui,
+					label,
 					options = self.options,
 					type = element.type,
 					parentNode = element.parentNode;
@@ -557,6 +648,16 @@
 				if (options.clearBtn) {
 					ui.textClearButtonElement = ui.textClearButtonElement || parentNode.querySelector(selector.uiTextInputClearButton);
 				}
+
+				element.classList.toggle(classes.empty, element.value === "");
+
+				label = self._findLabel(element);
+				if (label) {
+					label.classList.add(classes.label);
+					label.classList.toggle(classes.labelInactive, element.value === "");
+				}
+				ui.label = label;
+
 				if (options.textLine) {
 					switch (type) {
 						case "text":
@@ -572,6 +673,8 @@
 								ui.textLineElement = ui.textLineElement || parentNode.querySelector(selector.uiTextInputTextLine);
 							}
 					}
+
+					ui.textLineElement && ui.textLineElement.classList.toggle(classes.hasLabel, !!label);
 				}
 
 				if (element.nodeName.toLowerCase() === "textarea") {
@@ -580,6 +683,10 @@
 					}
 					self._resizeTextArea(element);
 				}
+
+				self._patternRegexp = (element.pattern) ? new RegExp(element.pattern) : null;
+
+				self._validate(element);
 
 				return element;
 			};
@@ -666,11 +773,14 @@
 			 * @protected
 			 */
 			prototype._enable = function () {
-				var element = this.element;
+				var self = this,
+					element = self.element,
+					label = self._ui.label;
 
 				if (element) {
 					element.removeAttribute("disabled");
 					element.classList.remove(classes.uiTextInputDisabled);
+					label && label.classList.remove(classes.DISABLED);
 				}
 			};
 
@@ -702,11 +812,14 @@
 			 * @protected
 			 */
 			prototype._disable = function () {
-				var element = this.element;
+				var self = this,
+					element = self.element,
+					label = self._ui.label;
 
 				if (element) {
 					element.setAttribute("disabled", "disabled");
 					element.classList.add(classes.uiTextInputDisabled);
+					label && label.classList.add(classes.DISABLED);
 				}
 			};
 
@@ -757,12 +870,17 @@
 					ui = self._ui,
 					textLine = ui.textLineElement,
 					clearButton = ui.textClearButtonElement,
-					errorMessage = ui.errorMessageElement;
+					errorMessage = ui.errorMessageElement,
+					label = ui.label;
 
 				self._unbindEvents();
 
 				if (textLine && textLine.parentElement) {
 					textLine.parentElement.removeChild(ui.textLineElement);
+				}
+
+				if (label) {
+					label.classList.remove(classes.label);
 				}
 
 				if (clearButton) {

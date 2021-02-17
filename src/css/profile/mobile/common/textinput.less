@@ -110,7 +110,8 @@ textarea.ui-text-input {
 	background-color: transparent;
 	border: none;
 	caret-color: var(--primary-color);
-	margin: 8 * @px_base 0 8 * @px_base 0;
+	margin: 18 * @px_base 0 8 * @px_base 0;
+	padding: 0;
 
 	&.ui-text-input-disabled,
 	&:disabled {
@@ -128,16 +129,16 @@ textarea.ui-text-input {
 	}
 
 	& + .ui-text-input-textline {
-		height: 1 * @px_base;
-		background: var(--text-input-underline-inactive);
-
+		height: 10 * @px_base;
+		border-top: 1 * @px_base solid var(--text-input-underline-inactive);
 		box-sizing: border-box;
 		display: block;
 
 		+ .ui-text-input-error-message {
 			display: none;
 			color: var(--text-input-invalid-color);
-			font-size: 12px;
+			font-size: 12 * @sp_base;
+			line-height: 16 * @px_base;
 		}
 	}
 
@@ -149,12 +150,12 @@ textarea.ui-text-input {
 	}
 
 	&:focus + .ui-text-input-textline {
-		height: 2 * @px_base;
-		background: var(--primary-color);
+		border-top-width: 2 * @px_base;
+		border-top-color: var(--primary-color);
 	}
 
 	&:invalid + .ui-text-input-textline {
-		background: var(--text-input-invalid-color);
+		border-top-color: var(--text-input-invalid-color);
 		+ .ui-text-input-error-message {
 			display: block;
 		}
@@ -272,10 +273,51 @@ textarea.ui-text-input {
 				margin-right: -30 * @unit_base;
 			}
 		}
-	} 
+	}
 
 }
 
+.ui-text-input-label {
+	font-size: 12 * @sp_base;
+	.font(regular);
+	text-align: left;
+	line-height: 16 * @px_base;
+	color: var(--text-input-label-inactive);
+	margin-top: 10 * @px_base;
+	transition: font-size 100ms ease-in-out;
+
+	&.ui-activated {
+		color: var(--primary-dark-color);
+	}
+	&.ui-disabled {
+		color: var(--text-input-disabled);
+	}
+	&.ui-error {
+		color: var(--text-input-invalid-color);
+	}
+	&:invalid {
+		color: var(--text-input-invalid-color);
+	}
+	&-inactive {
+		font-size: 18 * @sp_base;
+		line-height: 26 * @px_base;
+		margin-top: 18 * @px_base;
+
+		& + .ui-text-input-empty {
+			height: 0;
+		}
+	}
+}
+
+.ui-text-input-label + input.ui-text-input {
+	margin-top: 0;
+}
+input.ui-text-input + .ui-text-input-has-label {
+	height: 2 * @px_base;
+}
+input.ui-text-input.ui-text-input-empty:not(.ui-text-input-focused) + .ui-text-input-has-label {
+	height: 10 * @px_base;
+}
 .ui-listview li.ui-textinput-box-with-right-button {
 	padding-right: 0;
 }
