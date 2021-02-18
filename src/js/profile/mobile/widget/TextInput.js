@@ -141,7 +141,13 @@
 						textLineElement: null,
 						textClearButtonElement: null,
 						errorMessageElement: null,
-						label: null
+						label: null,
+						icon: null
+					};
+					self._state = {
+						empty: true,
+						focused: false,
+						valid: true
 					};
 					self._callbacks = {};
 
@@ -254,6 +260,18 @@
 					 * @member ns.widget.mobile.TextInput
 					 */
 					ERROR: "ui-error",
+					/**
+					 * Set class for icon assigned to text input
+					 * @style ui-text-input-icon
+					 * @member ns.widget.mobile.TextInput
+					 */
+					ICON: CLASSES_PREFIX + "-icon",
+					/**
+					 * Set icon assigned to text input on bottom
+					 * @style ui-text-input-icon-on-bottom
+					 * @member ns.widget.mobile.TextInput
+					 */
+					ICON_ON_BOTTOM: CLASSES_PREFIX + "-icon-on-bottom",
 					HEADER_WITH_SEARCH: "ui-header-searchbar",
 					/**
 					 * Set search-input widget in text input widget
@@ -396,6 +414,64 @@
 				}
 			};
 
+			prototype._updateIconPosition = function () {
+				var self = this,
+					state = self._state,
+					icon = self._ui.icon;
+
+				if (icon) {
+					icon.classList.toggle(classes.ICON_ON_BOTTOM,
+						state.focused && state.valid ||
+						!state.focused && !state.empty && state.valid
+					);
+				}
+			};
+
+			prototype._updateLabelError = function () {
+				var self = this,
+					label = self._ui.label;
+
+				if (label) {
+					label.classList.toggle(classes.ERROR, !self._state.valid);
+				}
+			}
+
+			/**
+			 * Validate input value and set error message class
+			 * @method _validate
+			 * @param {HTMLElement} element
+			 * @protected
+			 * @member ns.widget.mobile.TextInput
+			 */
+			prototype._validate = function (element) {
+				var self = this,
+					valid = true;
+
+				if (self._patternRegexp) {
+					valid = element.value.replace(self._patternRegexp, "") === "";
+				}
+				self._state.valid = valid;
+			}
+
+			/**
+			 * Find icon assigned to text input
+			 * @method _findIcon
+			 * @param {HTMLElement} element
+			 * @protected
+			 * @member ns.widget.mobile.TextInput
+			 */
+			prototype._findIcon = function (element) {
+				var parentElement = element.parentElement,
+					prevSibling;
+
+				if (parentElement) {
+					prevSibling = parentElement.previousElementSibling;
+					if (prevSibling && prevSibling.classList.contains(classes.ICON)) {
+						this._ui.icon = prevSibling;
+					}
+				}
+			};
+
 			/**
 			 * Method adds class ui-text-input-focused to target element of event.
 			 * @method _onFocus
@@ -407,33 +483,28 @@
 			prototype._onFocus = function (self) {
 				var element = self.element,
 					currentValueLength = element.value.length,
-					label = self._ui.label;
+					ui = self._ui,
+					label = ui.label;
+
+				self._state.focused = true;
+				self._state.empty = element.value === "";
 
 				element.classList.add(classes.uiTextInputFocused);
-				element.classList.toggle(classes.empty, element.value === "");
+				element.classList.toggle(classes.empty, self._state.empty);
+
 				if (label) {
 					label.classList.add(classes.ACTIVATED);
 					label.classList.remove(classes.labelInactive);
 				}
-				if (element.value !== "" && self._ui.textClearButtonElement) {
-					self._ui.textClearButtonElement.classList.remove(classes.uiTextInputClearHidden);
+				if (!self._state.empty && ui.textClearButtonElement) {
+					ui.textClearButtonElement.classList.remove(classes.uiTextInputClearHidden);
 				}
+				self._updateIconPosition();
 
 				// setting caret position at the end
 				element.selectionStart = currentValueLength;
 				element.selectionEnd = currentValueLength;
 			};
-
-			prototype._validate = function (element) {
-				var self = this,
-					label = self._ui.label;
-
-				if (self._patternRegexp && label) {
-					label.classList.toggle(
-						classes.ERROR,
-						element.value.replace(self._patternRegexp, "") !== "");
-				}
-			}
 
 			/**
 			 * Method adds event for showing clear button and optional resizing textarea.
@@ -448,14 +519,16 @@
 					ui = self._ui,
 					btn = ui.textClearButtonElement;
 
-				if (element.value === "" && btn) {
+				self._state.empty = element.value === "";
+
+				if (self._state.empty && btn) {
 					btn.classList.add(classes.uiTextInputClearHidden);
 					element.classList.remove(classes.uiTextInputClearActive);
 				} else {
 					self._toggleClearButton(ui.textClearButtonElement, element);
 				}
 
-				element.classList.toggle(classes.empty, element.value === "");
+				element.classList.toggle(classes.empty, self._state.empty);
 				ui.label && ui.label.classList.remove(classes.labelInactive);
 
 				if (element.nodeName.toLowerCase() === "textarea") {
@@ -463,6 +536,9 @@
 				}
 
 				self._validate(element);
+
+				self._updateLabelError();
+				self._updateIconPosition();
 			};
 			/**
 			 * Method removes class ui-text-input-focused from target element of event.
@@ -476,13 +552,18 @@
 				var element = self.element,
 					label = self._ui.label;
 
+				self._state.focused = false;
+				self._state.empty = element.value === "";
+
 				element.classList.remove(classes.uiTextInputFocused);
 				if (label) {
 					label.classList.remove(classes.ACTIVATED);
-					label.classList.toggle(classes.labelInactive, element.value === "");
+					label.classList.toggle(classes.labelInactive, self._state.empty);
 				}
 				self._toggleClearButton(self._ui.textClearButtonElement, element);
-				element.classList.toggle(classes.empty, element.value === "");
+				element.classList.toggle(classes.empty, self._state.empty);
+
+				self._updateIconPosition();
 			};
 
 			function setAria(element) {
@@ -649,12 +730,14 @@
 					ui.textClearButtonElement = ui.textClearButtonElement || parentNode.querySelector(selector.uiTextInputClearButton);
 				}
 
-				element.classList.toggle(classes.empty, element.value === "");
+				self._state.empty = element.value === "";
+
+				element.classList.toggle(classes.empty, self._state.empty);
 
 				label = self._findLabel(element);
 				if (label) {
 					label.classList.add(classes.label);
-					label.classList.toggle(classes.labelInactive, element.value === "");
+					label.classList.toggle(classes.labelInactive, self._state.empty);
 				}
 				ui.label = label;
 
@@ -686,7 +769,11 @@
 
 				self._patternRegexp = (element.pattern) ? new RegExp(element.pattern) : null;
 
+				self._findIcon(element);
 				self._validate(element);
+
+				self._updateLabelError();
+				self._updateIconPosition();
 
 				return element;
 			};

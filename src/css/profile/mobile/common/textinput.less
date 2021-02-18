@@ -247,9 +247,9 @@ textarea.ui-text-input {
 				}
 
 				&::after {
-					.mask-size(80 * @unit_base, 80 * @unit_base);
-					.mask-repeat(none);
-					.mask-position(center center);
+					mask-size: 40 * @px_base, 40 * @px_base;
+					mask-repeat: no-repeat;
+					mask-position: center center;
 				}
 			}
 			&.ui-btn-text-light {
@@ -316,8 +316,38 @@ input.ui-text-input + .ui-text-input-has-label {
 	height: 2 * @px_base;
 }
 input.ui-text-input.ui-text-input-empty:not(.ui-text-input-focused) + .ui-text-input-has-label {
-	height: 10 * @px_base;
+	margin-top: 8 * @px_base;
 }
 .ui-listview li.ui-textinput-box-with-right-button {
 	padding-right: 0;
+}
+
+.ui-has-text-input {
+	display: flex;
+	flex-direction: column;
+	margin: 0 24 * @px_base;
+	flex: 1;
+}
+.ui-text-input-icon {
+	width: 20 * @px_base;
+	height: 20 * @px_base;
+	position: inherit;
+	display: flex;
+	margin: auto 0 auto 24px;
+
+	&::after {
+		content: "";
+		position: absolute;
+		width: 20 * @px_base;
+		height: 20 * @px_base;
+		mask-size: 20 * @px_base, 20 * @px_base;
+		mask-repeat: no-repeat;
+		mask-position: center center;
+	}
+	& + .ui-has-text-input {
+		margin-left: 20 * @px_base;
+	}
+	&.ui-text-input-icon-on-bottom {
+		padding-top: 16 * @px_base; // height of active label
+	}
 }
