@@ -242,6 +242,7 @@
 					 * @member ns.widget.mobile.TextInput
 					 */
 					hasLabel: CLASSES_PREFIX + "-has-label",
+					inputHasNotLine: CLASSES_PREFIX + "-label-has-not-line",
 					/**
 					 * Set class for text input label when TextInput is focused
 					 * @style ui-activated
@@ -416,13 +417,14 @@
 
 			prototype._updateIconPosition = function () {
 				var self = this,
+					options = self.options,
 					state = self._state,
 					icon = self._ui.icon;
 
 				if (icon) {
 					icon.classList.toggle(classes.ICON_ON_BOTTOM,
-						state.focused && state.valid ||
-						!state.focused && !state.empty && state.valid
+						state.focused && state.valid && options.textLine ||
+						!state.focused && !state.empty && state.valid && options.textLine
 					);
 				}
 			};
@@ -633,7 +635,9 @@
 					case "tel":
 					case "search":
 						setAria(element);
-						ui.textLineElement = createSpanAfter(element, classes.uiTextInputTextLine);
+						if (options.textLine) {
+							ui.textLineElement = createSpanAfter(element, classes.uiTextInputTextLine);
+						}
 						break;
 					default:
 						if (element.tagName.toLowerCase() === "textarea") {
@@ -710,6 +714,15 @@
 				return null;
 			};
 
+			prototype._updateLabel = function () {
+				var self = this,
+					label = self._ui.label;
+
+				if (label) {
+					label.classList.toggle(classes.inputHasNotLine, !self.options.textLine);
+				}
+			};
+
 			/**
 			* Init TextInput Widget
 			* @method _init
@@ -736,6 +749,9 @@
 
 				label = self._findLabel(element);
 				if (label) {
+					if (!label.getAttribute("for")) {
+						label.setAttribute("for", element.id);
+					}
 					label.classList.add(classes.label);
 					label.classList.toggle(classes.labelInactive, self._state.empty);
 				}
@@ -772,6 +788,7 @@
 				self._findIcon(element);
 				self._validate(element);
 
+				self._updateLabel();
 				self._updateLabelError();
 				self._updateIconPosition();
 

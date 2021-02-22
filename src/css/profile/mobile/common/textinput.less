@@ -351,3 +351,40 @@ input.ui-text-input.ui-text-input-empty:not(.ui-text-input-focused) + .ui-text-i
 		padding-top: 16 * @px_base; // height of active label
 	}
 }
+
+input.ui-text-input {
+	&[data-text-line="false"] {
+		margin-top: 15 * @px_base;
+		margin-bottom: 15 * @px_base;
+	}
+}
+
+.ui-text-input-label {
+	&.ui-text-input-label-has-not-line {
+		margin-top: 7 * @px_base;
+
+		& + input.ui-text-input {
+			&[data-text-line="false"] {
+				margin-top: 0;
+				margin-bottom: 7 * @px_base;
+			}
+		}
+
+		&.ui-text-input-label-inactive {
+			margin-top: 15 * @px_base;
+
+			& + input.ui-text-input {
+				&[data-text-line="false"] {
+					margin-top: 0;
+					margin-bottom: 15 * @px_base;
+				}
+			}
+		}
+	}
+}
+
+.ui-color-icon {
+	&-text-field::after {
+		background-color: var(--text-field-icon-color);
+	}
+}
