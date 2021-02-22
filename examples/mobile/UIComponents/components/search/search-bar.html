@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="search-bar-page">
+		<header id="search-header">
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<h1>
+				<input type="search" placeholder="Search for 'Suggest'" data-text-line="false"
+					data-search-bar="true" data-search-result="dialog-search-results">
+			</h1>
+		</header>
+		<!-- /header -->
+		<div class="ui-content">
+			<div class="ui-popup ui-search-history" id="dialog-search-results" data-overlay="false" data-position-to="#search-header">
+				<div class="ui-popup-content ui-content">
+					<div class="ui-content-subheader">Subheader</div>
+					<ul class="ui-listview ui-content-area">
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 1 line
+								</span>
+							</div>
+							<div class="ui-li-action">
+								<button data-inline="true" data-style="flat" data-icon="clear-search"></button>
+							</div>
+						</li>
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 1 line
+								</span>
+							</div>
+							<div class="ui-li-action">
+								<button data-inline="true" data-style="flat" data-icon="clear-search"></button>
+							</div>
+						</li>
+						<li class="ui-li-divider">
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 1 line
+								</span>
+							</div>
+							<div class="ui-li-action">
+								<button data-inline="true" data-style="flat" data-icon="clear-search"></button>
+							</div>
+						</li>
+						<li class="ui-li-search-history-clear">
+							<a href="#" class="ui-btn" data-style="flat" data-rel="back">Clear search history</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="./search-bar.js" ></script>
+	</div>
+	<!-- /page -->
+</body>
+
+</html>

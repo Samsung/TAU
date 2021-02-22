@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="72px" height="72px" viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
-<g>
-	<polygon fill="#FFFFFF" points="54,21.626 50.375,18 36,32.374 21.626,18 18,21.626 32.374,36 18,50.375 21.626,54 36,39.626 
-		50.375,54 54,50.375 39.625,36 	"/>
+<title>Mobile/Light_theme/ICON/11_SEARCH/Search_Close</title>
+<desc>Created with Sketch.</desc>
+<g id="Mobile_x2F_Light_x5F_theme_x2F_ICON_x2F_11_x5F_SEARCH_x2F_Search_x5F_Close">
+	<path id="Cancel-_x2F_-Close" fill="#FFFFFF" d="M39.183,35.998l17.912-17.908c0.879-0.879,0.879-2.301,0-3.18
+		c-0.88-0.879-2.31-0.879-3.183,0L35.997,32.813L18.089,14.91c-0.879-0.879-2.303-0.879-3.182,0c-0.881,0.879-0.881,2.301,0,3.18
+		l17.91,17.908L14.908,53.91c-0.88,0.879-0.88,2.301,0,3.18c0.44,0.441,1.014,0.658,1.589,0.658c0.579,0,1.15-0.217,1.592-0.658
+		l17.908-17.906L53.912,57.09c0.437,0.441,1.014,0.658,1.588,0.658s1.151-0.217,1.595-0.658c0.879-0.879,0.879-2.301,0-3.18
+		L39.183,35.998z"/>
 </g>
 </svg>

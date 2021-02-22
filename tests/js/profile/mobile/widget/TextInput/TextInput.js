@@ -65,7 +65,7 @@
 
 			assert.ok(clearBtn.classList.contains(TextInput.classes.uiTextInputClearHidden), "Clear button has uiTextInputClearHidden class.");
 
-			element.classList.add(TextInput.classes.uiTextInputFocused);
+			widget._state.focused = true;
 
 			widget._toggleClearButton(clearBtn, element);
 

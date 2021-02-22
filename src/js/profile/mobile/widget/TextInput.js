@@ -274,6 +274,7 @@
 					 */
 					ICON_ON_BOTTOM: CLASSES_PREFIX + "-icon-on-bottom",
 					HEADER_WITH_SEARCH: "ui-header-searchbar",
+					HEADER_FOCUSED: "ui-header-searchbar-focused",
 					/**
 					 * Set search-input widget in text input widget
 					 * @style ui-search-input
@@ -377,13 +378,13 @@
 			 */
 			prototype._toggleClearButton = function (clearBtn, inputElement) {
 				if (clearBtn) {
-					if (!inputElement.classList.contains(classes.uiTextInputFocused)) {
+					if (this._state.focused) {
+						clearBtn.classList.remove(classes.uiTextInputClearHidden);
+						inputElement.classList.add(classes.uiTextInputClearActive);
+					} else {
 						if (!clearBtn.classList.contains("ui-btn-active")) {
 							clearBtn.classList.add(classes.uiTextInputClearHidden);
 						}
-					} else {
-						clearBtn.classList.remove(classes.uiTextInputClearHidden);
-						inputElement.classList.add(classes.uiTextInputClearActive);
 					}
 				}
 			};
@@ -475,6 +476,23 @@
 			};
 
 			/**
+			 * Update widget focused look depending to the widget state
+			 * @method _updateFocused
+			 * @protected
+			 * @member ns.widget.mobile.TextInput
+			 */
+			prototype._updateFocused = function () {
+				var self = this,
+					element = self.element,
+					header = self._ui.header;
+
+				if (header) {
+					header.classList.toggle(classes.HEADER_FOCUSED, self._state.focused);
+				}
+				element.classList.toggle(classes.uiTextInputFocused, self._state.focused);
+			};
+
+			/**
 			 * Method adds class ui-text-input-focused to target element of event.
 			 * @method _onFocus
 			 * @param {ns.widget.mobile.TextInput} self
@@ -491,7 +509,6 @@
 				self._state.focused = true;
 				self._state.empty = element.value === "";
 
-				element.classList.add(classes.uiTextInputFocused);
 				element.classList.toggle(classes.empty, self._state.empty);
 
 				if (label) {
@@ -502,6 +519,7 @@
 					ui.textClearButtonElement.classList.remove(classes.uiTextInputClearHidden);
 				}
 				self._updateIconPosition();
+				self._updateFocused();
 
 				// setting caret position at the end
 				element.selectionStart = currentValueLength;
@@ -557,7 +575,6 @@
 				self._state.focused = false;
 				self._state.empty = element.value === "";
 
-				element.classList.remove(classes.uiTextInputFocused);
 				if (label) {
 					label.classList.remove(classes.ACTIVATED);
 					label.classList.toggle(classes.labelInactive, self._state.empty);
@@ -566,6 +583,7 @@
 				element.classList.toggle(classes.empty, self._state.empty);
 
 				self._updateIconPosition();
+				self._updateFocused();
 			};
 
 			function setAria(element) {
@@ -661,9 +679,7 @@
 
 					if (header) {
 						header.classList.add(classes.HEADER_WITH_SEARCH);
-						if (element.nextElementSibling.classList.contains(classes.uiTextInputTextLine)) {
-							element.parentElement.removeChild(element.nextElementSibling);
-						}
+						ui.header = header;
 					}
 
 					if (!options.clearBtn) {
@@ -791,6 +807,7 @@
 				self._updateLabel();
 				self._updateLabelError();
 				self._updateIconPosition();
+				self._updateFocused();
 
 				return element;
 			};

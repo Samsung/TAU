@@ -1,10 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="72px" height="72px" viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
-<path fill="#FFFFFF" d="M57.379,34.732l-5.22-0.078c-0.13,8.72-7.209,15.55-16.116,15.55c-9.548,0-16.202-8.176-16.202-15.512
-	h-5.221c0,9.107,7.584,19.174,18.769,20.572v9.988h5.22v-9.969C49.166,54.075,57.22,45.485,57.379,34.732z"/>
-<path fill="#FFFFFF" d="M36,44.958c5.651,0,10.249-4.621,10.249-10.298l0.029-17.612c0-5.68-4.611-10.301-10.278-10.301
-	c-5.667,0-10.278,4.621-10.278,10.301v17.609C25.721,40.337,30.333,44.958,36,44.958z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="72px" viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>PNG/Light/Winset/Action_bar/tw_ic_voice_search_api_mtrl_alpha</title>
+    <defs>
+        <path d="M52.251,34.64595 L57.501,34.72695 C57.339,45.51495 49.239,54.13395 38.625,55.35195 L38.625,55.35195 L38.625,65.35395 L33.375,65.35395 L33.375,55.33095 C22.128,53.92695 14.499,43.82595 14.499,34.68795 L14.499,34.68795 L19.749,34.68795 C19.749,42.04995 26.439,50.25195 36.045,50.25195 C45,50.25195 52.119,43.39695 52.251,34.64595 L52.251,34.64595 Z M35.9991,6.64605 C41.6991,6.64605 46.3371,11.28405 46.3371,16.98105 L46.3371,16.98105 L46.3071,34.65405 C46.3071,40.35105 41.6841,44.98905 35.9991,44.98905 C30.3021,44.98905 25.6641,40.35105 25.6641,34.65405 L25.6641,34.65405 L25.6641,16.98105 C25.6641,11.28405 30.3021,6.64605 35.9991,6.64605 Z" id="path-1"></path>
+    </defs>
+    <g id="PNG/Light/Winset/Action_bar/tw_ic_voice_search_api_mtrl_alpha" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Voice-(Search-field)" fill="#FFFFFF" xlink:href="#path-1"></use>
+    </g>
 </svg>
