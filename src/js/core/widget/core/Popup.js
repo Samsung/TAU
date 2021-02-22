@@ -825,7 +825,7 @@
 
 				self.trigger(events.before_show);
 				// show overlay
-				if (overlay) {
+				if (overlay && self.options.overlay) {
 					overlay.classList.toggle(classes.overlayShown, true);
 				}
 

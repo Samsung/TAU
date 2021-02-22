@@ -1,10 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="72px" height="72px" viewBox="0 0 72 72" enable-background="new 0 0 72 72" xml:space="preserve">
-<g>
-	<polygon fill="#FFFFFF" points="40.897,61.521 12.748,34.989 40.897,8.453 44.773,12.423 20.843,34.989 44.773,57.549 
-		40.897,61.521 	"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="72px" viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>PNG/Light/Winset/Action_bar/tw_ic_ab_back_mtrl</title>
+    <defs>
+        <path d="M46.6923404,12.456582 C47.5773404,11.583582 47.5893404,10.158582 46.7163404,9.27358197 C45.8433404,8.39158197 44.4183404,8.38258197 43.5333404,9.25558197 L20.1993404,32.265582 C19.1913404,33.258582 18.6363404,34.587582 18.6363404,36.003582 C18.6363404,37.416582 19.1913404,38.748582 20.1993404,39.741582 L43.5333404,62.748582 C43.9713404,63.177582 44.5413404,63.393582 45.1143404,63.393582 C45.6933404,63.393582 46.2753404,63.168582 46.7163404,62.724582 C47.5893404,61.839582 47.5773404,60.414582 46.6923404,59.541582 L23.3613404,36.534582 C23.1633404,36.345582 23.1363404,36.120582 23.1363404,36.003582 C23.1363404,35.886582 23.1633404,35.658582 23.3613404,35.469582 L46.6923404,12.456582 Z" id="path-1"></path>
+    </defs>
+    <g id="PNG/Light/Winset/Action_bar/tw_ic_ab_back_mtrl" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Previous-/-Back" fill="#FFFFFF" xlink:href="#path-1"></use>
+    </g>
 </svg>
