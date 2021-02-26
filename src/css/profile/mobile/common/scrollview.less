@@ -94,22 +94,24 @@
 
 .ui-overflow-indicator-top,
 .ui-overflow-indicator-bottom {
-	position: absolute;
+	position: fixed;
 	display: none;
-	width: 100%;
-	height: 29 * @unit_base;
+	width: 10%;
+	transform: scaleX(10);
+	transform-origin: left;
+	height: 15 * @px_base;
 	opacity: 1;
-
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
+	background-color: var(--boundary-feedback-color);
 }
 
 .ui-overflow-indicator-top {
 	top: 0;
+	border-radius: 0 0 10 * @px_base 10 * @px_base;
 }
 
 .ui-overflow-indicator-bottom {
 	bottom: 0;
+	border-radius: 10 * @px_base 10 * @px_base 0 0;
 }
 
 .ui-overflow-effect-bottom {
@@ -117,6 +119,17 @@
 	display: none;
 	bottom: 0;
 	width: 100%;
+}
+
+.ui-scrollindicator-top {
+	.ui-overflow-indicator-top {
+		display: block;
+	}
+}
+.ui-scrollindicator-bottom {
+	.ui-overflow-indicator-bottom {
+		display: block;
+	}
 }
 
 .ui-overflow-top {

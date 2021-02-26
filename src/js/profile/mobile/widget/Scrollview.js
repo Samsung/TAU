@@ -215,7 +215,64 @@
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
-			var Scrollview = ns.widget.core.Scrollview;
+			var Scrollview = ns.widget.core.Scrollview,
+				DOMUtils = ns.util.DOM,
+				classes = Scrollview.classes;
+
+			/**
+			 * Show scroll indicators.
+			 * @method _showScrollIndicator
+			 * @protected
+			 * @member ns.widget.core.Scrollview
+			 */
+			Scrollview.prototype._showScrollIndicator = function () {
+				var self = this,
+					clip = self.element,
+					view = self._ui.view,
+					scrollTop = clip.scrollTop,
+					clipHeight = DOMUtils.getElementHeight(clip),
+					clipOffset = DOMUtils.getElementOffset(clip),
+					viewHeight = DOMUtils.getElementHeight(view),
+					viewWidth = DOMUtils.getElementWidth(view);
+
+				self._clearIndicator(clip);
+
+				switch (self.options.scroll) {
+					case "x":
+					case "xy":
+						break;
+					default:
+						if (scrollTop === 0) {
+							clip.classList.add(classes.indicatorTopShown);
+						}
+						if (Math.floor(viewHeight - scrollTop - clipHeight) <= 0) {
+							clip.classList.add(classes.indicatorBottomShown);
+						}
+						self._setTopAndBottomIndicators(clip, {
+							clipTop: clipOffset.top,
+							clipHeight: clipHeight,
+							width: viewWidth
+						});
+				}
+			};
+
+			Scrollview.prototype._setTopAndBottomIndicators = function (clip, options) {
+				var self = this,
+					topIndicator = self._ui.overflowTop,
+					bottomIndicator = self._ui.overflowBottom,
+					style;
+
+				// set top indicator
+				if (topIndicator) {
+					style = topIndicator.style;
+					style.top = options.clipTop + "px";
+				}
+				if (bottomIndicator) {
+					// set bottom indicator
+					style = bottomIndicator.style;
+					style.top = (options.clipTop + options.clipHeight - bottomIndicator.getBoundingClientRect().height) + "px";
+				}
+			};
 
 			ns.widget.mobile.Scrollview = Scrollview;
 			ns.engine.defineWidget(

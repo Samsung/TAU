@@ -285,6 +285,8 @@
 					ui.page = null;
 					ui.jumpHorizontalButton = null;
 					ui.jumpVerticalButton = null;
+					ui.overflowTop = null;
+					ui.overflowBottom = null;
 					self._ui = ui;
 					/**
 					 * Dictionary for holding internal listeners
@@ -606,18 +608,28 @@
 			 * @member ns.widget.core.Scrollview
 			 */
 			Scrollview.prototype._addOverflowIndicator = function (clip) {
-				clip.insertAdjacentHTML("beforeend",
-					"<div class='" + classes.indicatorTop + "'></div><div class='" + classes.indicatorBottom + "'></div>");
+				var ui = this._ui,
+					indicatorTop = document.createElement("div"),
+					indicatorBottom = document.createElement("div");
+
+				indicatorTop.className = classes.indicatorTop;
+				indicatorBottom.className = classes.indicatorBottom;
+
+				clip.appendChild(indicatorTop);
+				clip.appendChild(indicatorBottom);
+
+				ui.overflowTop = indicatorTop;
+				ui.overflowBottom = indicatorBottom;
 			};
 
 			/**
 			 * Clear classes and styles of indicators
 			 * @param {HTMLElement} element
-			 * @method clearIndicator
-			 * @private
+			 * @method _clearIndicator
+			 * @protected
 			 * @member ns.widget.core.Scrollview
 			 */
-			function clearIndicator(element) {
+			Scrollview.prototype._clearIndicator = function (element) {
 				var clipClasses = element.classList,
 					topIndicator = selectors.getChildrenByClass(element, classes.indicatorTop)[0],
 					bottomIndicator = selectors.getChildrenByClass(element, classes.indicatorBottom)[0];
@@ -634,13 +646,14 @@
 			 * Set top and bottom indicators
 			 * @param {HTMLElement} clip
 			 * @param {Object} options
-			 * @method setTopAndBottomIndicators
-			 * @private
+			 * @method _setTopAndBottomIndicators
+			 * @protected
 			 * @member ns.widget.core.Scrollview
 			 */
-			function setTopAndBottomIndicators(clip, options) {
-				var topIndicator = selectors.getChildrenByClass(clip, classes.indicatorTop)[0],
-					bottomIndicator = selectors.getChildrenByClass(clip, classes.indicatorBottom)[0],
+			Scrollview.prototype._setTopAndBottomIndicators = function (clip, options) {
+				var self = this,
+					topIndicator = self._ui.overflowTop,
+					bottomIndicator = self._ui.overflowBottom,
 					style;
 
 				// set top indicator
@@ -657,7 +670,7 @@
 					style.top = options.clipTop + options.clipHeight - DOMUtils.getElementHeight(bottomIndicator) + "px";
 					style.backgroundColor = options.color;
 				}
-			}
+			};
 
 			/**
 			 * Show scroll indicators.
@@ -676,7 +689,7 @@
 					viewWidth = DOMUtils.getElementWidth(view),
 					viewOffset = DOMUtils.getElementOffset(view);
 
-				clearIndicator(clip);
+				self._clearIndicator(clip);
 
 				switch (self.options.scroll) {
 					case "x":
@@ -684,7 +697,7 @@
 						// @todo
 						break;
 					default:
-						setTopAndBottomIndicators(clip, {
+						self._setTopAndBottomIndicators(clip, {
 							clipTop: clipOffset.top,
 							clipHeight: clipHeight,
 							width: viewWidth,
@@ -716,7 +729,7 @@
 					window.clearTimeout(timer);
 				}
 				timers.scrollIndicatorHide = window.setTimeout(function () {
-					clearIndicator(self.element);
+					self._clearIndicator(self.element);
 				}, 1500);
 			};
 
