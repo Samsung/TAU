@@ -209,11 +209,22 @@
 			list-style-position: inside;
 			padding-left: 12 * @px_base;
 		}
-		ui {
-			list-style: tau-disc;
-		}
 		ul ~ ol, ul ~ ul, ol ~ ol, ol ~ ul {
 			padding-top: 8 * @px_base;
+		}
+		.ui-container {
+			overflow: hidden;
+			display: flex;
+			align-items: center;
+			padding: 0;
+			margin-bottom: 20 * @px_base;
+			margin-left: -24 * @px_base;
+			margin-right: -24 * @px_base;
+			border-radius: 22 * @px_base;
+
+			img {
+				width: 100%;
+			}
 		}
 	}
 }
