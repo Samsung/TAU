@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/mobile/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" id="search-bar-page">
+		<header id="search-header-location" class="ui-header-searchbar-location" data-expanding-enabled="false">
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<h1>
+				<input type="search" placeholder="Search for 'Suggest'" data-text-line="false"
+					data-search-bar="true" data-search-result="dialog-search-results">
+			</h1>
+			<div class="ui-appbar-action-buttons-container">
+				<button class="ui-btn ui-btn-icon" data-icon="location" data-style="flat"></button>
+			</div>
+		</header>
+		<!-- /header -->
+		<div class="ui-content">
+			<div class="ui-popup ui-search-map" id="map-search-results" data-overlay="false" data-position-to="#search-header-location">
+				<div class="ui-popup-content ui-content">
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /page -->
+</body>
+
+</html>
