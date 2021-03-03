@@ -10,14 +10,21 @@ input[type="search"][disabled] {
 
 .ui-header-searchbar {
 	.ui-appbar-controls-container {
-		height: 44 * @px_base;
-		margin: 6 * @px_base 0;
-		border-radius: 22 * @px_base;
-		background: var(--search-bar-bg-color);
+		&::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			height: 44 * @px_base;
+			margin: 6 * @px_base 0;
+			border-radius: 22 * @px_base;
+			background: var(--search-bar-bg-color);
+			width: 100%;
+		}
 
 		.ui-appbar-title-container {
 			width: 100%;
-			height: inherit;
+			z-index: 1;
+
 			.ui-appbar-title {
 				display: flex;
 				width: 100%;
@@ -34,8 +41,22 @@ input[type="search"][disabled] {
 		}
 	}
 	&-focused {
+		.ui-appbar-controls-container::before {
+			display: none;
+		}
+	}
+	&-location {
 		.ui-appbar-controls-container {
-			background: transparent;
+			&::before {
+				width: calc(~"100% - "64 * @px_base);
+			}
+
+			.ui-appbar-action-buttons-container {
+				display: inherit;
+				.ui-btn {
+					width: 24 * @px_base;
+				}
+			}
 		}
 	}
 
