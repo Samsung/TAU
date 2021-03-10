@@ -104,6 +104,7 @@
  * @author Hyunkook Cho <hk0713.cho@samsung.com>
  * @author Junhyeon Lee <juneh.lee@samsung.com>
  * @author Heeju Joo <heeju.joo@samsung.com>
+ * @author Tomasz Lukawski <t.lukawski@samsung.com>
  */
 (function (document, ns) {
 	"use strict";
@@ -142,7 +143,9 @@
 						textClearButtonElement: null,
 						errorMessageElement: null,
 						label: null,
-						icon: null
+						icon: null,
+						line: null,
+						unit: null
 					};
 					self._state = {
 						empty: true,
@@ -262,6 +265,12 @@
 					 */
 					ERROR: "ui-error",
 					/**
+					 * Set class for text input label when TextInput value does not match pattern
+					 * @style ui-has-text-input-error
+					 * @member ns.widget.mobile.TextInput
+					 */
+					PARENT_ERROR: "ui-has-text-input-error",
+					/**
 					 * Set class for icon assigned to text input
 					 * @style ui-text-input-icon
 					 * @member ns.widget.mobile.TextInput
@@ -319,7 +328,8 @@
 					textLine: true,
 					maxHeight: null,
 					outsideDiv: false,
-					errorMessageString: "Enter a valid email address"
+					errorMessageString: "Enter a valid email address",
+					unit: ""
 				},
 				eventName = {
 					SEARCH: "search",
@@ -437,7 +447,16 @@
 				if (label) {
 					label.classList.toggle(classes.ERROR, !self._state.valid);
 				}
-			}
+			};
+
+			prototype._updateParentError = function () {
+				var self = this,
+					parent = self.element.parentElement;
+
+				if (parent) {
+					parent.classList.toggle(classes.PARENT_ERROR, !self._state.valid);
+				}
+			};
 
 			/**
 			 * Validate input value and set error message class
@@ -448,9 +467,9 @@
 			 */
 			prototype._validate = function (element) {
 				var self = this,
-					valid = true;
+					valid = element.checkValidity();
 
-				if (self._patternRegexp) {
+				if (valid && self._patternRegexp) {
 					valid = element.value.replace(self._patternRegexp, "") === "";
 				}
 				self._state.valid = valid;
@@ -520,10 +539,13 @@
 				}
 				self._updateIconPosition();
 				self._updateFocused();
+				self._updateUnit();
 
 				// setting caret position at the end
-				element.selectionStart = currentValueLength;
-				element.selectionEnd = currentValueLength;
+				if (element.type === "text") {
+					element.selectionStart = currentValueLength;
+					element.selectionEnd = currentValueLength;
+				}
 			};
 
 			/**
@@ -558,6 +580,7 @@
 				self._validate(element);
 
 				self._updateLabelError();
+				self._updateParentError();
 				self._updateIconPosition();
 			};
 			/**
@@ -590,6 +613,35 @@
 				element.setAttribute("role", "textinput");
 				element.setAttribute("aria-label", "Keyboard opened");
 			}
+
+			prototype._createTextLine = function (element, classStyle, content) {
+				var self = this,
+					span = document.createElement("span"),
+					line = document.createElement("span"),
+					unit = document.createElement("span");
+
+				if (classStyle) {
+					span.classList.add(classStyle);
+				}
+
+				unit.innerHTML = self.options.unit;
+
+				line.classList.add("ui-textinput-textline-line");
+				unit.classList.add("ui-textinput-textline-unit");
+
+				if (content) {
+					span.innerHTML = content;
+				}
+
+				span.appendChild(line);
+				span.appendChild(unit);
+
+				domUtils.insertNodeAfter(element, span);
+
+				self._ui.unit = unit;
+				self._ui.line = line;
+				return span;
+			};
 
 			function createSpanAfter(element, classStyle, content) {
 				var span = document.createElement("span");
@@ -654,14 +706,14 @@
 					case "search":
 						setAria(element);
 						if (options.textLine) {
-							ui.textLineElement = createSpanAfter(element, classes.uiTextInputTextLine);
+							ui.textLineElement = self._createTextLine(element, classes.uiTextInputTextLine);
 						}
 						break;
 					default:
 						if (element.tagName.toLowerCase() === "textarea") {
 							setAria(element);
 							if (options.textLine) {
-								ui.textLineElement = createSpanAfter(element, classes.uiTextInputTextLine);
+								ui.textLineElement = self._createTextLine(element, classes.uiTextInputTextLine);
 							}
 						}
 				}
@@ -691,7 +743,7 @@
 					}
 				}
 
-				if (type === "email" || pattern) {
+				if (type === "email" || type === "number" || pattern) {
 					ui.errorMessageElement = createSpanAfter(ui.textLineElement, classes.uiTextInputErrorMessage, options.errorMessageString);
 				}
 
@@ -714,7 +766,7 @@
 			};
 
 			/**
-			* Init TextInput Widget
+			* Find label for widget
 			* @method _findLabel
 			* @param {HTMLElement} element
 			* @member ns.widget.mobile.TextInput
@@ -736,6 +788,28 @@
 
 				if (label) {
 					label.classList.toggle(classes.inputHasNotLine, !self.options.textLine);
+				}
+			};
+
+			prototype._updateUnit = function () {
+				var self = this,
+					ui = self._ui,
+					unit = ui.unit,
+					line = ui.line,
+					lineWidth;
+
+				if (unit) {
+					if (self.options.unit) {
+						unit.innerHTML = self.options.unit;
+						unit.style.display = "inline";
+					} else {
+						unit.style.display = null;
+					}
+				}
+
+				if (line) {
+					lineWidth = line.getBoundingClientRect().width;
+					self.element.style.width = (lineWidth) ? lineWidth + "px" : null;
 				}
 			};
 
@@ -806,8 +880,10 @@
 
 				self._updateLabel();
 				self._updateLabelError();
+				self._updateParentError();
 				self._updateIconPosition();
 				self._updateFocused();
+				self._updateUnit();
 
 				return element;
 			};
@@ -977,6 +1053,22 @@
 					element.value = value;
 				}
 				return this;
+			};
+
+			/**
+			 * Set unit of number input
+			 * @method _setUnit
+			 * @param {HTMLElement} element
+			 * @param {string} value
+			 * @member ns.widget.mobile.TextInput
+			 * @protected
+			 * @since 1.2
+			 */
+			prototype._setUnit = function (element, value) {
+				var self = this;
+
+				self.options.unit = value;
+				self._updateUnit();
 			};
 
 			/**

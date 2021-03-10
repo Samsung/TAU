@@ -130,9 +130,25 @@ textarea.ui-text-input {
 
 	& + .ui-text-input-textline {
 		height: 10 * @px_base;
-		border-top: 1 * @px_base solid var(--text-input-underline-inactive);
 		box-sizing: border-box;
-		display: block;
+		display: flex;
+
+		.ui-textinput-textline-line {
+			flex: 1;
+			border-top: 1 * @px_base solid var(--text-input-underline-inactive);
+		}
+
+		.ui-textinput-textline-unit {
+			content: "unit";
+			.font(regular);
+			font-size: 19 * @sp_base;
+			text-align: right;
+			line-height: 26 * @px_base;
+			color: var(--text-color);
+			margin-left: 16 * @px_base;
+			margin-top: -34 * @px_base;
+			display: none;
+		}
 
 		+ .ui-text-input-error-message {
 			display: none;
@@ -149,13 +165,15 @@ textarea.ui-text-input {
 		}
 	}
 
-	&:focus + .ui-text-input-textline {
+	&:focus + .ui-text-input-textline .ui-textinput-textline-line {
 		border-top-width: 2 * @px_base;
 		border-top-color: var(--primary-color);
 	}
 
 	&:invalid + .ui-text-input-textline {
-		border-top-color: var(--text-input-invalid-color);
+		.ui-textinput-textline-line {
+			border-top-color: var(--text-input-invalid-color);
+		}
 		+ .ui-text-input-error-message {
 			display: block;
 		}
@@ -278,6 +296,7 @@ textarea.ui-text-input {
 }
 
 .ui-text-input-label {
+	display: block;
 	font-size: 12 * @sp_base;
 	.font(regular);
 	text-align: left;
@@ -316,7 +335,8 @@ input.ui-text-input + .ui-text-input-has-label {
 	height: 2 * @px_base;
 }
 input.ui-text-input.ui-text-input-empty:not(.ui-text-input-focused) + .ui-text-input-has-label {
-	margin-top: 8 * @px_base;
+	padding-bottom: 8 * @px_base;
+	height: 10 * @px_base;
 }
 .ui-listview li.ui-textinput-box-with-right-button {
 	padding-right: 0;
@@ -333,7 +353,7 @@ input.ui-text-input.ui-text-input-empty:not(.ui-text-input-focused) + .ui-text-i
 	height: 20 * @px_base;
 	position: inherit;
 	display: flex;
-	margin: auto 0 auto 24px;
+	margin: auto 0 auto 24 * @px_base;
 
 	&::after {
 		content: "";
@@ -382,6 +402,23 @@ input.ui-text-input {
 					margin-top: 0;
 					margin-bottom: 15 * @px_base;
 				}
+			}
+		}
+	}
+}
+
+.ui-popup {
+	.ui-has-text-input-error {
+		&.ui-popup-content {
+			margin-bottom: 8 * @px_base;
+		}
+	}
+}
+@media (orientation: landscape) {
+	.ui-popup {
+		.ui-has-text-input-error {
+			&.ui-popup-content {
+				margin-bottom: 0;
 			}
 		}
 	}
