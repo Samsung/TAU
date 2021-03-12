@@ -254,11 +254,15 @@
 			background-color: var(--popup-footer-divider-color);
 		}
 
-		.ui-popup-stack .ui-btn {
-			margin-bottom: 16 * @px_base;
+		.ui-popup-stack {
+			margin: auto;
 
-			&:nth-last-child(1) {
-				margin-bottom: 0;
+			.ui-btn {
+				margin-bottom: 16 * @px_base;
+
+				&:nth-last-child(1) {
+					margin-bottom: 0;
+				}
 			}
 		}
 
