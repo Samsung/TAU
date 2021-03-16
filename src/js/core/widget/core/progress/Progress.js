@@ -276,7 +276,7 @@
 					self._ui.page = page;
 
 					self._callbacks.onPageBeforeShow = pageBeforeShow.bind(null, self);
-					page && page.addEventListener(Page.events.BEFORE_SHOW, self._callbacks.onPageBeforeShow, false);
+					page.addEventListener(Page.events.BEFORE_SHOW, self._callbacks.onPageBeforeShow, false);
 				}
 			};
 
