@@ -116,16 +116,16 @@ tau-expandable {
 		}
 		// Checkbox icon
 		.ui-li-checkbox-icon img {
-			width: 40 * @px_base;
-			height: 40 * @px_base;
+			width: inherit;
+			height: inherit;
 			margin-right: 18 * @px_base;
 			display: flex;
 		}
 
 		// Icon
 		.ui-li-icon {
-			width: 40 * @px_base;
-			height: 40 * @px_base;
+			width: 36 * @px_base;
+			height: 36 * @px_base;
 			display: inline-flex;
 			position: relative;
 			align-self: center;
@@ -158,6 +158,8 @@ tau-expandable {
 				color: var(--text-color);
 				line-height: 21 * @px_base;
 				vertical-align: middle;
+				margin-top: auto;
+				margin-bottom: auto;
 
 				&:only-child {
 					padding-bottom: @px_base;
@@ -281,6 +283,90 @@ tau-expandable {
 			background-color: var(--list-item-selected-color);
 		}
 	}
+
+	/* style for whole listview */
+	&&-thumb-rounded, &&-thumb-circle {
+		li {
+			.ui-li-icon {
+				overflow: hidden;
+				margin: 10 * @px_base 20 * @px_base;
+
+				* {
+					width: inherit;
+					height: inherit;
+				}
+			}
+		}
+	}
+
+	&&-thumb-rounded {
+		li {
+			.ui-li-icon {
+				width: 50 * @px_base;
+				height: 50 * @px_base;
+				border-radius: 12 * @px_base;
+				margin: 6 * @px_base 20 * @px_base;
+			}
+			&.ui-li-divider.ui-li-has-icon::after {
+				width: calc(~"100% - "114 * @px_base);
+				left: 90 * @px_base;
+			}
+		}
+	}
+
+	&&-thumb-circle {
+		li {
+			.ui-li-icon {
+				border-radius: 18 * @px_base;
+			}
+			&.ui-li-divider.ui-li-has-icon::after {
+				width: calc(~"100% - "100 * @px_base);
+				left: 76 * @px_base;
+			}
+		}
+	}
+
+	/* style for one list item */
+	li {
+		&.ui-li {
+			&-thumb-rounded, &-thumb-circle {
+				.ui-li-icon {
+					overflow: hidden;
+					margin: 10 * @px_base 20 * @px_base;
+
+					* {
+						width: inherit;
+						height: inherit;
+					}
+				}
+			}
+			&-thumb-rounded {
+				.ui-li-icon {
+					width: 50 * @px_base;
+					height: 50 * @px_base;
+					border-radius: 12 * @px_base;
+					margin: 6 * @px_base 20 * @px_base;
+				}
+				&.ui-li-divider.ui-li-has-icon::after {
+					width: calc(~"100% - "114 * @px_base);
+					left: 90 * @px_base;
+				}
+			}
+
+			&-thumb-circle {
+				.ui-li-icon {
+					width: 36 * @px_base;
+					height: 36 * @px_base;
+					border-radius: 18 * @px_base;
+				}
+				&.ui-li-divider.ui-li-has-icon::after {
+					width: calc(~"100% - "100 * @px_base);
+					left: 76 * @px_base;
+				}
+			}
+		}
+	}
+
 
 	// Deprecated since 1.2
 	li, tau-expandable {
