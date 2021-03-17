@@ -11,7 +11,7 @@
 	}
 
 	function onPageShow() {
-		search = page.querySelector("header .ui-appbar-title-container input[type='search']");
+		search = page.querySelector("header input[type='search']");
 		search.addEventListener("focus", onSearchFocus);
 	}
 

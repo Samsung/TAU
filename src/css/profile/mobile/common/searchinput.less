@@ -21,18 +21,21 @@ input[type="search"][disabled] {
 			width: 100%;
 		}
 
-		.ui-appbar-title-container {
+		.ui-appbar-search-container {
 			width: 100%;
 			z-index: 1;
+			display: flex;
+			width: 100%;
+			flex-direction: row;
 
-			.ui-appbar-title {
-				display: flex;
-				width: 100%;
-				.ui-btn-icon.ui-text-input-clear {
-					top: auto;
-					margin: auto 20 * @px_base auto 16 * @px_base;
-					width: 24 * @px_base;
-				}
+			.ui-btn-icon.ui-text-input-clear {
+				top: auto;
+				margin: auto 20 * @px_base auto 16 * @px_base;
+				width: 24 * @px_base;
+			}
+			input[type="search"] {
+				margin-top: auto;
+				margin-bottom: auto;
 			}
 		}
 
@@ -188,15 +191,16 @@ input[type="search"][disabled] {
 					margin-right: 20 * @px_base;
 					padding-right: 4 * @px_base;
 				}
-			}
 
-			&.ui-li-divider::after {
-				left: 0;
-				width: 100%;
-			}
-
-			.ui-li-text:first-child {
-				margin: 0;
+				~ li {
+					&.ui-li-divider::after {
+						left: 0;
+						width: 100%;
+					}
+					.ui-li-text:first-child {
+						margin-left: 0;
+					}
+				}
 			}
 		}
 	}
