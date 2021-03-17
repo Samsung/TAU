@@ -61,6 +61,7 @@
 						titleContainer: null,
 						leftIconsContainer: null,
 						actionButtonsContainer: null,
+						searchContainer: null,
 						page: null,
 						selectAll: null,
 						bottomBar: null,
@@ -84,6 +85,7 @@
 					actionButtonsContainer: classPrefix + "-action-buttons-container",
 					instantContainer: classPrefix + "-container",
 					titleContainer: classPrefix + "-title-container",
+					searchContainer: classPrefix + "-search-container",
 					hasMultilineTitle: classPrefix + "-has-multiline",
 					hasSubtitle: classPrefix + "-has-subtitle",
 					expanded: classPrefix + "-expanded",
@@ -106,10 +108,15 @@
 						class: classes.titleContainer,
 						position: 1
 					},
+					searchContainer: {
+						selector: "." + classes.searchContainer,
+						class: classes.searchContainer,
+						position: 2
+					},
 					actionButtonsContainer: {
 						selector: "." + classes.actionButtonsContainer,
 						class: classes.actionButtonsContainer,
-						position: 2
+						position: 3
 					}
 				},
 				selectors = {
@@ -304,9 +311,10 @@
 					expandedTitleContainer.classList.add(classes.expandedTitleContainer);
 
 					// clone titles to expanded container if not existed before
-					[].slice.call(ui.titleContainer.children).forEach(function (node) {
-						expandedTitleContainer.appendChild(node.cloneNode(true));
-					});
+					[].slice.call(ui.titleContainer.children)
+						.forEach(function (node) {
+							expandedTitleContainer.appendChild(node.cloneNode(true));
+						});
 				}
 
 				ui.expandedTitleContainer = expandedTitleContainer;

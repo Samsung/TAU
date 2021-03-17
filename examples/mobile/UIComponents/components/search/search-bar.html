@@ -11,14 +11,17 @@
 
 <body>
 	<div class="ui-page" id="search-bar-page">
-		<header id="search-header" data-expanding-enabled="false">
+		<header id="search-header">
+			<div class="ui-appbar-expanded-title-container">
+				<div class="ui-appbar-title">Search</div>
+			</div>
 			<div class="ui-appbar-left-icons-container">
 				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
 			</div>
-			<h1>
+			<div class="ui-appbar-search-container">
 				<input type="search" placeholder="Search for 'Suggest'" data-text-line="false"
 					data-search-bar="true" data-search-result="dialog-search-results">
-			</h1>
+			</div>
 		</header>
 		<!-- /header -->
 		<div class="ui-content">
