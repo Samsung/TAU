@@ -398,6 +398,13 @@ tau-progress {
 	padding-left: 56 * @px_base;
 	padding-right: 56 * @px_base;
 }
+.ui-listview li > .ui-li-action .ui-progress.ui-indeterminate-circle {
+	margin-right: 24 * @px_base;
+}
+.ui-listview li > .ui-progress.ui-indeterminate-circle {
+	margin-top: 12 * @px_base;
+	margin-bottom: 15 * @px_base;
+}
 
 /** Progress Bar / Circle in AppBar */
 .ui-appbar {
@@ -473,5 +480,16 @@ tau-progress {
 			width: (24/2 - 3) * @px_base;
 			height: (24/2 - 3) * @px_base;
 		}
+	}
+}
+
+.ui-content-subheader.ui-content-subheader-progress {
+	display: inline-flex;
+	margin-top: 0;
+	margin-bottom: 20 * @px_base;
+	padding-bottom: 0;
+
+	.ui-progress.ui-indeterminate-circle {
+		margin-right: 8 * @px_base;
 	}
 }
