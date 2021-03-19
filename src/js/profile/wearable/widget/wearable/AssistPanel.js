@@ -139,6 +139,16 @@
 					INDICATOR: WIDGET_CLASS + "-indicator",
 					OVERLAY: WIDGET_CLASS + "-overlay"
 				},
+				/**
+				 * Events
+				 * @event assistpanelopen Event triggered then the assist panel is opened.
+				 * @event assistpanelclose Event triggered then the assist panel is closed.
+				 * @member ns.widget.wearable.AssistPanel
+				 */
+				CUSTOM_EVENTS = {
+					OPEN: "assistpanelopen",
+					CLOSE: "assistpanelclose"
+				},
 				AssistPanel = function () {
 					var self = this;
 
@@ -149,7 +159,6 @@
 					};
 				},
 				prototype = new CoreAssistPanel();
-
 
 			AssistPanel.prototype = prototype;
 
@@ -228,20 +237,42 @@
 				self.open();
 			}
 
+			function onDrawerOpen(ev) {
+				this.trigger(CUSTOM_EVENTS.OPEN, {
+					position: ev.detail.position
+				});
+			}
+
+			function onDrawerClose(ev) {
+				this.trigger(CUSTOM_EVENTS.CLOSE, {
+					position: ev.detail.position
+				});
+			}
+
 			prototype._bindEvents = function () {
 				var self = this,
-					callbacks = self._callbacks;
+					callbacks = self._callbacks,
+					element = self.element;
 
 				callbacks.onClick = onClick.bind(null, self);
+				callbacks.onDrawerOpen = onDrawerOpen.bind(self);
+				callbacks.onDrawerClose = onDrawerClose.bind(self);
+
 				CoreAssistPanel.prototype._bindEvents.call(self);
 
 				self._ui.indicator.addEventListener("vclick", callbacks.onClick);
+				element.addEventListener("draweropen", callbacks.onDrawerOpen);
+				element.addEventListener("drawerclose", callbacks.onDrawerClose);
 			};
 
 			prototype._unbindEvents = function () {
-				var self = this;
+				var self = this,
+					callbacks = self._callbacks,
+					element = self.element;
 
-				self._ui.indicator.removeEventListener("vclick", self._callbacks.onClick);
+				self._ui.indicator.removeEventListener("vclick", callbacks.onClick);
+				element.removeEventListener("draweropen", callbacks.onDrawerOpen);
+				element.removeEventListener("drawerclose", callbacks.onDrawerClose);
 			};
 
 			prototype._destroy = function () {

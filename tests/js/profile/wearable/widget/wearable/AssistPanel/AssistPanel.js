@@ -205,6 +205,12 @@
 			var assistPanel = new AssistPanel(),
 				onClick = function () {
 					// noop
+				},
+				onDrawerOpen = function () {
+					// noop
+				},
+				onDrawerClose = function () {
+					// noop
 				};
 
 			// perpare stubs
@@ -212,8 +218,11 @@
 				assert.ok(true, "_bindEvents on iherited widget was called");
 				return true;
 			});
+			assistPanel.element = document.createElement("div");
 			assistPanel._ui.indicator = document.createElement("div");
 			assistPanel._callbacks.onClick = onClick;
+			assistPanel._callbacks.onDrawerOpen = onDrawerOpen;
+			assistPanel._callbacks.onDrawerClose = onDrawerClose;
 
 			// tested method
 			assistPanel._bindEvents();
@@ -231,10 +240,20 @@
 			var assistPanel = new AssistPanel(),
 				onClick = function () {
 					// noop
+				},
+				onDrawerOpen = function () {
+					// noop
+				},
+				onDrawerClose = function () {
+					// noop
 				};
 
 			// perpare stubs
+			assistPanel.element = document.createElement("div");
 			assistPanel._callbacks.onClick = onClick;
+			assistPanel._callbacks.onDrawerOpen = onDrawerOpen;
+			assistPanel._callbacks.onDrawerClose = onDrawerClose;
+
 			assistPanel._ui = {
 				indicator: {
 					removeEventListener: function (eventName, callback) {
