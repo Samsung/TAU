@@ -1153,6 +1153,14 @@
 				return false;
 			};
 
+			prototype._unlockFocusSelf = function () {
+				var current = activeElement || getFocusedLink();
+
+				if (current) {
+					unlockFocus(this, current);
+				}
+			};
+
 			/**
 			 * Supports keyboard long press event.
 			 * It is called on keydown event, when the long press was not detected.
