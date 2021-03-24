@@ -282,6 +282,8 @@
 					var self = this,
 						ui = {};
 
+					BaseKeyboardSupport.call(this);
+
 					self.selectors = selectors;
 					self.options = objectUtils.merge({}, Popup.defaults);
 					self.storedOptions = null;
@@ -851,7 +853,7 @@
 				var self = this;
 
 				self._setActive(true);
-				if (self.isKeyboardSupport) {
+				if (self.isKeyboardSupport && ns.getConfig("keyboardSupport")) {
 					self.disableFocusableElements(this._ui.page);
 					self.enableDisabledFocusableElements(this.element);
 					BaseKeyboardSupport.focusElement(this.element);
