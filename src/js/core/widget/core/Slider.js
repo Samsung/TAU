@@ -144,7 +144,8 @@
 				events.on(self.element, "input change vmouseup vmousedown", self, false);
 
 				if (self.isKeyboardSupport) {
-					events.on(self.element, "focus, blur, keyup", self, false);
+					events.on(self.element, "focus, blur", self, false);
+					events.on(document, "keyup", self, true);
 				}
 			}
 
@@ -160,7 +161,8 @@
 				events.off(self.element, "input change vmouseup vmousedown", self, false);
 
 				if (self.isKeyboardSupport) {
-					events.off(self.element, "focus, blur, keyup", self, false);
+					events.off(self.element, "focus, blur", self, false);
+					events.off(document, "keyup", self, true);
 				}
 			}
 
@@ -268,7 +270,7 @@
 			prototype._build = function (element) {
 				var self = this,
 					ui = self._ui,
-					containerElement = document.createElement("div"),
+					containerElement = self._createWrapper("div"),
 					barElement = document.createElement("div"),
 					valueElement = document.createElement("div"),
 					handlerElement = document.createElement("div"),
@@ -467,19 +469,31 @@
 			};
 
 			prototype._enable = function (element) {
+				var self = this,
+					ui = self._ui;
+
 				if (element) {
-					this.options.disabled = false;
-					if (this._ui.containerElement) {
-						this._ui.containerElement.classList.remove(classes.SLIDER_DISABLED);
+					self.options.disabled = false;
+					if (ui.containerElement) {
+						ui.containerElement.classList.remove(classes.SLIDER_DISABLED);
+						if (ns.getConfig("keyboardSupport", false)) {
+							ui.containerElement.classList.remove(BaseKeyboardSupport.classes.focusDisabled);
+						}
 					}
 				}
 			};
 
 			prototype._disable = function (element) {
+				var self = this,
+					ui = self._ui;
+
 				if (element) {
-					this.options.disabled = true;
-					if (this._ui.containerElement) {
-						this._ui.containerElement.classList.add(classes.SLIDER_DISABLED);
+					self.options.disabled = true;
+					if (ui.containerElement) {
+						ui.containerElement.classList.add(classes.SLIDER_DISABLED);
+						if (ns.getConfig("keyboardSupport", false)) {
+							ui.containerElement.classList.add(BaseKeyboardSupport.classes.focusDisabled);
+						}
 					}
 				}
 			};
@@ -538,17 +552,13 @@
 				this._ui.containerElement.classList.remove(classes.SLIDER_ACTIVE);
 			};
 
-			// prototype._onFocus = function () {
-			// 	var container = this._ui.containerElement.parentElement;
+			prototype._focus = function () {
+				this._ui.containerElement.classList.add("ui-focus");
+			}
 
-			// 	container && container.classList.add("ui-listview-item-focus");
-			// };
-
-			// prototype._onBlur = function () {
-			// 	var container = this._ui.containerElement.parentElement;
-
-			// 	container && container.classList.remove("ui-listview-item-focus");
-			// };
+			prototype._blur = function () {
+				this._ui.containerElement.classList.remove("ui-focus");
+			}
 
 			prototype._decreaseValue = function () {
 				var self = this;
@@ -562,40 +572,28 @@
 				self._setValue(self._value + (parseFloat(self.element.step) || 1));
 			};
 
-			// prototype._lockKeyboard = function () {
-			// 	var self = this,
-			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
-			// 		listviewWidget = engine.getBinding(listview, "Listview");
+			prototype._unlockKeyboard = function () {
+				var self = this;
 
-			// 	self._locked = true;
-			// 	listviewWidget.saveKeyboardSupport();
-			// 	listviewWidget.disableKeyboardSupport();
-			// 	self.enableKeyboardSupport();
-			// 	self._ui.containerElement.classList.add(classes.SLIDER_FOCUS);
-			// };
-
-			// prototype._unlockKeyboard = function () {
-			// 	var self = this,
-			// 		listview = utilSelector.getClosestBySelector(self.element, ".ui-listview"),
-			// 		listviewWidget = engine.getBinding(listview, "Listview");
-
-			// 	self._locked = false;
-			// 	listviewWidget.restoreKeyboardSupport();
-			// 	listviewWidget.enableKeyboardSupport();
-			// 	self.disableKeyboardSupport();
-			// 	self._ui.containerElement.classList.remove(classes.SLIDER_FOCUS);
-			// };
+				self._ui.handlerElement.classList.remove(BaseKeyboardSupport.classes.focus);
+				self._unlockFocusSelf();
+			};
 
 			prototype._onKeyUp = function (event) {
 				var self = this,
 					KEY_CODES = BaseKeyboardSupport.KEY_CODES;
 
-				if (self._locked) {
+				if (self._supportKeyboard) {
 					switch (event.keyCode) {
-						// case KEY_CODES.escape :
-						// case KEY_CODES.enter :
-						// 	self._unlockKeyboard();
-						// 	break;
+						case KEY_CODES.escape :
+							self._unlockKeyboard();
+							break;
+						case KEY_CODES.enter :
+							self._unlockKeyboard();
+							// stop event propagation for prevent loop of focus lock
+							event.preventDefault();
+							event.stopImmediatePropagation();
+							break;
 						case KEY_CODES.left :
 							self._decreaseValue();
 							break;
@@ -603,12 +601,6 @@
 							self._increaseValue();
 							break;
 					}
-				} else {
-					// switch (event.keyCode) {
-					// 	case KEY_CODES.enter :
-					// 		self._lockKeyboard();
-					// 		break;
-					// }
 				}
 			};
 

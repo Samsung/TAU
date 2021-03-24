@@ -21,6 +21,9 @@
 	&:focus {
 		outline: none;
 	}
+	&.ui-focus {
+		background-color: var(--focus-bg-color);
+	}
 
 	.ui-slider-handler-track {
 		position: absolute;
@@ -57,6 +60,13 @@
 			border-radius: 100%;
 			background-color: var(--ripple-color);
 		}
+		&.ui-focus {
+			&::before {
+				opacity: 1;
+				left: -7 * @px_base;
+				top: -7 * @px_base;
+			}
+		}
 	}
 
 	&.ui-slider-active {
@@ -65,6 +75,8 @@
 			min-height: 22 * @px_base;
 			&::before {
 				opacity: 1;
+				left: -5 * @px_base;
+				top: -5 * @px_base;
 			}
 		}
 	}
