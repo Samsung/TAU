@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="width=device-width, user-scalable=no" name="viewport" />
+	<link href="../../lib/tau/tv/theme/default/tau.css" rel="stylesheet" />
+	<link href="../../css/style.css" rel="stylesheet" />
+	<script data-build-remove="false" src="../../lib/tau/tv/js/tau.js">
+	</script>
+</head>
+
+<body>
+	<div class="ui-page" data-role="page" id="demo-dialog-page">
+		<div class="ui-header" data-position="fixed">
+			<div class="ui-appbar-left-icons-container">
+				<a href="#" class="ui-btn ui-btn-icon ui-btn-icon-back" data-style="flat" data-rel="back"></a>
+			</div>
+			<h1>
+				General Dialogs
+			</h1>
+		</div>
+		<div class="ui-content">
+			<ul class="ui-listview ui-content-area">
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#dialog-textfield">
+						Text Field
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#dialog-textfield-label">
+						Text Field with label
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#dialog-textfield-label-error">
+						Text Field with label and error
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#dialog-textfield-number-input">
+						Number input
+					</a>
+				</li>
+			</ul>
+
+			<div class="ui-popup" id="dialog-textfield">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					<input placeholder="Hint text activated" type="text"/>
+				</div>
+				<div class="ui-popup-footer">
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 1</a>
+					<div class="ui-li-divider"></div>
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 2</a>
+				</div>
+			</div>
+
+			<div class="ui-popup" id="dialog-textfield-label">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					<label class="ui-text-input-label">Label activated</label>
+					<input placeholder="Hint text activated" type="text"/>
+				</div>
+				<div class="ui-popup-footer">
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 1</a>
+					<div class="ui-li-divider"></div>
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 2</a>
+				</div>
+			</div>
+
+			<div class="ui-popup" id="dialog-textfield-label-error">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					<label class="ui-text-input-label">Label</label>
+					<input placeholder="Hint text" value="Wrong input text" pattern="[0-9 ]" type="text"/>
+				</div>
+				<div class="ui-popup-footer">
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 1</a>
+					<div class="ui-li-divider"></div>
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 2</a>
+				</div>
+			</div>
+
+			<div class="ui-popup" id="dialog-textfield-number-input">
+				<div class="ui-popup-header">
+					Dialog header
+				</div>
+				<div class="ui-popup-content">
+					<label class="ui-text-input-label">000000.0</label>
+					<input placeholder="Hint text" value="10.5" type="number" step="0.1"
+						data-unit="MB" data-error-message-string="Enter valid a number"/>
+				</div>
+				<div class="ui-popup-footer">
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 1</a>
+					<div class="ui-li-divider"></div>
+					<a href="#" class="ui-btn" data-style="flat" data-rel="back">Action 2</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

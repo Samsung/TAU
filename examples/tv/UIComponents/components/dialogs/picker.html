@@ -3,7 +3,7 @@
 
 <head>
 	<meta content="width=device-width, user-scalable=no" name="viewport" />
-	<link href="../../lib/tau/tv/theme/changeable/tau.css" rel="stylesheet" />
+	<link href="../../lib/tau/tv/theme/default/tau.css" rel="stylesheet" />
 	<link href="../../css/style.css" rel="stylesheet" />
 	<script data-build-remove="false" src="../../lib/tau/tv/js/tau.js">
 	</script>
@@ -55,6 +55,11 @@
 				<li class="ui-li-anchor">
 					<a data-position-to="window" data-rel="popup" href="#value-picker">
 						Value picker
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a data-position-to="window" data-rel="popup" href="#value-picker-description">
+						Value picker + description
 					</a>
 				</li>
 			</ul>
@@ -122,6 +127,25 @@
 					Temperature
 				</div>
 				<div class="ui-popup-content">
+					<div class="ui-value-picker">
+						<div class="ui-spin ui-value-picker-value" style="width: 32%;" data-min="5" data-max="25" data-step="0.5" data-value="11"
+							data-loop="disabled" data-momentum-duration="400" data-momentum-level="1"></div>
+						<div class="ui-spin ui-value-picker-unit" data-min="0" data-max="1" data-value="0" data-labels="&#176;C,&#176;F"
+							data-loop="disabled"></div>
+						</div>
+				</div>
+				<div class="ui-popup-footer">
+					<a class="ui-btn" data-style="flat" data-rel="back">Cancel</a>
+					<div class="ui-li-divider"></div>
+					<a class="ui-btn" data-style="flat" data-rel="back">Done</a>
+				</div>
+			</div>
+			<div class="ui-popup" id="value-picker-description">
+				<div class="ui-popup-header">
+					Temperature
+				</div>
+				<div class="ui-popup-content">
+					The 0000 operates when the room temperature is <u><b>above</b></u> the set temperature.
 					<div class="ui-value-picker">
 						<div class="ui-spin ui-value-picker-value" style="width: 32%;" data-min="5" data-max="25" data-step="0.5" data-value="11"
 							data-loop="disabled" data-momentum-duration="400" data-momentum-level="1"></div>

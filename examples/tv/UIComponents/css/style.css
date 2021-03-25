@@ -1,6 +1,6 @@
 /* Header */
 .btn-icon-back::after {
-	 -webkit-mask-image: url(./images/core_icon_back.png);
+	-webkit-mask-image: url(./images/core_icon_back.png);
 	mask-image: url(./images/core_icon_back.png);
 }
 
@@ -18,13 +18,11 @@
 
 .ui-icon-test{
 	background-size: 100% 100%;
-	background-image: url(test.png);
 }
 
 .ui-icon-test2{
 	background-position: 0 0;
 	background-size:50% 50%;
-	background-image: url(test.png);
 }
 
 .ui-popup-header.popup-2line-title,
@@ -272,14 +270,14 @@
 }
 #result {
 	font-size: 30px;
-	line-height: 45px;
+	line-height: 56px;
 	width: 72px;
 	text-align: center;
 }
 #result,
 #circle {
 	display: block;
-	margin: 0 auto;
+	margin: 5px auto;
 }
 
 /****************************************************************/
@@ -288,29 +286,15 @@
 .ui-btn-icon.ui-icon-plus:not(.ui-btn-circle) {
 	background-color: transparent;
 }
-.ui-btn-icon.ui-icon-plus:not(.ui-btn-circle):after {
-	background-color: rgba(61, 185, 204, 1);
-}
-.ui-btn-icon.ui-icon-plus:not(.ui-btn-circle):active:after {
-	background-color: rgba(34, 104, 115, 1);
-}
+
 .ui-btn-icon.ui-icon-minus:not(.ui-btn-circle) {
 	background-color: transparent;
-}
-.ui-btn-icon.ui-icon-minus:not(.ui-btn-circle):after {
-	background-color: rgba(224, 34, 34, 1);
-}
-.ui-btn-icon.ui-icon-minus:not(.ui-btn-circle):active:after {
-	background-color: rgba(186, 28, 28, 1);
 }
 .ui-btn-icon.ui-icon-cancel:after {
 	-webkit-mask-image: url("images/core_button_cancel.png");
 }
 .ui-btn-icon.ui-icon-delete:after {
 	-webkit-mask-image: url("images/core_button_delete.png");
-}
-.ui-btn-icon.ui-icon-reorder:after {
-	-webkit-mask-image: url("images/core_button_reorder.png");
 }
 .ui-btn-icon.ui-icon-call:after {
 	-webkit-mask-image: url("images/00_button_call.png");
@@ -326,12 +310,6 @@
 }
 .ui-btn-icon.ui-icon-arrow-d:after {
 	-webkit-mask-image: url("images/00_button_expand_closed.png");
-}
-.ui-btn-icon.ui-icon-plus:after {
-	-webkit-mask-image: url("images/00_button_add.png");
-}
-.ui-btn-icon.ui-icon-minus:after {
-	-webkit-mask-image: url("images/00_button_delete.png");
 }
 .ui-btn-icon.ui-icon-forward:after {
 	-webkit-mask-image: url("images/00_button_expand_send.png");
@@ -462,7 +440,7 @@
 }
 
 /**************************************
-			Virtual List
+		Virtual List
 ***************************************/
 .virtual-icon {
 	width: 35px;
@@ -470,7 +448,7 @@
 }
 
 /**************************************
-            Slider
+		Slider
 ***************************************/
 #slider-demo .ui-slider-vertical {
 	left: 50%;
@@ -479,7 +457,7 @@
 }
 
 /**************************************
-			Button Text
+		Button Text
 ***************************************/
 #button-page {
 	color: white;
@@ -626,18 +604,18 @@
 }
 
 /**************************************
-            text input with buttons
+		text input with buttons
 ***************************************/
 #textinputwithbuttons-demo .ui-content {
 	top: 80px;
 	background: white;
 }
 /******************************************************
-            List Styles - sliders
+		List Styles - sliders
 ******************************************************/
 
 #slider-description{
-	width: 100%;
+	width: 328px;
 	padding-top: 12px;
 	padding-bottom: 8px;
 	height: 61px;
@@ -645,17 +623,17 @@
 #slider-description .ui-slider.ui-slider-horizontal{
 	margin-left:0px;
 	margin-right:0px;
-	width:95%;
+	width:328px;
 	margin-top:14px;
 	margin-bottom:14px;
 }
 #slider-raw{
-	width:100%;
+	width:328px;
 }
 #slider-raw .ui-slider.ui-slider-horizontal{
 	margin-left:0px;
 	margin-right:0px;
-	width:95%;
+	width:328px;
 }
 
 @media(max-width: 480px) {
@@ -670,4 +648,80 @@
 		width: 800px;
 		height: auto;
 	}
+}
+
+/******************************************************
+		Indexscrollbar with search floating button
+******************************************************/
+
+#indexscrollbarPage .ui-header.search-active h1 {
+	display: none;
+}
+
+#indexscrollbarPage .ui-header input, #indexscrollbarPage .ui-header a {
+	display: none;
+}
+
+#indexscrollbarPage .ui-header.search-active input,
+#indexscrollbarPage .ui-header.search-active a  {
+	display: block;
+}
+
+
+#ContainedButtonMediumHighEmphasis1Demo button.ui-btn.ui-btn-contained ~ button.ui-btn.ui-btn-contained {
+	margin-top: 10px;
+}
+
+
+/* Sample of line size & fonts */
+.sample-unit-line {
+	background-color: black;
+	margin: 4px;
+}
+.sample-unit-lines {
+	font-size: 12px;
+	text-indent: 10px;
+}
+.sample-unit-lines p {
+	margin-bottom: 2px;
+}
+
+/* Expand button example */
+.app-content-example {
+	height: 150px;
+	width: 100%;
+	background-color: #ddd;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 15px;
+}
+.app-content-example-expanded {
+	height: 150px;
+	width: 100%;
+	background-color: #ddd;
+	display: flex;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 15px;
+}
+
+.app-icon {
+	background-color: #6170ff;
+	position: relative;
+}
+
+.app-icon::after {
+	content: "IC";
+	position: absolute;
+	top: 7px;
+	left: 7px;
+	font-size: 12px;
+	color: white;
+}
+
+.app-full-height {
+	height: 100vh;
 }
