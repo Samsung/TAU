@@ -1126,27 +1126,33 @@
 				var classList = element.classList;
 
 				classList.add(classes.WIDGET_FOCUSED);
+				if (element.getAttribute("data-edit-on-focus") !== "false") {
+					element.focus();
+					ns.event.trigger(element, "focus");
+				} else {
+					this._ui.label.classList.add(classes.ACTIVATED);
+				}
 			}
 
 			prototype._blur = function (element) {
 				var classList = element.classList;
 
 				classList.remove(classes.WIDGET_FOCUSED);
+				ns.event.trigger(element, "blur");
 				element.blur();
 			}
 
 			prototype._actionEnter = function (element) {
-				var self = this;
-
-				self._blur(element);
-				element.focus();
+				if (element.getAttribute("data-edit-on-focus") === "false") {
+					element.focus();
+					ns.event.trigger(element, "focus");
+				}
 			}
 
 			prototype._actionEscape = function (element) {
-				var self = this;
-
-				element.blur();
-				self.focus();
+				if (element.getAttribute("data-edit-on-focus") === "false") {
+					ns.event.trigger(element, "blur");
+				}
 			}
 
 			BaseKeyboardSupport.registerActiveSelector("input[type='text']:not([data-role])" +
