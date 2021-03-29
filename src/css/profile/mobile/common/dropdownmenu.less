@@ -19,7 +19,7 @@
 	&:active {
 		outline: none;
 		.ui-dropdownmenu-placeholder {
-			background-color: @color_dropdownmenu_placeholder_bg_press;
+			background-color: transparent;
 		}
 	}
 	&::before {
@@ -27,7 +27,7 @@
 		opacity: 0;
 		width: 90%;
 		height: 26 * @px_base;
-		background-color: @color_dropdownmenu_placeholder_bg_press_effect;
+		background-color: var(--ripple-color);
 		position: absolute;
 		top: 17 * @px_base;
 		left: 5%;
@@ -40,7 +40,7 @@
 		opacity: 1;
 		width: 94%;
 		height: 40 * @px_base;
-		background-color: @color_dropdownmenu_placeholder_bg_press_effect;
+		background-color: var(--ripple-color);
 		position: absolute;
 		top: 10 * @px_base;
 		left: 3%;
@@ -60,7 +60,7 @@
 		text-overflow: ellipsis;
 		font-size: 17 * @px_base;
 		text-indent: 5 * @px_base;
-		background-color: @color_dropdownmenu_placeholder_bg;
+		background-color: transparent;
 		&::after {
 			content: "";
 			position: absolute;
@@ -77,7 +77,7 @@
 	}
 
 	&.ui-focus {
-		background-color: @color_dropdownmenu_placeholder_bg_press_effect;
+		background-color: var(--ripple-color);
 	}
 }
 
@@ -269,6 +269,9 @@
 			&:focus, &:active {
 				outline: none;
 			}
+			&.ui-focus {
+				background-color: var(--focus-bg-color);
+			}
 
 			&::before {
 				content: "";
@@ -310,29 +313,39 @@
 }
 
 .ui-spinner {
-	.ui-dropdownmenu-placeholder::after {
-		content: "";
-		width: 20 * @px_base;
-		height: 20 * @px_base;
-		position: absolute;
-		right: 0;
-		background-color:black;
-		top: 35%;
-		mask-image: url(images/13_View_controls/tw_spinner_mtrl.svg);
+	padding: 0 24 * @px_base;
+
+	.ui-dropdownmenu-placeholder {
+		font-size: 18 * @sp_base;
+		padding-left: 0;
+		text-indent: 0;
+
+		&::after {
+			content: "";
+			width: 20 * @px_base;
+			height: 20 * @px_base;
+			position: absolute;
+			right: 0;
+			background-color: black;
+			top: 35%;
+			mask-image: url(images/13_View_controls/tw_spinner_mtrl.svg);
+		}
+	}
+	&::before {
+		height: 100%;
+		top: 0;
+		left: 0;
+		border-radius: 30 * @px_base;
 	}
 	.ui-dropdownmenu-active .ui-dropdownmenu-placeholder::after {
 		display: none;
 	}
-}
-.ui-appbar {
-	.ui-appbar-left-icons-container {
-		.ui-spinner {
-			margin-left: 4 * @px_base;
+	&.ui-focus {
+		background-color: transparent;
+
+		&::before {
+			opacity: 1;
+			background-color: var(--focus-bg-color);
 		}
-	}
-}
-.ui-li-has-dropdownmenu {
-	.ui-spinner {
-		margin-left: 4 * @px_base;
 	}
 }
