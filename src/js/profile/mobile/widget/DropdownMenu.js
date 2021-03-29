@@ -1270,6 +1270,18 @@
 				}
 			};
 
+			prototype._focus = function () {
+				this._ui.elSelectWrapper.classList.add("ui-focus");
+			};
+
+			prototype._blur = function () {
+				this._ui.elSelectWrapper.classList.remove("ui-focus");
+			};
+
+			prototype._actionEnter = function () {
+				this.open();
+			};
+
 			/**
 			 * Show DropdownMenu options
 			 * @method _hide
