@@ -39,6 +39,7 @@
 		"../../../core/event/gesture/Drag",
 		"../../../core/event/gesture/Instance",
 		"../../../core/util/selectors",
+		"../BaseKeyboardSupport",
 		"./Page",
 		"./Appbar"
 	],
@@ -48,6 +49,7 @@
 			BaseWidget = ns.widget.BaseWidget,
 			Page = ns.widget.core.Page,
 			Appbar = ns.widget.core.Appbar,
+			BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 			engine = ns.engine,
 			utilsEvents = ns.event,
 			gesture = utilsEvents.gesture,
@@ -139,6 +141,8 @@
 				self._currentCentralCarouseItem = 0;
 				self._count = 0;
 				self._dragTimeoutHandler = null;
+
+				BaseKeyboardSupport.call(self);
 			},
 
 			WIDGET_CLASS = "ui-spin",
@@ -894,6 +898,9 @@
 				case "vclick":
 					self._click(event);
 					break;
+				case "keyup":
+					self._onKeyUp(event);
+					break;
 			}
 		};
 
@@ -907,6 +914,7 @@
 			}));
 
 			utilsEvents.on(self.element, "vclick", self);
+			utilsEvents.on(document, "keyup", self, true);
 		};
 
 		prototype._unbindEvents = function () {
@@ -916,6 +924,70 @@
 
 			utilsEvents.off(self.dragTarget, "drag dragend dragstart", self);
 			utilsEvents.off(self.element, "vclick", self);
+			utilsEvents.off(document, "keyup", self, true);
+		};
+
+		prototype._decreaseValue = function () {
+			var self = this;
+
+			self._setValue(self.options.value - (parseFloat(self.options.step) || 1));
+		};
+
+		prototype._increaseValue = function () {
+			var self = this;
+
+			self._setValue(self.options.value + (parseFloat(self.options.step) || 1));
+		};
+
+		prototype._focus = function () {
+			this.element.classList.add("ui-focus");
+		};
+
+		prototype._blur = function () {
+			this.element.classList.remove("ui-focus");
+		};
+
+		prototype._actionEnter = function () {
+			var self = this;
+
+			self.element.classList.add("ui-active");
+			self.saveKeyboardSupport();
+			self.enableKeyboardSupport();
+		};
+
+		prototype._actionEscape = function () {
+			var self = this;
+
+			self.element.classList.remove("ui-active");
+			self.disableKeyboardSupport();
+			self.restoreKeyboardSupport();
+		};
+
+		prototype._onKeyUp = function (event) {
+			var self = this,
+				KEY_CODES = BaseKeyboardSupport.KEY_CODES;
+
+			if (self._supportKeyboard) {
+				switch (event.keyCode) {
+					case KEY_CODES.escape :
+					case KEY_CODES.left :
+					case KEY_CODES.right :
+						self._actionEscape();
+						break;
+					case KEY_CODES.enter :
+						// stop event propagation for prevent loop of focus lock
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						self._actionEscape();
+						break;
+					case KEY_CODES.down :
+						self._decreaseValue();
+						break;
+					case KEY_CODES.up :
+						self._increaseValue();
+						break;
+				}
+			}
 		};
 
 		/**
@@ -954,6 +1026,8 @@
 			Spin,
 			"core"
 		);
+
+		BaseKeyboardSupport.registerActiveSelector(".ui-spin");
 
 		//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 		return Spin;
