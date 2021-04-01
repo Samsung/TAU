@@ -1,4 +1,4 @@
-/*global window, define, ns, HTMLElement, Node */
+/*global define, ns */
 /*
  * Copyright (c) 2010 - 2014 Samsung Electronics Co., Ltd.
  * License : MIT License V2
@@ -885,14 +885,15 @@
 			 */
 			function unlockFocus(self, element) {
 				var widget;
-				// enable escape from children (usability)
 
+				// enable escape from children (usability)
 				if (DOM.getNSData(element, "focus-lock") !== true) {
 					element = selectorUtils.getClosestBySelectorNS(element.parentNode, "focus-lock=true");
 					if (!element) {
 						return false;
 					}
 				}
+
 				widget = engine.getBinding(element);
 				if (widget && widget === currentKeyboardWidget) {
 					widget.disableKeyboardSupport();
@@ -1020,10 +1021,11 @@
 			 * @member ns.widget.tv.BaseKeyboardSupport
 			 */
 			prototype._onKeyup = function (event) {
-				var self = this,
+				var self = currentKeyboardWidget || this,
 					keyboardSupportState = ns.getConfig("keyboardSupport", false);
 
 				if (keyboardSupportState && self._supportKeyboard) {
+
 					if (!self.keydownEventRepeated) {
 						// short press was detected
 						self._onShortPress(event);

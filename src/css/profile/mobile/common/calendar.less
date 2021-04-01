@@ -8,7 +8,7 @@
 				text-align: center;
 				vertical-align: middle;
 				font-size: 15 * @sp_base;
-				.font(regular); 
+				.font(regular);
 				color: var(--calendar-text-color);
 				padding: 0;
 				div {
@@ -82,7 +82,7 @@
 	&-top-space {
 		height: 10 * @px_base;
 	}
-	
+
 	&-prev-month-day {
 		opacity: 0.1;
 	}
@@ -109,18 +109,35 @@
 	&-arrow {
 		width: 36 * @px_base;
 		height: 36 * @px_base;
-		mask-repeat: no-repeat;
-		mask-position: center;
-		mask-size: 100%;
-		background-color: var(--calendar-arrow-color);
+		position: relative;
+
+		&::after {
+			content: "";
+			position: absolute;
+			background-color: var(--calendar-arrow-color);
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			mask-repeat: no-repeat;
+			mask-position: center;
+			mask-size: 100%;
+		}
 	}
 	&-left-arrow {
 		float: left;
-		mask-image: url("images/4_Dialogs/tw_numberpicker_prev_mtrl.svg");
+
+		&::after {
+			mask-image: url("images/4_Dialogs/tw_numberpicker_prev_mtrl.svg");
+		}
+
 	}
 	&-right-arrow {
 		float: right;
-		mask-image: url("images/4_Dialogs/tw_numberpicker_next_mtrl.svg");
+
+		&::after {
+			mask-image: url("images/4_Dialogs/tw_numberpicker_next_mtrl.svg");
+		}
 	}
 
 	&-disabled {
@@ -136,7 +153,9 @@
 			margin: 0 auto;
 		}
 	}
-	
+	&.ui-focus, .ui-focus {
+		outline: 2 * @px_base solid var(--focus-outline-color);
+	}
 }
 
 .ui-content-area, .ui-popup-content {
