@@ -44,4 +44,15 @@
 		position: absolute;
 		display: none;
 	}
+	&.ui-focus {
+		background-color: var(--focus-bg-color);
+		&.ui-active {
+			background-color: transparent;
+
+			.ui-spin-item-selected {
+				background-color: var(--focus-bg-color);
+				border-radius: 24 * @px_base;
+			}
+		}
+	}
 }
