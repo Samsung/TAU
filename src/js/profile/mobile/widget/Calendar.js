@@ -35,11 +35,13 @@
 			"../../../core/engine",
 			"../../../core/util/DOM/attributes",
 			"../../../core/event",
+			"../../../core/widget/BaseKeyboardSupport",
 			"../widget"
 		],
 		function () {
 			//>>excludeEnd("tauBuildExclude");
 			var utilsObject = ns.util.object,
+				BaseKeyboardSupport = ns.widget.core.BaseKeyboardSupport,
 				engine = ns.engine,
 				events = ns.event,
 				days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"],
@@ -65,7 +67,8 @@
 					TOP_SPACE: "ui-calendar-top-space",
 
 					SWITCH_VIEW: "ui-calendar-switch",
-					CALENDAR_VIEW: "ui-calendar-view"
+					CALENDAR_VIEW: "ui-calendar-view",
+					FOCUS: "ui-focus"
 				},
 
 				/**
@@ -107,6 +110,8 @@
 						rightArrow: null,
 						calendarView: null
 					};
+
+					BaseKeyboardSupport.call(self);
 				},
 
 				BaseWidget = ns.widget.BaseWidget,
@@ -199,6 +204,9 @@
 						if (self._fixMonth === self._todayMonth && !self.options.pastSelection) {
 							div.classList.add(classes.DISABLED);
 						}
+						if (self.isKeyboardSupport && ns.getConfig("keyboardSupport")) {
+							div.setAttribute("tabindex", "0");
+						}
 					}
 					while (leftDays != 0) {
 						div = createDayInRow(row);
@@ -230,6 +238,9 @@
 									self._selectDay = div;
 								}
 							}
+						}
+						if (self.isKeyboardSupport && ns.getConfig("keyboardSupport")) {
+							div.setAttribute("tabindex", "0");
 						}
 					}
 					leftDays = 7;
@@ -493,6 +504,12 @@
 				rightArrowElement.classList.add(classes.ARROW);
 				viewChangeElement.classList.add(classes.SWITCH_VIEW);
 
+				if (this.isKeyboardSupport && ns.getConfig("keyboardSupport")) {
+					leftArrowElement.setAttribute("tabindex", "0");
+					rightArrowElement.setAttribute("tabindex", "0");
+					viewChangeElement.setAttribute("tabindex", "0");
+				}
+
 				controllerElement.appendChild(leftArrowElement);
 				controllerElement.appendChild(rightArrowElement);
 				controllerElement.appendChild(viewChangeElement);
@@ -525,7 +542,20 @@
 				element.appendChild(controllerElement);
 				element.appendChild(viewTableElement);
 
+				if (this.isKeyboardSupport && ns.getConfig("keyboardSupport")) {
+					element.setAttribute("data-focus-lock", "true");
+					element.setAttribute("tabindex", "0");
+				}
+
 				return element;
+			};
+
+			prototype._focus = function () {
+				this.element.classList.add(classes.FOCUS);
+			};
+
+			prototype._blur = function () {
+				this.element.classList.remove(classes.FOCUS);
 			};
 
 			prototype._destroy = function () {
@@ -543,6 +573,10 @@
 				Calendar,
 				"mobile"
 			);
+
+			BaseKeyboardSupport.registerActiveSelector(".ui-calendar, .ui-calendar-arrow, .ui-calendar-switch," +
+				".ui-calendar-current-month-day, .ui-calendar-prev-month-day, .ui-calendar-next-month-day");
+
 			//>>excludeStart("tauBuildExclude", pragmas.tauBuildExclude);
 			return ns.widget.mobile.Calendar;
 		}
