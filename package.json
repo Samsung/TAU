@@ -2,7 +2,7 @@
   "name": "tau",
   "title": "tau",
   "description": "Tizen Advanced UI",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "scripts": {
     "build": "node --harmony ./node_modules/.bin/grunt build",
     "postinstall": "npm run build",
