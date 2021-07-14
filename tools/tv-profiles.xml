@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<profiles version="3.0">
-<profile name="default">
-<profileitem ca="" distributor="0" key="tools/tv-author.p12" password="zy4zmoMT6lw=" rootca=""/>
-<profileitem ca="" distributor="1" key="tools/distributor.p12" password="yYf5ivba+s+e6Fac8LGVSw==" rootca=""/>
-</profile>
-</profiles>
