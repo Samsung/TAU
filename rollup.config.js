@@ -5,7 +5,7 @@ import pkg from './package.json';
 const extensions = ['.js', '.ts'];
 
 export default {
-  input: 'src/uc-elements.ts',
+  input: 'src/one-elements.ts',
   plugins: [
     resolve({ extensions }),
     typescript()
@@ -16,13 +16,13 @@ export default {
       format: 'umd',
       name: 'uc'
     },
-    // {
-    //   file: pkg.main,
-    //   format: 'cjs'
-    // },
-    // {
-    //   file: pkg.module,
-    //   format: 'es'
-    // }
+    {
+      file: pkg.main,
+      format: 'cjs'
+    },
+    {
+      file: pkg.module,
+      format: 'es'
+    }
   ]
 }
