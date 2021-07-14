@@ -2,12 +2,13 @@
   "name": "ucfw",
   "version": "0.0.1",
   "description": "UI Components For Wearable",
-  "main": "lib/uc-elements.cjs.js",
-  "module": "lib/uc-elements.esm.js",
-  "browser": "lib/uc-element.umd.js",
-  "types": "lib/uc-elements.d.ts",
+  "main": "lib/one-elements.cjs.js",
+  "module": "lib/one-elements.esm.js",
+  "browser": "lib/one-element.umd.js",
+  "types": "lib/one-elements.d.ts",
   "scripts": {
-    "build": "rimraf lib && rollup -c"
+    "build": "rimraf lib && rollup -c",
+    "watch": "rollup -c -w"
   },
   "author": "Hunseop Jeong <hs85.jeong@samsung.com>",
   "devDependencies": {

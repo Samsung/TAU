@@ -1,18 +1,43 @@
-import { LitElement, PropertyValues } from 'lit';
+import { css, LitElement, PropertyValues } from 'lit';
 import { query } from 'lit/decorators.js';
 
 export type Point = [number, number];
 
-export abstract class UCBase extends LitElement {
+export const BaseCSS = css`
+:host {
+  opacity: 0;
+  color: white;
+}
+:host(.one-rendered) {
+  opacity: 1;
+}
+#overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+svg {
+  display: block;
+}
+path {
+  stroke: currentColor;
+  fill: transparent;
+}
+.hidden {
+  display: none !important;
+}
+`;
+
+export abstract class OneBase extends LitElement {
   @query('svg') protected svg?: SVGSVGElement;
 
   protected lastSize: Point = [0, 0];
 
   updated(_changed?: PropertyValues) {
-    this.ucRender();
+    this.oneRender();
   }
 
-  ucRender(force = false) {
+  oneRender(force = false) {
     if (this.svg) {
       const size = this.canvasSize();
       if ((!force) && (size[0] === this.lastSize[0]) && (size[1] === this.lastSize[1])) {
@@ -25,7 +50,7 @@ export abstract class UCBase extends LitElement {
       this.svg.setAttribute('height', `${size[1]}`);
       this.draw(this.svg, size);
       this.lastSize = size;
-      this.classList.add('uc-rendered');
+      this.classList.add('one-rendered');
     }
   }
 
