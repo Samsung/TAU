@@ -36,19 +36,11 @@ export class OneCircle extends LitElement {
   }
 
   slotChange() {
-    console.log('circle slotChange');
     this.requestUpdate();        
   }
 
-  firstUpdated() {
-    console.log('circle firstUpdated');    
-  }
-
   updated() {
-    console.log('circle updated');
-
     if (this.radius) {
-      console.log('radius exist');
       this.style.width = `${this.radius * 2}px`;
       this.style.height = `${this.radius * 2}px`;
       this.style.clipPath = `circle(${this.radius}px at center)`;

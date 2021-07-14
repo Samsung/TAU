@@ -1,10 +1,12 @@
 import { css, html, CSSResultArray, TemplateResult } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import { BaseCSS, Point, OneBase } from './one-base';
 import { rectangle } from './one-lib';
 
 @customElement('one-button')
 export class OneButton extends OneBase {
+  @property({ type: Boolean }) icon = false;
+
   @query('button') private button?: HTMLButtonElement;
 
   constructor() {
@@ -33,11 +35,14 @@ export class OneButton extends OneBase {
         letter-spacing: 1.25px;
         text-align: center;
         padding: 10px;
-        outline: none;
         color: inherit;
+        outline: none;
+      }
+      button[icon] {
+        border-radius: 50%;
       }
       button:active path {
-        transform: scale(0.97) translate(1.5% 1.5%);
+        transform: scale(0.97) translate(1.5%, 1.5%);
       }
       button:focus path {
         stroke-width: 1.5;
@@ -48,7 +53,7 @@ export class OneButton extends OneBase {
 
   render(): TemplateResult {
     return html`
-    <button>
+    <button ?icon="${this.icon}">
       <slot @slotchange="${this.oneRender}"></slot>
       <div id="overlay">
         <svg></svg>
@@ -65,10 +70,20 @@ export class OneButton extends OneBase {
     }
   }
 
+  firstUpdated() {
+    console.log('firstUpdated');
+  }
+
+  updated() {
+    console.log('updated');
+    super.updated();
+
+    console.log('icon:' + this.icon);
+  }
+
   protected canvasSize(): Point {
     if (this.button) {
       const size = this.button.getBoundingClientRect();
-      console.log(`button canvasSize width:${size.width} height:${size.height}`);
       return [size.width, size.height];
     }
 
@@ -76,8 +91,12 @@ export class OneButton extends OneBase {
   }
 
   protected draw(svg: SVGSVGElement, size: Point) {
-    const width = size[0];
-    const height = size[1];
-    rectangle(svg, 0, 0, width, height);    
+    if (this.icon) {
+      const min = Math.min(size[0], size[1]);
+      svg.setAttribute('width', `${min}`);
+      svg.setAttribute('height', `${min}`);
+    } else {
+      rectangle(svg, 0, 0, size[0], size[1]);
+    }
   }
 }
