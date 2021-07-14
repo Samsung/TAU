@@ -1,5 +1,0 @@
-.app-full-height {
-    display: flex;
-    height: 100vh;
-    max-height: -webkit-fill-available;
-}
