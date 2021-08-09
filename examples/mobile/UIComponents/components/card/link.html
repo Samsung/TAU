@@ -6,6 +6,7 @@
 	<meta content="width=device-width, user-scalable=no" name="viewport" />
 	<link href="../../lib/tau/mobile/theme/changeable/tau.css" rel="stylesheet" />
 	<link href="../../css/style.css" rel="stylesheet" />
+	<script src="https://unpkg.com/mustache@latest"></script>
 	<script data-build-remove="false" src="../../lib/tau/mobile/js/tau.js">
 	</script>
 </head>
@@ -26,6 +27,15 @@
 			<div class="ui-card" data-src="../../webclip/link-favorite/webclip.html"></div>
 			<div class="ui-card" data-src="../../webclip/link-container/webclip.html"></div>
 			<div class="ui-card" data-src="../../webclip/link-list/webclip.html"></div>
+			<div class="ui-card" data-src="../../webclip/link-video-template/webclip.html"
+				data-template-data='{"title":"Title","description":"description","video":"https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4","actionText":"Action"}'></div>
+			<div class="ui-card" data-src="../../webclip/link-tab-template/webclip.html"
+				data-template-data='{"title":"Title template","images":[{"img":"images/tw_list_icon_connections.svg"},{"img":"images/thumbnail_013.jpg"},{"img":"images/thumbnail_013.jpg"}],"action":{"play":1}}' data-template-html=""></div>
+			<div class="ui-card"
+				data-src="../../webclip/link-tab-template/webclip.html"
+				data-template-data='{"title":"Template base path","images":[{"img":"images/tw_list_icon_connections.svg"},{"img":"images/thumbnail_013.jpg"},{"img":"images/thumbnail_013.jpg"}],"action":{"play":1}}'
+				data-template-base-path="../../webclip/template-base-path">
+			</div>
 		</div>
 	</div>
 </body>

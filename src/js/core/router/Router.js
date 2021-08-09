@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* global define, HTMLElement, ns */
+/* global define, ns */
 /**
  * #Router
  *
@@ -1069,7 +1069,7 @@
 							} else {
 								self._loadError(status.absUrl, options, deferred);
 							}
-						});
+						}, options.templateEngine);
 					}
 				}
 			};
