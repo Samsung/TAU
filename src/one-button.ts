@@ -9,10 +9,6 @@ export class OneButton extends OneBase {
 
   @query('button') private button?: HTMLButtonElement;
 
-  constructor() {
-    super();
-  }
-
   static get styles(): CSSResultArray {
     return [
       BaseCSS,

@@ -55,6 +55,18 @@ export abstract class OneBase extends LitElement {
     }
   }
 
+  fire(name: string, detail?: any) {
+    fireEvent(this, name, detail);
+  }
+
   protected abstract canvasSize(): Point;
   protected abstract draw(svg: SVGSVGElement, size: Point): void;
+}
+
+export function fireEvent(e: HTMLElement, name: string, detail?: any) {
+  e.dispatchEvent(new CustomEvent(name, {
+    composed: true,
+    bubbles: true,
+    detail
+  }));
 }
