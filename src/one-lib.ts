@@ -106,8 +106,8 @@ function _ellipse(ellipseInc: number, cx: number, cy: number, rx: number, ry: nu
 }
 
 export function ellipse(parent: SVGElement, x: number, y: number, width: number, height: number) {
-  width = Math.max(width, 1);
-  height = Math.max(height, 1);
+  width = Math.max(width > 10 ? width - 4 : width - 1, 1);
+  height = Math.max(height > 10 ? height - 4 : height - 1, 1);
   const ellipseInc = (Math.PI * 2) / __curveStepCount;
   let rx = Math.abs(width / 2);
   let ry = Math.abs(height / 2);
