@@ -116,3 +116,37 @@ export function ellipse(parent: SVGElement, x: number, y: number, width: number,
   parent.appendChild(node);
   return node;
 }
+
+function _continousLine(x1: number, y1: number, x2: number, y2: number, move: boolean, path: OnePath) {
+  path = path || new OnePath();
+
+  if (move) {
+    path.moveTo(x1, y1);
+  }
+  path.lineTo(x2, y2);
+
+  return path;
+}
+
+export function polygon(parent: SVGElement, verties: any) {
+  let path = null;
+  const vCount = verties.length;
+  if (vCount > 2) {
+    for (let i = 0; i < vCount; i++) {
+      let move = true;
+      for (let i = 1; i < vCount; i++) {
+        path = _continousLine(verties[i -1][0], verties[i - 1][1], verties[i][0], verties[i][1], move, path);
+        move = false;
+      }
+      path = _continousLine(verties[vCount - 1][0], verties[vCount - 1][1], verties[0][0], verties[0][1], move, path);
+    }
+  } else if (vCount === 2) {
+    path = _line(verties[0][0], verties[0][1], verties[1][0], verties[1][1]);
+  } else {
+    path = new OnePath();
+  }
+
+  const node = svgNode('path', { d: path.value });
+  parent.appendChild(node);
+  return node;
+}
