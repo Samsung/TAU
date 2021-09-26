@@ -5,3 +5,4 @@ export * from './one-input';
 export * from './one-radio';
 export * from './one-radio-group';
 export * from './one-progress';
+export * from './one-toggle';

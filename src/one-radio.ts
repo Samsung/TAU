@@ -2,7 +2,6 @@ import { css, CSSResultArray, html, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { BaseCSS, OneBase, Point } from './one-base'
 import {ellipse, svgNode} from "./one-lib";
-// import { line, rectangle, svgNode } from './one-lib';
 
 @customElement('one-radio')
 export class OneRadio extends OneBase {

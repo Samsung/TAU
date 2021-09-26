@@ -1,10 +1,10 @@
 import { css, CSSResultArray, html, TemplateResult } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { BaseCSS, OneBase, Point } from './one-base'
-import {ellipse, polygon, rectangle, svgNode} from "./one-lib";
+import { polygon, rectangle } from "./one-lib";
 
 @customElement('one-progress')
-export class OneRadio extends OneBase {
+export class OneProgress extends OneBase {
   @property({ type: Number }) value = 0;
   @property({ type: Number }) min = 0;
   @property({ type: Number }) max = 100;
