@@ -117,7 +117,7 @@ export function ellipse(parent: SVGElement, x: number, y: number, width: number,
   return node;
 }
 
-function _continousLine(x1: number, y1: number, x2: number, y2: number, move: boolean, path: OnePath) {
+function _continousLine(x1: number, y1: number, x2: number, y2: number, move: boolean, path?: OnePath | null) {
   path = path || new OnePath();
 
   if (move) {
