@@ -71,7 +71,7 @@ tau-gridview {
 		.ui-gridview-image {
 			display: block;
 			width: 100%;
-			height: auto;
+			height: 100%;
 			pointer-events: none;
 		}
 
@@ -188,7 +188,7 @@ tau-gridview {
 @media (orientation: portrait) {
 	.ui-content:not(.ui-popup-content-gridview) {
 		.ui-gridview {
-			min-height: 509 * @px_base;
+			min-height: 172 * @px_base;
 		}
 	}
 }
@@ -207,6 +207,12 @@ tau-gridview {
 @media (min-width: 960px) {
 	.ui-gridview-cols::after {
 		content: "5";
+	}
+}
+
+@media (min-width: 1920px) {
+	.ui-gridview-cols::after {
+		content: "8";
 	}
 }
 
@@ -265,15 +271,18 @@ tau-gridview {
 		.ui-gridview:not(.ui-gridview-label-out) {
 			min-width: 1920 * @px_base;
 			.ui-gridview-item {
-				width: 240 * @px_base;
-				height: 238 * @px_base;
+				width: 226 * @px_base;
+				height: 226 * @px_base;
 				.ui-gridview-image {
-					width: 240 * @px_base;
-					height: 238 * @px_base;
+					width: 224 * @px_base;
+					height: 190 * @px_base;
+					padding-top: 27 * @px_base;
+					padding-bottom: 15 * @px_base;
 				}
 				.ui-gridview-label {
 					height: 39 * @px_base;
-					line-height: 39 *@px_base;
+					width: 226 * @px_base;
+					line-height: 30 *@px_base;
 					padding: 0 10 * @px_base;
 				}
 			}
