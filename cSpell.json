@@ -933,6 +933,8 @@
         "Zopf",
         "Zunic",
         "Texttexttextexttextte",
+        "Hyunsik",
+        "Daeryong",
 
         // Lorem ipsum...
         "lorem",
@@ -1013,7 +1015,15 @@
         "egestas",
         "felis",
         "volutpat",
-        "venenatis"
+        "venenatis",
+
+        // fix below words in the source
+        "Saerch",
+        "hrefs",
+        "garph",
+        "disble",
+        "enbled",
+        "chekcbox"
     ],
     "ignoreRegExpList": [
         "@author\\s.+?<.*?>",

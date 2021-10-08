@@ -21,10 +21,10 @@ jobs:
         npm test
         npm run build && npm run test:karma
 
-    - name: Setup Node 10.15
+    - name: Setup Node 12.22
       uses: actions/setup-node@v2.4.0
       with:
-        node-version: '10.15'
+        node-version: '12.22'
 
     - name: TAU Lint
       run: |
