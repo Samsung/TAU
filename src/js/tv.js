@@ -66,6 +66,7 @@
 			"./core/util/deferredWhen",
 			"./core/util/path",
 			"./core/util/bezierCurve",
+			"./core/util/image",
 			"./core/util/zoom",
 			"./core/util/anim/Keyframes",
 			"./core/util/anim/Animation",
