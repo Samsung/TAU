@@ -164,6 +164,18 @@ tau-gridview {
 		}
 	}
 
+	.ui-gridview-item.ui-gridview-image-icon img {
+		display: flex;
+		justify-self: center;
+		align-self: center;
+		margin: auto;
+		height: 60%;
+		width: 60%;
+		max-height: 70%;
+		max-width: 70%;
+		padding-bottom: 57 * @px_base;
+		transform: initial !important;
+	}
 }
 
 .ui-content:not(.ui-popup-content-gridview) {
@@ -266,6 +278,10 @@ tau-gridview {
 					margin: 0;
 					margin-bottom: 23 * @px_base;
 				}
+				&.ui-gridview-image-icon .ui-gridview-image {
+					padding-bottom: 40 * @px_base;
+					padding-top: 0;
+				}
 			}
 		}
 		.ui-gridview:not(.ui-gridview-label-out) {
@@ -284,6 +300,10 @@ tau-gridview {
 					width: 226 * @px_base;
 					line-height: 30 *@px_base;
 					padding: 0 10 * @px_base;
+				}
+				&.ui-gridview-image-icon .ui-gridview-image {
+					padding-bottom: 40 * @px_base;
+					padding-top: 0;
 				}
 			}
 		}

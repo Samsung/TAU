@@ -68,6 +68,7 @@
 			"../../../core/event/gesture/Instance",
 			"../../../core/util/DOM",
 			"../../../core/util/selectors",
+			"../../../core/util/image",
 			"../../../core/widget/BaseKeyboardSupport",
 			"../widget"
 		],
@@ -78,6 +79,7 @@
 				engine = ns.engine,
 				utilsEvents = ns.event,
 				utilsSelectors = ns.util.selectors,
+				checkTransparency = ns.util.image.checkTransparency,
 				utilsDom = ns.util.DOM,
 				pageEvents = ns.widget.core.Page.events,
 				Popup = ns.widget.mobile.Popup,
@@ -170,7 +172,8 @@
 					 * @style ui-gridview-item-has-label
 					 * @member ns.widget.mobile.GridView
 					 */
-					ITEM_HAS_LABEL: "ui-gridview-item-has-label"
+					ITEM_HAS_LABEL: "ui-gridview-item-has-label",
+					ITEM_HAS_ICON: "ui-gridview-image-icon"
 				},
 				selectors = {
 					ANY_NOT_IMAGE: "*:not(." + classes.IMAGE + ")"
@@ -341,6 +344,7 @@
 				self.on("animationend webkitAnimationEnd", animationEndCallback);
 
 				self.on("change", self);
+				self.on("load", self, true);
 				utilsEvents.on(window, "resize", self, true);
 
 				utilsEvents.on(page, pageEvents.SHOW, self._onSetGridStyle);
@@ -367,6 +371,7 @@
 				}
 				self.off("animationend webkitAnimationEnd", animationEndCallback);
 				self.off("change", self);
+				self.off("load", self, true);
 				utilsEvents.off(page, pageEvents.SHOW, self._onSetGridStyle);
 			};
 
@@ -388,6 +393,7 @@
 				self._setLabel(element);
 				self._checkItemLabel();
 				self._setReorder(element, self.options.reorder);
+				self._detectIcons();
 				self._calculateListHeight();
 				self._ui.content = utilsSelectors.getClosestByClass(element, "ui-content") || window;
 				self._ui.scrollableParent = getScrollableParent(element) || self._ui.content;
@@ -418,6 +424,9 @@
 				switch (event.type) {
 					case "change":
 						self._shadeCheckbox(event.target);
+						break;
+					case "load":
+						self._detectIcon(event.target);
 						break;
 					case "dragprepare":
 						if (event.detail.srcEvent.srcElement.classList.contains(classes.HANDLER)) {
@@ -706,6 +715,22 @@
 			}
 
 			/**
+			 * Set icon class on transparent image
+			 * @method _detectIcon
+			 * @protected
+			 * @param {HTMLElement} target
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._detectIcon = function (target) {
+				if (target.complete) {
+					target.parentElement.classList.toggle(
+						classes.ITEM_HAS_ICON,
+						checkTransparency(target)
+					);
+				}
+			}
+
+			/**
 			 * Update information of each list item
 			 * @method _refreshItemsInfo
 			 * @protected
@@ -797,6 +822,25 @@
 					}
 				}
 			};
+
+			/**
+			 * Method detects icons and add specific css class for icon
+			 * @method _detectIcons
+			 * @protected
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._detectIcons = function () {
+				var self = this,
+					listElements = self._ui.listElements || [];
+
+				listElements.forEach(function (liItem) {
+					var image = liItem.querySelector("img");
+
+					if (image) {
+						self._detectIcon(image);
+					}
+				});
+			}
 
 			/**
 			 * Set the width of each item
