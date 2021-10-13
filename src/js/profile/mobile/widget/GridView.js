@@ -393,6 +393,7 @@
 				self._setLabel(element);
 				self._checkItemLabel();
 				self._setReorder(element, self.options.reorder);
+				self._detectIcons();
 				self._calculateListHeight();
 				self._ui.content = utilsSelectors.getClosestByClass(element, "ui-content") || window;
 				self._ui.scrollableParent = getScrollableParent(element) || self._ui.content;
@@ -714,17 +715,19 @@
 			}
 
 			/**
-			 * Set icon class on transparent images
-			 * @method _checkImage
+			 * Set icon class on transparent image
+			 * @method _detectIcon
 			 * @protected
 			 * @param {HTMLElement} target
 			 * @member ns.widget.mobile.GridView
 			 */
 			prototype._detectIcon = function (target) {
-				target.parentElement.classList.toggle(
-					classes.ITEM_HAS_ICON,
-					checkTransparency(target)
-				);
+				if (target.complete) {
+					target.parentElement.classList.toggle(
+						classes.ITEM_HAS_ICON,
+						checkTransparency(target)
+					);
+				}
 			}
 
 			/**
@@ -819,6 +822,25 @@
 					}
 				}
 			};
+
+			/**
+			 * Method detects icons and add specific css class for icon
+			 * @method _detectIcons
+			 * @protected
+			 * @member ns.widget.mobile.GridView
+			 */
+			prototype._detectIcons = function () {
+				var self = this,
+					listElements = self._ui.listElements || [];
+
+				listElements.forEach(function (liItem) {
+					var image = liItem.querySelector("img");
+
+					if (image) {
+						self._detectIcon(image);
+					}
+				});
+			}
 
 			/**
 			 * Set the width of each item

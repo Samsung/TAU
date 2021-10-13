@@ -165,15 +165,16 @@ tau-gridview {
 	}
 
 	.ui-gridview-item.ui-gridview-image-icon img {
+		display: flex;
 		justify-self: center;
 		align-self: center;
 		margin: auto;
-		max-height: calc(~"100% - "80 * @px_base);
+		height: 60%;
+		width: 60%;
+		max-height: 70%;
+		max-width: 70%;
 		padding-bottom: 57 * @px_base;
 		transform: initial !important;
-		height: initial !important;
-		max-width: calc(~"100% - "80 * @px_base);
-		width: initial;
 	}
 }
 

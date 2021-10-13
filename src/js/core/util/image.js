@@ -40,24 +40,25 @@
 				 * @member ns.util.image
 				 */
 				checkTransparency: function (image, points) {
-					var c = document.createElement("canvas"),
-						cnx = c.getContext("2d"),
-						rect = image.getBoundingClientRect(),
+					var c,
+						cnx,
 						imageData;
 
-					c.width = rect.width;
-					c.height = rect.height;
+					c = document.createElement("canvas");
+					cnx = c.getContext("2d");
+					c.width = image.width;
+					c.height = image.height;
 
 					points = points || [
-						[0, 0], [rect.width - 1, 0], [rect.width - 1, rect.height - 1], [0, rect.height - 1]
+						[0, 0], [image.width - 1, 0], [image.width - 1, image.height - 1], [0, image.height - 1]
 					];
 
-					cnx.drawImage(image, 0, 0, rect.width, rect.height);
+					cnx.drawImage(image, 0, 0, image.width, image.height);
 
 					return points.some(function (point) {
 						imageData = cnx.getImageData(point[0], point[1], 1, 1);
-						return imageData.data.at(3) !== 255;
-					})
+						return imageData && imageData.data[3] !== 255 || false;
+					});
 				}
 			};
 
