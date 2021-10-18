@@ -1,0 +1,101 @@
+<div class="ui-card ui-card-service">
+	<link data-template-rel="origin" href="css/style.css" rel="stylesheet" />
+	<script data-template-rel="origin" src="js/app.js"></script>
+	<div class="ui-header">
+		<div class="ui-title">{{title}}</div>
+		<div class="ui-icon app-icon"></div>
+		<div class="ui-controls">
+			<button data-icon="down"></button>
+			<button data-icon="reorder"></button>
+		</div>
+	</div>
+	<div class="ui-content ui-tabs" style="height: 215px;">
+		<div class="ui-sub-tab ui-sub-tab-static">
+			<ul>
+				<li class="ui-li-anchor">
+					<a class="ui-tab-active" href="#">
+						One
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a href="#">
+						Two
+					</a>
+				</li>
+				<li class="ui-li-anchor">
+					<a href="#">
+						Three
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="ui-section-changer">
+			<div>
+				<section class="ui-content ui-section-active">
+					<ul class="ui-listview ui-content-area">
+						<li class="ui-li-divider">
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 01
+								</span>
+								<span class="ui-li-text-sub ui-li-text-value">
+									Value text
+								</span>
+							</div>
+						</li>
+						<li class="ui-li-divider">
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 02
+								</span>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="ui-content">
+					<ul class="ui-listview ui-content-area">
+						{{#images}}
+						<li class="ui-li-has-icon ui-li-divider">
+							<div class="ui-li-icon">
+								<img data-template-rel="origin" src="{{img}}"/>
+							</div>
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 01
+								</span>
+								<span class="ui-li-text-sub">
+									Subtitle on list item
+								</span>
+							</div>
+						</li>
+						{{/images}}
+					</ul>
+				</section>
+				<section class="ui-content">
+					<ul class="ui-listview ui-content-area">
+						<li class="ui-li-divider">
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 03
+								</span>
+								<span class="ui-li-text-sub">
+									Subtitle on list item
+								</span>
+							</div>
+						</li>
+						<li>
+							<div class="ui-li-text">
+								<span class="ui-li-text-title">
+									Main text 04
+								</span>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</div>
+		</div>
+	</div>
+	<div class="ui-footer">
+		<button data-inline="true" data-action={{action}}>View more</button>
+	</div>
+</div>

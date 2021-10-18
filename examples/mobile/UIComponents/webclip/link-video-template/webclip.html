@@ -1,0 +1,17 @@
+`<div class="ui-card ui-card-ads">
+	<link href="css/style.css" rel="stylesheet" />
+	<div class="ui-content">
+		<script src="js/app.js"></script>
+		<video src="{{video}}" id="video" style="width: 100%;"></video>
+		<div class="ui-title">{{title}}</div>
+		<div class="ui-subtitle">{{description}}</div>
+		<script>
+			document.getElementById("video").addEventListener("click", function () {
+				this.play();
+			});
+		</script>
+	</div>
+	<div class="ui-footer">
+		<button data-inline="true">{{actionText}}</button>
+	</div>
+</div>`

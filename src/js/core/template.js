@@ -30,7 +30,7 @@
 				templateFunctions = {},
 				globalOptions = {
 					"pathPrefix": "",
-					"default": ""
+					"default": "html"
 				};
 
 			/**

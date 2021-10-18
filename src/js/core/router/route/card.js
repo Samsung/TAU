@@ -40,7 +40,8 @@
 				DOM = ns.util.DOM,
 				defaults = {
 					volatileRecord: true,
-					orderNumber: 2
+					orderNumber: 2,
+					templateEngine: "webclip"
 				},
 				CardRoute = function () {
 					this.filter = ".ui-card";
@@ -85,8 +86,8 @@
 					card,
 					dataUrl = self._createDataUrl(absUrl);
 
-				// Finding matching page inside created element
-				card = html.querySelector(self.filter);
+				// Finding matching card inside created element
+				card = ns.util.selectors.getClosestBySelector(html, self.filter) || html.querySelector(self.filter);
 
 				// If a card exists...
 				if (card) {
@@ -122,6 +123,7 @@
 				}
 
 				if (card) {
+					card._url = url;
 					card.changeContent(content, options);
 				}
 

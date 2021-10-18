@@ -89,6 +89,7 @@
         "ylabel",
         "xinit",
         "yinit",
+        "remoteui",
 
         //jslint specific words
         "nomen",

@@ -147,6 +147,7 @@
 			"./core/controller",
 			//>>excludeEnd("tauMVC");
 			"./core/template/html",
+			"./core/template/webclip",
 			"./core/info",
 			"./core/init",
 			// globalize
