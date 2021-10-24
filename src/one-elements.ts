@@ -6,3 +6,5 @@ export * from './one-radio';
 export * from './one-radio-group';
 export * from './one-progress';
 export * from './one-toggle';
+export * from './one-slider';
+
