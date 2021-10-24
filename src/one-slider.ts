@@ -8,6 +8,7 @@ export class OneSlider extends OneBase {
   @property({ type: Number }) min = 0;
   @property({ type: Number }) max = 100;
   @property({ type: Number }) step = 1;
+  @property({ type: Boolean, reflect: true }) disabled = false;
 
   @query('input') private input?: HTMLInputElement;
 
@@ -24,6 +25,13 @@ export class OneSlider extends OneBase {
         position: relative;
         width: 300px;
         box-sizing: border-box;
+      }
+      :host([disabled]) {
+        opacity: 0.45 !important;
+        cursor: default;
+        pointer-events: none;
+        background: rgba(0, 0, 0, 0.07);
+        border-radius: 5px;
       }
       input[type=range] {
         width: 100%;
@@ -128,8 +136,8 @@ export class OneSlider extends OneBase {
         min="${this.min}"
         max="${this.max}"
         step="${this.step}"
-        @input="${this.onInput}"
-      >
+        ?disabled="${this.disabled}"
+        @input="${this.onInput}">
       <div id="overlay">
         <svg></svg>
       </div>
