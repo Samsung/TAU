@@ -35,12 +35,35 @@ export class OneSlider extends OneBase {
         outline: none;
         position: relative;
       }
+      input[type=range]:focus {
+        outline: none;
+      }
+      input[type=range]::-ms-track {
+        width: 100%;
+        cursor:pointer;
+        background: transparent;
+        border-color: transparent;
+        color: transparent;
+      }
       input[type=range]::-moz-range-thumb {
         border-radius: 50px;
         background: none;
         cursor: pointer;
         border: none;
         margin: 0;
+        height: 24px;
+        width: 24px;
+        line-height: 1;
+      }
+      input[type=range]::-moz-focus-outer {
+        outline: none;
+        border: 0;
+      }
+      input[type=range]::-moz-range-thumb {
+        border-radius: 50px;
+        background: none;
+        cursor: pointer;
+        border: none;
         height: 24px;
         width: 24px;
         line-height: 1;
@@ -63,6 +86,10 @@ export class OneSlider extends OneBase {
       .knob {
         fill: rgb(51, 103, 214);
         stroke: rgb(51, 103, 214);
+      }
+      input:focus + div svg .knob {
+        stroke: rgb(0, 0, 0);
+        fill-opacity: 0.8;
       }
     `];
   }
@@ -108,6 +135,14 @@ export class OneSlider extends OneBase {
       </div>
     </div>
     `;
+  }
+
+  focus() {
+    if (this.input) {
+      this.input.focus();
+    } else {
+      super.focus();
+    }
   }
 
   private onInput(e: Event) {
