@@ -1,3 +1,4 @@
 {
+  "includeShadowDom": true,
   "integrationFolder": "test"
 }
