@@ -8,14 +8,20 @@
   "types": "lib/one-elements.d.ts",
   "scripts": {
     "build": "rimraf lib && rollup -c",
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "cypress": "cypress run",
+    "cypress:open": "cypress open",
+    "test:dev": "start-server-and-test watch http://localhost:8080 cypress:open"
   },
   "author": "Hunseop Jeong <hs85.jeong@samsung.com>",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
+    "cypress": "^9.1.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.53.1",
+    "rollup-plugin-serve": "^1.1.0",
+    "start-server-and-test": "^1.14.0",
     "tslint": "^6.1.3",
     "typescript": "^4.3.5"
   },
