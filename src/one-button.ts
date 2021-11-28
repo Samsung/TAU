@@ -6,8 +6,13 @@ import { rectangle } from './one-lib';
 @customElement('one-button')
 export class OneButton extends OneBase {
   @property({ type: Boolean }) icon = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
 
   @query('button') private button?: HTMLButtonElement;
+
+  constructor() {
+    super();
+  }
 
   static get styles(): CSSResultArray {
     return [
@@ -37,6 +42,11 @@ export class OneButton extends OneBase {
       button[icon] {
         border-radius: 50%;
       }
+      button[disabled] {
+        opacity: 0.6 !important;
+        cursor: default;
+        pointer-events: none;
+      }
       button:active path {
         transform: scale(0.97) translate(1.5%, 1.5%);
       }
@@ -49,7 +59,7 @@ export class OneButton extends OneBase {
 
   render(): TemplateResult {
     return html`
-    <button ?icon="${this.icon}">
+    <button ?icon="${this.icon}" ?disabled="${this.disabled}">
       <slot @slotchange="${this.oneRender}"></slot>
       <div id="overlay">
         <svg></svg>
@@ -66,21 +76,14 @@ export class OneButton extends OneBase {
     }
   }
 
-  firstUpdated() {
-    console.log('firstUpdated');
-  }
-
   updated() {
-    console.log('updated');
     super.updated();
-
-    console.log('icon:' + this.icon);
   }
 
   protected canvasSize(): Point {
     if (this.button) {
       const size = this.button.getBoundingClientRect();
-      return [size.width, size.height];
+      return [Math.round(size.width), Math.round(size.height)];
     }
 
     return this.lastSize;
