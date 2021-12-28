@@ -1,5 +1,5 @@
 import { css, CSSResultArray, html, TemplateResult } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { BaseCSS, OneBase, Point } from './one-base'
 import { rectangle } from './one-lib';
 
@@ -8,8 +8,6 @@ export class OneInput extends OneBase {
   @property({ type: Boolean }) checked = false;
   @property({ type: Boolean }) type = 'text';
   @property({ type: Number }) size?: number;
-
-  @query('input') private input?: HTMLInputElement;
 
   static get styles(): CSSResultArray {
     return [
