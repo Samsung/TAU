@@ -1,7 +1,7 @@
 import { css, CSSResultArray, html, TemplateResult } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { BaseCSS, OneBase, Point } from './one-base'
-import { line, ellipse } from "./one-lib";
+import { ellipse } from "./one-lib";
 
 @customElement('one-spinner')
 export class OneSpinner extends OneBase {

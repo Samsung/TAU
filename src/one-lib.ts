@@ -146,7 +146,7 @@ export function polygon(parent: SVGElement, verties: any) {
     path = new OnePath();
   }
 
-  const node = svgNode('path', { d: path.value });
+  const node = svgNode('path', { d: `${path?.value}` });
   parent.appendChild(node);
   return node;
 }
