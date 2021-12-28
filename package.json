@@ -11,7 +11,7 @@
     "watch": "rollup -c -w",
     "cypress": "cypress run",
     "cypress:open": "cypress open",
-    "test:dev": "start-server-and-test watch http://localhost:8080 cypress:open"
+    "test:dev": "start-server-and-test watch http://localhost:8080/examples/index.html cypress:open"
   },
   "author": "Hunseop Jeong <hs85.jeong@samsung.com>",
   "devDependencies": {

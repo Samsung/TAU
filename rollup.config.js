@@ -12,7 +12,7 @@ export default {
   plugins: [
     resolve({ extensions }),
     typescript(),
-    !production && serve({open: true, openPage: '/examples/index.html', contentBase: ['examples'], port: 8080})
+    !production && serve({open: true, openPage: '/examples/index.html', contentBase: ['./'], port: 8080})
   ],
   output: [
     {
