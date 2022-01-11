@@ -15,6 +15,7 @@ export const BaseCSS = css`
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: -10;
 }
 svg {
   display: block;

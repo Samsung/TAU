@@ -1,12 +1,14 @@
 import { css, html, CSSResultArray, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { BaseCSS, Point, OneBase } from './one-base';
-import { rectangle } from './one-lib';
+import { polygon } from './one-lib';
+import { theme } from './one-theme';
 
 @customElement('one-button')
 export class OneButton extends OneBase {
   @property({ type: Boolean }) icon = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({ type: String, reflect: true }) variant = "contained";
 
   @query('button') private button?: HTMLButtonElement;
 
@@ -59,7 +61,7 @@ export class OneButton extends OneBase {
 
   render(): TemplateResult {
     return html`
-    <button ?icon="${this.icon}" ?disabled="${this.disabled}">
+    <button ?icon="${this.icon}" ?disabled="${this.disabled}" ?variant="${this.variant}">
       <slot @slotchange="${this.oneRender}"></slot>
       <div id="overlay">
         <svg></svg>
@@ -95,7 +97,14 @@ export class OneButton extends OneBase {
       svg.setAttribute('width', `${min}`);
       svg.setAttribute('height', `${min}`);
     } else {
-      rectangle(svg, 0, 0, size[0], size[1]);
+      if (this.variant === 'text') {
+        return;
+      }
+
+      const rectangle = polygon(svg, [[0, 0], [size[0], 0], [size[0], size[1]], [0, size[1]]]);
+      if (this.variant === 'contained') {
+        rectangle.style.fill = theme.primary;
+      }
     }
   }
 }
