@@ -1,4 +1,5 @@
 export * from './one-circle';
+export * from './one-square';
 export * from './one-button';
 export * from './one-checkbox';
 export * from './one-input';
