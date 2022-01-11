@@ -8,7 +8,8 @@ import { theme } from './one-theme';
 export class OneButton extends OneBase {
   @property({ type: Boolean }) icon = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
-  @property({ type: String, reflect: true }) variant = "contained";
+  @property({ type: String, reflect: true }) variant = 'contained';
+  @property({ type: String, reflect: true }) color = null;
 
   @query('button') private button?: HTMLButtonElement;
 
@@ -61,7 +62,12 @@ export class OneButton extends OneBase {
 
   render(): TemplateResult {
     return html`
-    <button ?icon="${this.icon}" ?disabled="${this.disabled}" ?variant="${this.variant}">
+    <button
+      ?icon="${this.icon}"
+      ?disabled="${this.disabled}"
+      ?variant="${this.variant}"
+      ?color="${this.color}"
+    >
       <slot @slotchange="${this.oneRender}"></slot>
       <div id="overlay">
         <svg></svg>
@@ -93,17 +99,21 @@ export class OneButton extends OneBase {
 
   protected draw(svg: SVGSVGElement, size: Point) {
     if (this.icon) {
+      this.style.color = this.color?? 'white';
       const min = Math.min(size[0], size[1]);
       svg.setAttribute('width', `${min}`);
       svg.setAttribute('height', `${min}`);
     } else {
       if (this.variant === 'text') {
+        this.style.color = this.color?? 'inherit';
         return;
       }
 
       const rectangle = polygon(svg, [[0, 0], [size[0], 0], [size[0], size[1]], [0, size[1]]]);
       if (this.variant === 'contained') {
-        rectangle.style.fill = theme.primary;
+        rectangle.style.fill = this.color?? theme.primary;
+      } else if (this.variant === 'outlined') {
+        this.style.color = this.color?? 'white';
       }
     }
   }
