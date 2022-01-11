@@ -10,6 +10,7 @@ export class OneButton extends OneBase {
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String, reflect: true }) variant = 'contained';
   @property({ type: String, reflect: true }) color = null;
+  @property({ type: String, reflect: true }) size = 'medium';
 
   @query('button') private button?: HTMLButtonElement;
 
@@ -67,6 +68,7 @@ export class OneButton extends OneBase {
       ?disabled="${this.disabled}"
       ?variant="${this.variant}"
       ?color="${this.color}"
+      ?size="${this.size}"
     >
       <slot @slotchange="${this.oneRender}"></slot>
       <div id="overlay">
@@ -104,6 +106,12 @@ export class OneButton extends OneBase {
       svg.setAttribute('width', `${min}`);
       svg.setAttribute('height', `${min}`);
     } else {
+      if (this.size === 'small') {
+        this.style.fontSize = '12px';
+      } else if (this.size === 'large') {
+        this.style.fontSize = '16px';
+      }
+
       if (this.variant === 'text') {
         this.style.color = this.color?? 'inherit';
         return;
