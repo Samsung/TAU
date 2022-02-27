@@ -89,7 +89,6 @@ export class OneProgress extends OneBase {
   }
 
   private refreshProgressFill() {
-    console.log('refreshProgressFill')
     if (this.progressBox) {
       if (this.progressBox.parentElement) {
         this.progressBox.parentElement.removeChild(this.progressBox);
