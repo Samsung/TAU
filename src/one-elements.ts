@@ -1,6 +1,7 @@
 export * from './one-circle';
 export * from './one-square';
 export * from './one-button';
+export * from './one-card';
 export * from './one-checkbox';
 export * from './one-input';
 export * from './one-radio';
