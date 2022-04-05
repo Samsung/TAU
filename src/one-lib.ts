@@ -1,4 +1,4 @@
-const __curveStepCount = 9;
+const __curveStepCount = 19;
 
 class OnePath {
   private p = '';
