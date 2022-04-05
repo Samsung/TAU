@@ -38,7 +38,6 @@ export class OneCard extends OneBase {
   }
 
   updated(changed: PropertyValues) {
-    console.log('updated');
     if (hasCircleContainer(this)) {
       if (!this.classList.contains('circle')) {
         this.classList.add('circle');
