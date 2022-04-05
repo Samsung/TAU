@@ -1,7 +1,7 @@
 import { css, html, CSSResultArray, TemplateResult, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { BaseCSS, Point, OneBase } from './one-base';
-import { rectangle } from './one-lib';
+import { hasCircleContainer, rectangle } from './one-lib';
 
 @customElement('one-card')
 export class OneCard extends OneBase {
@@ -17,6 +17,9 @@ export class OneCard extends OneBase {
           display: inline-block;
           position: relative;
           padding: 0 10px;
+        }
+        :host(.circle) {
+          padding: 0 50px !important;
         }
         path {
           stroke: var(--one-card-background-fill, currentColor);
@@ -35,7 +38,13 @@ export class OneCard extends OneBase {
   }
 
   updated(changed: PropertyValues) {
-    const force = changed.has('fill');    
+    console.log('updated');
+    if (hasCircleContainer(this)) {
+      if (!this.classList.contains('circle')) {
+        this.classList.add('circle');
+      }
+    }
+    const force = changed.has('fill');
     super.oneRender(force);
   }
 

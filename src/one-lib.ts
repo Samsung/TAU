@@ -150,3 +150,16 @@ export function polygon(parent: SVGElement, verties: any) {
   parent.appendChild(node);
   return node;
 }
+
+export function hasCircleContainer(element: HTMLElement): Boolean {
+  let parentElement = element.parentElement;
+  while (parentElement) {
+    if (parentElement.tagName === 'ONE-CIRCLE') {
+      return true;
+    }
+
+    parentElement = parentElement?.parentElement;
+  }
+
+  return false;
+}
