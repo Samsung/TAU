@@ -13,3 +13,4 @@ export * from './one-spinner';
 export * from './one-item';
 export * from './one-listbox';
 export * from './one-combo';
+export * from './one-textarea';
