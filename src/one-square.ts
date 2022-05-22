@@ -10,6 +10,7 @@ export class OneSquare extends LitElement {
     return css`
       :host {
         display: flex;
+        position: relative;
         width: 360px;
         height: 360px;
         background-color: black;
