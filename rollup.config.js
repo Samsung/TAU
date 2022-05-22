@@ -1,6 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import serve from 'rollup-plugin-serve';
 import pkg from './package.json';
 
 const extensions = ['.js', '.ts'];
@@ -12,7 +11,6 @@ export default {
   plugins: [
     resolve({ extensions }),
     typescript(),
-    !production && serve({open: true, openPage: '/examples/index.html', contentBase: ['./'], port: 8080})
   ],
   output: [
     {
