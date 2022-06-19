@@ -13,12 +13,72 @@ describe('One-Combo', () => {
       expect(element.tagName).to.eql('ONE-COMBO');
     });
 
-    it('using html', async () => {
-      const html = '<one-combo><one-item>one</one-item></one-combo>';
-      const container = await cy.get('#container');
-      container.html(html);
-      const element = container.find('one-combo');
-      expect(element[0].tagName).to.eql('ONE-COMBO');
+    it('using html', () => {
+      const html = `
+        <one-combo>
+          <one-item>
+            one
+          </one-item>
+        </one-combo>
+      `;
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      const element = container.querySelector('one-combo');
+      expect(element.tagName).to.eql('ONE-COMBO');
+    });
+  });
+
+  describe('Property check', () => {
+    it('selected', () => {
+      const html = `
+        <one-combo selected="one">
+          <one-item value="one">
+            one
+          </one-item>
+        </one-combo>
+      `;
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      const oneCombo = container.querySelector('one-combo');
+      expect(oneCombo.hasAttribute('selected')).to.eql(true);
+      expect(oneCombo.getAttribute('selected')).to.eql('one');
+    });
+  });
+
+  describe('Interaction', () => {
+    it('Click the item', async () => {
+      const html = `
+        <one-combo selected="one">
+          <one-item value="one">
+            one
+          </one-item>
+          <one-item value="two">
+            two
+          </one-item>
+        </one-combo>
+      `;
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      const oneCombo = container.querySelector('one-combo');
+      expect(oneCombo.getAttribute('selected')).to.eql('one');
+
+      // Wait for inserting the shadow element of the one-button
+      await cy.wait(100);
+
+      const dropPanel = oneCombo.shadowRoot.querySelector('#dropPanel');
+      dropPanel.click();
+
+      // Wait for changing element properties
+      await cy.wait(100);
+      const itemTwo = win.document.querySelector('one-item[value="two"]');
+      await cy.get(itemTwo).click();
+
+      // Wait for changing element properties
+      await cy.wait(100);
+      expect(oneCombo.getAttribute('selected')).to.eql('two');
     });
   });
 });
