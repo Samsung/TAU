@@ -5,7 +5,7 @@ import { line, rectangle, svgNode } from './one-lib';
 
 @customElement('one-checkbox')
 export class OneCheckbox extends OneBase {
-  @property({ type: Boolean }) checked = false;
+  @property({ type: Boolean, reflect: true }) checked = false;
 
   @query('input') private input?: HTMLInputElement;
 
@@ -71,6 +71,7 @@ export class OneCheckbox extends OneBase {
     svg.appendChild(this.svgCheck);
     line(this.svgCheck, size[0] * 0.3, size[1] * 0.4, size[0] * 0.5, size[1] * 0.7)
     line(this.svgCheck, size[0] * 0.5, size[1] * 0.7, size[0] + 5, -5);
+    this.refreshCheckVisibility();
   }
 
   private onChange() {
