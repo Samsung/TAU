@@ -9,11 +9,10 @@
   "scripts": {
     "build": "rimraf lib && rollup -c",
     "watch": "rollup -c -w",
-    "serve": "http-server .",
+    "serve": "http-server . -p 9000",
     "dev": "run-p watch serve",
-    "cypress": "cypress run",
     "cypress:open": "cypress open",
-    "test:dev": "start-server-and-test dev http://localhost:8080/examples/index.html cypress:open"
+    "test": "start-server-and-test dev http://localhost:9000/examples/index.html cypress:open"
   },
   "author": "Hunseop Jeong <hs85.jeong@samsung.com>",
   "devDependencies": {
