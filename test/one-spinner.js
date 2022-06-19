@@ -1,7 +1,9 @@
+const LOCAL_HOST = 'http://localhost:9000';
+
 describe('One-Spinner', () => {
   let win = null;
   before(async () => {
-    win = await cy.visit('http://localhost:8080/examples/spinner.html');
+    win = await cy.visit(`${LOCAL_HOST}/test/fixtures/test.html`);
   });
 
   describe("Create a one-spinner element", () => {

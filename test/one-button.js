@@ -1,7 +1,9 @@
+const LOCAL_HOST = 'http://localhost:9000';
+
 describe('One-Button', () => {
   let win = null;
-  before(async () => {
-    win = await cy.visit('http://localhost:8080/examples/button.html');
+  beforeEach(async () => {
+    win = await cy.visit(`${LOCAL_HOST}/test/fixtures/test.html`);
   });
 
   describe("Create a one-button element", () => {

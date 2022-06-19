@@ -27,7 +27,6 @@ Use it in your HTML:
 
 ```shell
 npm install
-npm run watch
-npx http-server
-# connect to http://localhost:8080
+npm run dev
+# connect to http://localhost:9000
 ```
