@@ -14,9 +14,11 @@ export class OneSquare extends LitElement {
         width: 360px;
         height: 360px;
         background-color: black;
+        color: white;
         clip-path: inset(0% 0% 0% 0%);
         justify-content: center;
         align-items: center;
+        overflow: auto;
       }
     `;
   }
