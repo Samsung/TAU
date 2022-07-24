@@ -45,6 +45,21 @@ describe('One-Combo', () => {
       expect(oneCombo.hasAttribute('selected')).to.eql(true);
       expect(oneCombo.getAttribute('selected')).to.eql('one');
     });
+
+    it('disabled', () => {
+      const html = `
+        <one-combo selected="one" disabled>
+          <one-item value="one">
+            one
+          </one-item>
+        </one-combo>
+      `;
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      const oneCombo = container.querySelector('one-combo');
+      expect(oneCombo.hasAttribute('disabled')).to.eql(true);
+    });
   });
 
   describe('Interaction', () => {
@@ -69,7 +84,7 @@ describe('One-Combo', () => {
       await cy.wait(100);
 
       const dropPanel = oneCombo.shadowRoot.querySelector('#dropPanel');
-      dropPanel.click();
+      await cy.get(dropPanel).click();
 
       // Wait for changing element properties
       await cy.wait(100);
@@ -79,6 +94,30 @@ describe('One-Combo', () => {
       // Wait for changing element properties
       await cy.wait(100);
       expect(oneCombo.getAttribute('selected')).to.eql('two');
+    });
+
+    it('Click the item on disabled state', async () => {
+      const html = `
+        <one-combo selected="one" disabled>
+          <one-item value="one">
+            one
+          </one-item>
+        </one-combo>
+      `;
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      const oneCombo = container.querySelector('one-combo');
+      expect(oneCombo.hasAttribute('disabled')).to.eql(true);
+
+      // Wait for inserting the shadow element of the one-button
+      await cy.wait(100);
+
+      const dropPanel = oneCombo.shadowRoot.querySelector('#dropPanel');
+      await cy.get(dropPanel).click();
+
+      const oneCard = oneCombo.shadowRoot.querySelector('one-card');
+      expect(oneCard.style.display).to.eql('none');
     });
   });
 });

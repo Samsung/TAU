@@ -17,6 +17,7 @@ interface ComboValue {
 export class OneCombo extends LitElement {
   @property({ type: Object }) value?: ComboValue;
   @property({ type: String, reflect: true }) selected?: string;
+  @property({ type: Boolean, reflect: true }) disabled = false;
 
   @query('svg') private svg?: SVGSVGElement;
   @query('#card') private card?: HTMLDivElement;
@@ -35,6 +36,12 @@ export class OneCombo extends LitElement {
         position: relative;
         outline: none;
         opacity: 0;
+      }
+      :host(.one-disabled) {
+        opacity: 0.5 !important;
+        cursor: default;
+        pointer-events: none;
+        background: rgba(0, 0, 0, 0.02);
       }
       :host(.one-rendered) {
         opacity: 1;
@@ -112,7 +119,18 @@ export class OneCombo extends LitElement {
     this.refreshSelection();
   }
 
-  updated() {
+  private refreshDisabledState() {
+    if (this.disabled) {
+      this.classList.add('one-disabled');
+    } else {
+      this.classList.remove('one-disabled');
+    }
+  }
+
+  updated(changed: PropertyValues) {
+    if (changed) {
+      this.refreshDisabledState();
+    }
     const svg = this.svg!;
     while (svg.hasChildNodes()) {
       svg.removeChild(svg.lastChild!);
@@ -181,7 +199,6 @@ export class OneCombo extends LitElement {
             value: selectedItem.value || '',
             text: selectedItem.textContent || ''
           };
-          console.log(selectedItem.value);
           this.selected = selectedItem.value;
         } else {
           this.value = undefined;
