@@ -1,7 +1,7 @@
 <html>
   <head>
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
-    <script src="../lib/one-element.umd.js"></script>
+    <script src="../../lib/one-element.umd.js"></script>
   </head>
   <style>
     div {
@@ -12,12 +12,12 @@
     }
   </style>
   <body>
-    <one-circle id="container">
+    <one-square id="container">
       <br/><br/><br/>
       <div>One Elements</div>
       <br/>
       <div>
-        <one-radio-group id="containerRadio" selected="circle">
+        <one-radio-group id="containerRadio" selected="square">
           <one-radio name="circle">Circle</one-radio>
           <one-radio name="square">Square</one-radio>
         </one-radio-group>
@@ -65,7 +65,7 @@
       <div>
         <a href="toggle.html">Toggle</a>
       </div>
-    </one-circle>
+    </one-square>
   </body>
   <script>
     const containerRadio = document.querySelector('#containerRadio');
@@ -73,7 +73,7 @@
       if (event.target.name === 'square') {
         location.href = 'square/index.html';
       } else if (event.target.name === 'circle') {
-        location.href = 'index.html';
+        location.href = '../index.html';
       }
     });
   </script>

@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
+    <script src="../../lib/one-element.umd.js"></script>
+  </head>
+  <body>
+    <one-square id="container">
+      <p>
+        <one-button id="openDialog">Show Dialog</one-button>
+      </p>
+      <one-dialog>
+        <p>
+          This is a paragraph and here's a link about wired-button and well
+          well well, what do you know, same link with more elevation
+          Here's another link that opens in a new tab about wired-input.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.  
+        </p>
+        <div style="text-align: center; padding: 30px 16px 16px;">
+          <one-button id="closeDialog">Close dialog</one-button>
+        </div>
+      </one-dialog>
+    </one-square>
+  </body>
+  <script>
+    document.getElementById('openDialog').addEventListener('click', () => {
+      document.querySelector('one-dialog').open = true;
+    });
+    document.getElementById('closeDialog').addEventListener('click', () => {
+      document.querySelector('one-dialog').open = false;
+    });
+  </script>
+</html>

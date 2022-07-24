@@ -13,9 +13,11 @@ export class OneCircle extends LitElement {
         width: 360px;
         height: 360px;
         background-color: black;
+        color: white;
         clip-path: circle(180px at center);
         justify-content: center;
         align-items: center;
+        overflow: auto;
       }
     `;
   }  
