@@ -1,10 +1,10 @@
 {
-  "name": "ucfw",
-  "version": "0.0.1",
+  "name": "one-elements",
+  "version": "0.0.2",
   "description": "UI Components For Wearable",
   "main": "lib/one-elements.cjs.js",
   "module": "lib/one-elements.esm.js",
-  "browser": "lib/one-element.umd.js",
+  "browser": "lib/one-elements.umd.js",
   "types": "lib/one-elements.d.ts",
   "scripts": {
     "build": "rimraf lib && rollup -c",
