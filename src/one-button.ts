@@ -1,7 +1,7 @@
 import { css, html, CSSResultArray, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { BaseCSS, Point, OneBase } from './one-base';
-import { polygon } from './one-lib';
+import { line, polygon } from './one-lib';
 import { theme } from './one-theme';
 
 @customElement('one-button')
@@ -11,6 +11,7 @@ export class OneButton extends OneBase {
   @property({ type: String, reflect: true }) variant = 'contained';
   @property({ type: String, reflect: true }) color = null;
   @property({ type: String, reflect: true }) size = 'medium';
+  @property({ type: Number }) elevation = 1;
 
   @query('button') private button?: HTMLButtonElement;
 
@@ -93,7 +94,10 @@ export class OneButton extends OneBase {
   protected canvasSize(): Point {
     if (this.button) {
       const size = this.button.getBoundingClientRect();
-      return [Math.round(size.width), Math.round(size.height)];
+      const elevation = Math.min(Math.max(1, this.elevation), 5);
+      const width = size.width + ((elevation - 1) * 2);
+      const height = size.height + ((elevation -1) * 2);
+      return [Math.round(width), Math.round(height)];
     }
 
     return this.lastSize;
@@ -117,11 +121,23 @@ export class OneButton extends OneBase {
         return;
       }
 
-      const rectangle = polygon(svg, [[0, 0], [size[0], 0], [size[0], size[1]], [0, size[1]]]);
+      const elevation = Math.min(Math.max(1, this.elevation), 5);
+      const s = {
+        width: size[0] - ((elevation - 1) * 2),
+        height: size[1] - ((elevation - 1) * 2)
+      };
+
+      const rectangle = polygon(svg, [[0, 0], [s.width, 0], [s.width, s.height], [0, s.height]]);
       if (this.variant === 'contained') {
         rectangle.style.fill = this.color?? theme.primary;
       } else if (this.variant === 'outlined') {
         this.style.color = this.color?? 'white';
+      }
+      for (let i = 1; i < elevation; i++) {
+        line(svg, (i * 2), s.height + (i * 2), s.width + (i * 2), s.height + (i * 2));
+        line(svg, s.width + (i * 2), s.height + (i * 2), s.width + (i * 2), i * 2);
+        line(svg, (i * 2), s.height + (i * 2), s.width + (i * 2), s.height + (i * 2));
+        line(svg, s.width + (i * 2), s.height + (i * 2), s.width + (i * 2), i * 2);
       }
     }
   }
