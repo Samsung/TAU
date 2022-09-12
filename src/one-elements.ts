@@ -16,3 +16,4 @@ export * from './one-combo';
 export * from './one-textarea';
 export * from './one-divider';
 export * from './one-dialog';
+export * from './one-tab';
