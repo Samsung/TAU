@@ -1,6 +1,7 @@
 import { css, html, CSSResultArray, LitElement, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { BaseCSS } from './one-base';
+import { hasCircleContainer } from './one-lib';
 
 interface OneTabItem extends HTMLElement {
   name: string;
@@ -30,6 +31,12 @@ export class OneTabs extends LitElement {
         }
         :host ::slotted(.hidden) {
           display: none !important;
+        }
+        :host(.circle) {
+          position: absolute;
+          top: 50px;
+          left: 0;
+          padding: 0 50px;
         }
         #bar {
           display: -ms-flexbox;
@@ -95,6 +102,11 @@ export class OneTabs extends LitElement {
   }
 
   updated() {
+    if (hasCircleContainer(this)) {
+      if (!this.classList.contains('circle')) {
+        this.classList.add('circle');
+      }
+    }
     const newPage = this.getElement();
     for (let i = 0; i < this.pages.length; i++) {
       const p = this.pages[i];
