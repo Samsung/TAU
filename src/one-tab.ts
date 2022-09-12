@@ -1,0 +1,38 @@
+import { css, html, CSSResultArray, TemplateResult } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { BaseCSS, OneBase, Point } from './one-base'
+import { rectangle } from './one-lib';
+
+@customElement('one-radio')
+export class OneTab extends OneBase {
+  static get styles(): CSSResultArray {
+    return [
+      BaseCSS,
+      css`
+        :host {
+          display: inline-block;
+          position: relative;
+          padding: 10px;
+        }
+      `
+    ];
+  }
+
+  render(): TemplateResult {
+    return html`
+      <div>
+        <slot @slotchange="${this.oneRender}"></slot>
+      </div>
+      <div id="overlay"><svg></svg></div>
+    `;
+  }
+
+  protected canvasSize(): Point {
+    const s = this.getBoundingClientRect();
+    return [s.width, s.height];
+  }
+
+  protected draw(svg: SVGSVGElement, s: Point) {
+    rectangle(svg, 2, 2, s[0] - 4, s[1] - 4);
+  }
+}
