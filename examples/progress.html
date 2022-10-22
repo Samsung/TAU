@@ -11,6 +11,36 @@
     <p>
         <one-progress value="65" percentage></one-progress>
     </p>
+    <p>
+        <one-progress id="progress"></one-progress>
+        <div>
+            <one-button id="start">Start</one-button>
+            <one-button id="stop">Stop</one-button>
+        </div>
+    </p>
 </one-circle>
 </body>
+<script>
+    const progress = document.getElementById('progress');
+    let timer = 0;
+    document.getElementById('start').addEventListener('click', () => {
+        if (timer) {
+            clearInterval(timer);
+        }
+        timer = setInterval(() => {
+            if (progress.value >= 100) {
+                progress.value = 0;
+            } else {
+                progress.value = progress.value + 1;
+            }
+        }, 100);
+    });
+    document.getElementById('stop').addEventListener('click', () => {
+        if (timer) {
+            clearInterval(timer);
+            timer = 0;
+        }
+        progress.value = 0;
+    });
+</script>
 </html>
