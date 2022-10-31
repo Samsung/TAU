@@ -30,4 +30,24 @@ describe('One-Radio', () => {
       expect(element).to.have.lengthOf(2);
     });
   });
+
+  describe('Interaction', () => {
+    it('Select radio', (done) => {
+      const html = `
+        <one-radio-group selected="two">
+          <one-radio name="one">One</one-radio>
+          <one-radio name="two">Two</one-radio>
+        </one-radio-group>`;
+
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      const oneRadioGroup = win.document.querySelector('one-radio-group');
+      oneRadioGroup.addEventListener('selected', () => {
+        done();
+      });
+
+      cy.get('one-radio[name=one]').click();
+    });
+  });
 });
