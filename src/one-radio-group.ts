@@ -51,10 +51,12 @@ export class OneRadioGroup extends LitElement {
         case 37:
         case 38:
           event.preventDefault();
+          this.selectPrevious();
           break;
         case 39:
         case 40:
           event.preventDefault();
+          this.selectNext();
           break;
       }
     });
@@ -76,6 +78,70 @@ export class OneRadioGroup extends LitElement {
             element.checked = false;
           }
         }
+      }
+    }
+  }
+
+  private selectPrevious() {
+    const list = this.radioNodes;
+    if (list.length) {
+      let radio = null;
+      let index = -1;
+      if (this.selected) {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].name === this.selected) {
+            index = i;
+            break;
+          }
+        }
+        if (index < 0) {
+          radio = list[0];
+        } else {
+          index--;
+          if (index < 0) {
+            index = list.length - 1;
+          }
+          radio = list[index];
+        }
+      } else {
+        radio = list[0];
+      }
+      if (radio) {
+        radio.focus();
+        this.selected = radio.name;
+        this.fireSelected();
+      }
+    }
+  }
+
+  private selectNext() {
+    const list = this.radioNodes;
+    if (list.length) {
+      let radio = null;
+      let index = -1;
+      if (this.selected) {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].name === this.selected) {
+            index = i;
+            break;
+          }
+        }
+        if (index < 0) {
+          radio = list[0];
+        } else {
+          index++;
+          if (index >= list.length) {
+            index = 0;
+          }
+          radio = list[index];
+        }
+      } else {
+        radio = list[0];
+      }
+      if (radio) {
+        radio.focus();
+        this.selected = radio.name;
+        this.fireSelected();
       }
     }
   }
