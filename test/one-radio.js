@@ -2,7 +2,7 @@ const LOCAL_HOST = 'http://localhost:9000';
 
 describe('One-Radio', () => {
   let win = null;
-  before(async () => {
+  beforeEach(async () => {
     win = await cy.visit(`${LOCAL_HOST}/test/fixtures/test.html`);
   });
 
@@ -48,6 +48,52 @@ describe('One-Radio', () => {
       });
 
       cy.get('one-radio[name=one]').click();
+    });
+
+    it('Select next radio by right key', (done) => {
+      const html = `
+        <one-radio-group selected="one">
+          <one-radio name="one">One</one-radio>
+          <one-radio name="two">Two</one-radio>
+        </one-radio-group>`;
+
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      cy.get('one-radio-group')
+        .click()
+        .type('{rightArrow}')
+        .then((group) => {
+          expect(group.get(0).getAttribute('selected')).to.eql('two');
+        })
+        .type('{rightArrow}')
+        .then((group) => {
+          expect(group.get(0).getAttribute('selected')).to.eql('one');
+          done();
+        });
+    });
+
+    it('Select previous radio by left key', (done) => {
+      const html = `
+        <one-radio-group selected="two">
+          <one-radio name="one">One</one-radio>
+          <one-radio name="two">Two</one-radio>
+        </one-radio-group>`;
+
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      cy.get('one-radio-group')
+        .click()
+        .type('{leftArrow}')
+        .then((group) => {
+          expect(group.get(0).getAttribute('selected')).to.eql('one');
+        })
+        .type('{leftArrow}')
+        .then((group) => {
+          expect(group.get(0).getAttribute('selected')).to.eql('two');
+          done();
+        });
     });
   });
 });
