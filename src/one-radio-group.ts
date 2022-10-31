@@ -9,7 +9,7 @@ interface RadioItem extends HTMLElement {
 
 @customElement('one-radio-group')
 export class OneRadioGroup extends LitElement {
-  @property({ type: String }) selected?: string;
+  @property({ type: String, reflect: true }) selected?: string;
   private radioNodes: RadioItem[] = [];
   private checkListener = this.handleChecked.bind(this);
 
