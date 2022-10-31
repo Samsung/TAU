@@ -1,6 +1,6 @@
 import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-// import { fireEvent } from './one-base';
+import { fireEvent } from './one-base';
 
 interface RadioItem extends HTMLElement {
   name: string;
@@ -88,11 +88,11 @@ export class OneRadioGroup extends LitElement {
       item.checked = true;
     } else {
       this.selected = (checked && name) || '';
-      this.firstUpdated();
+      this.fireSelected();
     }
   }
 
-  // private firstSelected() {
-  //   fireEvent(this, 'selected', { selected: this.selected });
-  // }
+  private fireSelected() {
+    fireEvent(this, 'selected', { selected: this.selected });
+  }
 }
