@@ -26,7 +26,6 @@ export class OneDialog extends LitElement {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.4);
         opacity: 0;
         transition: opacity 0.5s ease;
       }
@@ -40,26 +39,6 @@ export class OneDialog extends LitElement {
         transform: translateY(150px);
         transition: transform 0.5s ease, opacity 0.5s ease;
       }
-      .layout.vertical {
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -ms-flex-direction: column;
-        -webkit-flex-direction: column;
-        flex-direction: column;
-      }
-      .flex {
-        -ms-flex: 1 1 0.000000001px;
-        -webkit-flex: 1;
-        flex: 1;
-        -webkit-flex-basis: 0.000000001px;
-        flex-basis: 0.000000001px;
-      }
-      one-card {
-        display: inline-block;
-        background: black;
-        text-align: left;
-      }
       .content {
         text-align: center;
         padding: 50px;
@@ -68,6 +47,7 @@ export class OneDialog extends LitElement {
       }
       :host([open]) #container {
         pointer-events: auto;
+        background: rgba(0, 0, 0, 1);
       }
       :host([open]) #container::before {
         opacity: 1;
