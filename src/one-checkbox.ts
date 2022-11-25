@@ -1,5 +1,5 @@
 import { css, CSSResultArray, html, LitElement, PropertyValues, TemplateResult } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { BaseCSS, fireEvent } from './one-base'
 import { line, rectangle, svgNode } from './one-lib';
 
@@ -7,6 +7,7 @@ import { line, rectangle, svgNode } from './one-lib';
 export class OneCheckbox extends LitElement {
   @property({ type: Boolean, reflect: true }) checked = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
+  @state() private focused = false;
 
   @query('input') private input?: HTMLInputElement;
 
@@ -34,6 +35,9 @@ export class OneCheckbox extends LitElement {
         min-height: 24px;
         cursor: pointer;
       }
+      #container.focused {
+        --one-checkbox-default-width: 1.5;
+      }
       span {
         margin-left: 1.5ex;
         line-height: 24px;
@@ -43,7 +47,7 @@ export class OneCheckbox extends LitElement {
       }
       path {
         stroke: currentColor;
-        stroke-width: 0.7;
+        stroke-width: var(--one-checkbox-default-width, 0.7);
       }
       g path {
         stroke-width: 2.5;
@@ -51,12 +55,22 @@ export class OneCheckbox extends LitElement {
     `];
   }
 
+  focus() {
+    if (this.input) {
+      this.input.focus();
+    } else {
+      super.focus();
+    }
+  }
+
   render(): TemplateResult {
     return html`
-    <label id="container">
+    <label id="container" class="${this.focused ? 'focused' : ''}">
       <input type="checkbox"
         .checked="${this.checked}"
         @change="${this.onChange}"
+        @focus="${() => this.focused = true}"
+        @blur="${() => this.focused = false}"
       >
       <span><slot></slot></span>
       <div id="overlay"><svg id="svg"></svg></div>
