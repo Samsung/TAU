@@ -1,10 +1,12 @@
 import { css, html, CSSResultArray, TemplateResult, PropertyValues } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import { BaseCSS, Point, OneBase } from './one-base';
-import { hasCircleContainer, rectangle } from './one-lib';
+import { hasCircleContainer, line, rectangle } from './one-lib';
 
 @customElement('one-card')
 export class OneCard extends OneBase {
+  @property({ type: Number }) elevation = 1;
+
   constructor() {
     super();
   }
@@ -49,14 +51,24 @@ export class OneCard extends OneBase {
 
   protected canvasSize(): Point {
     const size = this.getBoundingClientRect();
-    return [size.width, size.height];
+    const elevation = Math.min(Math.max(1, this.elevation), 5);
+    const width = size.width + ((elevation - 1) * 2);
+    const height = size.height + ((elevation - 1) * 2);
+    return [width, height];
   }
 
   protected draw(svg: SVGSVGElement, size: Point) {
+    const elevation = Math.min(Math.max(1, this.elevation), 5);
     const s = {
-      width: size[0],
-      height: size[1]
+      width: size[0] - ((elevation - 1) * 2),
+      height: size[1] - ((elevation - 1) * 2)
     };
     rectangle(svg, 2, 2, s.width - 4, s.height - 4);
+    for (let i = 1; i < elevation; i++) {
+      (line(svg, (i * 2), s.height - 4 + (i * 2), s.width - 4 + (i * 2), s.height - 4 + (i * 2))).style.opacity = `${(85 - (i * 10)) / 100}`;
+      (line(svg, s.width - 4 + (i * 2), s.height - 4 + (i * 2), s.width - 4 + (i * 2), i * 2)).style.opacity = `${(85 - (i * 10)) / 100}`;
+      (line(svg, (i * 2), s.height - 4 + (i * 2), s.width - 4 + (i * 2), s.height - 4 + (i * 2))).style.opacity = `${(85 - (i * 10)) / 100}`;
+      (line(svg, s.width - 4 + (i * 2), s.height - 4 + (i * 2), s.width - 4 + (i * 2), i * 2)).style.opacity = `${(85 - (i * 10)) / 100}`;
+    }
   }
 }
