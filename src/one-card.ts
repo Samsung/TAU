@@ -1,11 +1,12 @@
 import { css, html, CSSResultArray, TemplateResult, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BaseCSS, Point, OneBase } from './one-base';
-import { hasCircleContainer, line, rectangle } from './one-lib';
+import { hasCircleContainer, line, rectangle, polygon } from './one-lib';
 
 @customElement('one-card')
 export class OneCard extends OneBase {
   @property({ type: Number }) elevation = 1;
+  @property({ type: String }) fill?: string;
 
   constructor() {
     super();
@@ -63,6 +64,10 @@ export class OneCard extends OneBase {
       width: size[0] - ((elevation - 1) * 2),
       height: size[1] - ((elevation - 1) * 2)
     };
+    if (this.fill && this.fill.trim()) {
+      const rectangle = polygon(svg, [[0, 0], [s.width, 0], [s.width, s.height], [0, s.height]]);
+      rectangle.style.fill = this.fill;
+    }
     rectangle(svg, 2, 2, s.width - 4, s.height - 4);
     for (let i = 1; i < elevation; i++) {
       (line(svg, (i * 2), s.height - 4 + (i * 2), s.width - 4 + (i * 2), s.height - 4 + (i * 2))).style.opacity = `${(85 - (i * 10)) / 100}`;
