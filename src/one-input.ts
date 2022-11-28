@@ -1,5 +1,5 @@
-import { css, CSSResultArray, html, TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { css, CSSResultArray, html, PropertyValueMap, TemplateResult } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
 import { BaseCSS, OneBase, Point } from './one-base'
 import { rectangle } from './one-lib';
 
@@ -7,7 +7,12 @@ import { rectangle } from './one-lib';
 export class OneInput extends OneBase {
   @property({ type: Boolean }) checked = false;
   @property({ type: Boolean }) type = 'text';
+  @property({ type: Number }) minlength?: number;
+  @property({ type: Number }) maxlength?: number;
   @property({ type: Number }) size?: number;
+
+  @query('input') private textInput?: HTMLInputElement;
+  private pendingValue?: string;
 
   static get styles(): CSSResultArray {
     return [
@@ -41,11 +46,43 @@ export class OneInput extends OneBase {
 
   render(): TemplateResult {
     return html`
-    <input type="${this.type}" size="${this.size}">
+    <input type="${this.type}" size="${this.size}" maxlength="${this.maxlength}" minlength="${this.minlength}"
+      @change="${this.refire}" @input="${this.refire}"
+    >
     <div id="overlay">
       <svg></svg>
     </div>
     `;
+  }
+
+  get input(): HTMLInputElement | undefined {
+    return this.textInput;
+  }
+
+  get value(): string {
+    const input = this.input;
+    return (input && input.value) || '';
+  }
+
+  set value(v: string) {
+    if (this.shadowRoot) {
+      const input = this.input;
+      if (input) {
+        input.value = v;
+        return;
+      }
+    }
+    this.pendingValue = v;
+  }
+
+  firstUpdated(): void {
+    this.value = this.pendingValue || this.value || this.getAttribute('value') || '';
+    delete this.pendingValue;
+  }
+
+  private refire(event: Event) {
+    event.stopPropagation();
+    this.fire(event.type, { sourceEvent: event });
   }
 
   protected canvasSize(): Point {

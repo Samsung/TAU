@@ -25,4 +25,26 @@ describe('One-Input', () => {
       expect(element).to.have.lengthOf(1);
     });
   });
+
+  describe('Property check', () => {
+    it('maxlength', async () => {
+      const html = `
+        <one-input maxlength="5">input</one-input>
+      `;
+      const container = win.document.querySelector('one-circle');
+      container.innerHTML = html;
+
+      const oneInput = container.querySelector('one-input');
+      await cy.wait(100);
+
+      const input = oneInput.shadowRoot.querySelector('input');
+
+      await cy.get(input).type('123456789');
+
+      await cy.get(input);
+      await cy.wait(100);
+
+      expect(input.value).to.eql('12345');
+    });
+  });
 });
