@@ -10,6 +10,7 @@ export class OneInput extends OneBase {
   @property({ type: Number }) minlength?: number;
   @property({ type: Number }) maxlength?: number;
   @property({ type: Number }) size?: number;
+  @property({ type: Boolean }) readonly = false;
 
   @query('input') private textInput?: HTMLInputElement;
   private pendingValue?: string;
@@ -47,6 +48,7 @@ export class OneInput extends OneBase {
   render(): TemplateResult {
     return html`
     <input type="${this.type}" size="${this.size}" maxlength="${this.maxlength}" minlength="${this.minlength}"
+      ?readonly="${this.readonly}"
       @change="${this.refire}" @input="${this.refire}"
     >
     <div id="overlay">
