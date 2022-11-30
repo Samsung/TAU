@@ -1,6 +1,6 @@
 {
   "name": "one-elements",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "UI Components For Wearable",
   "main": "lib/one-elements.cjs.js",
   "module": "lib/one-elements.esm.js",
