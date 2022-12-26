@@ -6,6 +6,7 @@ import {ellipse, svgNode} from "./one-lib";
 @customElement('one-radio')
 export class OneRadio extends OneBase {
   @property({ type: Boolean }) checked = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) name?: string;
 
   @query('input') private input?: HTMLInputElement;
@@ -19,6 +20,11 @@ export class OneRadio extends OneBase {
       :host {
         display: inline-block;
         font-family: inherit;
+      }
+      :host([disabled]) {
+        opacity: 0.6 !important;
+        cursor: default;
+        pointer-events: none;
       }
       #container {
         display: flex;
