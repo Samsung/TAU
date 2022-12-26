@@ -1,5 +1,5 @@
 import { css, CSSResultArray, html, TemplateResult } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { BaseCSS, OneBase, Point } from './one-base'
 import {ellipse, svgNode} from "./one-lib";
 
@@ -8,6 +8,7 @@ export class OneRadio extends OneBase {
   @property({ type: Boolean }) checked = false;
   @property({ type: Boolean, reflect: true }) disabled = false;
   @property({ type: String }) name?: string;
+  @state() focused = false;
 
   @query('input') private input?: HTMLInputElement;
 
@@ -34,6 +35,9 @@ export class OneRadio extends OneBase {
         min-height: 24px;
         cursor: pointer;
       }
+      #container.focused {
+        --one-radio-default-width: 1.5;
+      }
       span {
         margin-left: 1.5ex;
       }
@@ -42,13 +46,21 @@ export class OneRadio extends OneBase {
       }
       path {
         stroke: currentColor;
-        stroke-width: 0.7;
+        stroke-width: var(--one-radio-default-width, 0.7);
       }
       g path {
         stroke-width: 0;
         fill: currentColor;
       }
     `];
+  }
+
+  focus() {
+    if (this.input) {
+      this.input.focus();
+    } else {
+      super.focus();
+    }
   }
 
   oneRender(force: boolean = false) {
@@ -58,9 +70,11 @@ export class OneRadio extends OneBase {
 
   render(): TemplateResult {
     return html`
-    <label id="container">
+    <label id="container" class="${this.focused ? 'focused' : ''}">
       <input type="checkbox" .checked="${this.checked}"
         @change="${this.onChange}"
+        @focus="${() => this.focused = true}"
+        @blur="${() => this.focused = false}"
       >
       <span><slot></slot></span>
       <div id="overlay"><svg></svg></div>
