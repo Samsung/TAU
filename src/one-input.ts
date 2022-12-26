@@ -1,4 +1,4 @@
-import { css, CSSResultArray, html, PropertyValueMap, TemplateResult } from 'lit';
+import { css, CSSResultArray, html, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { BaseCSS, OneBase, Point } from './one-base'
 import { rectangle } from './one-lib';
