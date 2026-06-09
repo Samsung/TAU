@@ -1,5 +1,21 @@
 # TAU
 
+> ⚠️ **This project has been archived and is no longer maintained.  
+We does not provide security support, vulnerability review, patches, releases, or CVE assignment/coordination for this project. 
+Vulnerability reports related to this project may be declined on the grounds that the project is unsupported.  
+Users should carefully evaluate the security implications before using this project.  
+However, a third-party CNA or the CVE Program may still assign a CVE ID under its own policies.  
+For questions regarding such assignments, please contact the CVE Program directly.**
+>
+> | 항목 | 내용 |
+> |------|------|
+> | **Archive Date** | 2026-05-22 |
+> | **Archive Reason** | Service discontinued |
+> | **Security Patches** | Not provided |
+>
+> This project is now read-only. Issues, pull requests, and new commits are disabled.
+
+
 The TAU library contains components which allows you to create Web Application UI. Each components represents UI element, such as a button or slider, which gives you interaction and manipulation features.
 
 ## Getting Started
